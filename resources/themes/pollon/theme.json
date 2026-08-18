@@ -1,0 +1,20 @@
+{
+    "label": "Pollon",
+    "icon": "⛅",
+    "fonts": "baloo-2:400,700",
+    "claim": "C'è da fare sull'Olimpo",
+    "counter": "esauditi",
+    "done_all": "Forse sì, forse no, forse invece chissà!",
+    "add": "+ Un pizzico di polvere del buonumore",
+    "stamp": "DIVINO!",
+    "footer": "Pollon, Pollon, combinaguai…",
+    "confirm": "Scagliare «:title» giù dall'Olimpo?",
+    "placeholder": "Desiderio per gli dèi…",
+    "deco": [
+        "⛅",
+        "🏛️",
+        "💛",
+        "🕊️"
+    ],
+    "slug": "pollon"
+}

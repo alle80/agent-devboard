@@ -1,0 +1,100 @@
+<?php
+
+namespace Alle80\Devboard\Livewire;
+
+use Alle80\Devboard\Models\Checklist;
+use Livewire\Component;
+
+class ChecklistSwitcher extends Component
+{
+    public string $newName = '';
+
+    /** Lista in rinomina e relativa bozza. */
+    public ?int $editingId = null;
+
+    public string $nameDraft = '';
+
+    public function startRename(int $checklistId): void
+    {
+        $list = Checklist::mine()->findOrFail($checklistId);
+        $this->editingId = $list->id;
+        $this->nameDraft = $list->name;
+    }
+
+    public function cancelRename(): void
+    {
+        $this->editingId = null;
+        $this->nameDraft = '';
+    }
+
+    public function saveRename(): void
+    {
+        $name = trim($this->nameDraft);
+
+        if ($name === '' || ! $this->editingId) {
+            return;
+        }
+
+        Checklist::mine()->whereKey($this->editingId)->update(['name' => $name]);
+
+        $wasCurrent = $this->editingId === Checklist::currentId();
+        $this->cancelRename();
+        $this->dispatch('toast', message: __('devboard::t.msg.list_renamed'));
+
+        // Il nome della lista corrente è il titolo della pagina: ricarico per aggiornarlo ovunque
+        if ($wasCurrent) {
+            $this->js('window.location.reload()');
+        }
+    }
+
+    public function switchTo(int $checklistId): void
+    {
+        if (! Checklist::mine()->whereKey($checklistId)->exists()) {
+            return;
+        }
+
+        session(['checklist_id' => $checklistId]);
+        $this->js('window.location.reload()');
+    }
+
+    public function create(): void
+    {
+        $name = trim($this->newName);
+
+        if ($name === '') {
+            return;
+        }
+
+        $list = Checklist::create(['name' => $name, 'user_id' => auth()->id()]);
+        session(['checklist_id' => $list->id]);
+        $this->js('window.location.reload()');
+    }
+
+    public function deleteList(int $checklistId): void
+    {
+        // L'ultima lista rimasta non si tocca
+        if (Checklist::mine()->count() <= 1) {
+            return;
+        }
+
+        $list = Checklist::mine()->whereKey($checklistId)->first();
+        $list?->delete();
+        $this->dispatch('toast', message: __('devboard::t.msg.list_deleted', ['name' => $list?->name]), type: 'info');
+
+        if ((int) session('checklist_id') === $checklistId) {
+            session()->forget('checklist_id');
+            $this->js('window.location.reload()');
+        }
+    }
+
+    public function render()
+    {
+        return view('devboard::livewire.checklist-switcher', [
+            'lists' => Checklist::mine()->withCount([
+                'todos' => fn ($q) => $q->whereNull('archived_at'),
+                'todos as done_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', true),
+            ])->orderBy('id')->get(),
+            'currentId' => Checklist::currentId(),
+        ]);
+    }
+}

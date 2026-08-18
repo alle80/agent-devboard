@@ -1,0 +1,12 @@
+<?php
+
+namespace Alle80\Devboard\Tests\Support;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    protected $table = 'users';
+
+    protected $guarded = [];
+}

@@ -1,0 +1,5 @@
+/* Entry of the standalone build: Tailwind (scanning the package views only) + the package styles. */
+@import 'tailwindcss';
+@source '../views/**/*.blade.php';
+@source '../../src/**/*.php';
+@import './devboard.css';

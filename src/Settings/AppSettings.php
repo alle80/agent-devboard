@@ -1,0 +1,69 @@
+<?php
+
+namespace Alle80\Devboard\Settings;
+
+use Alle80\Devboard\Themes;
+use Spatie\LaravelSettings\Settings;
+
+/**
+ * Impostazioni dell'app (comportamento della board), gruppo «app». Vedi AgentSettings per l'assistente.
+ */
+class AppSettings extends Settings
+{
+    /** Stile aperto da «/»: '' = manga (nessun redirect), altrimenti slug (jack, c64, linux…). */
+    public string $default_style;
+
+    /** Lunghezza massima del titolo di un todo. */
+    public int $title_max_length;
+
+    /** Archivia da solo i completati più vecchi di N giorni (0 = mai). */
+    public int $auto_archive_days;
+
+    /** Descrizione AI delle immagini caricate (per la ricerca). */
+    public bool $ai_describe_images;
+
+    /** Provider AI per le immagini: '' = da .env (AI_IMAGE_PROVIDERS/AI_PROVIDER), altrimenti nome provider. */
+    public string $ai_image_provider;
+
+    /** Modello AI per le immagini: '' = da .env / il più economico del provider. */
+    public string $ai_image_model;
+
+    /** Toast in pagina quando lo stato viene cambiato da console (es. Claude prende in carico). */
+    public bool $toast_console_changes;
+
+    public static function group(): string
+    {
+        return 'app';
+    }
+
+    public static function fields(): array
+    {
+        $styles = ['' => __('devboard::t.settings_options.default_style_none')];
+        foreach (Themes::switcher() as $slug => $s) {
+            $styles[$slug] = ($s['icon'] ?? '').' '.$s['label'];
+        }
+
+        $providers = ['' => __('devboard::t.settings_options.ai_provider_env')];
+        foreach (array_keys((array) config('ai.providers', [])) as $name) {
+            $providers[$name] = $name;
+        }
+
+        $labels = (array) __('devboard::t.settings_fields');
+        $def = [
+            'default_style' => ['select', $styles],
+            'title_max_length' => ['int', ['min' => 10, 'max' => 200]],
+            'auto_archive_days' => ['int', ['min' => 0, 'max' => 365]],
+            'ai_describe_images' => ['bool', []],
+            'ai_image_provider' => ['select', $providers],
+            'ai_image_model' => ['text', []],
+            'toast_console_changes' => ['bool', []],
+        ];
+        $out = [];
+        foreach ($def as $key => [$type, $opts]) {
+            [$label, $help] = $labels[$key] ?? [$key, ''];
+            $out[$key] = [$label, $help, $type, $opts];
+        }
+
+        return $out;
+    }
+}

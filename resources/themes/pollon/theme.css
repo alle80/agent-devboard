@@ -1,0 +1,12 @@
+.theme-pollon {
+    --tl-bg: radial-gradient(circle at 12% 18%, #fff 0 42px, rgb(255 255 255 / 0.55) 55px, transparent 85px),
+        radial-gradient(circle at 88% 65%, #fff 0 34px, rgb(255 255 255 / 0.5) 46px, transparent 72px),
+        linear-gradient(#ffd9e8, #cfe8ff);
+    --tl-fg: #6b4a5a;
+    --tl-font: 'Baloo 2', cursive; --tl-display: 'Baloo 2', cursive;
+    --tl-title: #e6537a; --tl-title-sh: 2px 2px 0 #fff;
+    --tl-card: #fffdf8; --tl-bcol: #e0a8c0; --tl-radius: 18px;
+    --tl-shadow: 0 4px 0 rgb(224 168 192 / 0.5);
+    --tl-accent: #d4a017; --tl-accent-fg: #fff; --tl-stamp: #d4a017;
+    --tl-add-bg: #e6537a; --tl-head: #ffe3ee;
+}

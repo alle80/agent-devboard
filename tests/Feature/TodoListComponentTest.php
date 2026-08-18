@@ -1,0 +1,114 @@
+<?php
+
+namespace Alle80\Devboard\Tests\Feature;
+
+use Alle80\Devboard\Livewire\TodoList;
+use Alle80\Devboard\Models\Checklist;
+use Alle80\Devboard\Models\Todo;
+use Alle80\Devboard\Tests\TestCase;
+use Livewire\Livewire;
+
+class TodoListComponentTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAsUser();
+    }
+
+    protected function add(string $title, int $pos = 1): Todo
+    {
+        Livewire::test(TodoList::class)->call('startInsert', $pos)->set('newTitle', $title)->call('saveInsert');
+
+        return Todo::where('title', $title)->firstOrFail();
+    }
+
+    public function test_add_toggle_rename_and_delete(): void
+    {
+        $todo = $this->add('Buy milk');
+        $this->assertSame(1, $todo->order);
+
+        Livewire::test(TodoList::class)->call('toggle', $todo->id);
+        $this->assertTrue($todo->fresh()->completed);
+
+        Livewire::test(TodoList::class)->call('startEdit', $todo->id)->set('titleDraft', 'Buy oat milk')->call('saveEdit');
+        $this->assertSame('Buy oat milk', $todo->fresh()->title);
+
+        Livewire::test(TodoList::class)->call('delete', $todo->id);
+        $this->assertDatabaseCount('todos', 0);
+    }
+
+    public function test_title_length_is_enforced(): void
+    {
+        Livewire::test(TodoList::class)->call('startInsert', 1)->set('newTitle', str_repeat('x', 51))->call('saveInsert')
+            ->assertDispatched('toast');
+        $this->assertDatabaseCount('todos', 0);
+
+        $this->add(str_repeat('y', 50));
+        $this->assertDatabaseCount('todos', 1);
+    }
+
+    public function test_archive_compacts_order_and_unarchive_appends(): void
+    {
+        $a = $this->add('A', 1);
+        $b = $this->add('B', 2);
+        $c = $this->add('C', 3);
+
+        Livewire::test(TodoList::class)->call('archive', $a->id);
+        $this->assertNotNull($a->fresh()->archived_at);
+        $this->assertSame([1, 2], [$b->fresh()->order, $c->fresh()->order]);
+
+        Livewire::test(TodoList::class)->call('unarchive', $a->id);
+        $this->assertNull($a->fresh()->archived_at);
+        $this->assertSame(3, $a->fresh()->order);
+    }
+
+    public function test_search_and_filters(): void
+    {
+        $milk = $this->add('Buy milk', 1);
+        $this->add('Call mom', 2);
+        $milk->update(['completed' => true]);
+
+        $t = Livewire::test(TodoList::class)->set('search', 'milk');
+        $this->assertCount(1, $t->viewData('todos'));
+
+        $t = Livewire::test(TodoList::class)->call('setFilter', 'done');
+        $this->assertSame(['Buy milk'], $t->viewData('todos')->pluck('title')->all());
+
+        $t = Livewire::test(TodoList::class)->call('setFilter', 'todo');
+        $this->assertSame(['Call mom'], $t->viewData('todos')->pluck('title')->all());
+    }
+
+    public function test_open_to_work_stop_and_resume(): void
+    {
+        $todo = $this->add('Task');
+
+        Livewire::test(TodoList::class)->call('toggleOpenToWork', $todo->id);
+        $this->assertTrue($todo->fresh()->open_to_work);
+
+        $todo->update(['working' => true]);
+        Livewire::test(TodoList::class)->call('toggleOpenToWork', $todo->id); // stops the agent
+        $todo->refresh();
+        $this->assertFalse($todo->working);
+        $this->assertFalse($todo->open_to_work);
+        $this->assertNotNull($todo->stopped_at);
+
+        $todo->update(['completed' => true, 'notes' => 'old note']);
+        Livewire::test(TodoList::class)->call('resume', $todo->id)->assertDispatched('open-ingredients');
+        $new = Todo::where('parent_id', $todo->id)->firstOrFail();
+        $this->assertSame('Task', $new->title);
+        $this->assertSame($todo->order + 1, $new->order);
+        $this->assertFalse($new->completed);
+    }
+
+    public function test_todos_of_other_users_are_invisible(): void
+    {
+        $this->add('Mine');
+        $other = \Alle80\Devboard\Tests\Support\User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
+        $foreign = Checklist::create(['name' => 'X', 'user_id' => $other->id]);
+        Todo::create(['title' => 'Not mine', 'order' => 1, 'checklist_id' => $foreign->id]);
+
+        $t = Livewire::test(TodoList::class);
+        $this->assertSame(['Mine'], $t->viewData('todos')->pluck('title')->all());
+    }
+}
