@@ -343,6 +343,26 @@ class IngredientModal extends Component
         $this->dispatch('ingredients-updated');
     }
 
+    /** Move the todo to another list of the user (appended at the end of the active items there). */
+    public function moveTo(int $checklistId): void
+    {
+        $todo = $this->todo();
+        if (! $todo || $checklistId === (int) $todo->checklist_id || ! Checklist::mine()->whereKey($checklistId)->exists()) {
+            return;
+        }
+        $from = $todo->checklist_id;
+        $order = $todo->order;
+        $newOrder = ((int) Todo::where('checklist_id', $checklistId)->whereNull('archived_at')->max('order')) + 1;
+        $todo->update(['checklist_id' => $checklistId, 'order' => $todo->archived_at ? 0 : $newOrder]);
+        if (! $todo->archived_at) {
+            Todo::where('checklist_id', $from)->whereNull('archived_at')->where('order', '>', $order)->decrement('order'); // close the gap
+        }
+        $target = Checklist::find($checklistId);
+        $this->dispatch('toast', message: __('devboard::t.msg.moved', ['title' => $todo->title, 'list' => $target?->name]));
+        $this->dispatch('ingredients-updated');
+        $this->close();
+    }
+
     /** Archive / delete reuse the list logic (order reindex) then close the modal. */
     public function archiveTodo(): void
     {
@@ -556,6 +576,7 @@ class IngredientModal extends Component
             'todo' => $todo,
             'readonly' => (bool) $todo?->completed,
             'skills' => \Alle80\Devboard\Support\Skills::all(),
+            'otherLists' => $todo ? Checklist::mine()->whereKeyNot($todo->checklist_id)->orderBy('name')->get(['id', 'name']) : collect(),
         ];
     }
 }

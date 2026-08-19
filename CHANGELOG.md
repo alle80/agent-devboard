@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-08-19
+
+### Added
+- **Move a task to another list**: a «Move to list…» menu in the modal header (the user's other lists);
+  the task is appended to the target list, the source numbering is closed. `IngredientModal::moveTo()`,
+  icon `move`.
+
 ## [0.18.1] - 2026-08-19
 
 ### Changed

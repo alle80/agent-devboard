@@ -27,6 +27,22 @@
         </button>
     @endif
 
+    @if ($otherLists->isNotEmpty())
+        {{-- Move to another list --}}
+        <details class="relative" x-data="{ o: false }" x-bind:open="o" x-on:toggle="o = $el.open" x-on:click.outside="o = false" x-on:keydown.escape.window="o = false">
+            <summary class="db-cmd cursor-pointer list-none [&::-webkit-details-marker]:hidden" title="{{ __('devboard::t.move_to') }}" aria-label="{{ __('devboard::t.move_to') }}" aria-haspopup="menu">
+                <x-devboard::icon name="move" />
+            </summary>
+            <div class="db-menu absolute right-0 z-30 mt-1 max-h-60 min-w-48 overflow-y-auto rounded-lg border-2 border-current/30 p-1 text-sm shadow-lg" role="menu" style="font-family: system-ui, sans-serif">
+                <p class="px-2 py-1 text-xs uppercase tracking-wide opacity-60">{{ __('devboard::t.move_to') }}</p>
+                @foreach ($otherLists as $l)
+                    <button type="button" role="menuitem" wire:click="moveTo({{ $l->id }})" x-on:click="o = false"
+                            class="db-menu-item flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-left">📋 <span class="truncate">{{ $l->name }}</span></button>
+                @endforeach
+            </div>
+        </details>
+    @endif
+
     <button type="button" class="db-cmd" wire:click="archiveTodo"
             title="{{ __('devboard::t.archive') }}" aria-label="{{ __('devboard::t.archive') }}">
         <x-devboard::icon name="archive" />

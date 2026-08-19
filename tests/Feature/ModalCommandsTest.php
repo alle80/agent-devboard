@@ -76,6 +76,26 @@ class ModalCommandsTest extends TestCase
         $this->assertFalse($todo->fresh()->working);
     }
 
+    public function test_move_to_another_list(): void
+    {
+        $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
+        $b = Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
+        $other = Checklist::create(['name' => 'other', 'user_id' => $this->list->user_id]);
+        Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $other->id]);
+        $foreign = Checklist::create(['name' => 'foreign', 'user_id' => \Alle80\Devboard\Tests\Support\User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')])->id]);
+
+        $modal = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->assertSee('other')->assertDontSee('foreign');
+        $modal->call('moveTo', $foreign->id);
+        $this->assertSame($this->list->id, $a->fresh()->checklist_id, 'not my list → ignored');
+
+        $modal->call('moveTo', $other->id)->assertDispatched('toast');
+        $a->refresh();
+        $this->assertSame($other->id, $a->checklist_id);
+        $this->assertSame(2, $a->order, 'appended after X');
+        $this->assertSame(1, $b->fresh()->order, 'gap closed in the source list');
+        $this->assertFalse($modal->instance()->open);
+    }
+
     public function test_state_key_reflects_the_todo(): void
     {
         $todo = Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $this->list->id, 'open_to_work' => true]);
