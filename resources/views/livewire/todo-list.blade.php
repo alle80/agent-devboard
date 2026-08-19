@@ -177,5 +177,7 @@
         {{ $t['footer'] }}
     </footer>
 
-    <livewire:devboard::themed-ingredient-modal :theme="$theme" />
+    {{-- wire:key: senza chiave stabile il modale viene ricreato (perdendo open=true) quando la lista
+         si ri-renderizza dopo aver aggiunto una riga → il pulsante «nuovo task» non apriva il modale. --}}
+    <livewire:devboard::themed-ingredient-modal :theme="$theme" wire:key="devboard-ingredient-modal" />
 </div>

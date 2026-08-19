@@ -5,7 +5,13 @@ All notable changes to `alle80/agent-devboard` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+$1
+## [0.7.3] - 2026-08-19
+
+### Fixed
+- The **New task** button still failed to open the modal when the list already had items: the modal
+  lacked a stable `wire:key`, so it was re-created (losing its open state) when the list re-rendered
+  after adding the new row. Added the key.
 
 ## [0.7.2] - 2026-08-19
 
@@ -153,7 +159,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/alle80/agent-devboard/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/alle80/agent-devboard/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/alle80/agent-devboard/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/alle80/agent-devboard/compare/v0.6.3...v0.7.0
