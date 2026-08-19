@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-08-19
+
+### Fixed
+- The modal title bar printed the raw `('devboard::livewire.partials.modal-actions')` string instead of
+  rendering the state badge + commands (a malformed `@include` insertion in 0.6.0).
+
 ## [0.6.1] - 2026-08-19
 
 ### Fixed
@@ -115,7 +121,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/alle80/agent-devboard/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/alle80/agent-devboard/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/alle80/agent-devboard/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/alle80/agent-devboard/compare/v0.5.0...v0.5.1
