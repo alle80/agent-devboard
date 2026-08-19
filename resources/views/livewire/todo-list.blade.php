@@ -110,6 +110,9 @@
                             @if ($unseen)
                                 <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
                             @endif
+                            @if (\Alle80\Devboard\Agent::many() && $todo->agent)
+                                <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('devboard::t.agent_of_task') }}">{{ \Alle80\Devboard\Agent::label($todo->agent) }}</span>
+                            @endif
                             @if ($todo->depends_on_id)
                                 <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('devboard::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}"><x-devboard::icon name="link" />@if ($todo->dependsOn?->completed)<x-devboard::icon name="check" size=".9em" />@endif</span>
                             @endif

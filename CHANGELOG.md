@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.31.0] - 2026-08-19
+
+### Added
+- **Multi-agent**: config `devboard.agents` (`DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI"`) declares
+  the active agents; each list (project) has a **default agent** (selector in the toolbar) and each task may
+  **override** it (selector in the modal header, chip on the row). `devboard:check --agent=<key>` (default:
+  `DEVBOARD_AGENT_KEY` / first configured) lists only that agent's tasks and prints `{agent: key}` per row; a
+  single configured agent keeps today's behaviour. `Alle80\Devboard\Agent::all()/effective()`, columns
+  `checklists.agent`, `todos.agent`.
+
 ## [0.30.2] - 2026-08-19
 
 ### Changed

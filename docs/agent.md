@@ -21,3 +21,9 @@ Rules worth knowing: take the task **first** (before reading/analysing), one tas
 keep the progress % and phase updated, report tokens on close when the setting asks for it.
 
 Statistics: every 🔧 interval is timed automatically; tokens are whatever the agent reports.
+
+## Several agents
+
+Declare them with `DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list (project) has a default agent
+(toolbar selector), a task may override it (modal header). Each agent runs `devboard:check --agent=<its key>`
+(or sets `DEVBOARD_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id.

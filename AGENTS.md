@@ -22,6 +22,11 @@ Skills: `devboard:skills-import` accepts any JSON list — the origin repo ships
 your agent exposes with `--tokens-in/--tokens-out` (optional). The UI calls the agent by
 `config('devboard.agent_name')` («Claude», «Codex», …).
 
+## Several agents on one board
+
+If the board lists several agents (`check` prints `🤝 agents: …`), run `devboard:check --agent=<your key>` (or
+export `DEVBOARD_AGENT_KEY`) so you only see the tasks assigned to you.
+
 ## Connect (once)
 
 ```bash

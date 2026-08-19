@@ -27,6 +27,16 @@
         </button>
     @endif
 
+    @if (\Alle80\Devboard\Agent::many())
+        {{-- Multi-agent: which agent handles this task --}}
+        <select class="db-cmd db-agent-select cursor-pointer bg-transparent text-xs" wire:change="setAgent($event.target.value)" title="{{ __('devboard::t.agent_of_task') }}" aria-label="{{ __('devboard::t.agent_of_task') }}" x-on:click.stop>
+            <option value="" @selected(! $todo->agent)>{{ __('devboard::t.agent_default', ['agent' => \Alle80\Devboard\Agent::label($todo->checklist?->agent ?: \Alle80\Devboard\Agent::defaultKey())]) }}</option>
+            @foreach (\Alle80\Devboard\Agent::all() as $k => $label)
+                <option value="{{ $k }}" @selected($todo->agent === $k)>{{ $label }}</option>
+            @endforeach
+        </select>
+    @endif
+
     @if ($otherLists->isNotEmpty())
         {{-- Move to another list --}}
         <details class="relative" x-data="{ o: false }" x-bind:open="o" x-on:toggle="o = $el.open" x-on:click.outside="o = false" x-on:keydown.escape.window="o = false">

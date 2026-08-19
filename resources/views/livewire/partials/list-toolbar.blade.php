@@ -8,6 +8,19 @@
       $btnClass    bottone archivio
 --}}
 <div class="{{ $wrapClass }} list-toolbar mb-4 space-y-2">
+    {{-- Multi-agent: default agent of this list --}}
+    @if (\Alle80\Devboard\Agent::many())
+        <div class="db-list-agent flex flex-wrap items-center gap-2 text-sm">
+            <label class="font-bold" for="list-agent">{{ __('devboard::t.agent_of_list') }}</label>
+            <select id="list-agent" class="{{ $inputClass }} text-xs" wire:change="setListAgent($event.target.value)">
+                <option value="" @selected(($listAgent ?? '') === '')>{{ __('devboard::t.agent_default', ['agent' => \Alle80\Devboard\Agent::label(\Alle80\Devboard\Agent::defaultKey())]) }}</option>
+                @foreach (\Alle80\Devboard\Agent::all() as $k => $label)
+                    <option value="{{ $k }}" @selected(($listAgent ?? '') === $k)>{{ $label }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+
     {{-- Plan mode: start the plan / progress --}}
     @if (! empty($plan))
         <div class="db-plan-bar flex flex-wrap items-center gap-2 text-sm">

@@ -111,6 +111,17 @@ class TodoList extends Component
         return $this->scoped()->whereNull('archived_at');
     }
 
+    /** Multi-agent: default agent of the current list ('' = the global default). */
+    public function setListAgent(string $agent): void
+    {
+        $agent = trim($agent);
+        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Devboard\Agent::all())) {
+            return;
+        }
+        Checklist::mine()->whereKey(Checklist::currentId())->update(['agent' => $agent ?: null]);
+        $this->dispatch('toast', message: __('devboard::t.agent_set', ['agent' => \Alle80\Devboard\Agent::label($agent ?: \Alle80\Devboard\Agent::defaultKey())]));
+    }
+
     /* ---------- Plan mode: start / status ---------- */
 
     /** Plan status of the current list: null if not a plan, else [next id|null, done, total, running]. */
@@ -450,6 +461,7 @@ class TodoList extends Component
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
             'plan' => $this->planStatus(),
+            'listAgent' => (string) (Checklist::find(Checklist::currentId())?->agent ?? ''),
         ])->layout('devboard::layouts.themed', ['theme' => Themes::default()])->title($this->listName());
     }
 }

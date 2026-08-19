@@ -29,7 +29,8 @@ class DevboardCheck extends Command
         {--ask= : Id of the todo to ask questions about (state ❓)}
         {--q=* : Text of each question, repeatable}
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
-        {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}';
+        {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
+        {--agent= : Only the tasks of this agent key (multi-agent; default: DEVBOARD_AGENT_KEY, or every task when one agent)}';
 
     protected $aliases = ['sviluppo:check'];
 
@@ -115,14 +116,20 @@ class DevboardCheck extends Command
         $marker = storage_path('app/devboard-last-check');
         $last = is_file($marker) ? (int) file_get_contents($marker) : 0;
 
-        $workable = function (Checklist $l) {
+        // Multi-agent: which agent am I? (option, else config key); with several agents only my tasks are listed
+        $me = (string) ($this->option('agent') ?: (\Alle80\Devboard\Agent::many() ? \Alle80\Devboard\Agent::defaultKey() : ''));
+        $workable = function (Checklist $l) use ($me) {
             $query = $l->todos()->whereNull('archived_at')->with(['ingredients', 'questions', 'parent.ingredients'])->orderBy('order');
             if (! $this->option('all')) {
                 // Only what the user marked "open to work" 🟢 (or already in progress)
                 $query->where('completed', false)->where('question', false)->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true));
             }
+            $todos = $query->get();
+            if ($me !== '') {
+                $todos = $todos->filter(fn ($t) => \Alle80\Devboard\Agent::effective($t, $l) === $me)->values();
+            }
 
-            return $query->get();
+            return $todos;
         };
         $todos = $workable($list);
         $planTodos = $planLists->mapWithKeys(fn ($l) => [$l->id => $workable($l)])->filter(fn ($c) => $c->isNotEmpty());
@@ -134,6 +141,9 @@ class DevboardCheck extends Command
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
             $this->line('⚡ optimization: '.$opt->summary());
+            if (\Alle80\Devboard\Agent::many()) {
+                $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(\Alle80\Devboard\Agent::all()), \Alle80\Devboard\Agent::all())), $me, \Alle80\Devboard\Agent::label($me)));
+            }
             if ($opt->terse_agent) {
                 $this->line('⚡ '.$opt->terseRules());
             }
@@ -148,7 +158,7 @@ class DevboardCheck extends Command
             $render = function ($todos) use ($last, $opt) {
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', $t->id));
+                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Devboard\Agent::many() ? ' {agent: '.\Alle80\Devboard\Agent::effective($t).'}' : '', $t->id));
                 if ($t->parent) {
                     $this->line(sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $t->parent->title, $t->parent->id));
                     if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($t->parent->notes)));

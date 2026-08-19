@@ -8,6 +8,12 @@ return [
     // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «🤖 Claude», «Claude's skills»
     'agent_name' => env('DEVBOARD_AGENT_NAME', 'Agent'),
 
+    // Several agents at once (key => label), e.g. DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI". A list
+    // (project) chooses its default agent, a task may override it; each agent runs `devboard:check --agent=<key>`
+    // (or sets DEVBOARD_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`.
+    'agents' => env('DEVBOARD_AGENTS'),
+    'agent_key' => env('DEVBOARD_AGENT_KEY'),
+
     // Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication,
     // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
     'mode' => env('DEVBOARD_MODE', 'server'),

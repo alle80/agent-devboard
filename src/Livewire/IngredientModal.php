@@ -355,6 +355,21 @@ class IngredientModal extends Component
         $this->dispatch('ingredients-updated');
     }
 
+    /** Multi-agent: choose which agent handles this task ('' = the list's default). */
+    public function setAgent(string $agent): void
+    {
+        $todo = $this->todo();
+        if (! $todo) {
+            return;
+        }
+        $agent = trim($agent);
+        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Devboard\Agent::all())) {
+            return;
+        }
+        $todo->update(['agent' => $agent ?: null]);
+        $this->dispatch('ingredients-updated');
+    }
+
     /** Move the todo to another list of the user (appended at the end of the active items there). */
     public function moveTo(int $checklistId): void
     {

@@ -34,6 +34,7 @@ class DashboardTodoList extends TodoList
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
             'plan' => $this->planStatus(),
+            'listAgent' => (string) (\Alle80\Devboard\Models\Checklist::find(\Alle80\Devboard\Models\Checklist::currentId())?->agent ?? ''),
             'wide' => true,
         ])->title($this->listName().' — Dashboard');
     }

@@ -19,6 +19,7 @@ return new class extends Migration
                 $table->string('name');
                 $table->text('plan_prompt')->nullable();                // plan mode: the prompt the list was built from
                 $table->boolean('plan_paused')->default(false);      // plan mode: paused = the chain does not open the next task
+                $table->string('agent', 40)->nullable();               // default agent of the list (multi-agent)
                 $table->timestamps();
             });
         }
@@ -44,6 +45,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('tokens_in')->default(0); // tokens reported by the agent (input, incl. cache)
                 $table->unsignedBigInteger('tokens_out')->default(0); // tokens reported by the agent (output)
                 $table->json('skills')->nullable();                 // agent skills chosen for this task (list of names)
+                $table->string('agent', 40)->nullable();             // agent override for this task (multi-agent)
                 $table->timestamp('archived_at')->nullable()->index();
                 $table->timestamps();
                 $table->foreignId('checklist_id')->nullable()->constrained()->cascadeOnDelete();

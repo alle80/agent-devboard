@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Checklist extends Model
 {
-    protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused'];
+    protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused', 'agent'];
 
     protected function casts(): array
     {
