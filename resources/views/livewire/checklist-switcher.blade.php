@@ -100,8 +100,10 @@
             <nav class="grid grid-cols-2 gap-1" aria-label="{{ __('devboard::t.settings') }}">
                 <a href="{{ route('devboard.stats') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.stats_page.menu') }}</a>
                 <a href="{{ route('devboard.agents') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.agents.menu') }}</a>
+                @if (\Alle80\Devboard\Admin::check())
                 <a href="{{ route('devboard.context') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.ctx.menu') }}</a>
                 <a href="{{ route('devboard.settings') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.settings') }}</a>
+                @endif
                 @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
                     <button type="submit" class="cursor-pointer rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold text-red-700 shadow-[1px_1px_0_#000] hover:bg-red-50 active:translate-y-px">{{ __('devboard::t.logout') }}</button>
                 @endif

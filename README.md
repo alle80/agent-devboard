@@ -107,6 +107,10 @@ quality); otherwise the browser's Web Speech API is used. Setting `speech_mode` 
 (single, multi-select, whole group), edit and reorder; `php artisan devboard:context export` prints the enabled
 context — write it back to the file from your host (see `scripts/sync-context.py` in the origin repo).
 
+**Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool` on your user
+model, or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
+registered user. Local mode from the UI needs `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
+
 **Modes**: `DEVBOARD_MODE=server` (default: login, lists per user; restrict access with
 `canAccessDevboard(): bool` on your user model or `DEVBOARD_ACCESS_GATE=<ability>`) or `DEVBOARD_MODE=local`
 (no authentication, one global set of lists — for your own machine only). Also switchable in `/settings`.

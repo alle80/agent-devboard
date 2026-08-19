@@ -153,6 +153,7 @@ return [
         'agent_updated' => 'Aggiornato «:title»',
         'moved' => '«:title» spostato in «:list»',
         'state_set' => '«:title» → :state',
+        'local_not_allowed' => 'La modalità local non può essere attivata dall\'interfaccia su questa installazione (solo ambiente local o DEVBOARD_ALLOW_LOCAL_FROM_UI).',
         'setting_on' => ':label: attivo',
         'setting_off' => ':label: spento',
         'setting_saved' => ':label salvato',

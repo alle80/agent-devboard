@@ -158,6 +158,7 @@ return [
         'agent_updated' => 'Updated «:title»',
         'moved' => '«:title» moved to «:list»',
         'state_set' => '«:title» → :state',
+        'local_not_allowed' => 'Local mode cannot be enabled from the UI on this installation (DEVBOARD_ALLOW_LOCAL_FROM_UI / local environment only).',
         'setting_on' => ':label: on',
         'setting_off' => ':label: off',
         'setting_saved' => ':label saved',

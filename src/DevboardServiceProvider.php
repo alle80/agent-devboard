@@ -46,7 +46,7 @@ class DevboardServiceProvider extends ServiceProvider
         Livewire::addNamespace('devboard', classNamespace: 'Alle80\\Devboard\\Livewire');
         // Security: DevboardAccess replaces `auth` on the package routes, so it must also run on Livewire's
         // /livewire/update requests (only "persistent" middleware is re-applied there)
-        Livewire::addPersistentMiddleware([\Alle80\Devboard\Http\Middleware\DevboardAccess::class]);
+        Livewire::addPersistentMiddleware([\Alle80\Devboard\Http\Middleware\DevboardAccess::class, \Alle80\Devboard\Http\Middleware\DevboardAdmin::class]);
 
         if (config('devboard.register_routes', true)) {
             // After the host app's routes, so its own routes (e.g. dedicated styles) win over /{theme}

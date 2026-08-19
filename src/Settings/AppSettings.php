@@ -87,11 +87,11 @@ class AppSettings extends Settings
             'ai_image_provider' => ['select', $providers],
             'ai_image_model' => ['text', []],
             'toast_console_changes' => ['bool', []],
-            'mode' => ['select', [
+            'mode' => ['select', array_filter([
                 '' => __('devboard::t.settings_options.mode_config'),
                 'server' => __('devboard::t.settings_options.mode_server'),
-                'local' => __('devboard::t.settings_options.mode_local'),
-            ]],
+                'local' => \Alle80\Devboard\Mode::localFromUiAllowed() ? __('devboard::t.settings_options.mode_local') : null,
+            ])],
             'show_dashboard_tab' => ['bool', []],
             'speech_mode' => ['select', [
                 'auto' => __('devboard::t.settings_options.speech_auto'),

@@ -25,23 +25,23 @@ class ModeTest extends TestCase
     {
         Route::get('/login', fn () => 'login')->name('login');
         $this->assertSame('server', Mode::current());
-        $this->get('/settings')->assertRedirect('/login');
+        $this->get('/stats')->assertRedirect('/login');
 
         $u = $this->actingAsUser();
-        $this->get('/settings')->assertOk();
+        $this->get('/stats')->assertOk();
 
         // Gate ability from config
         config(['devboard.access_gate' => 'access-devboard']);
         Gate::define('access-devboard', fn ($user) => $user->email === 'boss@example.com');
-        $this->get('/settings')->assertForbidden();
+        $this->get('/stats')->assertForbidden();
         $this->actingAs(User::create(['name' => 'Boss', 'email' => 'boss@example.com', 'password' => bcrypt('x')]));
-        $this->get('/settings')->assertOk();
+        $this->get('/stats')->assertOk();
 
         // canAccessDevboard() on the model wins over the gate
         $this->actingAs(new class extends User {
             public function canAccessDevboard(): bool { return false; }
         });
-        $this->get('/settings')->assertForbidden();
+        $this->get('/stats')->assertForbidden();
     }
 
     public function test_access_middleware_is_persistent_on_livewire_updates(): void
@@ -79,6 +79,9 @@ class ModeTest extends TestCase
         $this->assertSame('', $app->mode);
         $app->mode = 'local';
         $app->save();
+        Mode::reset();
+        $this->assertFalse(Mode::isLocal(), 'a local override from the UI is ignored unless allowed');
+        config(['devboard.allow_local_from_ui' => true]);
         Mode::reset();
         $this->assertTrue(Mode::isLocal());
         auth()->logout();

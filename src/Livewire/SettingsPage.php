@@ -32,6 +32,12 @@ class SettingsPage extends Component
         return ['agent' => AgentSettings::class, 'optimization' => OptimizationSettings::class, 'app' => AppSettings::class];
     }
 
+    /** Defence in depth: admin-only, also on Livewire update requests. */
+    public function boot(): void
+    {
+        abort_unless(\Alle80\Devboard\Admin::check(), 403, 'Administrators only.');
+    }
+
     public function mount(): void
     {
         foreach ($this->groups() as $group => $class) {
@@ -66,6 +72,11 @@ class SettingsPage extends Component
             case 'select':
                 if (! array_key_exists((string) $value, $field[3])) {
                     $this->values[$group][$key] = $settings->{$key};
+                    return;
+                }
+                if ($group === 'app' && $key === 'mode' && $value === 'local' && ! \Alle80\Devboard\Mode::localFromUiAllowed()) {
+                    $this->values[$group][$key] = $settings->{$key};
+                    $this->dispatch('toast', message: __('devboard::t.msg.local_not_allowed'), type: 'error');
                     return;
                 }
                 $settings->{$key} = (string) $value;

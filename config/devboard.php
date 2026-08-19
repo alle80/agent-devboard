@@ -16,6 +16,16 @@ return [
     // otherwise this Gate ability (e.g. 'access-devboard') if set; otherwise every authenticated user.
     'access_gate' => env('DEVBOARD_ACCESS_GATE'),
 
+    // Server mode: who may ADMINISTER the board (settings, agent context, theme packs). Checked in this order:
+    // `canManageDevboard(): bool` on the user model if defined; else this Gate ability if set; else the ids/e-mails
+    // in `admins` (DEVBOARD_ADMINS="1,alice@example.com") if set; else the first registered user only.
+    'admin_gate' => env('DEVBOARD_ADMIN_GATE'),
+    'admins' => env('DEVBOARD_ADMINS'),
+
+    // Allow switching the board to local mode (no authentication) from /settings. Off by default: the override
+    // is accepted from the UI only when the app runs in the `local` environment.
+    'allow_local_from_ui' => env('DEVBOARD_ALLOW_LOCAL_FROM_UI', false),
+
     // Middleware of the package routes. Authentication is enforced by the package itself according to the
     // mode (Alle80\Devboard\Http\Middleware\DevboardAccess), so 'auth' is not needed here (and is ignored).
     'middleware' => ['web'],

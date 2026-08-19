@@ -16,6 +16,7 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+        \Alle80\Devboard\Mode::reset(); // static cache must not leak between tests
         $this->withoutVite();
 
         // Users table of the host app + package migrations (tables + settings defaults)

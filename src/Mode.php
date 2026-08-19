@@ -29,6 +29,9 @@ class Mode
         } catch (\Throwable) {
             // settings not migrated yet
         }
+        if ($mode === self::LOCAL && ! self::localFromUiAllowed()) {
+            $mode = ''; // a local override from the UI is only honoured where allowed
+        }
         if (! in_array($mode, [self::LOCAL, self::SERVER], true)) {
             $mode = (string) config('devboard.mode', self::SERVER);
         }
@@ -39,6 +42,12 @@ class Mode
     public static function isLocal(): bool
     {
         return self::current() === self::LOCAL;
+    }
+
+    /** May the UI switch the board to local mode? Only in the `local` environment or when explicitly allowed. */
+    public static function localFromUiAllowed(): bool
+    {
+        return (bool) config('devboard.allow_local_from_ui', false) || app()->environment('local');
     }
 
     /** Forget the resolved value (settings changed, tests). */

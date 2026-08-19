@@ -9,6 +9,7 @@ use Alle80\Devboard\Http\Controllers\ThemeAssetController;
 use Alle80\Devboard\Http\Controllers\PushSubscriptionController;
 use Alle80\Devboard\Http\Controllers\ServiceWorkerController;
 use Alle80\Devboard\Http\Middleware\DevboardAccess;
+use Alle80\Devboard\Http\Middleware\DevboardAdmin;
 use Alle80\Devboard\Http\Middleware\OpenFromLink;
 use Illuminate\Support\Facades\Route;
 
@@ -22,8 +23,8 @@ Route::middleware(array_merge(array_values(array_diff((array) config('devboard.m
                 ->name('devboard.home');
         }
 
-        Route::get('/settings', SettingsPage::class)->name('devboard.settings');
-        Route::get('/context', \Alle80\Devboard\Livewire\ContextPage::class)->name('devboard.context');
+        Route::get('/settings', SettingsPage::class)->middleware(DevboardAdmin::class)->name('devboard.settings');
+        Route::get('/context', \Alle80\Devboard\Livewire\ContextPage::class)->middleware(DevboardAdmin::class)->name('devboard.context');
         Route::get('/stats', \Alle80\Devboard\Livewire\StatsPage::class)->name('devboard.stats');
         Route::get('/agents', \Alle80\Devboard\Livewire\AgentsPage::class)->name('devboard.agents');
 

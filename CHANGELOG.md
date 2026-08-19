@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.29.0] - 2026-08-19
+
+### Security
+- **Admin boundary**: `/settings` and `/context` (settings, agent context, theme packs) are now restricted to
+  administrators — `Alle80\Devboard\Admin`: `canManageDevboard(): bool` on the user model, else Gate
+  `devboard.admin_gate`, else `devboard.admins` (ids/e-mails, `DEVBOARD_ADMINS`), else the **first registered
+  user** only; middleware `DevboardAdmin` (also persistent on Livewire updates) + defensive `boot()` in the
+  components; menu links hidden to non-admins. Local mode: everybody.
+- Switching the board to **local mode from the UI is refused** unless the app runs in the `local` environment
+  or `devboard.allow_local_from_ui` is on (a stale `local` override in the settings is ignored too).
+
 ### Added
 - `docs/config-and-settings.md`: inventory of current configurations and settings, template, and the prioritised
   backlog of future ones (with implementation notes).

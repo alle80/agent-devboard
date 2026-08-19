@@ -33,6 +33,12 @@ class ContextPage extends Component
 
     public string $newGroup = '';
 
+    /** Defence in depth: admin-only, also on Livewire update requests. */
+    public function boot(): void
+    {
+        abort_unless(\Alle80\Devboard\Admin::check(), 403, 'Administrators only.');
+    }
+
     // ----- Groups -----
 
     public function toggleGroup(int $id): void
