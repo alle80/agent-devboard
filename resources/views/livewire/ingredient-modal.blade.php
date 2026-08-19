@@ -11,11 +11,9 @@
             {{-- Pannello --}}
             <div class="tl-card tl-modal modal-panel relative w-full max-w-md">
 
-                {{-- Testata --}}
-                <div class="modal-head tl-modal-head flex items-center justify-between gap-3 px-5 py-3">
-                    <h2 class="tl-display tl-title text-2xl">
-                        <x-theme-icon :theme="$t" /> @include('devboard::livewire.partials.modal-title')
-                    </h2>
+                {{-- Testata: icona del tema + comandi/badge + chiudi (il titolo sta nel corpo, prima di «Task») --}}
+                <div class="modal-head tl-modal-head flex items-center gap-3 px-5 py-3">
+                    <x-theme-icon :theme="$t" class="tl-display tl-title shrink-0 text-2xl" />
                     @include('devboard::livewire.partials.modal-actions')
                     <button
                         wire:click="close"
@@ -24,6 +22,9 @@
                 </div>
 
                 <div class="modal-body max-h-[60vh] space-y-4 overflow-y-auto px-5 py-5">
+
+                    {{-- Titolo del task, modificabile, come primo campo del corpo --}}
+                    <h2 class="tl-display tl-title text-2xl break-words">@include('devboard::livewire.partials.modal-title')</h2>
 
                     @include('devboard::livewire.partials.modal-readonly')
 
