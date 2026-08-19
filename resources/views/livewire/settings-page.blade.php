@@ -70,8 +70,11 @@
                             >
                         @endif
                     </li>
-                    @if ($key === 'task_mode' && ($values[$group][$key] ?? '') === 'multitasking')
-                        <li class="pb-3" wire:key="warn-{{ $group }}-{{ $key }}">
+                    @if ($key === 'task_mode')
+                        {{-- Reso sempre, mostrato via Alpine quando è "multitasking": la sola @if lato
+                             server non veniva inserita dal morph di Livewire al cambio della select. --}}
+                        <li class="pb-3" wire:key="warn-{{ $group }}-{{ $key }}"
+                            x-data x-show="$wire.get('values.{{ $group }}.{{ $key }}') === 'multitasking'" x-cloak>
                             <p class="db-setting-warn">{{ __('devboard::t.settings_options.task_mode_warn') }}</p>
                         </li>
                     @endif
