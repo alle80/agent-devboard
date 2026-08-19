@@ -462,6 +462,8 @@ select.setting-input { appearance: auto; }
 
 /* ---------- /stats ---------- */
 .db-series-bar { background: var(--tl-accent, #22c55e); opacity: .85; border-radius: 2px 2px 0 0; min-width: 2px; }
+.db-series { gap: 2px; }
+@media (max-width: 639px) { .db-series { gap: 1px; } }
 .db-series-bar:hover { opacity: 1; }
 .db-kpi-value { line-height: 1.1; }
 .db-history td, .db-history th { vertical-align: top; }

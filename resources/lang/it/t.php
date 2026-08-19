@@ -192,6 +192,7 @@ return [
         'col_task' => 'Task',
         'col_time' => 'Tempo',
         'col_tokens' => 'Token in / out',
+        'col_tokens_short' => 'Token',
         'col_cost' => 'Costo',
         'archived' => '(archiviato)',
         'subtasks' => 'sotto-task',

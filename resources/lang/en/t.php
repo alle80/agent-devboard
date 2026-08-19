@@ -198,6 +198,7 @@ return [
         'col_task' => 'Task',
         'col_time' => 'Time',
         'col_tokens' => 'Tokens in / out',
+        'col_tokens_short' => 'Tokens',
         'col_cost' => 'Cost',
         'archived' => '(archived)',
         'subtasks' => 'sub-tasks',

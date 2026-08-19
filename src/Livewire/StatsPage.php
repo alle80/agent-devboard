@@ -62,7 +62,7 @@ class StatsPage extends Component
             'rows' => $rows,
             'agg' => Stats::aggregate($rows),
             'aggAll' => Stats::aggregate($allRows),
-            'series' => Stats::series($rows, $this->days > 0 ? min($this->days, 90) : 90),
+            'series' => Stats::series($rows, $this->days > 0 ? min($this->days, 60) : 60),
             'overview' => Stats::overview($lists, $from),
             'prices' => Stats::prices(),
             'currency' => Stats::currency(),

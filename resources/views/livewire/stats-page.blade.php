@@ -1,6 +1,6 @@
 <div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
     <div class="mb-4 flex items-center justify-between gap-3">
-        <h1 class="{{ $skin['h1'] }} db-ctx-h1 inline-flex items-center gap-2"><x-devboard::icon name="chart" size="1em" /> {{ __('devboard::t.stats_page.title') }}</h1>
+        <h1 class="{{ $skin['h1'] }} db-ctx-h1">{{ __('devboard::t.stats_page.title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-devboard::icon name="arrow-left" /> {{ __('devboard::t.back_to_list') }}</a>
     </div>
     <p class="{{ $skin['sub'] }} mb-4">{{ __('devboard::t.stats_page.intro') }}</p>
@@ -8,7 +8,7 @@
     {{-- Selectors: list + period --}}
     <div class="{{ $skin['card'] }} mb-4 flex flex-wrap items-center gap-2">
         <label class="{{ $skin['label'] }} text-sm" for="stats-list">{{ __('devboard::t.stats_page.list') }}</label>
-        <select id="stats-list" class="{{ $skin['input'] }} min-w-0 flex-1 text-sm" wire:change="setList($event.target.value)">
+        <select id="stats-list" class="{{ $skin['input'] }} w-full min-w-0 text-sm sm:w-auto sm:flex-1" wire:change="setList($event.target.value)">
             @foreach ($lists as $l)
                 <option value="{{ $l->id }}" @selected($list && $l->id === $list->id)>{{ $l->name }}</option>
             @endforeach
@@ -57,7 +57,24 @@
             @if ($rows->isEmpty())
                 <p class="{{ $skin['help'] }} py-3 text-center text-sm">{{ __('devboard::t.stats_page.empty') }}</p>
             @else
-                <div class="overflow-x-auto">
+                {{-- Mobile: one card per task --}}
+                <ul class="{{ $skin['divide'] }} sm:hidden">
+                    @foreach ($rows as $r)
+                        @php($t = $r['todo'])
+                        <li wire:key="hm-{{ $t->id }}" class="py-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="{{ $skin['label'] }} min-w-0 break-words">{{ $t->title }}</span>
+                                <span class="{{ $skin['help'] }} shrink-0 text-xs tabular-nums">{{ $t->completed_at->format('d/m H:i') }}</span>
+                            </div>
+                            <div class="{{ $skin['help'] }} mt-0.5 grid grid-cols-3 gap-1 text-xs tabular-nums">
+                                <span>{{ __('devboard::t.stats_page.col_time') }}: {{ \Alle80\Devboard\Support\Stats::duration($r['work_seconds']) }}</span>
+                                <span>{{ __('devboard::t.stats_page.col_tokens_short') }}: {{ $r['tokens_in'] + $r['tokens_out'] ? \Alle80\Devboard\Models\Todo::formatTokens($r['tokens_in'] + $r['tokens_out']) : '—' }}</span>
+                                <span class="text-right">{{ \Alle80\Devboard\Support\Stats::money($r['cost']) }}</span>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+                <div class="hidden overflow-x-auto sm:block">
                     <table class="db-history w-full text-sm">
                         <thead>
                             <tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide">
