@@ -10,3 +10,17 @@ import './push.js';
 import './dictate.js';
 
 window.Sortable = Sortable;
+
+// Mobile keyboard vs modal (task 303): when a field inside the scrollable modal body gets the focus,
+// bring it above the virtual keyboard once the keyboard has settled. The viewport meta
+// (interactive-widget=resizes-content) does the heavy lifting on Android; this is the safety net
+// (iOS, browsers that ignore the meta, fields near the bottom edge).
+document.addEventListener('focusin', (e) => {
+    const field = e.target.closest('.modal-body input, .modal-body textarea, .modal-body [contenteditable]');
+    if (! field) return;
+    setTimeout(() => {
+        if (document.activeElement === e.target) {
+            field.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+    }, 300); // keyboard open animation
+});

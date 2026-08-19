@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.1] - 2026-08-20
+
+### Fixed
+- **Mobile: the virtual keyboard no longer covers the sub-task editor** (and the other modal fields):
+  the viewport meta now uses `interactive-widget=resizes-content` (the keyboard shrinks `100dvh` instead of
+  overlaying the modal) and, as a safety net, a focused field inside the modal body is scrolled into view
+  once the keyboard has settled.
+
 ## [0.33.0] - 2026-08-20
 
 ### Changed

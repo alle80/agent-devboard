@@ -6,7 +6,9 @@
 <html lang="it">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    {{-- interactive-widget: la tastiera virtuale RIDIMENSIONA il viewport (100dvh si accorcia) invece di
+         coprire il contenuto — senza, su Android l'editor dei sotto-task finisce sotto la tastiera (task 303). --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#111111">
     <title>{{ $title ?? 'Agent Devboard — '.$t['label'] }}</title>
