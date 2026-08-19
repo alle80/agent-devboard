@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.3] - 2026-08-19
+
+### Changed
+- Italian titles say «l'agente» (skills, questions, settings section, context) instead of naming the agent;
+  the name from `agent_name` is still used in the 🤖 comment box.
+
 ## [0.21.2] - 2026-08-19
 
 ### Changed
