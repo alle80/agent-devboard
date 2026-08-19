@@ -52,6 +52,9 @@ class AppSettings extends Settings
     /** Currency symbol/code shown with costs. */
     public string $cost_currency;
 
+    /** Agent context: when on, the host sync writes the enabled blocks to the instruction files; when off, the originals are restored. */
+    public bool $context_sync;
+
     /** Board notifications (task closed / question asked) in the in-app bell 🔔. */
     public bool $notify_in_app;
 
@@ -101,6 +104,7 @@ class AppSettings extends Settings
             'cost_per_m_in' => ['text', []],
             'cost_per_m_out' => ['text', []],
             'cost_currency' => ['text', []],
+            'context_sync' => ['bool', []],
             'notify_in_app' => ['bool', []],
             'notify_webpush' => ['bool', []],
             'notify_mail' => ['bool', []],

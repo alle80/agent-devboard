@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
  */
 class ContextCommand extends Command
 {
-    protected $signature = 'devboard:context {action=status : import|export|status} {--file= : markdown file for import (default: stdin)} {--replace : import: wipe the current context first} {--all : export: include disabled groups/blocks}';
+    protected $signature = 'devboard:context {action=status : import|export|status|enabled} {--file= : markdown file for import (default: stdin)} {--replace : import: wipe the current context first} {--all : export: include disabled groups/blocks}';
 
     protected $description = 'Agent context (instructions file) as switchable groups/blocks: import, export, status';
 
@@ -34,6 +34,11 @@ class ContextCommand extends Command
                 }
                 [$g, $b] = Context::import($md, (bool) $this->option('replace'));
                 $this->info("$g groups, $b blocks imported");
+
+                return self::SUCCESS;
+            case 'enabled':
+                // for the host sync: 1 = write the generated files, 0 = restore the originals
+                $this->output->write(app(\Alle80\Devboard\Settings\AppSettings::class)->context_sync ? '1' : '0');
 
                 return self::SUCCESS;
             case 'export':

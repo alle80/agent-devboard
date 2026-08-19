@@ -9,6 +9,15 @@
         @if ($tokensTotal) · {{ (int) round($tokensOn / max(1, $tokensTotal) * 100) }}% @endif
     </p>
 
+    {{-- Generate the instruction files from the board, or keep the original files --}}
+    <div class="{{ $skin['card'] }} mb-4 flex items-start justify-between gap-3">
+        <div class="min-w-0 flex-1">
+            <p class="{{ $skin['label'] }} text-sm">{{ __('devboard::t.ctx.sync_label') }}</p>
+            <p class="{{ $skin['help'] }} text-xs">{{ __('devboard::t.ctx.sync_help') }}</p>
+        </div>
+        <button type="button" role="switch" aria-checked="{{ $syncOn ? 'true' : 'false' }}" aria-label="{{ __('devboard::t.ctx.sync_label') }}" wire:click="toggleSync" class="setting-switch mt-1 shrink-0 {{ $syncOn ? 'is-on' : '' }}"><span class="setting-knob"></span></button>
+    </div>
+
     {{-- Bulk bar (sticky while something is selected) --}}
     <div class="{{ $skin['card'] }} db-ctx-bulk sticky top-14 z-20 mb-4 flex flex-wrap items-center gap-2 py-2 {{ $selected ? '' : 'hidden' }}" aria-live="polite">
         <span class="{{ $skin['label'] }} text-sm">{{ __('devboard::t.ctx.selected', ['count' => count($selected)]) }}</span>

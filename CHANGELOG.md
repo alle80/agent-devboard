@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.31.1] - 2026-08-19
+
+### Added
+- Agent context: switch **«Generate the instruction files from the board»** (`/context`, setting
+  `app.context_sync`, `devboard:context enabled` for host scripts). When off, the host sync restores the original
+  files and leaves them alone (the origin repo's `sync-context.py` keeps the originals in `docs/context-originals/`
+  and offers `--restore` / `--backup`).
+
 ## [0.31.0] - 2026-08-19
 
 ### Added

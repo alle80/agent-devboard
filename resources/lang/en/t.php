@@ -286,6 +286,10 @@ return [
         'new_group' => 'New group…',
         'add_group' => 'Add group',
         'empty' => 'Empty context: import your instructions file with `php artisan devboard:context import --file=…`.',
+        'sync_label' => 'Generate the instruction files from the board',
+        'sync_help' => 'On: the host sync rewrites CLAUDE.md / AGENTS.md from the enabled blocks (your manual edits are overwritten). Off: the ORIGINAL files are restored and left alone — the board context is just a draft.',
+        'sync_on' => 'Instruction files will be generated from the board again.',
+        'sync_off' => 'Generation stopped: the original instruction files will be restored by the host sync.',
         'how' => 'The enabled blocks are what `php artisan devboard:context export` prints; on the host a script writes them to the instructions file.',
     ],
     'notif' => [
@@ -356,6 +360,7 @@ return [
         'cost_per_m_in' => ['Price per 1M input tokens', 'Used by the statistics to turn tokens into cost (e.g. 3 for 3 €/M). 0 = cost not shown.'],
         'cost_per_m_out' => ['Price per 1M output tokens', 'Same, for output tokens (e.g. 15).'],
         'cost_currency' => ['Currency', 'Symbol or code shown next to costs (EUR, $, …).'],
+        'context_sync' => ['Generate instruction files from the board', 'When off, the host sync restores the original CLAUDE.md / AGENTS.md and stops touching them.'],
         'notify_in_app' => ['In-app notifications', 'Bell at the top of the board with what the agent did (task closed, question asked), live.'],
         'notify_webpush' => ['Web Push notifications', 'Notifications on the devices where you enabled them (button below), even with the app closed. iPhone: add the app to the Home screen first.'],
         'notify_mail' => ['E-mail notifications', 'Also by e-mail to your account address (needs a configured mailer: MAIL_MAILER).'],

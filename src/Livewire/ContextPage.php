@@ -39,6 +39,15 @@ class ContextPage extends Component
         abort_unless(\Alle80\Devboard\Admin::check(), 403, 'Administrators only.');
     }
 
+    /** Switch «generate the instruction files from the board» (host sync honours it). */
+    public function toggleSync(): void
+    {
+        $s = app(\Alle80\Devboard\Settings\AppSettings::class);
+        $s->context_sync = ! $s->context_sync;
+        $s->save();
+        $this->dispatch('toast', message: __($s->context_sync ? 'devboard::t.ctx.sync_on' : 'devboard::t.ctx.sync_off'), type: $s->context_sync ? 'success' : 'info');
+    }
+
     // ----- Groups -----
 
     public function toggleGroup(int $id): void
@@ -183,6 +192,7 @@ class ContextPage extends Component
             'groups' => ContextGroup::with('blocks')->orderBy('order')->orderBy('id')->get(),
             'tokensOn' => $on,
             'tokensTotal' => $total,
+            'syncOn' => (bool) app(\Alle80\Devboard\Settings\AppSettings::class)->context_sync,
         ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]));
     }
 }

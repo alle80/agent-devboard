@@ -280,6 +280,10 @@ return [
         'new_group' => 'Nuovo gruppo…',
         'add_group' => 'Aggiungi gruppo',
         'empty' => 'Contesto vuoto: importa il file delle istruzioni con `php artisan devboard:context import --file=…`.',
+        'sync_label' => 'Genera i file di istruzioni dalla board',
+        'sync_help' => 'Acceso: la sincronizzazione sul server riscrive CLAUDE.md / AGENTS.md dai blocchi attivi (le modifiche a mano vengono sovrascritte). Spento: vengono RIPRISTINATI i file originali e non toccati più — il contesto della board resta una bozza.',
+        'sync_on' => 'I file di istruzioni torneranno a essere generati dalla board.',
+        'sync_off' => 'Generazione fermata: la sincronizzazione sul server ripristinerà i file originali.',
         'how' => 'I blocchi attivi sono ciò che stampa `php artisan devboard:context export`; sul server uno script li scrive nel file delle istruzioni (CLAUDE.md).',
     ],
     'notif' => [
@@ -350,6 +354,7 @@ return [
         'cost_per_m_in' => ['Prezzo per 1M token input', 'Usato dalle statistiche per trasformare i token in costo (es. 3 per 3 €/M). 0 = costo non mostrato.'],
         'cost_per_m_out' => ['Prezzo per 1M token output', 'Idem per i token di output (es. 15).'],
         'cost_currency' => ['Valuta', 'Simbolo o codice mostrato accanto ai costi (EUR, $, …).'],
+        'context_sync' => ['Genera i file di istruzioni dalla board', 'Se spento, la sincronizzazione sul server ripristina i CLAUDE.md / AGENTS.md originali e non li tocca più.'],
         'notify_in_app' => ['Notifiche in-app', 'Campanella in cima alla board con quello che ha fatto l\'agente (task chiuso, domanda posta), in tempo reale.'],
         'notify_webpush' => ['Notifiche Web Push', 'Notifiche sui dispositivi dove le hai attivate (bottone qui sotto), anche ad app chiusa. iPhone: prima aggiungi l\'app alla schermata Home.'],
         'notify_mail' => ['Notifiche via e-mail', 'Anche per e-mail all\'indirizzo del tuo account (serve un mailer configurato: MAIL_MAILER).'],
