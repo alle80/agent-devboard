@@ -9,6 +9,7 @@
 @foreach ($chosen as $name)
     @php($catalogue[$name] ??= ['name' => $name, 'description' => '', 'source' => ''])
 @endforeach
+@php(uksort($catalogue, fn ($a, $b) => [! in_array($a, $chosen, true), strtolower($a)] <=> [! in_array($b, $chosen, true), strtolower($b)]))
 @if ($catalogue)
     <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }} }" x-bind:open="o" x-on:toggle="o = $el.open">
         <summary class="flex cursor-pointer items-center justify-between gap-2 select-none">
