@@ -102,6 +102,33 @@ class PlanTest extends TestCase
         $this->artisan('devboard:check')->expectsOutputToContain('Plan step 2')->assertSuccessful();
     }
 
+    public function test_new_tasks_join_the_chain_of_a_plan_list_and_the_plan_can_resume(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'A'], ['title' => 'B']];
+        $list = Checklist::create(['name' => 'Plan', 'user_id' => auth()->id()]);
+        Plan::build($list, 'Go');
+        session(['checklist_id' => $list->id]);
+        [$a, $b] = $list->todos()->orderBy('order')->get()->all();
+        $a->update(['completed' => true]);
+        $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('plan completed');
+
+        // user adds a task at the end (via the modal «new task») → chained to B, plan resumable
+        Livewire::test(\Alle80\Devboard\Livewire\IngredientModal::class)->call('createNew');
+        $c = $list->todos()->orderByDesc('order')->first();
+        $c->update(['title' => 'C']);
+        $this->assertSame($b->id, $c->fresh()->depends_on_id, 'new task joins the chain');
+        $this->assertFalse($c->fresh()->open_to_work);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('Resume the plan')->call('startPlan');
+        $this->assertTrue($c->fresh()->open_to_work);
+
+        // a normal list does not chain
+        $plain = Checklist::create(['name' => 'plain', 'user_id' => auth()->id()]);
+        Todo::create(['title' => 'x', 'order' => 1, 'checklist_id' => $plain->id]);
+        $y = Todo::create(['title' => 'y', 'order' => 2, 'checklist_id' => $plain->id]);
+        $this->assertNull($y->depends_on_id);
+    }
+
     public function test_fallback_without_ai_creates_a_plan_request_task(): void
     {
         $this->assertFalse(Plan::available());

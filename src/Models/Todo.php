@@ -126,6 +126,24 @@ class Todo extends Model
 
     protected static function booted(): void
     {
+        // Plan lists: a new task joins the chain (depends on the previous task by order) unless told otherwise
+        static::creating(function (Todo $todo) {
+            if ($todo->depends_on_id || ! $todo->checklist_id || $todo->archived_at) {
+                return;
+            }
+            $list = Checklist::find($todo->checklist_id);
+            $isPlan = $list && ($list->plan_prompt || static::where('checklist_id', $list->id)->whereNotNull('depends_on_id')->exists());
+            if (! $isPlan) {
+                return;
+            }
+            $prev = static::where('checklist_id', $list->id)->whereNull('archived_at')->where('order', '<', (int) $todo->order)->orderByDesc('order')->first()
+                ?? static::where('checklist_id', $list->id)->whereNull('archived_at')->orderByDesc('order')->first();
+            if ($prev && $prev->id !== $todo->id) {
+                $todo->depends_on_id = $prev->id;
+                // the previous task is already done → this one opens right away only if the plan is running
+            }
+        });
+
         // History: completed_at follows the `completed` flag (set when it becomes true, cleared when reopened)
         static::saving(function (Todo $todo) {
             if ($todo->isDirty('completed')) {

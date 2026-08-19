@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.26.1] - 2026-08-19
+
+### Added
+- Plan lists: a **new task joins the chain** automatically (depends on the previous task by order), so
+  after a plan is completed you can add tasks and «Resume the plan» (toolbar or ▶ in the lists menu) —
+  the new ones open in sequence.
+
 ## [0.26.0] - 2026-08-19
 
 ### Added
