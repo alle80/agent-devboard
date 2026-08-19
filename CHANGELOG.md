@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-08-19
+
+### Added
+- **Plan mode**: when creating a list, «Create as a plan» + a prompt (with 🎤): the goal is split by the AI SDK
+  agent `PlanBuilder` (structured output, default provider) into ordered tasks with notes and sub-tasks,
+  **chained** with the new `todos.depends_on_id` — the first one is left for the user to start, each next
+  one opens 🟢 automatically when the previous is completed (model hook). Chain shown in the row (⛓), in the
+  modal and in `devboard:check`. `checklists.plan_prompt` keeps the prompt. Without an AI provider the list
+  gets a single «Build the plan» task with the prompt (for the agent). `Alle80\Devboard\Support\Plan`
+  (fakeable via `Plan::$resolver`).
+
 ## [0.19.0] - 2026-08-19
 
 ### Added

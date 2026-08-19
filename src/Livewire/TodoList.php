@@ -102,7 +102,7 @@ class TodoList extends Component
     {
         return $this->applyFilters($this->scoped())
             ->when($this->showArchived, fn ($q) => $q->whereNotNull('archived_at')->orderByDesc('archived_at'), fn ($q) => $q->whereNull('archived_at')->orderBy('order'))
-            ->with('ingredients')->withCount('attachments')->get();
+            ->with(['ingredients', 'dependsOn:id,title,completed,order'])->withCount('attachments')->get();
     }
 
     /** Query dei todo attivi (non archiviati) della lista corrente: la numerazione `order` vive solo qui. */

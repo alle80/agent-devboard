@@ -52,14 +52,31 @@
         @endforeach
 
         {{-- Nuova lista --}}
-        <form wire:submit="create" class="mt-1 flex items-center gap-1 border-t-2 border-black/20 p-1 pt-2">
-            <input
-                type="text"
-                wire:model="newName"
-                placeholder="{{ __('devboard::t.new_list') }}"
-                class="w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm focus:bg-emerald-50 focus:outline-none"
-            >
-            <button type="submit" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px">+</button>
+        <form wire:submit="create" class="mt-1 border-t-2 border-black/20 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }">
+            <div class="flex items-center gap-1">
+                <input
+                    type="text"
+                    wire:model="newName"
+                    placeholder="{{ __('devboard::t.new_list') }}"
+                    class="w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm focus:bg-emerald-50 focus:outline-none"
+                >
+                <button type="submit" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" wire:loading.attr="disabled" wire:target="create">
+                    <span wire:loading.remove wire:target="create">+</span><span wire:loading wire:target="create">…</span>
+                </button>
+            </div>
+            {{-- Plan mode: build the list from a prompt (chained tasks) --}}
+            <label class="mt-1.5 flex cursor-pointer items-center gap-1.5 px-1 text-xs select-none">
+                <input type="checkbox" x-model="plan" class="db-skill-check">
+                <span>📐 {{ __('devboard::t.plan.as_plan') }}</span>
+            </label>
+            <div x-show="plan" x-cloak class="mt-1.5 space-y-1 px-1">
+                <div class="flex items-start gap-1">
+                    <textarea wire:model="planPrompt" rows="4" placeholder="{{ __('devboard::t.plan.prompt_placeholder') }}" class="db-plan-prompt w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm focus:bg-emerald-50 focus:outline-none"></textarea>
+                    <x-devboard::mic class="shrink-0 rounded border-2 border-black bg-white px-1.5 py-1 text-sm shadow-[1px_1px_0_#000]" within="form" target=".db-plan-prompt" />
+                </div>
+                <p class="text-[11px] opacity-60">{{ \Alle80\Devboard\Support\Plan::available() ? __('devboard::t.plan.hint') : __('devboard::t.plan.hint_no_ai') }}</p>
+                <p class="text-[11px] font-bold" wire:loading wire:target="create">⏳ {{ __('devboard::t.plan.building') }}</p>
+            </div>
         </form>
 
         {{-- Utente e logout --}}

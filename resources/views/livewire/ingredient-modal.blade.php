@@ -28,6 +28,11 @@
 
                     @include('devboard::livewire.partials.modal-readonly')
 
+                    @if ($todo->depends_on_id && $todo->dependsOn)
+                        {{-- Plan chain: this task opens when the previous one is done --}}
+                        <p class="db-chain-line text-xs opacity-75">⛓ {{ __('devboard::t.plan.after', ['title' => $todo->dependsOn->title]) }} — {{ $todo->dependsOn->completed ? __('devboard::t.plan.prev_done') : __('devboard::t.plan.prev_pending') }}</p>
+                    @endif
+
                     {{-- Domande dell'assistente (in cima: se ci sono, sono la prima cosa da vedere) --}}
                     @include('devboard::livewire.partials.modal-questions', [
                         'boxClass' => 'tl-card relative px-4 py-3',

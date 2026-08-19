@@ -87,6 +87,10 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Plan mode**: create a list «as a plan» from a prompt: the AI SDK splits the goal into chained tasks
+(`depends_on_id`); completing one opens the next. Needs `laravel/ai` + a provider key (otherwise a single
+«Build the plan» task is created for the agent).
+
 **Speech to text**: a microphone on every text field. With `laravel/ai` installed and a transcription provider
 configured (`AI_PROVIDER`/keys, `ai.default_for_transcription`) the clip is transcribed server-side (best
 quality); otherwise the browser's Web Speech API is used. Setting `speech_mode` (auto/server/browser).

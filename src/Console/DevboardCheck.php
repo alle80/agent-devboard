@@ -142,6 +142,10 @@ class DevboardCheck extends Command
                 if ($t->stopped_at) {
                     $this->line('        ⏹ stopped by the user on '.$t->stopped_at->format('d/m H:i').': do NOT work on it until it is 🟢 again');
                 }
+                if ($t->depends_on_id) {
+                    $dep = Todo::find($t->depends_on_id);
+                    $this->line(sprintf('        ⛓ plan chain: after «%s» (id:%d, %s) — the next task opens automatically when this one is done', $dep?->title ?? '?', $t->depends_on_id, $dep?->completed ? 'done' : 'NOT done yet'));
+                }
                 if ($t->skills) {
                     $this->line('        🧩 skills to activate for this task (Skill tool): '.implode(', ', (array) $t->skills));
                 }

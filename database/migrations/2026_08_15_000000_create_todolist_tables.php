@@ -17,6 +17,7 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
                 $table->string('name');
+                $table->text('plan_prompt')->nullable();                // plan mode: the prompt the list was built from
                 $table->timestamps();
             });
         }
@@ -44,6 +45,7 @@ return new class extends Migration
                 $table->timestamps();
                 $table->foreignId('checklist_id')->nullable()->constrained()->cascadeOnDelete();
                 $table->foreignId('parent_id')->nullable()->constrained('todos')->nullOnDelete();
+                $table->foreignId('depends_on_id')->nullable()->constrained('todos')->nullOnDelete(); // chained tasks (plan): opens when this one is done
             });
         }
 

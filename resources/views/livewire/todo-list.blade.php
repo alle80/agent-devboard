@@ -110,6 +110,9 @@
                             @if ($unseen)
                                 <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
                             @endif
+                            @if ($todo->depends_on_id)
+                                <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('devboard::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}">⛓{{ $todo->dependsOn?->completed ? '✓' : '' }}</span>
+                            @endif
                             @if ($todo->working && $todo->progress !== null)
                                 <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('devboard::t.progress') }}">{{ $todo->progress }}%</span>
                             @endif

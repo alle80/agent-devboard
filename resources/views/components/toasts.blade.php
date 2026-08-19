@@ -13,6 +13,7 @@
         remove(id) { this.toasts = this.toasts.filter(t => t.id !== id) },
     }"
     x-on:toast.window="add($event.detail)"
+    @if ($flash = session()->pull('devboard_toast')) x-init="$nextTick(() => add(@js($flash)))" @endif
     class="pointer-events-none fixed inset-x-0 bottom-4 z-[90] flex flex-col items-center gap-2 px-4 sm:items-end sm:pr-6"
     style="font-family: system-ui, sans-serif"
     aria-live="polite"

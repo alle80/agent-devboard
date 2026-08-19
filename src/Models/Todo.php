@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Todo extends Model
 {
-    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'archived_at', 'checklist_id', 'parent_id'];
+    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -51,6 +51,18 @@ class Todo extends Model
     public function followUps(): HasMany
     {
         return $this->hasMany(Todo::class, 'parent_id')->orderBy('id');
+    }
+
+    /** The task this one waits for (plan chain): it opens to work when that one is completed. */
+    public function dependsOn(): BelongsTo
+    {
+        return $this->belongsTo(Todo::class, 'depends_on_id');
+    }
+
+    /** Tasks chained after this one. */
+    public function dependents(): HasMany
+    {
+        return $this->hasMany(Todo::class, 'depends_on_id')->orderBy('order');
     }
 
     public function questions(): HasMany
@@ -120,6 +132,14 @@ class Todo extends Model
 
         // Eliminando un todo vanno eliminati anche i file allegati (la FK cancella solo i record)
         static::deleting(fn (Todo $todo) => $todo->attachments->each->delete());
+
+        // Plan chain: when a task gets completed, the tasks waiting for it become open to work 🟢
+        static::saved(function (Todo $todo) {
+            if ($todo->completed && $todo->wasChanged('completed')) {
+                $todo->dependents()->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->whereNull('archived_at')
+                    ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => true, 'stopped_at' => null]));
+            }
+        });
 
         // Aggiornamento live delle pagine aperte (Reverb)
         static::saved(fn (Todo $todo) => Live::todoChanged($todo, stateChanged: $todo->wasChanged(['completed', 'open_to_work', 'working', 'question'])));
