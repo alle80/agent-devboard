@@ -69,6 +69,9 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 - **A question doesn't block the others** — move to the next 🟢 while one waits for an answer.
 - **Stop means stop:** if an item shows ⏹ (stopped), drop it at once and don't touch it until it
   is 🟢 again. Taking it (`--take`) clears the stop.
+- **Plans:** lists built from a prompt («Create as a plan») are chained tasks; once the user starts a plan,
+  `check` lists its open task under `📐 Plan «name»` after the agent list — work it like any other task
+  (`--take/--done` by id); closing it opens the next one automatically.
 - **Never touch ⚪ items.**
 - **Save tokens:** `check` prints an `⚡ optimization:` line (the «Optimization» settings group). With
   compact output on, action calls print only their result — don't re-run `check` just to look. If it

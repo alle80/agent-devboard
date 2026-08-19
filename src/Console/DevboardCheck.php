@@ -46,9 +46,17 @@ class DevboardCheck extends Command
             return self::SUCCESS;
         }
 
+        // Scope: the agent list + the owner's PLAN lists (built from a prompt / chained tasks): starting a plan
+        // means the agent works on that list too, after the agent list
+        $planLists = Checklist::where('user_id', $list->user_id)->whereKeyNot($list->id)
+            ->where(fn ($q) => $q->whereNotNull('plan_prompt')->orWhereHas('todos', fn ($t) => $t->whereNotNull('depends_on_id')))
+            ->orderBy('id')->get();
+        $scopeIds = $planLists->pluck('id')->push($list->id)->all();
+        $find = fn (int $id) => Todo::whereIn('checklist_id', $scopeIds)->findOrFail($id);
+
         // Questions: pause the work until the user answers and restarts the item
         if ($id = $this->option('ask')) {
-            $t = $list->todos()->findOrFail((int) $id);
+            $t = $find((int) $id);
             $qs = array_values(array_filter(array_map('trim', (array) $this->option('q'))));
             if (! $qs) {
                 $this->error('At least one --q="question" is required');
@@ -67,7 +75,7 @@ class DevboardCheck extends Command
         // Quick actions: take in charge / complete with comment
         foreach (['take' => ['working' => true, 'stopped_at' => null], 'done' => ['working' => false, 'completed' => true, 'result_seen' => false]] as $opt => $attrs) {
             if ($id = $this->option($opt)) {
-                $t = $list->todos()->findOrFail((int) $id);
+                $t = $find((int) $id);
                 if ($c = $this->option('comment')) {
                     $attrs['claude_comment'] = $c;
                 }
@@ -107,15 +115,22 @@ class DevboardCheck extends Command
         $marker = storage_path('app/devboard-last-check');
         $last = is_file($marker) ? (int) file_get_contents($marker) : 0;
 
-        $query = $list->todos()->whereNull('archived_at')->with(['ingredients', 'questions', 'parent.ingredients'])->orderBy('order');
-        if (! $this->option('all')) {
-            // Only what the user marked "open to work" 🟢 (or already in progress)
-            $query->where('completed', false)->where('question', false)->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true));
-        }
-        $todos = $query->get();
+        $workable = function (Checklist $l) {
+            $query = $l->todos()->whereNull('archived_at')->with(['ingredients', 'questions', 'parent.ingredients'])->orderBy('order');
+            if (! $this->option('all')) {
+                // Only what the user marked "open to work" 🟢 (or already in progress)
+                $query->where('completed', false)->where('question', false)->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true));
+            }
+
+            return $query->get();
+        };
+        $todos = $workable($list);
+        $planTodos = $planLists->mapWithKeys(fn ($l) => [$l->id => $workable($l)])->filter(fn ($c) => $c->isNotEmpty());
 
         if ($this->option('json')) {
-            $this->line($todos->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            $all = $todos;
+            foreach ($planTodos as $c) $all = $all->concat($c);
+            $this->line($all->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
             $this->line('⚡ optimization: '.$opt->summary());
@@ -130,6 +145,7 @@ class DevboardCheck extends Command
                 if ($asking) $this->line("   (+{$asking} waiting for the user's answers ❓)");
             }
 
+            $render = function ($todos) use ($last, $opt) {
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
                 $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', $t->id));
@@ -167,6 +183,15 @@ class DevboardCheck extends Command
                     $this->line('        ❓ '.$q->question);
                     $this->line('           → '.($q->answer ?? '(no answer)'));
                 }
+            }
+            };
+            $render($todos);
+
+            // Plans: lists built from a prompt / chained tasks — work them AFTER the agent list, following the chain
+            foreach ($planTodos as $listId => $pt) {
+                $pl = $planLists->firstWhere('id', $listId);
+                $this->info(sprintf('📐 Plan «%s» (list id:%d): %d items %s — follow the chain (next task opens when the previous is done)', $pl->name, $pl->id, $pt->count(), $this->option('all') ? 'in total' : 'open to work 🟢'));
+                $render($pt);
             }
         }
 

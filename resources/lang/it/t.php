@@ -180,6 +180,7 @@ return [
         'not_built' => 'Piano non generato: la lista contiene un task «Costruisci il piano» col tuo prompt.',
         'request_title' => 'Costruisci il piano',
         'request_notes' => 'Plan mode: spezza questo obiettivo in task ordinati e concatenati in questa lista (un task per passo, ognuno con nota e sotto-task), poi chiudi questo.',
+        'running_short' => 'Piano in corso: l\'agente segue la catena',
         'label' => 'Piano',
         'progress' => ':done/:total task fatti',
         'start' => 'Avvia il piano',

@@ -186,6 +186,7 @@ return [
         'not_built' => 'The plan could not be generated: the list contains a «Build the plan» task with your prompt.',
         'request_title' => 'Build the plan',
         'request_notes' => 'Plan mode: split this goal into ordered, chained tasks in this list (one task per step, each with notes and sub-tasks), then close this one.',
+        'running_short' => 'Plan in progress: the agent works through the chain',
         'label' => 'Plan',
         'progress' => ':done/:total tasks done',
         'start' => 'Start the plan',

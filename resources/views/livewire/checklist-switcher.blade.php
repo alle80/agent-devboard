@@ -34,6 +34,10 @@
                         <span class="block truncate">{{ $list->name }}@if ($list->id === $currentId) <x-devboard::icon name="check" size=".9em" />@endif</span>
                         <span class="block text-xs font-normal opacity-60">{{ $list->done_count }}/{{ $list->todos_count }} {{ __('devboard::t.done_short') }}</span>
                     </button>
+                    @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count > 0)
+                        {{-- Plan running: the agent follows the chain --}}
+                        <span class="db-badge db-badge-working shrink-0 px-1" title="{{ __('devboard::t.plan.running_short') }}" aria-label="{{ __('devboard::t.plan.running_short') }}"><x-devboard::icon name="working" :stroke="2" /></span>
+                    @endif
                     @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count === 0 && $list->done_count < $list->todos_count)
                         {{-- Plan list not running: start it from here --}}
                         <button

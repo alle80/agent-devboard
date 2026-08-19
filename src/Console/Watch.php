@@ -64,8 +64,12 @@ class Watch extends Command
             return [];
         }
 
+        // Agent list + the owner's plan lists (same scope as devboard:check)
+        $ids = Checklist::where('user_id', $list->user_id)->whereKeyNot($list->id)
+            ->where(fn ($q) => $q->whereNotNull('plan_prompt')->orWhereHas('todos', fn ($t) => $t->whereNotNull('depends_on_id')))
+            ->pluck('id')->push($list->id)->all();
         $out = [];
-        foreach ($list->todos()->whereNull('archived_at')->where('completed', false)->with('questions')->get() as $t) {
+        foreach (\Alle80\Devboard\Models\Todo::whereIn('checklist_id', $ids)->whereNull('archived_at')->where('completed', false)->with('questions')->get() as $t) {
             $out[$t->id] = [
                 'title' => $t->title,
                 'otw' => (bool) $t->open_to_work,

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.25.0] - 2026-08-19
+
+### Changed
+- **Plans are part of the agent's work**: `devboard:check` and `devboard:watch` now cover the agent list
+  **plus the owner's plan lists** (built from a prompt / chained tasks); started plan tasks are listed after
+  the agent list under `📐 Plan «name»`, and `--take/--done/--ask` accept their ids. Starting a plan = the
+  agent works it, following the chain.
+- Lists menu: a running plan shows the «working» badge instead of ▶.
+
 ## [0.24.1] - 2026-08-19
 
 ### Added

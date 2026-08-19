@@ -80,6 +80,28 @@ class PlanTest extends TestCase
         Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('plan completed');
     }
 
+    public function test_check_includes_plan_lists_after_the_agent_list(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'Plan step 1'], ['title' => 'Plan step 2']];
+        $dev = Checklist::create(['name' => 'dev', 'user_id' => auth()->id()]);
+        Todo::create(['title' => 'Dev task', 'order' => 1, 'checklist_id' => $dev->id, 'open_to_work' => true]);
+        $plan = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($plan, 'Go');
+        $first = $plan->todos()->orderBy('order')->first();
+
+        // plan not started → not listed
+        $this->artisan('devboard:check')->expectsOutputToContain('Dev task')->doesntExpectOutputToContain('Plan step 1')->assertSuccessful();
+        $first->update(['open_to_work' => true]);
+        $this->artisan('devboard:check')->expectsOutputToContain('Plan «Roadmap»')->expectsOutputToContain('Plan step 1')->doesntExpectOutputToContain('Plan step 2')->assertSuccessful();
+
+        // take / done work on plan todos too; the chain opens step 2
+        $this->artisan('devboard:check', ['--take' => $first->id])->expectsOutputToContain('taken in charge')->assertSuccessful();
+        $this->artisan('devboard:check', ['--done' => $first->id, '--comment' => 'ok'])->assertSuccessful();
+        $second = $plan->todos()->orderBy('order')->skip(1)->first();
+        $this->assertTrue($second->fresh()->open_to_work);
+        $this->artisan('devboard:check')->expectsOutputToContain('Plan step 2')->assertSuccessful();
+    }
+
     public function test_fallback_without_ai_creates_a_plan_request_task(): void
     {
         $this->assertFalse(Plan::available());
