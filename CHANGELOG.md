@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-08-19
+
+### Added
+- The **state badge in the modal header is a menu**: click it to set the state from there too — waiting ⚪,
+  open to work 🟢, done ✔ (choosing a state while the agent works stops it, like the dot in the row;
+  agent states working/question are shown but not settable). `IngredientModal::setState()`.
+
+### Removed
+- The separate «open to work» command button in the modal header (superseded by the state menu).
+
 ## [0.17.1] - 2026-08-19
 
 ### Added

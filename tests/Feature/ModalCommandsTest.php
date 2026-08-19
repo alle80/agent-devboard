@@ -48,6 +48,34 @@ class ModalCommandsTest extends TestCase
         $this->assertSame(4, Todo::latest('id')->first()->order);
     }
 
+    public function test_set_state_from_the_badge_menu(): void
+    {
+        $todo = Todo::create(['title' => 'S', 'order' => 1, 'checklist_id' => $this->list->id, 'working' => true, 'progress' => 40]);
+        $modal = Livewire::test(IngredientModal::class)->call('openFor', $todo->id);
+
+        $modal->call('setState', 'done')->assertDispatched('toast');
+        $todo->refresh();
+        $this->assertTrue($todo->completed);
+        $this->assertFalse($todo->working);
+        $this->assertNotNull($todo->stopped_at, 'choosing a state while the agent works = stop');
+        $this->assertNull($todo->progress);
+        $this->assertSame('done', $modal->instance()->stateKey());
+
+        $modal->call('setState', 'open');
+        $todo->refresh();
+        $this->assertFalse($todo->completed);
+        $this->assertTrue($todo->open_to_work);
+        $this->assertNull($todo->stopped_at);
+
+        $modal->call('setState', 'waiting');
+        $todo->refresh();
+        $this->assertFalse($todo->open_to_work);
+        $this->assertFalse($todo->completed);
+
+        $modal->call('setState', 'working'); // not settable by the user
+        $this->assertFalse($todo->fresh()->working);
+    }
+
     public function test_state_key_reflects_the_todo(): void
     {
         $todo = Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $this->list->id, 'open_to_work' => true]);

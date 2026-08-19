@@ -318,6 +318,31 @@ class IngredientModal extends Component
         $this->dispatch('ingredients-updated');
     }
 
+    /**
+     * Set the state from the badge in the modal header: 'waiting' ⚪, 'open' 🟢 or 'done' ✔
+     * (the agent states working/question are left to the agent; choosing a state while the agent works = stop).
+     */
+    public function setState(string $state): void
+    {
+        $todo = $this->todo();
+        if (! $todo || ! in_array($state, ['waiting', 'open', 'done'], true)) {
+            return;
+        }
+        $wasWorking = $todo->working;
+        $attrs = match ($state) {
+            'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'question' => false],
+            'open' => ['completed' => false, 'open_to_work' => true, 'working' => false, 'question' => false, 'stopped_at' => null],
+            'done' => ['completed' => true, 'open_to_work' => false, 'working' => false, 'question' => false, 'result_seen' => true, 'progress' => null],
+        };
+        if ($wasWorking && $state !== 'open') {
+            $attrs['stopped_at'] = now();
+        }
+        $todo->update($attrs);
+        $this->dispatch('toast', message: __('devboard::t.msg.state_set', ['state' => __('devboard::t.state.'.$state), 'title' => $todo->title]), type: $state === 'done' ? 'success' : 'info');
+        \Alle80\Devboard\Support\Live::todoChanged($todo);
+        $this->dispatch('ingredients-updated');
+    }
+
     /** Archive / delete reuse the list logic (order reindex) then close the modal. */
     public function archiveTodo(): void
     {
