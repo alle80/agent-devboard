@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.3] - 2026-08-20
+
+### Changed
+- README overhauled: the row-state table now uses the **real SVG icons** (new `docs/images/state-*.svg`),
+  and everything from “Compatibility” on is restructured into sections with bullet lists and copyable
+  command blocks; install/routes notes aligned with the current access middleware and pages.
+
 ## [0.33.2] - 2026-08-20
 
 ### Fixed

@@ -34,8 +34,11 @@ php artisan storage:link                             # attachments live on the "
 php artisan vendor:publish --tag=devboard-assets     # precompiled build & theme assets
 ```
 
-Routes register automatically — `/` (default theme), `/{theme}`, `/settings` — behind `web` + `auth`.
-**The package needs an authenticated user** (lists belong to users), so plug it into your app's login.
+Routes register automatically — `/` (default theme), `/{theme}`, `/settings`, `/context`, `/stats`,
+`/agents` — behind `web` plus the package's access middleware (login in server mode, none in local mode;
+see [Access, administrators and modes](#access-administrators-and-modes)).
+**In server mode the package needs an authenticated user** (lists belong to users), so plug it into your
+app's login — or use local mode on your own machine.
 
 Then wire up the front-end assets (below) and you're ready to [connect an agent](#connect-a-coding-agent).
 
@@ -69,85 +72,145 @@ and acts with `devboard:check`.
 
 ### The state of each row
 
-| Dot | State | Meaning |
-|-----|-------|---------|
-| ⚪ | waiting | not ready — the agent leaves it alone |
-| 🟢 | open to work | the user released it; the agent may take it (top-down = priority) |
-| 🔧 | working | the agent took it (its first action, so you see it in real time) |
-| ❓ | question | the agent asked something; paused until you answer in the app |
-| ⏹ | stop | you stopped it; the agent drops it immediately |
-| ✔ | done | closed, with the agent's comment |
+The badge on each row uses the package's SVG icon set (no emoji in the UI):
+
+| Icon | State | Meaning |
+|:----:|-------|---------|
+| <img src="docs/images/state-waiting.svg" width="18" alt="waiting"> | waiting | not ready — the agent leaves it alone |
+| <img src="docs/images/state-open.svg" width="18" alt="open to work"> | open to work | the user released it; the agent may take it (top-down = priority) |
+| <img src="docs/images/state-working.svg" width="18" alt="working"> | working | the agent took it (its first action, so you see it in real time) — with progress % and phase |
+| <img src="docs/images/state-question.svg" width="18" alt="question"> | question | the agent asked something; paused until you answer in the app |
+| <img src="docs/images/state-stop.svg" width="18" alt="stop"> | stop | you stopped it (tap on the working badge); the agent drops it immediately |
+| <img src="docs/images/state-done.svg" width="18" alt="done"> | done | closed, with the agent's comment |
 
 ### The agent's commands (`devboard:check`)
 
 ```bash
-php artisan devboard:check                 # what to work on (🟢/🔧), in order; --all for everything
-php artisan devboard:check --take=ID       # take it in charge  → 🔧 (shows 0%)
-php artisan devboard:check --take=ID --progress=60   # update the progress % on the row (re-run as you go)
-php artisan devboard:check --ask=ID --q="…" --q="…"   # ask, pausing it → ❓
-php artisan devboard:check --done=ID --comment="…"    # close it, with a note back to the user → ✔
-php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
+php artisan devboard:check                # what to work on (open/working), in order; --all for everything
+php artisan devboard:check --take=ID      # take it in charge → working (starts at 0%)
+php artisan devboard:check --take=ID --progress=60 --phase="writing code"   # update % and phase as you go
+php artisan devboard:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
+php artisan devboard:check --done=ID --comment="…"                          # close it, with a note back → done
+php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
 ```
 
-**Configuration vs settings**: inventory, defaults and the backlog of future ones in
-[`docs/config-and-settings.md`](docs/config-and-settings.md).
+`devboard:check` also prints, at the top, the **behaviour settings** from `/settings` that the agent must
+follow (commit policy, autonomy, notifications, verification, git flow, task order, …) and the
+**Optimization** switches that cut the tokens a session spends (compact output, terse mode, context
+trimming). A closed item can be **resumed** into a new linked one, carrying its context.
 
-**Compatibility**: any CLI coding agent — Claude Code, OpenAI Codex CLI, Gemini CLI, Aider, Cursor, … — the
-contract is just the `devboard:check`/`devboard:watch` commands plus `AGENTS.md` (Codex/others), `CLAUDE.md`
-(Claude) or `GEMINI.md` (Gemini) carrying the same rules; `DEVBOARD_AGENT_NAME` sets how the UI calls it.
+### Compatibility
 
-**Plan mode**: create a list «as a plan» from a prompt: the AI SDK splits the goal into chained tasks
-(`depends_on_id`); completing one opens the next. Needs `laravel/ai` + a provider key (otherwise a single
-«Build the plan» task is created for the agent).
+Any CLI coding agent works — Claude Code, OpenAI Codex CLI, Gemini CLI, Aider, Cursor, … The contract is
+deliberately small:
 
-**Speech to text**: a microphone on every text field. With `laravel/ai` installed and a transcription provider
-configured (`AI_PROVIDER`/keys, `ai.default_for_transcription`) the clip is transcribed server-side (best
-quality); otherwise the browser's Web Speech API is used. Setting `speech_mode` (auto/server/browser).
+- the two commands: `devboard:check` (read/act) and `devboard:watch` (react);
+- one instructions file with the same rules: `AGENTS.md` (Codex and most agents), `CLAUDE.md` (Claude Code)
+  or `GEMINI.md` (Gemini);
+- `DEVBOARD_AGENT_NAME` sets how the UI calls the agent.
 
-**Agent context** (`/context`): import your instructions file (e.g. CLAUDE.md) with
-`php artisan devboard:context import --file=CLAUDE.md`; it becomes groups (`##`) and blocks you can switch on/off
-(single, multi-select, whole group), edit and reorder; `php artisan devboard:context export` prints the enabled
-context — write it back to the file from your host (see `scripts/sync-context.py` in the origin repo).
+With more than one agent, declare them and pick one per list or per task:
 
-**Theme packs** are code-like content: only administrators can install them; SVG is refused, the CSS is sanitised
-(no `@import`/external urls), packs are capped (5 MB/file, 20 MB, 200 files) and assets are served sandboxed.
+```bash
+# .env
+DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI"
+```
 
-**Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool` on your user
-model, or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
-registered user. Local mode from the UI needs `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
+```bash
+php artisan devboard:check --agent=codex     # each agent sees only its own tasks
+```
 
-**Local mode safety**: `DEVBOARD_MODE=local` removes authentication from every board route — run it only on your
-own machine and bind the web server to `127.0.0.1` (or a firewall-protected interface); a banner reminds it on every
-page. Behind a reverse proxy keep `trustProxies` limited to the proxy's address.
+### Plan mode
 
-**Modes**: `DEVBOARD_MODE=server` (default: login, lists per user; restrict access with
-`canAccessDevboard(): bool` on your user model or `DEVBOARD_ACCESS_GATE=<ability>`) or `DEVBOARD_MODE=local`
-(no authentication, one global set of lists — for your own machine only). Also switchable in `/settings`.
+Create a list **«as a plan»** from a prompt: the AI SDK splits the goal into chained tasks
+(`depends_on_id`) and completing one opens the next. The chain follows the visible order (drag & drop).
+Plans can be started, paused and resumed from the list bar.
 
-**Notifications from the board**: on `--done` / `--ask` the list owner is notified by the app — in-app bell 🔔,
-Web Push (add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model and run
-`php artisan webpush:vapid`; users enable their devices in `/settings`) and mail — channels switchable in
-`/settings`. Tables `notifications` / `push_subscriptions` are created by the package migration if missing.
+- Needs `laravel/ai` + a provider key.
+- Without AI configured, a single «Build the plan» task is created and the agent does the splitting.
 
-**Skills**: `php artisan devboard:skills-import --file=skills.json` (or JSON on stdin) loads the catalogue
-of the agent's skills; the modal shows them under the Task note as a 🧩 accordion and the chosen ones are
-printed by `devboard:check` for that task.
+### Speech to text
 
-**Agents status** (`/agents`): plan + usage windows (5h / 7d …) of your coding agents with used/remaining %,
-reset countdown and alert levels; feed it with `php artisan devboard:agent-status-import` (JSON snapshot) —
-see `scripts/agent-status.py` in the origin repo for Claude Code (credentials never leave the host).
+A microphone on every text field:
 
-**Statistics page** (`/stats`): completed tasks per list with working time, tokens and cost (set the price
-per million tokens in Settings), per-day bars, overview of all lists.
+- with `laravel/ai` + a transcription provider (`AI_PROVIDER`/keys, `ai.default_for_transcription`) the clip
+  is transcribed **server-side** (best quality);
+- otherwise the browser's **Web Speech API** is used;
+- setting `speech_mode`: auto / server / browser.
 
-**Statistics**: every 🔧 interval is timed automatically (working time per todo, waiting for answers
-excluded); tokens are whatever the agent reports with `--tokens-in/--tokens-out` (cumulative, also on
-`--take`/`--ask`). The modal shows them as a **📊 Stats** line.
+### Agent context (`/context`)
 
-`devboard:check` also prints the behaviour settings from `/settings` (commit policy, autonomy,
-notifications, …) that the agent is expected to follow, plus the **⚡ Optimization** switches (compact
-command output, terse mode, context trimming, …) that cut the tokens an agent session spends. A closed item can be **resumed** into a new
-linked one, carrying its context.
+Turn your instructions file into switchable blocks — groups (`##`) and blocks you can toggle (single,
+multi-select, whole group), edit as Markdown and reorder:
+
+```bash
+php artisan devboard:context import --file=CLAUDE.md   # file → groups/blocks
+php artisan devboard:context export                    # enabled blocks → stdout
+```
+
+Write the export back to your instruction files from the host (see `scripts/sync-context.py` in the origin
+repo, which also keeps the originals and restores them when the sync is switched off).
+
+### Access, administrators and modes
+
+- **Modes**: `DEVBOARD_MODE=server` (default — login required, lists per user) or `DEVBOARD_MODE=local`
+  (no authentication, one global set of lists: **your own machine only** — bind to `127.0.0.1`; a banner
+  reminds it on every page). Also switchable in `/settings`; enabling local from the UI needs
+  `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
+- **Access** (server mode): restrict who uses the board with `canAccessDevboard(): bool` on your user model
+  or `DEVBOARD_ACCESS_GATE=<ability>`.
+- **Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool`,
+  or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
+  registered user.
+- **Theme packs** are code-like content: admin-only install, SVG refused, CSS sanitised (no
+  `@import`/external urls), size caps (5 MB/file, 20 MB, 200 files), assets served sandboxed.
+
+### Notifications from the board
+
+On `--done` / `--ask` the list owner is notified by the app itself. Channels (each switchable in
+`/settings`):
+
+- **in-app bell** (database notifications);
+- **Web Push** on the user's devices;
+- **mail**.
+
+```bash
+php artisan webpush:vapid    # generate the VAPID keys (Web Push)
+```
+
+Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; users enable each device in
+`/settings`, where a diagnostics panel helps when pushes do not show up. The `notifications` /
+`push_subscriptions` tables are created by the package migration if missing.
+
+### Skills
+
+Load the catalogue of the agent's skills; the task modal shows them as an accordion under the note and
+`devboard:check` prints the chosen ones for the task the agent is working:
+
+```bash
+php artisan devboard:skills-import --file=skills.json   # or JSON on stdin
+```
+
+### Statistics and agents status
+
+- **`/stats`** — completed tasks per list (or all lists / all plans) with working time, tokens and **cost**
+  (price per million tokens set in Settings), per-day bars, overview of every list. Deleting a list or a
+  task is a **soft delete**: statistics survive; purge for real with `php artisan devboard:empty-trash`.
+- **How it is measured** — every *working* interval is timed automatically (waiting for answers excluded);
+  tokens are whatever the agent reports with `--tokens-in/--tokens-out`. The modal shows a **Stats** line
+  per task.
+- **`/agents`** — plan + usage windows (5h / 7d, …) of your coding agents: used/remaining %, reset
+  countdown, alert levels. Feed it with a JSON snapshot:
+
+```bash
+php artisan devboard:agent-status-import --file=snapshot.json
+```
+
+(see `scripts/agent-status.py` in the origin repo for Claude Code — credentials never leave the host).
+
+### Configuration vs settings
+
+Inventory, defaults and the backlog of future options: [`docs/config-and-settings.md`](docs/config-and-settings.md).
 
 ---
 
