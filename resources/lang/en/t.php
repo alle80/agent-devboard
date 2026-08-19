@@ -49,6 +49,8 @@ return [
     'note' => 'Task',
     'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
     'md' => ['bold' => 'Bold', 'italic' => 'Italic', 'code' => 'Code', 'codeblock' => 'Code block', 'list' => 'List', 'quote' => 'Quote', 'link' => 'Link', 'linktext' => 'text', 'table' => 'Table', 'separator' => 'Separator'],
+    'image_description' => 'Image description',
+    'image_no_description' => 'No description yet (the AI describes new images when enabled in Settings).',
     'mic_busy' => 'Transcribing…',
     'mic_error' => 'Transcription failed',
     'mic_start' => 'Dictate (speech to text)',

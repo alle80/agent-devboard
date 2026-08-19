@@ -46,6 +46,8 @@ return [
     'note' => 'Task',
     'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],
     'md' => ['bold' => 'Grassetto', 'italic' => 'Corsivo', 'code' => 'Codice', 'codeblock' => 'Blocco codice', 'list' => 'Elenco', 'quote' => 'Citazione', 'link' => 'Link', 'linktext' => 'testo', 'table' => 'Tabella', 'separator' => 'Separatore'],
+    'image_description' => 'Descrizione dell\'immagine',
+    'image_no_description' => 'Nessuna descrizione (l\'AI descrive le nuove immagini se attivo in Impostazioni).',
     'mic_busy' => 'Trascrizione in corso…',
     'mic_error' => 'Trascrizione fallita',
     'mic_start' => 'Detta (speech to text)',
