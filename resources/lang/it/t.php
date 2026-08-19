@@ -54,6 +54,8 @@ return [
     'skills' => 'Skill di Claude',
     'skills_chosen' => ':count scelte',
     'skills_none' => 'nessuna — apri per scegliere',
+    'skills_search' => 'Cerca tra le skill…',
+    'skills_no_match' => 'Nessuna skill corrisponde.',
     'skills_hint' => 'Skill che Claude attiverà lavorando a questo task (catalogo da devboard:skills-import).',
     'stats_time' => 'Tempo di lavoro dell\'agente',
     'stats_tokens' => 'Token (input / output)',

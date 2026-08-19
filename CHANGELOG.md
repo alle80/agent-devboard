@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-08-19
+
+### Added
+- **Live search** box at the top of the 🧩 skills accordion (client-side, filters name/description/source
+  while typing; Esc clears).
+
 ## [0.14.0] - 2026-08-19
 
 ### Added

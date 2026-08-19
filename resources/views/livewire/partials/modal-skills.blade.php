@@ -11,16 +11,26 @@
 @endforeach
 @php(uksort($catalogue, fn ($a, $b) => [! in_array($a, $chosen, true), strtolower($a)] <=> [! in_array($b, $chosen, true), strtolower($b)]))
 @if ($catalogue)
-    <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }} }" x-bind:open="o" x-on:toggle="o = $el.open">
+    <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }}, q: '', hay: @js(array_values(array_map(fn ($sk) => $sk['name'].' '.($sk['description'] ?? '').' '.($sk['source'] ?? ''), $catalogue))), match(t) { return this.q.trim() === '' || t.toLowerCase().includes(this.q.trim().toLowerCase()); }, noMatch() { return this.q.trim() !== '' && ! this.hay.some(t => this.match(t)); } }" x-bind:open="o" x-on:toggle="o = $el.open">
         <summary class="flex cursor-pointer items-center justify-between gap-2 select-none">
             <span class="{{ $labelClass }}">🧩 {{ __('devboard::t.skills') }}</span>
             <span class="{{ $textClass }} text-xs opacity-70">{{ $chosen ? __('devboard::t.skills_chosen', ['count' => count($chosen)]) : __('devboard::t.skills_none') }}</span>
         </summary>
         <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('devboard::t.skills_hint') }}</p>
+        {{-- Live search (client-side, Alpine): filters the list below while typing --}}
+        <input
+            type="search"
+            x-model="q"
+            x-on:keydown.escape.stop="q = ''"
+            placeholder="{{ __('devboard::t.skills_search') }}"
+            aria-label="{{ __('devboard::t.skills_search') }}"
+            class="tl-input db-skills-search mt-2 w-full px-3 py-1.5 text-sm focus:outline-none"
+        >
+        <p class="{{ $textClass }} mt-1 text-xs opacity-60" x-show="noMatch()" x-cloak>{{ __('devboard::t.skills_no_match') }}</p>
         <ul class="mt-2 space-y-1.5" role="list">
             @foreach ($catalogue as $name => $sk)
                 @php($on = in_array($name, $chosen, true))
-                <li wire:key="skill-{{ $todo->id }}-{{ md5($name) }}">
+                <li wire:key="skill-{{ $todo->id }}-{{ md5($name) }}" x-show="match(@js($name.' '.($sk['description'] ?? '').' '.($sk['source'] ?? '')))" x-bind:hidden="!match(@js($name.' '.($sk['description'] ?? '').' '.($sk['source'] ?? '')))">
                     <label class="flex cursor-pointer items-start gap-2 {{ $readonly && ! $on ? 'opacity-50' : '' }}">
                         <input
                             type="checkbox"

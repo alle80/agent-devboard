@@ -57,6 +57,8 @@ return [
     'skills' => 'Agent skills',
     'skills_chosen' => ':count chosen',
     'skills_none' => 'none — open to choose',
+    'skills_search' => 'Search skills…',
+    'skills_no_match' => 'No skill matches.',
     'skills_hint' => 'Skills the agent will activate while working on this task (catalogue from devboard:skills-import).',
     'stats_time' => 'Agent working time',
     'stats_tokens' => 'Tokens (input / output)',
