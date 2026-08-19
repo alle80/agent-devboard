@@ -8,7 +8,7 @@
     x-on:toggle="open = $el.open"
 >
     <summary class="max-w-[48vw] cursor-pointer list-none truncate rounded-lg border-2 border-black bg-white px-2.5 py-1 text-xs font-bold sm:px-3 sm:py-1.5 sm:text-sm text-black shadow-[2px_2px_0_#000] select-none hover:bg-emerald-100 active:translate-y-px sm:max-w-xs [&::-webkit-details-marker]:hidden">
-        📋 {{ $lists->firstWhere('id', $currentId)?->name ?? __('devboard::t.lists') }} ▾
+        <x-devboard::icon name="list" /> {{ $lists->firstWhere('id', $currentId)?->name ?? __('devboard::t.lists') }} <x-devboard::icon name="chevron" size=".9em" class="opacity-60" />
     </summary>
     <div class="absolute left-0 mt-1.5 max-h-[70vh] w-64 overflow-y-auto rounded-lg border-2 border-black bg-white p-1 text-black shadow-[3px_3px_0_#000]">
 
@@ -38,14 +38,14 @@
                         wire:click="startRename({{ $list->id }})"
                         title="{{ __('devboard::t.rename_list') }}"
                         class="shrink-0 cursor-pointer px-1.5 py-1.5 text-sm opacity-30 hover:opacity-100"
-                    >✏️</button>
+                    ><x-devboard::icon name="edit" /></button>
                     @if ($lists->count() > 1)
                         <button
                             wire:click="deleteList({{ $list->id }})"
                             wire:confirm="{{ __('devboard::t.delete_list_confirm', ['name' => $list->name, 'count' => $list->todos_count]) }}"
                             title="{{ __('devboard::t.delete_list') }}"
                             class="shrink-0 cursor-pointer px-2 py-1.5 text-sm opacity-30 hover:text-red-600 hover:opacity-100"
-                        >✕</button>
+                        ><x-devboard::icon name="close" /></button>
                     @endif
                 @endif
             </div>
@@ -67,7 +67,7 @@
             {{-- Plan mode: build the list from a prompt (chained tasks) --}}
             <label class="mt-1.5 flex cursor-pointer items-center gap-1.5 px-1 text-xs select-none">
                 <input type="checkbox" x-model="plan" class="db-skill-check">
-                <span>📐 {{ __('devboard::t.plan.as_plan') }}</span>
+                <span class="inline-flex items-center gap-1"><x-devboard::icon name="ruler" /> {{ __('devboard::t.plan.as_plan') }}</span>
             </label>
             <div x-show="plan" x-cloak class="mt-1.5 space-y-1 px-1">
                 <div class="flex items-start gap-1">
@@ -83,9 +83,9 @@
         @php($logout = \Alle80\Devboard\Mode::isLocal() ? null : config('devboard.logout_route'))
         <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="mt-1 flex items-center justify-between gap-2 border-t-2 border-black/20 px-2 pt-2 pb-1">
             @csrf
-            <span class="min-w-0 truncate text-xs opacity-60">👤 {{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</span>
-            <a href="{{ route('devboard.context') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]) }}">📚 {{ __('devboard::t.ctx.menu') }}</a>
-            <a href="{{ route('devboard.settings') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.settings') }}">⚙️ {{ __('devboard::t.settings') }}</a>
+            <span class="inline-flex min-w-0 items-center gap-1 truncate text-xs opacity-60"><x-devboard::icon name="user" /> {{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</span>
+            <a href="{{ route('devboard.context') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]) }}"><x-devboard::icon name="book" /> {{ __('devboard::t.ctx.menu') }}</a>
+            <a href="{{ route('devboard.settings') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.settings') }}"><x-devboard::icon name="settings" /> {{ __('devboard::t.settings') }}</a>
             @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
                 <button type="submit" class="shrink-0 cursor-pointer text-xs font-bold text-red-700 hover:underline">{{ __('devboard::t.logout') }}</button>
             @endif

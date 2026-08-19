@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.2] - 2026-08-19
+
+### Changed
+- The top menus use the SVG icon set too: lists switcher (list/chevron, edit, close, user, context, settings,
+  plan), notification bell (bell + per-kind state icons), style switcher (palette/chevron). New icons `user`,
+  `logout`, `ruler`, `list`.
+
 ## [0.21.1] - 2026-08-19
 
 ### Changed

@@ -12,7 +12,7 @@
         title="{{ __('devboard::t.notif.bell') }}"
         aria-label="{{ __('devboard::t.notif.bell') }}{{ $unread ? ' ('.$unread.')' : '' }}"
     >
-        <span aria-hidden="true">🔔</span>
+        <x-devboard::icon name="bell" size="1.2em" />
         @if ($unread)
             <span class="db-bell-badge absolute -top-2 -right-2 min-w-5 rounded-full border-2 border-black bg-red-500 px-1 text-center text-[10px] leading-4 text-white">{{ $unread > 99 ? '99+' : $unread }}</span>
         @endif
@@ -32,7 +32,8 @@
                 wire:click="openNotification('{{ $n->id }}')"
                 class="flex w-full cursor-pointer items-start gap-2 rounded px-2 py-1.5 text-left {{ $n->read_at ? 'opacity-60 hover:bg-emerald-50' : 'bg-emerald-100 hover:bg-emerald-200' }}"
             >
-                <span class="shrink-0 text-base" aria-hidden="true">{{ $d['icon'] ?? '🔔' }}</span>
+                @php($kindIcon = ['todo_completed' => 'done', 'question_asked' => 'question', 'test' => 'bell'][$d['kind'] ?? ''] ?? 'bell')
+                <span class="db-badge db-badge-{{ $kindIcon === 'done' ? 'done' : ($kindIcon === 'question' ? 'question' : 'open') }} shrink-0" aria-hidden="true"><x-devboard::icon :name="$kindIcon" size="1.2em" :stroke="2" /></span>
                 <span class="min-w-0 flex-1">
                     <span class="block truncate text-sm font-bold">{{ $d['title'] ?? '' }}</span>
                     @if (! empty($d['body']))<span class="block text-xs opacity-80">{{ \Illuminate\Support\Str::limit($d['body'], 120) }}</span>@endif
