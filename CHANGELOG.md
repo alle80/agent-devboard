@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.3] - 2026-08-19
+
+### Changed
+- `/context` uses the SVG icon set everywhere (grip handles, edit/trash, select-all, enable/disable,
+  chevron, title/tokens) instead of emoji. New icons: `check`, `check-all`, `ban`, `chevron`, `grip`,
+  `book`, `coins`.
+
 ## [0.15.2] - 2026-08-19
 
 ### Changed

@@ -17,6 +17,13 @@
         'edit'     => '<path d="M4 20h4l10-10a2 2 0 0 0-2.8-2.8L5 17l-1 3z"/><path d="M13.5 6.5l4 4"/>',
         'restore'  => '<path d="M9 5 4 10l5 5"/><path d="M4 10h9a7 7 0 0 1 0 14h-2"/>',
         'plus'     => '<path d="M12 5v14M5 12h14"/>',
+        'check'    => '<path d="M5 12.5l4.5 4.5L19 7"/>',
+        'check-all'=> '<path d="M3 12.5l4 4L14 9"/><path d="M10 12.5l4 4L21 9"/>',
+        'ban'      => '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>',
+        'chevron'  => '<path d="M6 9l6 6 6-6"/>',
+        'grip'     => '<circle cx="9" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.3" fill="currentColor" stroke="none"/>',
+        'book'     => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/>',
+        'coins'    => '<ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/><path d="M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/>',
     ];
     $inner = $paths[$name] ?? '';
 @endphp
