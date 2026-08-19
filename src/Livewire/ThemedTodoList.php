@@ -26,6 +26,7 @@ class ThemedTodoList extends TodoList
             'listName' => $this->listName(),
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
+            'plan' => $this->planStatus(),
         ])->title($this->listName().' — '.$t['label']);
     }
 }

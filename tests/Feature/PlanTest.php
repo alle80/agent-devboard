@@ -55,6 +55,31 @@ class PlanTest extends TestCase
         $this->artisan('devboard:check')->expectsOutputToContain('⛓ plan chain: after «Build the API»')->assertSuccessful();
     }
 
+    public function test_start_plan_from_the_list(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'A'], ['title' => 'B']];
+        $list = Checklist::create(['name' => 'Plan', 'user_id' => auth()->id()]);
+        Plan::build($list, 'Go');
+        session(['checklist_id' => $list->id]);
+        [$a, $b] = $list->todos()->orderBy('order')->get()->all();
+
+        $c = Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('Start the plan');
+        $c->call('startPlan')->assertDispatched('toast');
+        $this->assertTrue($a->fresh()->open_to_work);
+        $this->assertFalse($b->fresh()->open_to_work);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('in progress')->assertDontSee('Start the plan');
+
+        // A done → B opens by the chain; nothing to start
+        $a->update(['open_to_work' => false, 'completed' => true]);
+        $this->assertTrue($b->fresh()->open_to_work);
+        // user stops B → «Resume the plan»
+        $b->fresh()->update(['open_to_work' => false]);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('Resume the plan')->call('startPlan');
+        $this->assertTrue($b->fresh()->open_to_work);
+        $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('plan completed');
+    }
+
     public function test_fallback_without_ai_creates_a_plan_request_task(): void
     {
         $this->assertFalse(Plan::available());

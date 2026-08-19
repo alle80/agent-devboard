@@ -33,6 +33,7 @@ class DashboardTodoList extends TodoList
             'listName' => $this->listName(),
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
+            'plan' => $this->planStatus(),
             'wide' => true,
         ])->title($this->listName().' — Dashboard');
     }

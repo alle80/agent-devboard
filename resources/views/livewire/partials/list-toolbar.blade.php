@@ -8,6 +8,22 @@
       $btnClass    bottone archivio
 --}}
 <div class="{{ $wrapClass }} list-toolbar mb-4 space-y-2">
+    {{-- Plan mode: start the plan / progress --}}
+    @if (! empty($plan))
+        <div class="db-plan-bar flex flex-wrap items-center gap-2 text-sm">
+            <span class="inline-flex items-center gap-1 font-bold"><x-devboard::icon name="ruler" /> {{ __('devboard::t.plan.label') }}</span>
+            <span class="tabular-nums opacity-80">{{ __('devboard::t.plan.progress', ['done' => $plan['done'], 'total' => $plan['total']]) }}</span>
+            @if ($plan['next'] && ! $plan['running'])
+                <button type="button" wire:click="startPlan" class="{{ $btnClass }} inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none">
+                    <x-devboard::icon name="play" /> {{ $plan['done'] > 0 ? __('devboard::t.plan.resume') : __('devboard::t.plan.start') }}
+                </button>
+            @elseif ($plan['running'])
+                <span class="inline-flex items-center gap-1 text-xs opacity-80"><span class="db-badge db-badge-working"><x-devboard::icon name="working" /></span> {{ __('devboard::t.plan.running') }}</span>
+            @elseif ($plan['done'] === $plan['total'] && $plan['total'] > 0)
+                <span class="inline-flex items-center gap-1 text-xs opacity-80"><x-devboard::icon name="done" /> {{ __('devboard::t.plan.completed') }}</span>
+            @endif
+        </div>
+    @endif
     {{-- Ricerca --}}
     <div class="relative">
         <input

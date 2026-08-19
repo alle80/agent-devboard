@@ -111,6 +111,35 @@ class TodoList extends Component
         return $this->scoped()->whereNull('archived_at');
     }
 
+    /* ---------- Plan mode: start / status ---------- */
+
+    /** Plan status of the current list: null if not a plan, else [next id|null, done, total, running]. */
+    protected function planStatus(): ?array
+    {
+        $chained = $this->active()->whereNotNull('depends_on_id')->exists();
+        $list = Checklist::find(Checklist::currentId());
+        if (! $chained && ! ($list?->plan_prompt)) {
+            return null;
+        }
+        $todos = $this->active()->orderBy('order')->get(['id', 'completed', 'open_to_work', 'working', 'question']);
+        $next = $todos->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->question);
+        $running = $todos->contains(fn ($t) => ! $t->completed && ($t->open_to_work || $t->working || $t->question));
+
+        return ['next' => $next?->id, 'done' => $todos->where('completed', true)->count(), 'total' => $todos->count(), 'running' => $running];
+    }
+
+    /** Start (or resume) the plan: the first not-started task becomes open to work 🟢; the chain does the rest. */
+    public function startPlan(): void
+    {
+        $status = $this->planStatus();
+        if (! $status || ! $status['next']) {
+            return;
+        }
+        $todo = $this->active()->findOrFail($status['next']);
+        $todo->update(['open_to_work' => true, 'stopped_at' => null]);
+        $this->dispatch('toast', message: __('devboard::t.plan.started', ['title' => $todo->title]), type: 'success');
+    }
+
     protected function archivedCount(): int
     {
         return $this->scoped()->whereNotNull('archived_at')->count();
@@ -387,6 +416,7 @@ class TodoList extends Component
             'listName' => $this->listName(),
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
+            'plan' => $this->planStatus(),
         ])->layout('devboard::layouts.themed', ['theme' => Themes::default()])->title($this->listName());
     }
 }

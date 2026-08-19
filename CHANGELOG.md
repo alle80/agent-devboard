@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-08-19
+
+### Added
+- **Start a plan**: on a plan list (chained tasks or built from a prompt) the toolbar shows a «Plan» bar with
+  progress (done/total) and a **Start the plan** button (→ the first not-started task becomes open to work;
+  the chain opens the following ones), «Resume the plan» after a stop, «in progress» / «plan completed»
+  states. `TodoList::startPlan()`, `planStatus()`; icon `play`.
+
 ## [0.22.3] - 2026-08-19
 
 ### Added
