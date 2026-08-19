@@ -3,6 +3,7 @@
 namespace Alle80\Devboard\Console;
 
 use Alle80\Devboard\Models\Checklist;
+use Alle80\Devboard\Models\Todo;
 use Alle80\Devboard\Settings\AgentSettings;
 use Illuminate\Console\Command;
 
@@ -23,7 +24,9 @@ class DevboardCheck extends Command
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
         {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
         {--ask= : Id of the todo to ask questions about (state ❓)}
-        {--q=* : Text of each question, repeatable}';
+        {--q=* : Text of each question, repeatable}
+        {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
+        {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}';
 
     protected $aliases = ['sviluppo:check'];
 
@@ -53,7 +56,7 @@ class DevboardCheck extends Command
             foreach ($qs as $q) {
                 $t->questions()->create(['question' => $q, 'order' => $next++]);
             }
-            $t->update(['question' => true, 'working' => false, 'open_to_work' => false]);
+            $t->update(['question' => true, 'working' => false, 'open_to_work' => false] + $this->tokenAttrs($t));
             $this->info(sprintf('❓ %d questions asked on «%s» (id:%d, waiting for answers)', count($qs), $t->title, $t->id));
         }
 
@@ -73,11 +76,14 @@ class DevboardCheck extends Command
                 if ($opt === 'done') {
                     $attrs['progress'] = null; // finished → no progress bar
                 }
-                $t->update($attrs);
+                $t->update($attrs + $this->tokenAttrs($t));
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
                     $t->ingredients()->update(['checked' => true]);
                 }
                 $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%', $attrs['progress']) : ''));
+                if ($opt === 'done' && $t->hasStats()) {
+                    $this->line('   📊 '.$t->statsLine());
+                }
             }
         }
 
@@ -112,6 +118,11 @@ class DevboardCheck extends Command
                     if ($t->parent->claude_comment) $this->line('           🤖 previous: '.str_replace("\n", "\n              ", $t->parent->claude_comment));
                     foreach ($t->parent->ingredients as $i) $this->line(sprintf('           - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
                 }
+                if ($t->working && $t->working_since) {
+                    $this->line(sprintf('        ⏱ working since %s (%s this interval%s)', $t->working_since->toIso8601String(), Todo::formatDuration(max(0, (int) $t->working_since->diffInSeconds(now()))), $t->work_seconds ? ', '.Todo::formatDuration($t->workSeconds()).' in total' : ''));
+                } elseif ($t->hasStats()) {
+                    $this->line('        📊 '.$t->statsLine());
+                }
                 if ($t->stopped_at) {
                     $this->line('        ⏹ stopped by the user on '.$t->stopped_at->format('d/m H:i').': do NOT work on it until it is 🟢 again');
                 }
@@ -134,5 +145,18 @@ class DevboardCheck extends Command
         file_put_contents($marker, (string) now()->timestamp);
 
         return self::SUCCESS;
+    }
+
+    /** Token counters to add to the todo from --tokens-in / --tokens-out (cumulative per todo). */
+    private function tokenAttrs(Todo $t): array
+    {
+        $attrs = [];
+        foreach (['tokens-in' => 'tokens_in', 'tokens-out' => 'tokens_out'] as $opt => $col) {
+            if ($this->option($opt) !== null) {
+                $attrs[$col] = (int) $t->{$col} + max(0, (int) $this->option($opt));
+            }
+        }
+
+        return $attrs;
     }
 }

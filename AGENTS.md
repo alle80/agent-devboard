@@ -30,10 +30,14 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
    before reading details, exploring code, or asking. The dot turns 🔧 in real time so the user
    sees it's in progress. (`ID` = the `id:N` shown, not the row position.)
 3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots.
+   Keep the user posted: `devboard:check --take=ID --progress=N` updates the percentage on the row
+   (it starts at 0% when you take it).
 4. **If unclear, ask:** `devboard:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
    user answers in the app and restarts it (it comes back 🟢). Ask *after* taking.
 5. **Close it:** `devboard:check --done=ID --comment="what you did / how to try it"`. The comment
-   is shown to the user; never write into the user's note.
+   is shown to the user; never write into the user's note. If you know how many tokens you spent on
+   it, add `--tokens-in=N --tokens-out=N` (also allowed on `--take`/`--ask`): the board keeps per-todo
+   **stats** (working time is timed automatically while the row is 🔧).
 
 ## Rules
 

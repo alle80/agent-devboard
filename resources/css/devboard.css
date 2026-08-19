@@ -432,6 +432,11 @@ select.setting-input { appearance: auto; }
     .db-progress-bar { transition: none; }
 }
 
+/* ---------- Stats (modal): live marker while the working timer is running ---------- */
+.db-stats-live { display: inline-block; animation: db-stats-blink 1.4s steps(4, end) infinite; letter-spacing: .1em; }
+@keyframes db-stats-blink { 0% { opacity: .2; } 50% { opacity: 1; } 100% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .db-stats-live { animation: none; } }
+
 /* ---------- Settings: inline warning helper (e.g. multitasking mode) ---------- */
 .db-setting-warn {
     margin-top: .15rem;

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-08-19
+
+### Added
+- **Per-todo statistics**: agent **working time** and **tokens**. Every 🔧 interval is timed automatically
+  (from `--take` to `--done`/`--ask`/a user stop; time spent waiting for answers is not counted) into
+  `todos.work_seconds` (+ `working_since` for the open interval). Tokens are reported by the agent with
+  the new `devboard:check --tokens-in=N --tokens-out=N` options (with `--take`/`--done`/`--ask`;
+  cumulative per todo, `todos.tokens_in` / `tokens_out`). Partially completed items keep their stats.
+- The modal shows a **📊 Stats** line (⏱ time — live while working — and 🪙 tokens in/out);
+  `devboard:check` prints `⏱ working since … (Xm this interval)` on working items and `📊 …` on
+  completed ones / when closing. Dedicated migration for existing installs.
+- `Todo::workSeconds()`, `hasStats()`, `statsLine()`, `formatDuration()`, `formatTokens()`.
+
 ## [0.9.3] - 2026-08-19
 
 ### Fixed
@@ -208,7 +221,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/alle80/agent-devboard/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/alle80/agent-devboard/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/alle80/agent-devboard/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/alle80/agent-devboard/compare/v0.9.0...v0.9.1

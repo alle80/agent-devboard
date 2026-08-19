@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Todo extends Model
 {
-    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'archived_at', 'checklist_id', 'parent_id'];
+    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'archived_at', 'checklist_id', 'parent_id'];
 
     protected function casts(): array
     {
@@ -20,6 +20,10 @@ class Todo extends Model
             'question' => 'boolean',
             'result_seen' => 'boolean',
             'progress' => 'integer',
+            'working_since' => 'datetime',
+            'work_seconds' => 'integer',
+            'tokens_in' => 'integer',
+            'tokens_out' => 'integer',
             'archived_at' => 'datetime',
             'stopped_at' => 'datetime',
             'order' => 'integer',
@@ -58,8 +62,61 @@ class Todo extends Model
         return $this->hasMany(Attachment::class)->orderBy('id');
     }
 
+    /* ---------- Statistics: agent working time + tokens ---------- */
+
+    /** Total working seconds, including the interval still open (if working now). */
+    public function workSeconds(): int
+    {
+        return (int) $this->work_seconds + ($this->working && $this->working_since ? max(0, (int) $this->working_since->diffInSeconds(now())) : 0);
+    }
+
+    /** True when there is something to show (time or tokens). */
+    public function hasStats(): bool
+    {
+        return $this->workSeconds() > 0 || $this->tokens_in > 0 || $this->tokens_out > 0;
+    }
+
+    /** "1h 12m", "4m 30s", "12s". */
+    public static function formatDuration(int $seconds): string
+    {
+        $h = intdiv($seconds, 3600);
+        $m = intdiv($seconds % 3600, 60);
+        $s = $seconds % 60;
+        if ($h > 0) return sprintf('%dh %02dm', $h, $m);
+        if ($m > 0) return sprintf('%dm %02ds', $m, $s);
+        return sprintf('%ds', $s);
+    }
+
+    /** "1.2M", "45k", "812". */
+    public static function formatTokens(int $n): string
+    {
+        if ($n >= 1_000_000) return rtrim(rtrim(number_format($n / 1_000_000, 1, '.', ''), '0'), '.').'M';
+        if ($n >= 1_000) return rtrim(rtrim(number_format($n / 1_000, 1, '.', ''), '0'), '.').'k';
+        return (string) $n;
+    }
+
+    /** One-line summary for CLI/UI: "⏱ 1h 12m · 🪙 1.2M in / 12k out". */
+    public function statsLine(): string
+    {
+        $parts = [];
+        if ($this->workSeconds() > 0) $parts[] = '⏱ '.self::formatDuration($this->workSeconds());
+        if ($this->tokens_in > 0 || $this->tokens_out > 0) $parts[] = '🪙 '.self::formatTokens((int) $this->tokens_in).' in / '.self::formatTokens((int) $this->tokens_out).' out';
+        return implode(' · ', $parts);
+    }
+
     protected static function booted(): void
     {
+        // Statistics: every 🔧 interval is timed, whatever flips `working` (CLI take/done/ask, user stop from the web)
+        static::saving(function (Todo $todo) {
+            if (! $todo->isDirty('working')) return;
+            if ($todo->working) {
+                $todo->working_since ??= now();
+            } elseif ($todo->working_since) {
+                $todo->work_seconds = (int) $todo->work_seconds + max(0, (int) $todo->working_since->diffInSeconds(now()));
+                $todo->working_since = null;
+            }
+        });
+
         // Eliminando un todo vanno eliminati anche i file allegati (la FK cancella solo i record)
         static::deleting(fn (Todo $todo) => $todo->attachments->each->delete());
 

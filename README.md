@@ -84,7 +84,12 @@ php artisan devboard:check --take=ID       # take it in charge  → 🔧 (shows 
 php artisan devboard:check --take=ID --progress=60   # update the progress % on the row (re-run as you go)
 php artisan devboard:check --ask=ID --q="…" --q="…"   # ask, pausing it → ❓
 php artisan devboard:check --done=ID --comment="…"    # close it, with a note back to the user → ✔
+php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
+
+**Statistics**: every 🔧 interval is timed automatically (working time per todo, waiting for answers
+excluded); tokens are whatever the agent reports with `--tokens-in/--tokens-out` (cumulative, also on
+`--take`/`--ask`). The modal shows them as a **📊 Stats** line.
 
 `devboard:check` also prints the behaviour settings from `/settings` (commit policy, autonomy,
 notifications, …) that the agent is expected to follow. A closed item can be **resumed** into a new

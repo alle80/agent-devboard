@@ -35,6 +35,10 @@ return new class extends Migration
                 $table->text('claude_comment')->nullable();        // agent's answer (read-only in UI)
                 $table->boolean('result_seen')->default(true);     // false = agent completed it, user hasn't opened the result yet
                 $table->unsignedTinyInteger('progress')->nullable(); // 0-100 while working; set by devboard:check --progress
+                $table->timestamp('working_since')->nullable();     // start of the current working interval (stats)
+                $table->unsignedInteger('work_seconds')->default(0); // total agent working time, closed intervals only (stats)
+                $table->unsignedBigInteger('tokens_in')->default(0); // tokens reported by the agent (input, incl. cache)
+                $table->unsignedBigInteger('tokens_out')->default(0); // tokens reported by the agent (output)
                 $table->timestamp('archived_at')->nullable()->index();
                 $table->timestamps();
                 $table->foreignId('checklist_id')->nullable()->constrained()->cascadeOnDelete();
