@@ -43,6 +43,15 @@ class AppSettings extends Settings
     /** Speech to text: 'auto' (server if configured, else browser), 'server' (AI SDK transcription), 'browser' (Web Speech API). */
     public string $speech_mode;
 
+    /** Price per million input tokens (statistics: cost = tokens × price); 0 = unknown. */
+    public string $cost_per_m_in;
+
+    /** Price per million output tokens; 0 = unknown. */
+    public string $cost_per_m_out;
+
+    /** Currency symbol/code shown with costs. */
+    public string $cost_currency;
+
     /** Board notifications (task closed / question asked) in the in-app bell 🔔. */
     public bool $notify_in_app;
 
@@ -89,6 +98,9 @@ class AppSettings extends Settings
                 'server' => __('devboard::t.settings_options.speech_server'),
                 'browser' => __('devboard::t.settings_options.speech_browser'),
             ]],
+            'cost_per_m_in' => ['text', []],
+            'cost_per_m_out' => ['text', []],
+            'cost_currency' => ['text', []],
             'notify_in_app' => ['bool', []],
             'notify_webpush' => ['bool', []],
             'notify_mail' => ['bool', []],

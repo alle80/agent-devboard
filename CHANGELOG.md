@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.26.0] - 2026-08-19
+
+### Added
+- **Statistics & history** (`/stats`, link in the lists menu): per list (project) — KPIs (completed, working
+  time with average, tokens, **cost** from a price list), per-day bars, the history of completed tasks
+  (date, time, lead time, tokens in/out, cost, sub-tasks/questions/resumed-from) and an overview of all
+  lists; period 7/30/90/365 days or all. `Alle80\Devboard\Support\Stats` (history/aggregate/series/
+  overview/cost), Livewire `StatsPage`.
+- `todos.completed_at` kept by the model (set when completed, cleared when reopened; migration backfills
+  existing completed items from `updated_at`).
+- Settings (App): `cost_per_m_in`, `cost_per_m_out`, `cost_currency` — price list used to turn tokens into
+  cost (0 = cost not shown).
+
 ## [0.25.0] - 2026-08-19
 
 ### Changed

@@ -1,0 +1,117 @@
+<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
+    <div class="mb-4 flex items-center justify-between gap-3">
+        <h1 class="{{ $skin['h1'] }} db-ctx-h1 inline-flex items-center gap-2"><x-devboard::icon name="chart" size="1em" /> {{ __('devboard::t.stats_page.title') }}</h1>
+        <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-devboard::icon name="arrow-left" /> {{ __('devboard::t.back_to_list') }}</a>
+    </div>
+    <p class="{{ $skin['sub'] }} mb-4">{{ __('devboard::t.stats_page.intro') }}</p>
+
+    {{-- Selectors: list + period --}}
+    <div class="{{ $skin['card'] }} mb-4 flex flex-wrap items-center gap-2">
+        <label class="{{ $skin['label'] }} text-sm" for="stats-list">{{ __('devboard::t.stats_page.list') }}</label>
+        <select id="stats-list" class="{{ $skin['input'] }} min-w-0 flex-1 text-sm" wire:change="setList($event.target.value)">
+            @foreach ($lists as $l)
+                <option value="{{ $l->id }}" @selected($list && $l->id === $list->id)>{{ $l->name }}</option>
+            @endforeach
+        </select>
+        <span class="flex flex-wrap items-center gap-1 text-xs">
+            @foreach ([7 => '7g', 30 => '30g', 90 => '90g', 365 => '1a', 0 => __('devboard::t.stats_page.all_time')] as $d => $lbl)
+                <button type="button" wire:click="setDays({{ $d }})" class="{{ $days === $d ? 'tl-check tl-check-on tl-display' : 'tl-check tl-display' }} cursor-pointer px-2 py-1 leading-none" aria-pressed="{{ $days === $d ? 'true' : 'false' }}">{{ $lbl }}</button>
+            @endforeach
+        </span>
+    </div>
+
+    @if (! $list)
+        <p class="{{ $skin['help'] }} text-center">{{ __('devboard::t.stats_page.no_list') }}</p>
+    @else
+        {{-- KPIs --}}
+        <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            @foreach ([
+                ['label' => __('devboard::t.stats_page.kpi_done'), 'value' => $agg['count'], 'sub' => __('devboard::t.stats_page.kpi_done_all', ['n' => $aggAll['count']])],
+                ['label' => __('devboard::t.stats_page.kpi_time'), 'value' => \Alle80\Devboard\Support\Stats::duration($agg['timed_count'] ? $agg['work_seconds'] : null), 'sub' => $agg['avg_work_seconds'] !== null ? __('devboard::t.stats_page.kpi_avg', ['v' => \Alle80\Devboard\Support\Stats::duration($agg['avg_work_seconds'])]) : __('devboard::t.stats_page.untracked')],
+                ['label' => __('devboard::t.stats_page.kpi_tokens'), 'value' => $agg['tokens_count'] ? \Alle80\Devboard\Models\Todo::formatTokens($agg['tokens_in'] + $agg['tokens_out']) : '—', 'sub' => $agg['tokens_count'] ? \Alle80\Devboard\Models\Todo::formatTokens($agg['tokens_in']).' in / '.\Alle80\Devboard\Models\Todo::formatTokens($agg['tokens_out']).' out' : __('devboard::t.stats_page.untracked')],
+                ['label' => __('devboard::t.stats_page.kpi_cost'), 'value' => \Alle80\Devboard\Support\Stats::money($agg['cost']), 'sub' => ($prices[0] <= 0 && $prices[1] <= 0) ? __('devboard::t.stats_page.no_prices') : __('devboard::t.stats_page.kpi_costed', ['n' => $agg['costed_count'], 'total' => $agg['count']])],
+            ] as $k)
+                <div class="{{ $skin['card'] }} db-kpi">
+                    <div class="{{ $skin['help'] }} text-xs uppercase tracking-wide">{{ $k['label'] }}</div>
+                    <div class="tl-display db-kpi-value mt-1 text-2xl tabular-nums">{{ $k['value'] }}</div>
+                    <div class="{{ $skin['help'] }} mt-0.5 text-xs">{{ $k['sub'] }}</div>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Per-day series: completed tasks (bars) + cost/time on hover --}}
+        @php($max = max(1, max(array_column($series, 'count'))))
+        <div class="{{ $skin['card'] }} mb-4">
+            <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('devboard::t.stats_page.series_title', ['days' => count($series)]) }}</h2>
+            <div class="db-series flex h-28 items-end gap-px" role="img" aria-label="{{ __('devboard::t.stats_page.series_title', ['days' => count($series)]) }}">
+                @foreach ($series as $date => $p)
+                    <div class="db-series-bar flex-1" style="height: {{ $p['count'] ? max(6, round($p['count'] / $max * 100)) : 2 }}%" title="{{ \Carbon\Carbon::parse($date)->format('d/m') }}: {{ $p['count'] }} · {{ \Alle80\Devboard\Support\Stats::duration($p['work_seconds'] ?: null) }} · {{ $p['cost'] ? \Alle80\Devboard\Support\Stats::money($p['cost']) : '—' }}"></div>
+                @endforeach
+            </div>
+            <div class="{{ $skin['help'] }} mt-1 flex justify-between text-[10px]"><span>{{ \Carbon\Carbon::parse(array_key_first($series))->format('d/m') }}</span><span>{{ \Carbon\Carbon::parse(array_key_last($series))->format('d/m') }}</span></div>
+        </div>
+
+        {{-- History --}}
+        <div class="{{ $skin['card'] }} mb-4">
+            <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('devboard::t.stats_page.history_title', ['n' => $rows->count()]) }}</h2>
+            @if ($rows->isEmpty())
+                <p class="{{ $skin['help'] }} py-3 text-center text-sm">{{ __('devboard::t.stats_page.empty') }}</p>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="db-history w-full text-sm">
+                        <thead>
+                            <tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide">
+                                <th class="py-1 pr-2">{{ __('devboard::t.stats_page.col_date') }}</th>
+                                <th class="py-1 pr-2">{{ __('devboard::t.stats_page.col_task') }}</th>
+                                <th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.col_time') }}</th>
+                                <th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.col_tokens') }}</th>
+                                <th class="py-1 text-right">{{ __('devboard::t.stats_page.col_cost') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="{{ $skin['divide'] }}">
+                            @foreach ($rows as $r)
+                                @php($t = $r['todo'])
+                                <tr wire:key="h-{{ $t->id }}" class="align-top">
+                                    <td class="py-1.5 pr-2 whitespace-nowrap tabular-nums {{ $skin['help'] }}">{{ $t->completed_at->format('d/m H:i') }}</td>
+                                    <td class="py-1.5 pr-2">
+                                        <span class="{{ $skin['label'] }}">{{ $t->title }}</span>
+                                        <span class="{{ $skin['help'] }} block text-xs">
+                                            @if ($t->archived_at)<span class="mr-1">{{ __('devboard::t.stats_page.archived') }}</span>@endif
+                                            @if ($t->ingredients_count ?? $t->ingredients->count()){{ $t->ingredients_done_count }}/{{ $t->ingredients->count() }} {{ __('devboard::t.stats_page.subtasks') }}@endif
+                                            @if ($t->questions_count) · {{ $t->questions_count }} {{ __('devboard::t.stats_page.questions') }}@endif
+                                            @if ($r['lead_seconds'] !== null) · {{ __('devboard::t.stats_page.lead') }} {{ \Alle80\Devboard\Support\Stats::duration($r['lead_seconds']) }}@endif
+                                            @if ($t->parent) · {{ __('devboard::t.stats_page.resumes', ['title' => $t->parent->title]) }}@endif
+                                        </span>
+                                    </td>
+                                    <td class="py-1.5 pr-2 text-right whitespace-nowrap tabular-nums">{{ \Alle80\Devboard\Support\Stats::duration($r['work_seconds']) }}</td>
+                                    <td class="py-1.5 pr-2 text-right whitespace-nowrap tabular-nums">{{ $r['tokens_in'] + $r['tokens_out'] ? \Alle80\Devboard\Models\Todo::formatTokens($r['tokens_in']).' / '.\Alle80\Devboard\Models\Todo::formatTokens($r['tokens_out']) : '—' }}</td>
+                                    <td class="py-1.5 text-right whitespace-nowrap tabular-nums">{{ \Alle80\Devboard\Support\Stats::money($r['cost']) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        {{-- Overview of every list --}}
+        <div class="{{ $skin['card'] }}">
+            <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('devboard::t.stats_page.overview_title') }}</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('devboard::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('devboard::t.stats_page.kpi_cost') }}</th></tr></thead>
+                    <tbody class="{{ $skin['divide'] }}">
+                        @foreach ($overview as $o)
+                            <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $o['list']->id === $list->id ? 'font-bold' : '' }}">
+                                <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}</button></td>
+                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ $o['agg']['count'] }}</td>
+                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ \Alle80\Devboard\Support\Stats::duration($o['agg']['timed_count'] ? $o['agg']['work_seconds'] : null) }}</td>
+                                <td class="py-1.5 text-right tabular-nums">{{ \Alle80\Devboard\Support\Stats::money($o['agg']['cost']) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+</div>

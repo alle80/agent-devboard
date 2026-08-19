@@ -97,6 +97,7 @@
         <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="mt-1 flex items-center justify-between gap-2 border-t-2 border-black/20 px-2 pt-2 pb-1">
             @csrf
             <span class="inline-flex min-w-0 items-center gap-1 truncate text-xs opacity-60"><x-devboard::icon name="user" /> {{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</span>
+            <a href="{{ route('devboard.stats') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.stats_page.title') }}"><x-devboard::icon name="chart" /> {{ __('devboard::t.stats_page.menu') }}</a>
             <a href="{{ route('devboard.context') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]) }}"><x-devboard::icon name="book" /> {{ __('devboard::t.ctx.menu') }}</a>
             <a href="{{ route('devboard.settings') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.settings') }}"><x-devboard::icon name="settings" /> {{ __('devboard::t.settings') }}</a>
             @if ($logout && \Illuminate\Support\Facades\Route::has($logout))

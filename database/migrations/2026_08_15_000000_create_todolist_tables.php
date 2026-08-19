@@ -28,6 +28,7 @@ return new class extends Migration
                 $table->string('title');
                 $table->unsignedInteger('order')->index();
                 $table->boolean('completed')->default(false);
+                $table->timestamp('completed_at')->nullable()->index(); // when it was completed (history/statistics)
                 $table->boolean('open_to_work')->default(false);   // user: ready for the agent
                 $table->boolean('working')->default(false);        // agent: in progress
                 $table->timestamp('stopped_at')->nullable();       // user stopped the agent

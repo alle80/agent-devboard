@@ -117,6 +117,9 @@ Web Push (add `NotificationChannels\WebPush\HasPushSubscriptions` to your user m
 of the agent's skills; the modal shows them under the Task note as a 🧩 accordion and the chosen ones are
 printed by `devboard:check` for that task.
 
+**Statistics page** (`/stats`): completed tasks per list with working time, tokens and cost (set the price
+per million tokens in Settings), per-day bars, overview of all lists.
+
 **Statistics**: every 🔧 interval is timed automatically (working time per todo, waiting for answers
 excluded); tokens are whatever the agent reports with `--tokens-in/--tokens-out` (cumulative, also on
 `--take`/`--ask`). The modal shows them as a **📊 Stats** line.

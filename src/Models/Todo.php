@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Todo extends Model
 {
-    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    protected $fillable = ['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -26,6 +26,7 @@ class Todo extends Model
             'tokens_out' => 'integer',
             'skills' => 'array',
             'archived_at' => 'datetime',
+            'completed_at' => 'datetime',
             'stopped_at' => 'datetime',
             'order' => 'integer',
         ];
@@ -108,6 +109,12 @@ class Todo extends Model
         return (string) $n;
     }
 
+    /** Estimated cost from the price list in AppSettings (null when no prices or no tokens). */
+    public function cost(): ?float
+    {
+        return \Alle80\Devboard\Support\Stats::cost((int) $this->tokens_in, (int) $this->tokens_out);
+    }
+
     /** One-line summary for CLI/UI: "⏱ 1h 12m · 🪙 1.2M in / 12k out". */
     public function statsLine(): string
     {
@@ -119,6 +126,13 @@ class Todo extends Model
 
     protected static function booted(): void
     {
+        // History: completed_at follows the `completed` flag (set when it becomes true, cleared when reopened)
+        static::saving(function (Todo $todo) {
+            if ($todo->isDirty('completed')) {
+                $todo->completed_at = $todo->completed ? now() : null;
+            }
+        });
+
         // Statistics: every 🔧 interval is timed, whatever flips `working` (CLI take/done/ask, user stop from the web)
         static::saving(function (Todo $todo) {
             if (! $todo->isDirty('working')) return;
