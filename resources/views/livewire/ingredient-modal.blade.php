@@ -9,7 +9,7 @@
             <div class="absolute inset-0 bg-black/70" wire:click="close"></div>
 
             {{-- Pannello --}}
-            <div class="tl-card tl-modal modal-panel relative w-full max-w-md">
+            <div class="tl-card tl-modal modal-panel relative w-full max-w-md md:max-w-2xl lg:max-w-3xl">
 
                 {{-- Testata: icona del tema + comandi/badge + chiudi (il titolo sta nel corpo, prima di «Task») --}}
                 <div class="modal-head tl-modal-head flex items-center gap-3 px-5 py-3">
@@ -21,7 +21,7 @@
                     ><x-devboard::icon name="close" /></button>
                 </div>
 
-                <div class="modal-body max-h-[60vh] space-y-4 overflow-y-auto px-5 py-5">
+                <div class="modal-body max-h-[60vh] space-y-4 overflow-y-auto px-5 py-5 md:max-h-[75vh] md:px-7">
 
                     {{-- Titolo del task, modificabile, come primo campo del corpo --}}
                     <h2 class="tl-display tl-title text-2xl break-words">@include('devboard::livewire.partials.modal-title')</h2>

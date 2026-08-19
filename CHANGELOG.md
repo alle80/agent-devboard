@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.30.1] - 2026-08-19
+
+### Changed
+- Wider task modal on desktop (2xl/3xl, taller body); phones unchanged (full screen).
+
 ## [0.30.0] - 2026-08-19
 
 ### Added
