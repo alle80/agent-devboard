@@ -47,6 +47,13 @@
 
     <x-devboard::toasts />
 
+    @if (\Alle80\Devboard\Mode::isLocal())
+        {{-- Local mode: no authentication — say it loudly on every page --}}
+        <div class="db-local-banner fixed right-3 bottom-3 z-[70] max-w-xs rounded-lg border-2 border-black bg-amber-200 px-3 py-2 text-xs font-bold text-black shadow-[2px_2px_0_#000]" role="status" style="font-family: system-ui, sans-serif">
+            {{ __('devboard::t.local_banner') }}
+        </div>
+    @endif
+
     <div class="relative">
         {{ $slot }}
     </div>

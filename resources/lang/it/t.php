@@ -167,6 +167,7 @@ return [
     'settings_optimization_intro' => 'Modi per far spendere meno token all\'agente (la spesa maggiore è il contesto della chat riletto a ogni passo: meno passi e output più corti = meno token).',
     'settings_app_title' => 'App',
     'settings_app_intro' => 'Comportamento della board.',
+    'local_banner' => 'Modalità local: nessuna autenticazione — chiunque raggiunga questo indirizzo usa la board. Tienila su localhost.',
     'local_mode' => 'modalità locale',
     'settings_saves' => 'Ogni modifica salva subito.',
     'settings_footer' => 'Per aggiungere impostazioni: metti la richiesta nella lista «sviluppo».',

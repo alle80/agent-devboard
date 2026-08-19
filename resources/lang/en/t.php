@@ -173,6 +173,7 @@ return [
     'settings_optimization_intro' => 'Ways to make the agent spend fewer tokens (most of the cost is the chat context re-read at every step: fewer steps and shorter outputs = fewer tokens).',
     'settings_app_title' => 'App',
     'settings_app_intro' => 'Behaviour of the board.',
+    'local_banner' => 'Local mode: no authentication — anyone reaching this address can use the board. Bind it to localhost.',
     'local_mode' => 'local mode',
     'settings_saves' => 'Every change is saved immediately.',
     'settings_footer' => 'To add settings: leave a request in the agent list.',

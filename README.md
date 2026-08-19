@@ -114,6 +114,10 @@ context — write it back to the file from your host (see `scripts/sync-context.
 model, or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
 registered user. Local mode from the UI needs `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
 
+**Local mode safety**: `DEVBOARD_MODE=local` removes authentication from every board route — run it only on your
+own machine and bind the web server to `127.0.0.1` (or a firewall-protected interface); a banner reminds it on every
+page. Behind a reverse proxy keep `trustProxies` limited to the proxy's address.
+
 **Modes**: `DEVBOARD_MODE=server` (default: login, lists per user; restrict access with
 `canAccessDevboard(): bool` on your user model or `DEVBOARD_ACCESS_GATE=<ability>`) or `DEVBOARD_MODE=local`
 (no authentication, one global set of lists — for your own machine only). Also switchable in `/settings`.

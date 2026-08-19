@@ -57,7 +57,7 @@ class ModeTest extends TestCase
 
         // guest can use the board
         $this->get('/settings')->assertOk();
-        $this->get('/')->assertOk()->assertSee('local mode')->assertDontSee('notification-bell');
+        $this->get('/')->assertOk()->assertSee('local mode')->assertSee('Local mode: no authentication')->assertDontSee('notification-bell');
 
         // lists are global: no user_id, everybody sees all of them
         $owner = User::create(['name' => 'A', 'email' => 'a@x.it', 'password' => bcrypt('x')]);
