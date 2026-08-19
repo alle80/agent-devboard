@@ -30,7 +30,7 @@ class StatsPage extends Component
 
     public function mount(): void
     {
-        if ($this->listId === null || ($this->listId > 0 && ! Checklist::mine()->whereKey($this->listId)->exists())) {
+        if ($this->listId === null || ($this->listId > 0 && ! Checklist::mine()->withTrashed()->whereKey($this->listId)->exists())) {
             $this->listId = Checklist::currentId();
         }
         if ($this->listId < 0 && $this->listId !== self::PLANS) {
@@ -43,7 +43,7 @@ class StatsPage extends Component
 
     public function setList(int $id): void
     {
-        if ($id === self::ALL || $id === self::PLANS || Checklist::mine()->whereKey($id)->exists()) {
+        if ($id === self::ALL || $id === self::PLANS || Checklist::mine()->withTrashed()->whereKey($id)->exists()) {
             $this->listId = $id;
         }
     }
@@ -70,7 +70,8 @@ class StatsPage extends Component
     {
         $style = RememberStyle::current();
         $skin = Themes::settingsSkin($style);
-        $lists = Checklist::mine()->orderBy('id')->get();
+        // Trashed lists stay selectable: deleting no longer wipes the statistics (task 298).
+        $lists = Checklist::mine()->withTrashed()->orderBy('id')->get();
         $selected = $this->selectedLists($lists);
         if ($selected->isEmpty() && $lists->isNotEmpty() && $this->listId > 0) {
             $this->listId = $lists->first()->id;

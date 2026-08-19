@@ -35,7 +35,8 @@ class TodoListComponentTest extends TestCase
         $this->assertSame('Buy oat milk', $todo->fresh()->title);
 
         Livewire::test(TodoList::class)->call('delete', $todo->id);
-        $this->assertDatabaseCount('todos', 0);
+        $this->assertSoftDeleted('todos', ['id' => $todo->id]); // soft: statistics survive (task 298)
+        $this->assertSame(0, Todo::count(), 'gone from the board scope');
     }
 
     public function test_title_length_is_enforced(): void

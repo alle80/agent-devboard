@@ -29,14 +29,19 @@ class ChecklistScopingTest extends TestCase
         $this->assertSame('La mia lista', Checklist::find(Checklist::currentId())->name);
     }
 
-    public function test_deleting_a_todo_removes_children(): void
+    public function test_deleting_a_todo_is_soft_and_force_delete_removes_children(): void
     {
         $this->actingAsUser();
         $todo = Todo::create(['title' => 'T', 'order' => 1, 'checklist_id' => Checklist::currentId()]);
         $todo->ingredients()->create(['name' => 'sub', 'order' => 1]);
         $todo->questions()->create(['question' => 'q?', 'order' => 1]);
-        $todo->delete();
 
+        $todo->delete(); // soft: the row (and its children) survive so the statistics keep reading it
+        $this->assertSoftDeleted('todos', ['id' => $todo->id]);
+        $this->assertDatabaseCount('ingredients', 1);
+
+        $todo->forceDelete();
+        $this->assertDatabaseCount('todos', 0);
         $this->assertDatabaseCount('ingredients', 0);
         $this->assertDatabaseCount('questions', 0);
     }

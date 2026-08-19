@@ -204,6 +204,7 @@ return [
         'list' => 'Lista',
         'all_lists' => 'Tutte le liste',
         'all_plans' => 'Tutti i piani (:n)',
+        'deleted_list' => '(eliminata)',
         'all_time' => 'tutto',
         'no_list' => 'Nessuna lista.',
         'kpi_done' => 'Completati',

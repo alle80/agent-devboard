@@ -210,6 +210,7 @@ return [
         'list' => 'List',
         'all_lists' => 'All lists',
         'all_plans' => 'All plans (:n)',
+        'deleted_list' => '(deleted)',
         'all_time' => 'all',
         'no_list' => 'No list yet.',
         'kpi_done' => 'Completed',

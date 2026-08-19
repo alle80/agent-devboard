@@ -7,6 +7,14 @@ Per list (or all lists / all plans): completed tasks, working time (sum and aver
 history of completed tasks (date, time, lead time, tokens, cost) and an overview of every list. Periods 7/30/90/365
 days or all time.
 
+Deleting a list or a task is a **soft delete**: the statistics survive, and trashed lists stay selectable on
+`/stats` (marked "(deleted)"). To really free the data — statistics included — empty the trash:
+
+```bash
+php artisan devboard:empty-trash --dry-run      # what would be purged
+php artisan devboard:empty-trash --days=30      # only items deleted more than 30 days ago
+```
+
 ## Agents status (`/agents`)
 
 Plan and usage windows of your coding agents (used %, remaining %, reset countdown, levels ok/high/almost

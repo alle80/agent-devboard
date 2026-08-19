@@ -6,10 +6,23 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Checklist extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused', 'agent'];
+
+    protected static function booted(): void
+    {
+        // Deleting a list carries its tasks along: soft → soft (stats keep reading them, task 298),
+        // force → force (so the attachment files are cleaned up too; the FK alone would leave them).
+        static::deleting(function (Checklist $list) {
+            $list->todos()->withTrashed()->get()
+                ->each(fn (Todo $t) => $list->isForceDeleting() ? $t->forceDelete() : $t->delete());
+        });
+    }
 
     protected function casts(): array
     {

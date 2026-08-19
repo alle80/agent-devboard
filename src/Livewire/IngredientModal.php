@@ -155,7 +155,7 @@ class IngredientModal extends Component
             && trim((string) $todo->notes) === ''
             && $todo->ingredients()->count() === 0
             && $todo->attachments()->count() === 0) {
-            $todo->delete();
+            $todo->forceDelete(); // blank and untouched: no stats to keep, no need to clog the trash
             $this->dispatch('ingredients-updated');
         }
 

@@ -6,10 +6,13 @@ use Alle80\Devboard\Support\Live;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Todo extends Model
 {
-    protected $fillable = ['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    use SoftDeletes;
+
+    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -162,8 +165,13 @@ class Todo extends Model
             }
         });
 
-        // Eliminando un todo vanno eliminati anche i file allegati (la FK cancella solo i record)
-        static::deleting(fn (Todo $todo) => $todo->attachments->each->delete());
+        // Solo l'eliminazione DEFINITIVA rimuove i file allegati (il soft delete tiene tutto: le statistiche
+        // continuano a leggere la riga — task 298). La FK cancella solo i record, i file vanno tolti qui.
+        static::deleting(function (Todo $todo) {
+            if ($todo->isForceDeleting()) {
+                $todo->attachments->each->delete();
+            }
+        });
 
         // Plan chain: when a task gets completed, the tasks waiting for it become open to work 🟢
         static::saved(function (Todo $todo) {

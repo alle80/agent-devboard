@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.0] - 2026-08-20
+
+### Changed
+- **Deleting a list or a task is now a soft delete**: the rows keep their `deleted_at` and the statistics
+  (time, tokens, costs, history) **survive the deletion**. Trashed lists stay selectable on `/stats`
+  (marked "(deleted)"); the board, menus and CLI never show trashed items. A blank untouched new task is
+  still dropped for real on close.
+
+### Added
+- `devboard:empty-trash {--days=N} {--dry-run}`: permanently purges soft-deleted lists/tasks (attachment
+  files included) — that is when their statistics disappear.
+
 ## [0.32.1] - 2026-08-19
 
 ### Changed

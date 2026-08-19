@@ -12,7 +12,7 @@
             <option value="0" @selected($selection === 0)>{{ __('devboard::t.stats_page.all_lists') }}</option>
             @if ($plansCount > 0)<option value="-1" @selected($selection === -1)>{{ __('devboard::t.stats_page.all_plans', ['n' => $plansCount]) }}</option>@endif
             @foreach ($lists as $l)
-                <option value="{{ $l->id }}" @selected($selection === $l->id)>{{ $l->name }}</option>
+                <option value="{{ $l->id }}" @selected($selection === $l->id)>{{ $l->name }}@if ($l->trashed()) {{ __('devboard::t.stats_page.deleted_list') }}@endif</option>
             @endforeach
         </select>
         <span class="flex flex-wrap items-center gap-1 text-xs">
@@ -122,7 +122,7 @@
                     <tbody class="{{ $skin['divide'] }}">
                         @foreach ($overview as $o)
                             <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $list && $o['list']->id === $list->id ? 'font-bold' : '' }}">
-                                <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}</button></td>
+                                <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}@if ($o['list']->trashed()) <span class="opacity-60">{{ __('devboard::t.stats_page.deleted_list') }}</span>@endif</button></td>
                                 <td class="py-1.5 pr-2 text-right tabular-nums">{{ $o['agg']['count'] }}</td>
                                 <td class="py-1.5 pr-2 text-right tabular-nums">{{ \Alle80\Devboard\Support\Stats::duration($o['agg']['timed_count'] ? $o['agg']['work_seconds'] : null) }}</td>
                                 <td class="py-1.5 text-right tabular-nums">{{ \Alle80\Devboard\Support\Stats::money($o['agg']['cost']) }}</td>
