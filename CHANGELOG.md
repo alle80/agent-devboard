@@ -159,7 +159,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.3...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/alle80/agent-devboard/compare/v0.7.3...v0.8.0
 [0.7.3]: https://github.com/alle80/agent-devboard/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/alle80/agent-devboard/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/alle80/agent-devboard/compare/v0.7.0...v0.7.1

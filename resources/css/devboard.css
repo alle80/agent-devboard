@@ -399,3 +399,19 @@ select.setting-input { appearance: auto; }
 .db-prose th, .db-prose td { border: 1px solid var(--tl-bcol, currentColor); padding: .3em .6em; text-align: left; }
 .db-prose th { background: var(--tl-head, rgb(0 0 0 / .12)); font-weight: 700; }
 .db-prose input[type=checkbox] { margin-right: .4em; }
+
+/* ---------- Completed-but-unseen task highlight (agent finished, user hasn't opened it) ---------- */
+.todo-row.db-unseen {
+    outline: 2px solid var(--tl-accent, #22c55e); outline-offset: 1px;
+    box-shadow: 0 0 0 2px rgb(34 197 94 / .15), 0 0 14px rgb(34 197 94 / .25);
+    opacity: 1 !important;                 /* override the completed dimming so it stands out */
+    animation: db-unseen-pulse 2.2s ease-in-out infinite;
+}
+.todo-row.db-unseen .tl-item-title { filter: none !important; }  /* keep the title crisp */
+.db-unseen-badge {
+    display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: .05em;
+    font-size: .62rem; font-weight: 700; line-height: 1; padding: .22em .5em; border-radius: 999px;
+    background: var(--tl-accent, #22c55e); color: var(--tl-accent-fg, #04180c); white-space: nowrap;
+}
+@keyframes db-unseen-pulse { 0%,100% { box-shadow: 0 0 0 2px rgb(34 197 94 / .15), 0 0 8px rgb(34 197 94 / .18); } 50% { box-shadow: 0 0 0 2px rgb(34 197 94 / .28), 0 0 18px rgb(34 197 94 / .35); } }
+@media (prefers-reduced-motion: reduce) { .todo-row.db-unseen { animation: none; } }

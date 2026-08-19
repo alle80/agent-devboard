@@ -109,6 +109,13 @@ class IngredientModal extends Component
         if ($edit) {
             $this->titleDraft = (string) ($this->todo()?->title ?? '');
         }
+
+        // Opening a completed task marks the agent's result as seen (removes the highlight).
+        $todo = $this->todo();
+        if ($todo && $todo->completed && ! $todo->result_seen) {
+            $todo->update(['result_seen' => true]);
+            \Alle80\Devboard\Support\Live::todoChanged($todo);
+        }
     }
 
     /** Aggiornamento live (Reverb) ricevuto dalla lista: il modale aperto si ri-renderizza. */

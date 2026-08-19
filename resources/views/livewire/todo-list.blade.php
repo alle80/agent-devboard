@@ -59,7 +59,8 @@
             </div>
 
             {{-- Riga todo --}}
-            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }}">
+            @php($unseen = $todo->completed && ! $todo->result_seen)
+            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $unseen ? 'db-unseen' : '' }}">
 
                 <span
                     class="drag-handle shrink-0 cursor-grab touch-none text-xl leading-none opacity-30 transition select-none hover:opacity-100 active:cursor-grabbing"
@@ -101,6 +102,9 @@
                             @endif
                             @if ($todo->attachments_count)
                                 <span class="shrink-0 text-sm" title="{{ __('devboard::t.images_count', ['count' => $todo->attachments_count]) }}">📷{{ $todo->attachments_count }}</span>
+                            @endif
+                            @if ($unseen)
+                                <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
                             @endif
                     </button>
                     @endif

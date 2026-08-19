@@ -57,7 +57,7 @@ class DevboardCheck extends Command
         }
 
         // Quick actions: take in charge / complete with comment
-        foreach (['take' => ['working' => true, 'stopped_at' => null], 'done' => ['working' => false, 'completed' => true]] as $opt => $attrs) {
+        foreach (['take' => ['working' => true, 'stopped_at' => null], 'done' => ['working' => false, 'completed' => true, 'result_seen' => false]] as $opt => $attrs) {
             if ($id = $this->option($opt)) {
                 $t = $list->todos()->findOrFail((int) $id);
                 if ($c = $this->option('comment')) {
