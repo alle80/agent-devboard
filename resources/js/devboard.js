@@ -1,14 +1,10 @@
 // alle80/agent-devboard — browser side: drag & drop (SortableJS, exposed globally for the Alpine x-init of the
-// lists) and live updates via Laravel Echo. Echo is loaded only when a key is configured, either at
-// runtime by <x-devboard::assets /> (window.DEVBOARD_ECHO, from config('devboard.echo')) or at build
-// time through VITE_REVERB_APP_KEY when the host app bundles this file itself.
+// lists) and live updates via Laravel Echo. Echo is set up SYNCHRONOUSLY (static import) so window.Echo exists
+// before Livewire wires the #[On('echo-private:...')] listeners — a dynamic import() resolves too late
+// (especially on mobile), Livewire wins the race, and the private channel is never subscribed.
+// echo.js is a no-op when no broadcaster key is configured.
 // Host app usage:  import '../../vendor/alle80/agent-devboard/resources/js/devboard.js';
 import Sortable from 'sortablejs';
+import './echo.js';
 
 window.Sortable = Sortable;
-
-const echoKey = window.DEVBOARD_ECHO?.key || import.meta.env.VITE_REVERB_APP_KEY;
-
-if (echoKey) {
-    import('./echo.js');
-}

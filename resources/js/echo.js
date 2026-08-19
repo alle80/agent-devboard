@@ -10,6 +10,9 @@ const host = cfg.host ?? import.meta.env.VITE_REVERB_HOST;
 const port = Number(cfg.port ?? import.meta.env.VITE_REVERB_PORT ?? 443);
 const scheme = cfg.scheme ?? import.meta.env.VITE_REVERB_SCHEME ?? 'https';
 
+// No broadcaster configured → do nothing (no WebSocket, no error).
+if (key) {
+
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
@@ -38,3 +41,5 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') resync();
 });
 window.addEventListener('pageshow', (e) => { if (e.persisted) resync(); });
+
+} // if (key)
