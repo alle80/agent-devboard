@@ -39,6 +39,7 @@ return new class extends Migration
                 $table->unsignedInteger('work_seconds')->default(0); // total agent working time, closed intervals only (stats)
                 $table->unsignedBigInteger('tokens_in')->default(0); // tokens reported by the agent (input, incl. cache)
                 $table->unsignedBigInteger('tokens_out')->default(0); // tokens reported by the agent (output)
+                $table->json('skills')->nullable();                 // agent skills chosen for this task (list of names)
                 $table->timestamp('archived_at')->nullable()->index();
                 $table->timestamps();
                 $table->foreignId('checklist_id')->nullable()->constrained()->cascadeOnDelete();

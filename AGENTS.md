@@ -29,7 +29,9 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 2. **Take it FIRST:** `php artisan devboard:check --take=ID` is your *first* action on a task —
    before reading details, exploring code, or asking. The dot turns 🔧 in real time so the user
    sees it's in progress. (`ID` = the `id:N` shown, not the row position.)
-3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots.
+3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots. If `check`
+   prints `🧩 skills to activate for this task: …`, invoke those skills (Skill tool) while working on it.
+   (The catalogue comes from `devboard:skills-import`; keep it fresh from your host with a JSON list.)
    Keep the user posted: `devboard:check --take=ID --progress=N` updates the percentage on the row
    (it starts at 0% when you take it).
 4. **If unclear, ask:** `devboard:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the

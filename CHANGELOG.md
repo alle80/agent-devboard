@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-19
+
+### Added
+- **Agent skills per task**: a catalogue of the skills the coding agent has available (imported with
+  `devboard:skills-import` from a JSON list of `{name, description, source}` — file or stdin — into
+  `config('devboard.skills_file')`, default `storage/app/devboard/skills.json`) is shown in the modal, under
+  the Task note, as a **🧩 accordion of checkboxes**; the chosen ones are saved in `todos.skills` (JSON) and
+  `devboard:check` prints `🧩 skills to activate for this task: …` so the agent invokes them. Read-only on
+  completed items. Dedicated migration for existing installs. `Alle80\Devboard\Support\Skills`.
+
 ## [0.11.0] - 2026-08-19
 
 ### Added
@@ -232,7 +242,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/alle80/agent-devboard/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/alle80/agent-devboard/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/alle80/agent-devboard/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/alle80/agent-devboard/compare/v0.9.2...v0.9.3

@@ -399,6 +399,25 @@ class IngredientModal extends Component
         $this->dispatch('toast', message: __('devboard::t.msg.note_saved'));
     }
 
+    // ----- Skills of the agent chosen for this task -----
+
+    /** Toggle a skill (from the catalogue, or already chosen) on the open todo. */
+    public function toggleSkill(string $name): void
+    {
+        if (! ($todo = $this->editable())) {
+            return;
+        }
+        $name = trim($name);
+        $chosen = array_values((array) $todo->skills);
+        if (! in_array($name, $chosen, true) && ! isset(\Alle80\Devboard\Support\Skills::all()[$name])) {
+            return; // unknown skill
+        }
+        $chosen = in_array($name, $chosen, true) ? array_values(array_diff($chosen, [$name])) : [...$chosen, $name];
+        $todo->skills = $chosen ?: null;
+        $todo->save();
+        $this->dispatch('ingredients-updated');
+    }
+
     // ----- Rinomina ingrediente -----
 
     public function editIngredient(int $ingredientId): void
@@ -504,6 +523,7 @@ class IngredientModal extends Component
         return [
             'todo' => $todo,
             'readonly' => (bool) $todo?->completed,
+            'skills' => \Alle80\Devboard\Support\Skills::all(),
         ];
     }
 }

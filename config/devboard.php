@@ -39,6 +39,9 @@ return [
     // Private broadcast channel per user for live updates ({id} = user id); requires a broadcaster
     'broadcast_channel' => 'App.Models.User.{id}',
 
+    // Catalogue of the agent's skills (JSON written by `devboard:skills-import`; shown in the task modal)
+    'skills_file' => env('DEVBOARD_SKILLS_FILE', storage_path('app/devboard/skills.json')),
+
     // Front-end assets: 'vite' = the host app bundles resources/css/devboard.css + resources/js/devboard.js
     // in its own Vite build (entries below); 'precompiled' = use the files built by the package and
     // published with `vendor:publish --tag=devboard-assets` (public/vendor/devboard/build)

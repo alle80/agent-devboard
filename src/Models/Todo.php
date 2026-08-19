@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Todo extends Model
 {
-    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'archived_at', 'checklist_id', 'parent_id'];
+    protected $fillable = ['title', 'order', 'completed', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'archived_at', 'checklist_id', 'parent_id'];
 
     protected function casts(): array
     {
@@ -24,6 +24,7 @@ class Todo extends Model
             'work_seconds' => 'integer',
             'tokens_in' => 'integer',
             'tokens_out' => 'integer',
+            'skills' => 'array',
             'archived_at' => 'datetime',
             'stopped_at' => 'datetime',
             'order' => 'integer',

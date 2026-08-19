@@ -137,6 +137,9 @@ class DevboardCheck extends Command
                 if ($t->stopped_at) {
                     $this->line('        ⏹ stopped by the user on '.$t->stopped_at->format('d/m H:i').': do NOT work on it until it is 🟢 again');
                 }
+                if ($t->skills) {
+                    $this->line('        🧩 skills to activate for this task (Skill tool): '.implode(', ', (array) $t->skills));
+                }
                 if ($t->notes) {
                     $this->line('        note: '.str_replace("\n", "\n              ", $t->notes));
                 }

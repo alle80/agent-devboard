@@ -54,6 +54,13 @@
                         'cancelClass' => 'tl-check tl-display cursor-pointer px-3 py-1 active:translate-y-px',
                     ])
 
+                    {{-- Skills dell'agente per questo task (sotto al «prompt») --}}
+                    @include('devboard::livewire.partials.modal-skills', [
+                        'boxClass' => 'tl-card relative px-4 py-3',
+                        'labelClass' => 'tl-display tl-accent mr-1',
+                        'textClass' => '',
+                    ])
+
                     {{-- Immagini allegate --}}
                     @include('devboard::livewire.partials.modal-images', [
                         'labelClass' => 'tl-display tl-accent text-xl',

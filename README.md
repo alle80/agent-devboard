@@ -87,6 +87,10 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Skills**: `php artisan devboard:skills-import --file=skills.json` (or JSON on stdin) loads the catalogue
+of the agent's skills; the modal shows them under the Task note as a 🧩 accordion and the chosen ones are
+printed by `devboard:check` for that task.
+
 **Statistics**: every 🔧 interval is timed automatically (working time per todo, waiting for answers
 excluded); tokens are whatever the agent reports with `--tokens-in/--tokens-out` (cumulative, also on
 `--take`/`--ask`). The modal shows them as a **📊 Stats** line.
