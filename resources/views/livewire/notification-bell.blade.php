@@ -17,7 +17,7 @@
             <span class="db-bell-badge absolute -top-2 -right-2 min-w-5 rounded-full border-2 border-black bg-red-500 px-1 text-center text-[10px] leading-4 text-white">{{ $unread > 99 ? '99+' : $unread }}</span>
         @endif
     </summary>
-    <div class="absolute left-0 mt-1.5 max-h-[70vh] w-72 overflow-y-auto rounded-lg border-2 border-black bg-white p-1 text-black shadow-[3px_3px_0_#000] sm:w-80">
+    <div class="db-bell-list fixed left-3 right-3 mt-1.5 max-h-[70vh] overflow-y-auto rounded-lg border-2 border-black bg-white p-1 text-black shadow-[3px_3px_0_#000] sm:absolute sm:right-auto sm:left-0 sm:w-80">
         <div class="flex items-center justify-between gap-2 px-2 py-1">
             <span class="text-xs font-bold uppercase opacity-60">{{ __('devboard::t.notif.title') }}</span>
             @if ($unread)

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.2] - 2026-08-19
+
+### Fixed
+- Notification bell dropdown no longer overflows the screen on phones (full-width panel under the top bar).
+
 ## [0.22.1] - 2026-08-19
 
 ### Changed
