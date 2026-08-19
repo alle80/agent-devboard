@@ -7,5 +7,6 @@
 import Sortable from 'sortablejs';
 import './echo.js';
 import './push.js';
+import './dictate.js';
 
 window.Sortable = Sortable;

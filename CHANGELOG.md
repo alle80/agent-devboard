@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-08-19
+
+### Added
+- **Speech to text**: a microphone button (`<x-devboard::mic>`, browser Web Speech API, no server needed)
+  in the Markdown editor toolbar (note, sub-tasks, context blocks), next to the task title field and in the
+  insert-title form; what you say is appended to the field (language = page locale). Hidden when the browser
+  has no speech recognition. Icon `mic`.
+
 ## [0.15.5] - 2026-08-19
 
 ### Fixed

@@ -15,6 +15,7 @@
             class="w-full min-w-0 flex-1 border-0 border-b-2 border-current bg-transparent px-1 focus:outline-none"
             style="font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit"
         >
+        <x-devboard::mic class="shrink-0 text-base leading-none opacity-70 hover:opacity-100" within="form" target="input" />
         <span class="shrink-0 text-xs font-normal tabular-nums opacity-70" style="font-family: system-ui, sans-serif" x-text="len + '/{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
         <button type="submit" class="shrink-0 cursor-pointer text-lg leading-none" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save_title') }}">✔</button>
         <button type="button" wire:click="cancelTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}">✕</button>

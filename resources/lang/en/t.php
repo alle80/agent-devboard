@@ -49,6 +49,8 @@ return [
     'note' => 'Task',
     'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
     'md' => ['bold' => 'Bold', 'italic' => 'Italic', 'code' => 'Code', 'codeblock' => 'Code block', 'list' => 'List', 'quote' => 'Quote', 'link' => 'Link', 'linktext' => 'text', 'table' => 'Table', 'separator' => 'Separator'],
+    'mic_start' => 'Dictate (speech to text)',
+    'mic_stop' => 'Stop dictation',
     'md_hint' => 'Markdown supported (bold, code, lists, tables…).',
     'result_new' => 'result',
     'result_new_hint' => 'The agent finished this — open to see the result.',

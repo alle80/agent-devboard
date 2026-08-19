@@ -46,6 +46,8 @@ return [
     'note' => 'Task',
     'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],
     'md' => ['bold' => 'Grassetto', 'italic' => 'Corsivo', 'code' => 'Codice', 'codeblock' => 'Blocco codice', 'list' => 'Elenco', 'quote' => 'Citazione', 'link' => 'Link', 'linktext' => 'testo', 'table' => 'Tabella', 'separator' => 'Separatore'],
+    'mic_start' => 'Detta (speech to text)',
+    'mic_stop' => 'Ferma la dettatura',
     'md_hint' => 'Supporta il Markdown (grassetto, codice, elenchi, tabelle…).',
     'result_new' => 'risultato',
     'result_new_hint' => 'Completato dall’agente — apri per vedere il risultato.',

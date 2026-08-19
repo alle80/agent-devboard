@@ -45,6 +45,8 @@
         <span class="db-md-sep"></span>
         <button type="button" class="db-md-btn" @click="insert('\n| a | b |\n| --- | --- |\n| 1 | 2 |\n')" title="{{ __('devboard::t.md.table') }}">&#8862;</button>
         <button type="button" class="db-md-btn" @click="insert('\n\n---\n\n')" title="{{ __('devboard::t.md.separator') }}">&mdash;</button>
+        <span class="db-md-sep"></span>
+        <x-devboard::mic class="db-md-btn" within=".db-md" target="textarea" />
     </div>
     <textarea x-ref="ta" wire:model="{{ $model }}" rows="{{ $rows }}" placeholder="{{ $placeholder }}"
               x-init="$nextTick(() => grow())" @input="grow()" style="overflow:hidden; resize:none;"
