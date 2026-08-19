@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-19
+
+### Added
+- **`devboard:watch`** — a portable monitor for a coding agent: watches the agent list and prints
+  only the changes to react to (an item going _open to work_, answers to a paused question arriving,
+  a stop being requested). One command replaces harness-specific monitors. `--interval`, `--list`,
+  `--once`.
+- **`AGENTS.md`** shipped with the package and publishable with `php artisan vendor:publish
+  --tag=devboard-agents` — the full agent protocol (states, take-first, order, questions, stop, close),
+  so "connect an agent" = launch it in the project directory + read `AGENTS.md` + one `devboard:watch`.
+
+### Changed
+- README rewritten in a scannable structure, with a **Connect a coding agent** section up front.
+
+### Fixed
+- Docs referenced the pre-rename config keys (`config('todolist.agent_list')`,
+  `todolist.broadcast_channel`); corrected to `devboard.*`.
+
 ## [0.3.0] - 2026-08-19
 
 ### Added
@@ -60,7 +78,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/alle80/agent-devboard/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alle80/agent-devboard/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/alle80/agent-devboard/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/alle80/agent-devboard/releases/tag/v0.1.0

@@ -1,45 +1,112 @@
 # alle80/agent-devboard
 
-A **dev board for coding agents** on Laravel 12/13 + Livewire 4: you queue requests as todos, the agent (Claude Code, …) takes them, asks questions, closes them — plus everything a personal todo app needs: multiple lists per user, sub-tasks, notes,
-image attachments (upload / camera / paste, with optional AI descriptions for the search), archive,
-filters, free-text search, live updates between devices (any Laravel broadcaster, e.g. Reverb),
-themes, a settings page, and an **agent-friendly workflow** to drive a coding agent (Claude Code, …)
-from the app itself.
+A **dev board for coding agents** on Laravel 12/13 + Livewire 4. You queue requests as todos; a
+coding agent (Claude Code, …) takes them, asks questions, and closes them — driven from the app.
 
-> Extracted from the original app at https://github.com/alle80/laravel-dev (phase 1: backend,
-> Livewire components, the generic theme system with the built-in **Slate** theme, English base
-> language with an Italian translation).
+**Includes**
+
+- Agent workflow: _open to work → working → done_, with questions, stop and resume
+- Multiple lists per user · sub-tasks · notes
+- Image attachments (upload / camera / paste) with optional AI descriptions for search
+- Archive · state filters · free-text search
+- Live updates between devices (any Laravel broadcaster, e.g. Reverb)
+- A theme system (built-in **Slate** theme + installable zip packs) and a settings page
+- English base language with an Italian translation
+
+> Extracted from the original app at https://github.com/alle80/laravel-dev.
+
+---
 
 ## Requirements
 
-- PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 (Vite) in the host app
-- `ext-gd` (image resizing), `spatie/laravel-settings` (installed automatically)
-- Optional: `laravel/ai` (AI image descriptions), a broadcaster such as `laravel/reverb` (live updates)
+- PHP 8.3+ · Laravel 12 or 13 · Livewire 4 · Tailwind CSS 4 (Vite) in the host app
+- `ext-gd` (image resizing) · `spatie/laravel-settings` (installed automatically)
+- Optional: `laravel/ai` (AI image descriptions) · a broadcaster like `laravel/reverb` (live updates)
 
-## Installation
+## Install
 
 ```bash
 composer require alle80/agent-devboard
 php artisan migrate                                  # tables + settings defaults (idempotent)
-php artisan storage:link                             # attachments live on the "public" disk by default
+php artisan storage:link                             # attachments live on the "public" disk
 php artisan vendor:publish --tag=devboard-assets     # precompiled build & theme assets
 ```
 
-### Front-end assets: two modes
+Routes register automatically — `/` (default theme), `/{theme}`, `/settings` — behind `web` + `auth`.
+**The package needs an authenticated user** (lists belong to users), so plug it into your app's login.
 
-**A. Precompiled (zero build)** — use the CSS/JS built by the package: set `DEVBOARD_ASSETS=precompiled`
-in `.env` (or `'assets' => 'precompiled'` in `config/devboard.php`) and publish the files:
+Then wire up the front-end assets (below) and you're ready to [connect an agent](#connect-a-coding-agent).
+
+---
+
+## Connect a coding agent
+
+One list — `config('devboard.agent_list')`, default **`dev`** — is the request channel between you
+and the agent. You add todos; the agent works them. Setup is meant to be minimal:
+
+**1 — Launch the agent inside the project directory** (Claude Code, or any agent that reads a project
+`AGENTS.md`).
+
+**2 — Give it the workflow** (once):
 
 ```bash
+php artisan vendor:publish --tag=devboard-agents     # drops AGENTS.md in the project root
+```
+
+Agents read `AGENTS.md` automatically; it describes the whole protocol (states, order, questions, stop).
+
+**3 — Start the monitor** (one command):
+
+```bash
+php artisan devboard:watch      # prints ONLY the changes the agent must react to
+```
+
+`watch` polls the list and emits a line when something needs the agent — an item goes **open to
+work**, the **answers** to a paused question arrive, or a **stop** is requested. The agent then reads
+and acts with `devboard:check`.
+
+### The state of each row
+
+| Dot | State | Meaning |
+|-----|-------|---------|
+| ⚪ | waiting | not ready — the agent leaves it alone |
+| 🟢 | open to work | the user released it; the agent may take it (top-down = priority) |
+| 🔧 | working | the agent took it (its first action, so you see it in real time) |
+| ❓ | question | the agent asked something; paused until you answer in the app |
+| ⏹ | stop | you stopped it; the agent drops it immediately |
+| ✔ | done | closed, with the agent's comment |
+
+### The agent's commands (`devboard:check`)
+
+```bash
+php artisan devboard:check                 # what to work on (🟢/🔧), in order; --all for everything
+php artisan devboard:check --take=ID       # take it in charge  → 🔧
+php artisan devboard:check --ask=ID --q="…" --q="…"   # ask, pausing it → ❓
+php artisan devboard:check --done=ID --comment="…"    # close it, with a note back to the user → ✔
+```
+
+`devboard:check` also prints the behaviour settings from `/settings` (commit policy, autonomy,
+notifications, …) that the agent is expected to follow. A closed item can be **resumed** into a new
+linked one, carrying its context.
+
+---
+
+## Front-end assets
+
+Pick one mode.
+
+**A — Precompiled (zero build).** Use the CSS/JS shipped by the package:
+
+```bash
+# .env  →  DEVBOARD_ASSETS=precompiled   (or 'assets' => 'precompiled' in config/devboard.php)
 php artisan vendor:publish --tag=devboard-assets     # public/vendor/devboard/{build,images}
 ```
 
-The package layouts print `<x-devboard::assets />`, which links `public/vendor/devboard/build/devboard.css`
-+ `devboard.js` (Tailwind utilities used by the package views, the theme system, SortableJS and, when a
-Reverb/Pusher key is configured, Laravel Echo). Nothing to install with npm.
+`<x-devboard::assets />` then links `public/vendor/devboard/build/devboard.{css,js}` (Tailwind
+utilities, the theme system, SortableJS, and Laravel Echo when a Reverb/Pusher key is set). No npm.
 
-**B. Bundled by your app (default, `assets = vite`)** — import the package sources in your own Vite
-build. Tailwind 4 does not scan `vendor/`, so add an `@source` for the package views:
+**B — Bundled by your app (default, `assets = vite`).** Import the package sources in your Vite build.
+Tailwind 4 doesn't scan `vendor/`, so add an `@source`:
 
 ```css
 /* resources/css/app.css */
@@ -57,58 +124,42 @@ import '../../vendor/alle80/agent-devboard/resources/js/devboard.js';   // Sorta
 npm i sortablejs laravel-echo pusher-js && npm run build
 ```
 
-`<x-devboard::assets />` then emits `@vite(config('devboard.vite_entries'))` (default
-`resources/css/app.css` + `resources/js/app.js`). In both modes the Echo client is configured at runtime
-from `config('devboard.echo')` (`VITE_REVERB_*` / `REVERB_*` env); with an empty key no WebSocket is opened.
-Web fonts of the themes are loaded from `config('devboard.fonts_url')` (bunny.net by default; set it to
-`''` to self-host them in your CSS).
+In both modes the Echo client is configured at runtime from `config('devboard.echo')` (`VITE_REVERB_*`
+/ `REVERB_*`); an empty key opens no WebSocket. Theme fonts load from `config('devboard.fonts_url')`
+(bunny.net by default; set `''` to self-host). To rebuild the precompiled files after editing package
+sources: `cd vendor/alle80/agent-devboard && npm install && npm run build`.
 
-To rebuild the precompiled files after changing the package sources: `cd vendor/alle80/agent-devboard && npm install && npm run build`.
-
-Routes are registered automatically (`/` → default theme, `/{theme}`, `/settings`) behind the
-`web` + `auth` middleware — the package needs an authenticated user (lists belong to users).
-Publish the config to change prefix, middleware, user model, disk, default theme, agent list name:
+## Configuration
 
 ```bash
 php artisan vendor:publish --tag=devboard-config     # config/devboard.php
 php artisan vendor:publish --tag=devboard-views      # override the Blade views
 php artisan vendor:publish --tag=devboard-lang       # translations (en, it)
+php artisan vendor:publish --tag=devboard-agents     # AGENTS.md (agent workflow)
 ```
+
+`config/devboard.php` covers the route prefix and middleware, the user model, the attachments disk,
+the default theme, and the **agent list** name (`agent_list`).
 
 ## Themes
 
-The package ships the generic theme system (shared views + CSS variables per `.theme-<slug>`)
-with the built-in **slate** theme. Add more generic themes in `config('devboard.themes')` or with
+The package ships a generic theme system (shared views + CSS variables per `.theme-<slug>`) with the
+built-in **Slate** theme. Add more with `config('devboard.themes')` or
 `Alle80\Devboard\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
-Fully custom styles (own components/views) can be plugged in with `Themes::registerStyle()` and
-`Themes::registerSkin()` — see the original app for six examples (manga, Jacovitti, C64, Star Wars,
-Zerocalcare, Dragon Ball).
+Fully custom styles (own components/views) plug in via `Themes::registerStyle()` /
+`Themes::registerSkin()`.
 
-### Installable theme packs (zip)
-
-A pack is a zip with `theme.json` (slug, label, icon, `fonts` from bunny.net, texts, `deco` emoji,
-optional `icon_img`, version, author), `theme.css` (`.theme-<slug> { --tl-… }` variables and any rule
-scoped to `.theme-<slug>`) and optional `images/`. Install it from **/settings → 🎨 Themes** or with
-`php artisan devboard:theme-import pack.zip`; packs live in `storage/app/themes/<slug>` and their
-files are served by `/devboard-themes/{slug}/{path}`. Uninstall from the same page or with
-`devboard:theme-import --uninstall=<slug>`. Export any theme as a starting point:
-`php artisan devboard:theme-export slate` (for themes defined in code add `--css-from=resources/css/app.css`
-to extract their CSS). A sample pack (`pollon`) is in `resources/themes/`.
-
-## Agent workflow (`devboard:check`)
-
-One list (config `todolist.agent_list`, default `dev`) is the request channel between the user and
-a coding agent. Each row has a state dot: ⚪ waiting → 🟢 open to work (user) → 🔧 working (agent,
-`--take=ID`) → ✔ done (`--done=ID --comment="…"`); the agent can ask questions (`--ask=ID --q="…"`,
-state ❓) that the user answers in the modal; a 🔧 item can be stopped by the user; a closed item can
-be **resumed** into a new linked one. `php artisan devboard:check` prints what the agent may work on,
-in list order, plus the settings from `/settings` that describe how the agent should behave.
+**Installable packs (zip):** a `theme.json` + `theme.css` (+ optional `images/`). Install from
+**/settings → 🎨 Themes** or `php artisan devboard:theme-import pack.zip`; packs live in
+`storage/app/themes/<slug>`. Export any theme as a starting point:
+`php artisan devboard:theme-export slate --css-from=resources/css/app.css`. A sample pack (`pollon`)
+is in `resources/themes/`.
 
 ## Live updates
 
-Every change of a todo / sub-task / question / attachment broadcasts `Alle80\Devboard\Events\TodoChanged`
-on the private channel `App.Models.User.{id}` (config `todolist.broadcast_channel`). If no broadcaster
-is configured nothing happens (failures are logged, never raised).
+Every change to a todo / sub-task / question / attachment broadcasts
+`Alle80\Devboard\Events\TodoChanged` on the private channel `App.Models.User.{id}`. With no broadcaster
+configured nothing happens (failures are logged, never raised).
 
 ## Development
 
@@ -116,10 +167,10 @@ is configured nothing happens (failures are logged, never raised).
 cd packages/devboard && composer update && vendor/bin/phpunit
 ```
 
-The suite (orchestra/testbench, sqlite in memory) covers migrations, per-user scoping, the Livewire
-components, `devboard:check`, the theme registry and zip packs, translations parity and the live event.
-GitHub Actions runs it on PHP 8.3/8.4 at every push touching the package.
+The suite (orchestra/testbench, in-memory sqlite) covers migrations, per-user scoping, the Livewire
+components, `devboard:check` and `devboard:watch`, the theme registry and zip packs, translation parity
+and the live event. GitHub Actions runs it on PHP 8.3 / 8.4 on every push touching the package.
 
 ## License
 
-MIT.
+MIT — see [LICENSE](LICENSE).

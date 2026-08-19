@@ -1,0 +1,46 @@
+# Agent Devboard — instructions for the coding agent
+
+You are a coding agent driven by an **Agent Devboard**. The user queues work as todos in one
+list (the **agent list**, `config('devboard.agent_list')`). Your job: pick them up, do them, close
+them — reacting to the board in real time.
+
+## Connect (once)
+
+```bash
+php artisan devboard:watch      # in one terminal: prints only the changes you must react to
+```
+
+Then, whenever `watch` reports something (or to start), read and act with `devboard:check`.
+
+## The dot on each row = the state
+
+| Dot | State | What you do |
+|-----|-------|-------------|
+| ⚪ | waiting | **Do not touch.** Not ready for you. |
+| 🟢 | open to work | Yours to take — in list order, top first. |
+| 🔧 | working | You set this the instant you start. |
+| ❓ | question | You asked something; paused until the user answers. |
+| ⏹ | stop | The user stopped it — **stop immediately**. |
+| ✔ | done | Closed with your comment. |
+
+## The loop
+
+1. **See the work:** `php artisan devboard:check` (only 🟢/🔧; `--all` for everything).
+2. **Take it FIRST:** `php artisan devboard:check --take=ID` is your *first* action on a task —
+   before reading details, exploring code, or asking. The dot turns 🔧 in real time so the user
+   sees it's in progress. (`ID` = the `id:N` shown, not the row position.)
+3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots.
+4. **If unclear, ask:** `devboard:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
+   user answers in the app and restarts it (it comes back 🟢). Ask *after* taking.
+5. **Close it:** `devboard:check --done=ID --comment="what you did / how to try it"`. The comment
+   is shown to the user; never write into the user's note.
+
+## Rules
+
+- **Order:** take 🟢 items top-to-bottom (the user's drag-and-drop priority). One at a time.
+- **A question doesn't block the others** — move to the next 🟢 while one waits for an answer.
+- **Stop means stop:** if an item shows ⏹ (stopped), drop it at once and don't touch it until it
+  is 🟢 again. Taking it (`--take`) clears the stop.
+- **Never touch ⚪ items.**
+
+That's it: `watch` tells you when, `check` lets you act.

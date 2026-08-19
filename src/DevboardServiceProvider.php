@@ -7,6 +7,7 @@ use Alle80\Devboard\Console\DescribeImages;
 use Alle80\Devboard\Console\ThemeExport;
 use Alle80\Devboard\Console\ThemeImport;
 use Alle80\Devboard\Console\DevboardCheck;
+use Alle80\Devboard\Console\Watch;
 use Alle80\Devboard\Settings\AgentSettings;
 use Alle80\Devboard\Settings\AppSettings;
 use Illuminate\Console\Scheduling\Schedule;
@@ -46,9 +47,10 @@ class DevboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([DevboardCheck::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
+            $this->commands([DevboardCheck::class, Watch::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
 
             $this->publishes([__DIR__.'/../config/devboard.php' => config_path('devboard.php')], 'devboard-config');
+            $this->publishes([__DIR__.'/../AGENTS.md' => base_path('AGENTS.md')], 'devboard-agents');
             $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/devboard')], 'devboard-views');
             $this->publishes([__DIR__.'/../resources/lang' => $this->app->langPath('vendor/devboard')], 'devboard-lang');
             $this->publishes([__DIR__.'/../public' => public_path('vendor/devboard')], 'devboard-assets');
