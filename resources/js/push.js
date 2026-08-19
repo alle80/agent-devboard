@@ -52,6 +52,30 @@ window.devboardPush = {
     if (sub) { await send('DELETE', { endpoint: sub.endpoint }); await sub.unsubscribe(); }
     return this.status();
   },
+  /** Diagnostics for the settings page: what this browser/device actually has. */
+  async diagnose() {
+    const out = { supported: supported(), secure: typeof window !== 'undefined' && window.isSecureContext, permission: supported() ? Notification.permission : 'n/a', registered: false, subscribed: false, endpointHost: null, standalone: typeof window !== 'undefined' && (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) };
+    if (!supported()) return out;
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    out.registered = !!reg && !!(reg.active || reg.waiting || reg.installing);
+    const sub = reg ? await reg.pushManager.getSubscription() : null;
+    out.subscribed = !!sub;
+    if (sub) { try { out.endpointHost = new URL(sub.endpoint).host; } catch (e) {} }
+    return out;
+  },
+  /** Show a notification locally (no network): proves the OS/browser lets this site display notifications. */
+  async localTest(title, body) {
+    if (!supported()) return false;
+    const reg = await navigator.serviceWorker.getRegistration('/') || await registration();
+    await navigator.serviceWorker.ready;
+    await reg.showNotification(title || 'Agent Devboard', { body: body || 'local test', tag: 'devboard-local-test' });
+    return true;
+  },
+  /** Listen for pushes that reached this device (the service worker posts a message). */
+  onPush(cb) {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'devboard-push') cb(e.data); });
+  },
   async test() {
     const r = await fetch(cfg().testUrl, { method: 'POST', credentials: 'same-origin', headers: { 'X-CSRF-TOKEN': cfg().csrf, Accept: 'application/json' } });
     return r.ok;

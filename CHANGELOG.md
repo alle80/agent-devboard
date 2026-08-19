@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.3] - 2026-08-19
+
+### Added
+- Web Push **diagnostics** in `/settings`: permission, service worker, subscription on this device (push host),
+  opened as PWA/browser, devices registered on the server; «Show a local notification» (no network) and a
+  live log that confirms when a server push actually reaches the device (the service worker posts a message
+  to open pages). Helps telling apart OS-level blocking from delivery problems.
+
 ## [0.22.2] - 2026-08-19
 
 ### Fixed

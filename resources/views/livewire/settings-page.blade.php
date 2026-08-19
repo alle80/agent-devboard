@@ -92,11 +92,12 @@
         class="{{ $skin['card'] }} mb-6"
         aria-labelledby="sec-notif"
         x-data="{
-            st: 'checking', busy: false, sent: false,
-            async refresh() { this.st = window.devboardPush ? await window.devboardPush.status() : 'unsupported'; },
+            st: 'checking', busy: false, sent: false, diag: null, log: [],
+            async refresh() { this.st = window.devboardPush ? await window.devboardPush.status() : 'unsupported'; this.diag = window.devboardPush ? await window.devboardPush.diagnose() : null; window.devboardPush && window.devboardPush.onPush((d) => { this.log.unshift(@js(__('devboard::t.notif.diag_received')) + ' «' + d.title + '»'); }); },
+            async localTest() { this.busy = true; try { await window.devboardPush.localTest(@js(__('devboard::t.notif.diag_local_title')), @js(__('devboard::t.notif.diag_local_body'))); this.log.unshift(@js(__('devboard::t.notif.diag_local_sent'))); } catch (e) { this.log.unshift('✗ ' + e.message); } this.busy = false; },
             async enable() { this.busy = true; try { this.st = await window.devboardPush.enable(); } catch (e) { console.error(e); } this.busy = false; },
             async disable() { this.busy = true; try { this.st = await window.devboardPush.disable(); } catch (e) { console.error(e); } this.busy = false; },
-            async test() { this.busy = true; try { this.sent = await window.devboardPush.test(); } catch (e) { console.error(e); } this.busy = false; },
+            async test() { this.busy = true; this.sent = false; try { this.sent = await window.devboardPush.test(); this.log.unshift(@js(__('devboard::t.notif.diag_server_sent'))); } catch (e) { console.error(e); } this.busy = false; },
         }"
         x-init="refresh()"
     >
@@ -114,7 +115,21 @@
             <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-show="st === 'on'" x-bind:disabled="busy" x-on:click="disable()"><x-devboard::icon name="bell-off" /> {{ __('devboard::t.notif.device_disable') }}</button>
             <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-bind:disabled="busy" x-on:click="test()"><x-devboard::icon name="send" /> {{ __('devboard::t.notif.test') }}</button>
             <span class="{{ $skin['help'] }} text-xs" x-show="sent">{{ __('devboard::t.notif.test_sent') }}</span>
+            <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-show="st === 'on'" x-bind:disabled="busy" x-on:click="localTest()"><x-devboard::icon name="bell" /> {{ __('devboard::t.notif.diag_local') }}</button>
         </div>
+        {{-- Diagnostics: what this device really has (helps when pushes do not show up) --}}
+        <details class="mt-3 text-xs" x-show="diag" x-cloak>
+            <summary class="{{ $skin['help'] }} cursor-pointer select-none">{{ __('devboard::t.notif.diag_title') }}</summary>
+            <dl class="{{ $skin['help'] }} mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 tabular-nums">
+                <dt>{{ __('devboard::t.notif.diag_permission') }}</dt><dd x-text="diag?.permission"></dd>
+                <dt>{{ __('devboard::t.notif.diag_sw') }}</dt><dd x-text="diag?.registered ? 'OK' : 'NO'"></dd>
+                <dt>{{ __('devboard::t.notif.diag_sub') }}</dt><dd x-text="diag?.subscribed ? ('OK (' + (diag.endpointHost || '?') + ')') : 'NO'"></dd>
+                <dt>{{ __('devboard::t.notif.diag_mode') }}</dt><dd x-text="diag?.standalone ? 'PWA' : 'browser'"></dd>
+                <dt>{{ __('devboard::t.notif.diag_server_subs') }}</dt><dd>{{ $pushSubscriptions }}</dd>
+            </dl>
+            <ul class="mt-1 space-y-0.5" x-show="log.length"><template x-for="(l, i) in log" :key="i"><li class="{{ $skin['help'] }}" x-text="l"></li></template></ul>
+            <p class="{{ $skin['help'] }} mt-1">{{ __('devboard::t.notif.diag_hint') }}</p>
+        </details>
     </section>
     @endunless
 

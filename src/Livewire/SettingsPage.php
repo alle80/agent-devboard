@@ -148,6 +148,7 @@ class SettingsPage extends Component
         return view('devboard::livewire.settings-page', [
             'skin' => $skin,
             'installedThemes' => ThemeStore::installed(),
+            'pushSubscriptions' => method_exists(auth()->user() ?? new \stdClass, 'pushSubscriptions') ? auth()->user()->pushSubscriptions()->count() : 0,
             'sections' => [
                 'agent' => [__('devboard::t.settings_agent_title', ['agent' => \Alle80\Devboard\Agent::name()]), __('devboard::t.settings_agent_intro'), AgentSettings::fields()],
                 'optimization' => [__('devboard::t.settings_optimization_title'), __('devboard::t.settings_optimization_intro'), OptimizationSettings::fields()],

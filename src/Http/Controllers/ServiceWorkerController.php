@@ -16,14 +16,19 @@ self.addEventListener('push', (event) => {
   try { payload = event.data ? event.data.json() : {}; } catch (e) { payload = { title: event.data ? event.data.text() : '' }; }
   const title = payload.title || 'Agent Devboard';
   const options = payload.options || payload;
-  event.waitUntil(self.registration.showNotification(title, {
-    body: options.body || '',
-    tag: options.tag,
-    icon: options.icon,
-    badge: options.badge,
-    data: options.data || {},
-    renotify: !!options.tag,
-  }));
+  event.waitUntil((async () => {
+    await self.registration.showNotification(title, {
+      body: options.body || '',
+      tag: options.tag,
+      icon: options.icon,
+      badge: options.badge,
+      data: options.data || {},
+      renotify: !!options.tag,
+    });
+    // tell open pages (diagnostics in /settings) that a push reached this device
+    const list = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    list.forEach((c) => c.postMessage({ type: 'devboard-push', title, body: options.body || '' }));
+  })());
 });
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
