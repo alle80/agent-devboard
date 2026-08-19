@@ -96,16 +96,14 @@
         @php($logout = \Alle80\Devboard\Mode::isLocal() ? null : config('devboard.logout_route'))
         <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="mt-1 border-t-2 border-black/20 px-1 pt-2 pb-1">
             @csrf
-            <div class="mb-1.5 flex items-center justify-between gap-2 px-1">
-                <span class="min-w-0 truncate text-xs opacity-60">{{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</span>
-                @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
-                    <button type="submit" class="shrink-0 cursor-pointer text-xs font-bold text-red-700 hover:underline">{{ __('devboard::t.logout') }}</button>
-                @endif
-            </div>
-            <nav class="grid grid-cols-3 gap-1" aria-label="{{ __('devboard::t.settings') }}">
+            <p class="mb-1.5 truncate px-1 text-xs opacity-60">{{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</p>
+            <nav class="grid grid-cols-2 gap-1" aria-label="{{ __('devboard::t.settings') }}">
                 <a href="{{ route('devboard.stats') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.stats_page.menu') }}</a>
                 <a href="{{ route('devboard.context') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.ctx.menu') }}</a>
                 <a href="{{ route('devboard.settings') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.settings') }}</a>
+                @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
+                    <button type="submit" class="cursor-pointer rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold text-red-700 shadow-[1px_1px_0_#000] hover:bg-red-50 active:translate-y-px">{{ __('devboard::t.logout') }}</button>
+                @endif
             </nav>
         </form>
     </div>

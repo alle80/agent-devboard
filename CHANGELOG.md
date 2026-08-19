@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.26.2] - 2026-08-19
 
 ### Changed
-- Lists menu footer: text-only navigation (Stats / Context / Settings) as three buttons, user name + logout
-  above — no icons.
+- Lists menu footer: text-only navigation (Stats / Context / Settings / Logout) as a 2×2 button grid under
+  the user name — no icons.
 - `/stats` on phones: full-width list selector, history as cards (title, date, time/tokens/cost), at most
   60 bars in the per-day chart; title without icon.
 
