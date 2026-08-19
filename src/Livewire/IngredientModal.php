@@ -98,6 +98,18 @@ class IngredientModal extends Component
             'checklist_id' => $listId,
         ]);
 
+        // Plan lists: keep the chain = list order (the task after the inserted one now depends on it)
+        if ($order < $end) {
+            $prev = null;
+            foreach (Todo::where('checklist_id', $listId)->whereNull('archived_at')->orderBy('order')->orderBy('id')->get(['id', 'depends_on_id']) as $t) {
+                $dep = $prev?->id;
+                if ($prev !== null && (int) $t->depends_on_id !== (int) $dep && Todo::where('checklist_id', $listId)->whereNotNull('depends_on_id')->exists()) {
+                    Todo::whereKey($t->id)->update(['depends_on_id' => $dep]);
+                }
+                $prev = $t;
+            }
+        }
+
         $this->dispatch('ingredients-updated'); // the list shows the new (empty) row
         $this->openFor($todo->id, true);
     }

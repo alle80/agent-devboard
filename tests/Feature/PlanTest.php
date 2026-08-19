@@ -157,6 +157,35 @@ class PlanTest extends TestCase
         $this->assertTrue($c->fresh()->open_to_work, 'chain works again');
     }
 
+    public function test_drag_and_drop_reorders_the_chain_of_a_plan(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'A'], ['title' => 'B'], ['title' => 'C']];
+        $list = Checklist::create(['name' => 'Plan', 'user_id' => auth()->id()]);
+        Plan::build($list, 'Go');
+        session(['checklist_id' => $list->id]);
+        [$a, $b, $c] = $list->todos()->orderBy('order')->get()->all();
+
+        // user drags C to the top: C, A, B
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->call('reorder', [$c->id, $a->id, $b->id]);
+        $this->assertNull($c->fresh()->depends_on_id);
+        $this->assertSame($c->id, $a->fresh()->depends_on_id);
+        $this->assertSame($a->id, $b->fresh()->depends_on_id);
+
+        // start → C opens first; completing C opens A
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->call('startPlan');
+        $this->assertTrue($c->fresh()->open_to_work);
+        $c->fresh()->update(['open_to_work' => false, 'completed' => true]);
+        $this->assertTrue($a->fresh()->open_to_work);
+
+        // a plain list is not chained by reorder
+        $plain = Checklist::create(['name' => 'plain', 'user_id' => auth()->id()]);
+        $x = Todo::create(['title' => 'x', 'order' => 1, 'checklist_id' => $plain->id]);
+        $y = Todo::create(['title' => 'y', 'order' => 2, 'checklist_id' => $plain->id]);
+        session(['checklist_id' => $plain->id]);
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->call('reorder', [$y->id, $x->id]);
+        $this->assertNull($x->fresh()->depends_on_id);
+    }
+
     public function test_fallback_without_ai_creates_a_plan_request_task(): void
     {
         $this->assertFalse(Plan::available());

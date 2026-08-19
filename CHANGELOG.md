@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.30.2] - 2026-08-19
+
+### Changed
+- Plan lists: the chain **follows the drag & drop order** (each task depends on the one above it after a reorder
+  or an insert in the middle), so the execution order is always the visible order.
+
 ## [0.30.1] - 2026-08-19
 
 ### Changed

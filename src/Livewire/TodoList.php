@@ -345,6 +345,23 @@ class TodoList extends Component
         foreach ($orderedIds as $index => $id) {
             $this->active()->whereKey($id)->update(['order' => $index + 1]);
         }
+        $this->rechainPlan();
+    }
+
+    /** Plan lists: the chain follows the list order — each task depends on the previous one (by `order`). */
+    protected function rechainPlan(): void
+    {
+        if (! $this->planStatus()) {
+            return;
+        }
+        $prev = null;
+        foreach ($this->active()->orderBy('order')->orderBy('id')->get(['id', 'depends_on_id']) as $t) {
+            $dep = $prev?->id;
+            if ((int) $t->depends_on_id !== (int) $dep) {
+                Todo::whereKey($t->id)->update(['depends_on_id' => $dep]);
+            }
+            $prev = $t;
+        }
     }
 
     public function delete(int $todoId): void
