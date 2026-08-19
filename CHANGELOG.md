@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.24.1] - 2026-08-19
+
+### Added
+- «Start the plan» ▶ also in the lists menu, next to plan lists that are not running (switches to the list
+  and opens the first not-started task).
+
 ## [0.24.0] - 2026-08-19
 
 ### Added

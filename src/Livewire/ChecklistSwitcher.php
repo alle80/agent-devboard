@@ -101,13 +101,33 @@ class ChecklistSwitcher extends Component
         }
     }
 
+    /** Start a plan list from the menu: first not-started task → open to work, then switch to that list. */
+    public function startPlan(int $checklistId): void
+    {
+        $list = Checklist::mine()->whereKey($checklistId)->first();
+        if (! $list) {
+            return;
+        }
+        $next = $list->todos()->whereNull('archived_at')->orderBy('order')->get()
+            ->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->question);
+        if ($next) {
+            $next->update(['open_to_work' => true, 'stopped_at' => null]);
+        }
+        session(['checklist_id' => $list->id]);
+        $this->js('window.location.reload()');
+    }
+
     public function render()
     {
+        $lists = Checklist::mine()->withCount([
+            'todos' => fn ($q) => $q->whereNull('archived_at'),
+            'todos as done_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', true),
+            'todos as chained_count' => fn ($q) => $q->whereNull('archived_at')->whereNotNull('depends_on_id'),
+            'todos as running_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', false)->where(fn ($w) => $w->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true)),
+        ])->orderBy('id')->get();
+
         return view('devboard::livewire.checklist-switcher', [
-            'lists' => Checklist::mine()->withCount([
-                'todos' => fn ($q) => $q->whereNull('archived_at'),
-                'todos as done_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', true),
-            ])->orderBy('id')->get(),
+            'lists' => $lists,
             'currentId' => Checklist::currentId(),
         ]);
     }

@@ -34,6 +34,15 @@
                         <span class="block truncate">{{ $list->name }}@if ($list->id === $currentId) <x-devboard::icon name="check" size=".9em" />@endif</span>
                         <span class="block text-xs font-normal opacity-60">{{ $list->done_count }}/{{ $list->todos_count }} {{ __('devboard::t.done_short') }}</span>
                     </button>
+                    @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count === 0 && $list->done_count < $list->todos_count)
+                        {{-- Plan list not running: start it from here --}}
+                        <button
+                            wire:click="startPlan({{ $list->id }})"
+                            title="{{ $list->done_count > 0 ? __('devboard::t.plan.resume') : __('devboard::t.plan.start') }}"
+                            aria-label="{{ $list->done_count > 0 ? __('devboard::t.plan.resume') : __('devboard::t.plan.start') }}"
+                            class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-1.5 py-1 text-sm shadow-[1px_1px_0_#000] active:translate-y-px"
+                        ><x-devboard::icon name="play" /></button>
+                    @endif
                     <button
                         wire:click="startRename({{ $list->id }})"
                         title="{{ __('devboard::t.rename_list') }}"
