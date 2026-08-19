@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.26.3] - 2026-08-19
+
+### Fixed
+- Lists menu navigation as a 2×2 grid («Settings» was cut on phones).
+
 ## [0.26.2] - 2026-08-19
 
 ### Changed
