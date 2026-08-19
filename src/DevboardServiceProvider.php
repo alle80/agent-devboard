@@ -10,6 +10,7 @@ use Alle80\Devboard\Console\DevboardCheck;
 use Alle80\Devboard\Console\Watch;
 use Alle80\Devboard\Settings\AgentSettings;
 use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Devboard\Settings\OptimizationSettings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -24,7 +25,7 @@ class DevboardServiceProvider extends ServiceProvider
         // spatie/laravel-settings: our settings classes and their value migrations
         $this->app->booting(function () {
             $config = $this->app['config'];
-            $config->set('settings.settings', array_values(array_unique(array_merge((array) $config->get('settings.settings', []), [AgentSettings::class, AppSettings::class]))));
+            $config->set('settings.settings', array_values(array_unique(array_merge((array) $config->get('settings.settings', []), [AgentSettings::class, AppSettings::class, OptimizationSettings::class]))));
             $config->set('settings.migrations_paths', array_values(array_unique(array_merge((array) $config->get('settings.migrations_paths', []), [__DIR__.'/../database/settings']))));
         });
     }

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-08-19
+
+### Added
+- **⚡ Optimization** settings group (`OptimizationSettings`, group `optimization`) — switches that make the
+  agent spend fewer tokens, printed by `devboard:check` as `⚡ optimization: …`:
+  `compact_check` (default on: action calls `--take/--done/--ask/--progress` print only the result line,
+  no settings/listing), `terse_agent` (prints `TERSE MODE ON` + the rules the agent must follow: no chat
+  prose, batched commands, targeted reads, short commits/comments), `context_max_chars` (trims previous
+  context in the command output; 0 = unlimited), `progress_piggyback` (progress updates only together with
+  other commands), `token_report` (report tokens on close). Settings migration for existing installs.
+
 ## [0.10.0] - 2026-08-19
 
 ### Added
@@ -221,7 +232,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/alle80/agent-devboard/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/alle80/agent-devboard/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/alle80/agent-devboard/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/alle80/agent-devboard/compare/v0.9.1...v0.9.2

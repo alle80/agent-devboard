@@ -92,7 +92,8 @@ excluded); tokens are whatever the agent reports with `--tokens-in/--tokens-out`
 `--take`/`--ask`). The modal shows them as a **📊 Stats** line.
 
 `devboard:check` also prints the behaviour settings from `/settings` (commit policy, autonomy,
-notifications, …) that the agent is expected to follow. A closed item can be **resumed** into a new
+notifications, …) that the agent is expected to follow, plus the **⚡ Optimization** switches (compact
+command output, terse mode, context trimming, …) that cut the tokens an agent session spends. A closed item can be **resumed** into a new
 linked one, carrying its context.
 
 ---

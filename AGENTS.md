@@ -50,5 +50,8 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 - **Stop means stop:** if an item shows ⏹ (stopped), drop it at once and don't touch it until it
   is 🟢 again. Taking it (`--take`) clears the stop.
 - **Never touch ⚪ items.**
+- **Save tokens:** `check` prints an `⚡ optimization:` line (the «Optimization» settings group). With
+  compact output on, action calls print only their result — don't re-run `check` just to look. If it
+  prints `TERSE MODE ON`, follow those rules literally (no chat prose, batched commands, targeted reads).
 
 That's it: `watch` tells you when, `check` lets you act.

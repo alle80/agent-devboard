@@ -4,6 +4,7 @@ namespace Alle80\Devboard\Livewire;
 
 use Alle80\Devboard\Settings\AgentSettings;
 use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Devboard\Settings\OptimizationSettings;
 use Alle80\Devboard\Http\Middleware\RememberStyle;
 use Alle80\Devboard\Themes;
 use Alle80\Devboard\ThemeStore;
@@ -24,11 +25,11 @@ class SettingsPage extends Component
     public $themeZip = null;
 
     /** Valori correnti: gruppo => [chiave => valore]. */
-    public array $values = ['agent' => [], 'app' => []];
+    public array $values = ['agent' => [], 'optimization' => [], 'app' => []];
 
     protected function groups(): array
     {
-        return ['agent' => AgentSettings::class, 'app' => AppSettings::class];
+        return ['agent' => AgentSettings::class, 'optimization' => OptimizationSettings::class, 'app' => AppSettings::class];
     }
 
     public function mount(): void
@@ -148,6 +149,7 @@ class SettingsPage extends Component
             'installedThemes' => ThemeStore::installed(),
             'sections' => [
                 'agent' => [__('devboard::t.settings_agent_title'), __('devboard::t.settings_agent_intro'), AgentSettings::fields()],
+                'optimization' => [__('devboard::t.settings_optimization_title'), __('devboard::t.settings_optimization_intro'), OptimizationSettings::fields()],
                 'app' => [__('devboard::t.settings_app_title'), __('devboard::t.settings_app_intro'), AppSettings::fields()],
             ],
         ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Impostazioni'])->title(__('devboard::t.settings_title'));

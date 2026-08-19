@@ -5,6 +5,7 @@ namespace Alle80\Devboard\Console;
 use Alle80\Devboard\Models\Checklist;
 use Alle80\Devboard\Models\Todo;
 use Alle80\Devboard\Settings\AgentSettings;
+use Alle80\Devboard\Settings\OptimizationSettings;
 use Illuminate\Console\Command;
 
 /**
@@ -87,6 +88,12 @@ class DevboardCheck extends Command
             }
         }
 
+        $opt = app(OptimizationSettings::class);
+        $acted = $this->option('take') || $this->option('done') || $this->option('ask');
+        if ($acted && $opt->compact_check && ! $this->option('all') && ! $this->option('json')) {
+            return self::SUCCESS; // compact: the result line is enough, no settings/listing (token saving)
+        }
+
         $marker = storage_path('app/devboard-last-check');
         $last = is_file($marker) ? (int) file_get_contents($marker) : 0;
 
@@ -101,6 +108,10 @@ class DevboardCheck extends Command
             $this->line($todos->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
+            $this->line('⚡ optimization: '.$opt->summary());
+            if ($opt->terse_agent) {
+                $this->line('⚡ '.$opt->terseRules());
+            }
             $this->info(sprintf('List "%s": %d items %s', $name, $todos->count(), $this->option('all') ? 'in total' : 'open to work 🟢 (in list order = priority)'));
             if (! $this->option('all')) {
                 $waiting = $list->todos()->whereNull('archived_at')->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->count();
@@ -114,8 +125,8 @@ class DevboardCheck extends Command
                 $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%]', $t->progress) : '', $t->id));
                 if ($t->parent) {
                     $this->line(sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $t->parent->title, $t->parent->id));
-                    if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $t->parent->notes));
-                    if ($t->parent->claude_comment) $this->line('           🤖 previous: '.str_replace("\n", "\n              ", $t->parent->claude_comment));
+                    if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($t->parent->notes)));
+                    if ($t->parent->claude_comment) $this->line('           🤖 previous: '.str_replace("\n", "\n              ", $opt->trim($t->parent->claude_comment)));
                     foreach ($t->parent->ingredients as $i) $this->line(sprintf('           - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
                 }
                 if ($t->working && $t->working_since) {
@@ -130,7 +141,7 @@ class DevboardCheck extends Command
                     $this->line('        note: '.str_replace("\n", "\n              ", $t->notes));
                 }
                 if ($t->claude_comment) {
-                    $this->line('        🤖 agent: '.str_replace("\n", "\n                 ", $t->claude_comment));
+                    $this->line('        🤖 agent: '.str_replace("\n", "\n                 ", $opt->trim($t->claude_comment)));
                 }
                 foreach ($t->ingredients as $i) {
                     $this->line(sprintf('        - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
