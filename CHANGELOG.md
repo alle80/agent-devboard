@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.2] - 2026-08-19
+
+### Changed
+- The **working icon** is now a green «Matrix» digital-rain glyph (three dashed columns flowing down,
+  glow + faint flicker) instead of the spinning gear.
+- The **sub-tasks badge** (☑ n/m) is shown only when the item has sub-tasks.
+
+### Removed
+- The 💬 icon shown on rows with a note.
+
 ## [0.14.1] - 2026-08-19
 
 ### Added

@@ -96,11 +96,10 @@
                             <span class="tl-item-title break-words underline decoration-dotted underline-offset-4 {{ $todo->completed ? 'line-through' : '' }}">
                                 {{ $todo->title }}
                             </span>
+                            @if ($todo->ingredients->isNotEmpty())
                                 <span class="tl-mini shrink-0">
                                     ☑ {{ $todo->ingredients->where('checked', true)->count() }}/{{ $todo->ingredients->count() }}
                                 </span>
-                            @if ($todo->notes)
-                                <span class="shrink-0" title="{{ $todo->notes }}">💬</span>
                             @endif
                             @if ($todo->claude_comment)
                                 <span class="shrink-0 text-sm" title="{{ __('devboard::t.agent_replied') }}">🤖</span>
