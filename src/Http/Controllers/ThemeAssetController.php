@@ -17,8 +17,14 @@ class ThemeAssetController
         $file = ThemeStore::path($slug, $path);
         abort_unless(is_file($file), 404);
 
-        $types = ['css' => 'text/css', 'svg' => 'image/svg+xml', 'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'webp' => 'image/webp', 'woff' => 'font/woff', 'woff2' => 'font/woff2', 'ttf' => 'font/ttf', 'otf' => 'font/otf', 'md' => 'text/plain', 'txt' => 'text/plain'];
+        $types = ['css' => 'text/css', 'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'webp' => 'image/webp', 'woff' => 'font/woff', 'woff2' => 'font/woff2', 'ttf' => 'font/ttf', 'otf' => 'font/otf', 'md' => 'text/plain', 'txt' => 'text/plain'];
 
-        return response()->file($file, ['Content-Type' => $types[$ext] ?? 'application/octet-stream', 'Cache-Control' => 'public, max-age=86400']);
+        return response()->file($file, [
+            'Content-Type' => $types[$ext] ?? 'application/octet-stream',
+            'Cache-Control' => 'public, max-age=86400',
+            'X-Content-Type-Options' => 'nosniff',
+            // Theme assets are data, never documents: no scripts, no navigation side effects
+            'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; sandbox",
+        ]);
     }
 }

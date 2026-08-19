@@ -36,7 +36,8 @@ class ThemesTest extends TestCase
         $p = $folder ? "{$slug}/" : '';
         $zip->addFromString($p.'theme.json', json_encode(['slug' => $slug, 'label' => 'Ocean', 'icon' => '🌊', 'claim' => 'deep blue', 'version' => '1.0'] + $extra));
         $zip->addFromString($p.'theme.css', ".theme-{$slug} { --tl-bg: #012; --tl-fg: #cde; }");
-        $zip->addFromString($p.'images/wave.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+        $zip->addFromString($p.'images/wave.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='));
+        $zip->addFromString($p.'images/bad.svg', '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"/>');
         $zip->addFromString($p.'evil.php', '<?php echo 1;');
         $zip->close();
 
@@ -68,13 +69,15 @@ class ThemesTest extends TestCase
         $def = ThemeStore::install($this->makePack());
         $this->assertSame('Ocean', $def['label']);
         $this->assertTrue(Themes::has('ocean'));
-        $this->assertFileExists(ThemeStore::path('ocean', 'images/wave.svg'));
+        $this->assertFileExists(ThemeStore::path('ocean', 'images/wave.png'));
+        $this->assertFileDoesNotExist(ThemeStore::path('ocean', 'images/bad.svg'), 'svg is not accepted (scriptable)');
         $this->assertFileDoesNotExist(ThemeStore::path('ocean', 'evil.php'), 'unknown extensions are dropped');
         $this->assertStringContainsString('/devboard-themes/ocean/theme.css', Themes::get('ocean')['css_url']);
 
         $this->get('/devboard-themes/ocean/theme.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8');
         $this->get('/devboard-themes/ocean/theme.json')->assertNotFound();
-        $this->get('/devboard-themes/ocean/images/wave.svg')->assertOk();
+        $this->get('/devboard-themes/ocean/images/wave.png')->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff')->assertHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; sandbox");
+        $this->get('/devboard-themes/ocean/images/bad.svg')->assertNotFound();
 
         // The themed page works with the pack (css link + texts)
         $this->get('/ocean')->assertOk()->assertSee('deep blue')->assertSee('devboard-themes/ocean/theme.css', false);
@@ -131,5 +134,34 @@ class ThemesTest extends TestCase
         $zip->close();
         $this->artisan('devboard:theme-import', ['zip' => $out])->assertSuccessful();
         $this->assertTrue(Themes::has('slate-copy'));
+    }
+
+    public function test_css_is_sanitised_and_packs_have_limits(): void
+    {
+        $css = "@import url('https://evil.test/x.css');\n.a { background: url(https://evil.test/beacon.png); }\n.b { background: url('images/ok.png'); color: red; }\n.c { behavior: url(x.htc); width: expression(alert(1)); }\n.d { background: url(data:image/png;base64,AAAA); } .e { background: url(../../etc/passwd); }";
+        $out = ThemeStore::sanitizeCss($css);
+        $this->assertStringNotContainsString('@import url', $out);
+        $this->assertStringNotContainsString('evil.test', $out);
+        $this->assertStringContainsString("url('images/ok.png')", $out, 'relative urls are kept');
+        $this->assertStringContainsString('url(data:image/png;base64,AAAA)', $out, 'inline images are kept');
+        $this->assertStringNotContainsString('expression(', $out);
+        $this->assertStringNotContainsString('behavior: url', $out);
+        $this->assertStringNotContainsString('passwd', $out);
+
+        // installed pack: the css on disk is the sanitised one, external icon_img dropped
+        $file = $this->makePack('sky', ['icon_img' => 'https://evil.test/i.png']);
+        $zip = new ZipArchive; $zip->open($file); $zip->addFromString('theme.css', "@import 'x'; .t{color:#fff}"); $zip->close();
+        $def = ThemeStore::install($file);
+        $this->assertNull($def['icon_img'] ?? null);
+        $this->assertStringNotContainsString('@import', file_get_contents(ThemeStore::path('sky', 'theme.css')));
+
+        // too many entries
+        $big = storage_path('framework/testing/big.zip');
+        $zip = new ZipArchive; $zip->open($big, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zip->addFromString('theme.json', json_encode(['slug' => 'big', 'label' => 'Big']));
+        for ($i = 0; $i < ThemeStore::MAX_ENTRIES + 1; $i++) { $zip->addFromString("images/f$i.txt", 'x'); }
+        $zip->close();
+        $this->expectException(\RuntimeException::class);
+        ThemeStore::install($big);
     }
 }

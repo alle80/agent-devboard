@@ -22,9 +22,42 @@ class ThemeStore
     public const KEYS = ['slug', 'label', 'icon', 'icon_img', 'fonts', 'claim', 'counter', 'done_all', 'add', 'stamp', 'footer', 'confirm', 'placeholder', 'deco', 'version', 'author', 'description'];
 
     /** File extensions accepted inside a pack. */
-    public const EXTENSIONS = ['json', 'css', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'woff', 'woff2', 'ttf', 'otf', 'md', 'txt'];
+    public const EXTENSIONS = ['json', 'css', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'woff', 'woff2', 'ttf', 'otf', 'md', 'txt']; // no svg: scriptable
+
+    /** Limits of a pack: per file, whole pack, number of entries. */
+    public const MAX_FILE_BYTES = 5 * 1024 * 1024;
+
+    public const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
+
+    public const MAX_ENTRIES = 200;
 
     protected static ?array $cache = null;
+
+    /**
+     * Theme CSS is linked on every page of the theme: strip what can call home or run code —
+     * `@import` of anything, `url()` / `src()` / `image-set()` pointing outside the pack (http(s)://, //, data:
+     * except images), `expression()`, `-moz-binding`, `behavior:`. Relative URLs (images/, fonts/) are kept.
+     */
+    public static function sanitizeCss(string $css): string
+    {
+        $css = preg_replace('/@import\b[^;]*;?/i', '/* import removed */', $css);
+        $css = preg_replace('/expression\s*\(/i', '/* removed */(', $css);
+        $css = preg_replace('/-moz-binding\s*:[^;}]*/i', '/* removed */', $css);
+        $css = preg_replace('/\bbehavior\s*:[^;}]*/i', '/* removed */', $css);
+        $css = preg_replace_callback('/\b(url|src|image-set)\s*\(\s*([\'"]?)([^\'")]*)\2\s*\)/i', function ($m) {
+            $target = trim($m[3]);
+            if (preg_match('#^(https?:)?//#i', $target) || preg_match('#^[a-z][a-z0-9+.-]*:#i', $target) && ! preg_match('#^data:image/(png|jpe?g|gif|webp);#i', $target)) {
+                return $m[1].'("")'; // external / non-image scheme → neutralised
+            }
+            if (str_contains($target, '..')) {
+                return $m[1].'("")';
+            }
+
+            return $m[0];
+        }, $css);
+
+        return $css;
+    }
 
     public static function root(): string
     {
@@ -78,8 +111,9 @@ class ThemeStore
             'placeholder' => '…', 'deco' => [],
         ];
         $def['deco'] = array_values(array_filter((array) $def['deco'], 'is_string'));
-        if (! empty($def['icon_img']) && ! preg_match('#^(https?:)?/#', $def['icon_img'])) {
-            $def['icon_img'] = static::url($slug, $def['icon_img']);
+        if (! empty($def['icon_img'])) {
+            // only files inside the pack (no external URLs: tracking / mixed content)
+            $def['icon_img'] = preg_match('#^(https?:)?//#', $def['icon_img']) || str_contains($def['icon_img'], '..') ? null : static::url($slug, ltrim($def['icon_img'], '/'));
         }
         if (is_file(static::path($slug, 'theme.css'))) {
             $def['css_url'] = static::url($slug, 'theme.css').'?v='.filemtime(static::path($slug, 'theme.css'));
@@ -130,6 +164,10 @@ class ThemeStore
         File::ensureDirectoryExists($tmp);
 
         try {
+            if ($zip->numFiles > self::MAX_ENTRIES) {
+                throw new RuntimeException(__('devboard::t.themes.err_too_many_files', ['max' => self::MAX_ENTRIES]));
+            }
+            $total = 0;
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $name = $zip->getNameIndex($i);
                 if ($prefix !== '' && ! str_starts_with($name, $prefix)) {
@@ -143,9 +181,25 @@ class ThemeStore
                 if (! in_array($ext, self::EXTENSIONS, true)) {
                     continue;
                 }
-                $data = $zip->getFromIndex($i);
-                if ($data === false || strlen($data) > 5 * 1024 * 1024) {
+                // Declared (uncompressed) size BEFORE reading: zip bombs are refused without inflating them
+                $stat = $zip->statIndex($i);
+                $declared = (int) ($stat['size'] ?? 0);
+                if ($declared > self::MAX_FILE_BYTES) {
                     continue;
+                }
+                if ($total + $declared > self::MAX_TOTAL_BYTES) {
+                    throw new RuntimeException(__('devboard::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
+                }
+                $data = $zip->getFromIndex($i);
+                if ($data === false || strlen($data) > self::MAX_FILE_BYTES) {
+                    continue;
+                }
+                $total += strlen($data);
+                if ($total > self::MAX_TOTAL_BYTES) {
+                    throw new RuntimeException(__('devboard::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
+                }
+                if ($ext === 'css') {
+                    $data = self::sanitizeCss($data);
                 }
                 File::ensureDirectoryExists(dirname($tmp.'/'.$rel));
                 File::put($tmp.'/'.$rel, $data);

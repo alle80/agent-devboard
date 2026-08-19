@@ -375,6 +375,8 @@ return [
         'uninstalled_ok' => 'Tema disinstallato',
         'how' => 'Per crearne uno: esporta un tema esistente con `php artisan devboard:theme-export <slug>` e modifica theme.json / theme.css.',
         'err_zip' => 'Il file non è uno zip valido.',
+        'err_too_many_files' => 'Troppi file nel pacchetto (max :max).',
+        'err_too_big_total' => 'Il pacchetto è troppo grande una volta estratto (max :max MB).',
         'err_missing_json' => 'theme.json non trovato nel pacchetto.',
         'err_invalid_json' => 'theme.json non valido (serve uno slug di lettere minuscole, cifre e trattini).',
         'err_reserved' => 'Lo slug «:slug» è riservato a un tema o stile incorporato.',

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.29.1] - 2026-08-19
+
+### Security
+- Theme packs hardened: **SVG no longer accepted** (scriptable); `theme.css` is **sanitised** on install
+  (`@import`, external `url()`/`src()`/`image-set()`, non-image `data:`, `expression()`, `behavior`,
+  `-moz-binding` removed — relative urls and inline images kept); extraction **limits** (5 MB per file, 20 MB per
+  pack, 200 entries) checked on the declared size before inflating; `icon_img` must be inside the pack; theme
+  assets are served with `X-Content-Type-Options: nosniff` and a sandboxing `Content-Security-Policy`.
+
 ## [0.29.0] - 2026-08-19
 
 ### Security

@@ -107,6 +107,9 @@ quality); otherwise the browser's Web Speech API is used. Setting `speech_mode` 
 (single, multi-select, whole group), edit and reorder; `php artisan devboard:context export` prints the enabled
 context — write it back to the file from your host (see `scripts/sync-context.py` in the origin repo).
 
+**Theme packs** are code-like content: only administrators can install them; SVG is refused, the CSS is sanitised
+(no `@import`/external urls), packs are capped (5 MB/file, 20 MB, 200 files) and assets are served sandboxed.
+
 **Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool` on your user
 model, or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
 registered user. Local mode from the UI needs `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
