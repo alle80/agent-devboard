@@ -3,7 +3,7 @@
     {{-- ===== HEADER ===== --}}
     <header class="relative mb-10 text-center">
         <div class="tl-card inline-block px-7 py-4">
-            <h1 class="tl-display tl-title"><x-devboard::theme-icon :theme="$t" size="1.1em" /> {{ $listName }} <x-devboard::theme-icon :theme="$t" size="1.1em" class="max-sm:hidden" /></h1>
+            <h1 class="tl-display tl-title"><x-devboard::logo size="1.1em" /> {{ $listName }} <x-devboard::logo size="1.1em" class="max-sm:hidden" /></h1>
             <p class="tl-claim mt-1.5">{{ $t['claim'] }}</p>
         </div>
 

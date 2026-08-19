@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.32.1] - 2026-08-19
+
+### Changed
+- The board **list title (h1)** now shows the brand mark (new inline `<x-devboard::logo>` component,
+  `currentColor`, so it follows the theme palette) instead of the theme icon/emoji; theme icons remain in
+  the style switcher, settings and modal.
+
 ## [0.32.0] - 2026-08-19
 
 ### Added
