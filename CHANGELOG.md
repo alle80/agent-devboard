@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-08-19
+
+### Fixed
+- `app.tab_side` (added in 0.5.0) is now seeded by its own settings migration, so installs that had
+  already run the initial settings migration get it on `php artisan migrate` (fresh installs were fine).
+
 ## [0.5.0] - 2026-08-19
 
 ### Added
@@ -88,7 +94,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/alle80/agent-devboard/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/alle80/agent-devboard/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/alle80/agent-devboard/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alle80/agent-devboard/compare/v0.2.0...v0.3.0
