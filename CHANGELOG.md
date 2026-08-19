@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.3] - 2026-08-19
+## [0.7.0] - 2026-08-19
+
+### Added
+- **Markdown** in the **Task** description and in **sub-tasks**: an editor toolbar
+  (`<x-devboard::md-editor>` — bold, italic, code, code block, list, quote, link, table, separator)
+  and **safe rendering** — GitHub-flavoured (tables, task lists, autolinks), with raw HTML stripped and
+  unsafe links blocked, via `league/commonmark` (`Alle80\Devboard\Support\Markdown`). The agent's
+  comment is rendered as Markdown too.
+
+### Added (dependency)
+- `league/commonmark ^2.4`.
 
 ### Changed
 - **Row icons** are now the SVG icon set with tooltips (a state badge coloured per state, plus
@@ -129,7 +139,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.6.3...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/alle80/agent-devboard/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/alle80/agent-devboard/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/alle80/agent-devboard/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/alle80/agent-devboard/compare/v0.6.0...v0.6.1

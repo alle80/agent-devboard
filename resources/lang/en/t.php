@@ -48,6 +48,8 @@ return [
     // Modal
     'note' => 'Task',
     'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
+    'md' => ['bold' => 'Bold', 'italic' => 'Italic', 'code' => 'Code', 'codeblock' => 'Code block', 'list' => 'List', 'quote' => 'Quote', 'link' => 'Link', 'linktext' => 'text', 'table' => 'Table', 'separator' => 'Separator'],
+    'md_hint' => 'Markdown supported (bold, code, lists, tables…).',
     'note_placeholder' => 'Write a note…',
     'note_empty' => 'No note. Tap here to add one.',
     'note_empty_ro' => 'No note.',

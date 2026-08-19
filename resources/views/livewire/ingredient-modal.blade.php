@@ -98,8 +98,8 @@
                                         <span class="tl-check tl-display flex size-7 shrink-0 items-center justify-center {{ $ingredient->checked ? 'tl-check-on' : '' }}">
                                             {{ $ingredient->checked ? '✔' : '' }}
                                         </span>
-                                        <span class="tl-item-title break-words {{ $ingredient->checked ? 'line-through' : '' }}">
-                                            {{ $ingredient->name }}
+                                        <span class="tl-item-title db-prose break-words {{ $ingredient->checked ? 'line-through' : '' }}">
+                                            {!! \Alle80\Devboard\Support\Markdown::inline($ingredient->name) !!}
                                         </span>
                                     </button>
                                         @unless($readonly)

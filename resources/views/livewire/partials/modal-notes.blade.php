@@ -22,14 +22,14 @@
     @elseif ($notesDraft !== null)
         <form wire:submit="saveNotes" class="space-y-2">
             <span class="{{ $labelClass }}">{{ $label }}</span>
-            <textarea
-                wire:model="notesDraft"
+            <x-devboard::md-editor
+                model="notesDraft"
+                :rows="4"
+                :placeholder="__('devboard::t.note_placeholder')"
+                :inputClass="$inputClass"
                 wire:keydown.escape="cancelNotes"
-                x-init="$el.focus(); $el.setSelectionRange($el.value.length, $el.value.length)"
-                rows="4"
-                placeholder="{{ __('devboard::t.note_placeholder') }}"
-                class="{{ $inputClass }} block w-full resize-y"
-            ></textarea>
+            />
+            <p class="text-xs opacity-60">{{ __('devboard::t.md_hint') }}</p>
             <div class="flex items-center justify-end gap-2">
                 <button type="button" wire:click="cancelNotes" class="{{ $cancelClass }}">{{ __('devboard::t.cancel') }}</button>
                 <button type="submit" class="{{ $okClass }}">{{ __('devboard::t.save') }}</button>
@@ -47,7 +47,7 @@
                 <span class="{{ $labelClass }}">{{ $label }}</span>
                 @if ($todo->notes)
                     {{-- whitespace-pre-wrap + break-words: la nota si legge tutta, a capo compresi --}}
-                    <p class="{{ $textClass }} whitespace-pre-wrap break-words">{{ $todo->notes }}</p>
+                    <div class="{{ $textClass }} db-prose break-words">{!! \Alle80\Devboard\Support\Markdown::render($todo->notes) !!}</div>
                 @else
                     <p class="{{ $textClass }} italic opacity-50">{{ __('devboard::t.note_empty') }}</p>
                 @endif
@@ -65,7 +65,7 @@
     @if ($todo->claude_comment)
         <div class="mt-3 border-t-2 border-dashed border-current/30 pt-2">
             <span class="{{ $labelClass }}">{{ __('devboard::t.agent_box') }}</span>
-            <p class="{{ $textClass }} whitespace-pre-wrap break-words text-[0.95em] opacity-90">{{ $todo->claude_comment }}</p>
+            <div class="{{ $textClass }} db-prose break-words text-[0.95em] opacity-90">{!! \Alle80\Devboard\Support\Markdown::render($todo->claude_comment) !!}</div>
         </div>
     @endif
 </div>
