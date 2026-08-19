@@ -28,6 +28,27 @@ class StatsTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_edge_cases_archived_included_tokens_without_time_and_prices_with_comma(): void
+    {
+        $s = app(AppSettings::class);
+        $s->cost_per_m_in = '2,5'; // decimal comma accepted
+        $s->cost_per_m_out = '0';
+        $s->save();
+        $a = Todo::create(['title' => 'archived done', 'order' => 1, 'checklist_id' => $this->list->id, 'completed' => true, 'archived_at' => now(), 'tokens_in' => 1_000_000]);
+        Todo::create(['title' => 'timed only', 'order' => 2, 'checklist_id' => $this->list->id, 'completed' => true, 'work_seconds' => 120]);
+        $rows = Stats::history($this->list);
+        $this->assertCount(2, $rows, 'archived completed tasks stay in the history');
+        $agg = Stats::aggregate($rows);
+        $this->assertSame(2.5, $agg['cost'], 'only input priced');
+        $this->assertSame(1, $agg['costed_count']);
+        $this->assertSame(1, $agg['timed_count']);
+        $this->assertSame(120, $agg['avg_work_seconds']);
+        $this->assertSame(1, $agg['tokens_count']);
+        $row = $rows->firstWhere('todo.id', $a->id);
+        $this->assertNull($row['work_seconds']);
+        $this->assertSame(2.5, $row['cost']);
+    }
+
     public function test_completed_at_follows_the_flag_and_history_computes_times_costs(): void
     {
         Carbon::setTestNow('2026-08-19 10:00:00');
