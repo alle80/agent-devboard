@@ -32,6 +32,7 @@ class Themes
             'slate' => [
                 'label' => 'Slate',
                 'icon' => '🪨',
+                'icon_img' => '/vendor/devboard/images/slate/slate.svg',
                 'fonts' => 'jetbrains-mono:400,700',
                 'claim' => 'todo',
                 'counter' => 'done',

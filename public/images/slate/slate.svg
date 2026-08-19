@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Slate">
+  <title>Slate</title>
+  <rect x="8" y="10" width="48" height="44" rx="9" fill="#0d120d" stroke="#2c5c3f" stroke-width="2"/>
+  <path d="M19 26 l10 8 l-10 8" fill="none" stroke="#33d17a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="33" y="39.5" width="15" height="5" rx="2.5" fill="#33d17a"/>
+</svg>

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-19
+
+### Added
+- **Slate theme icon**: the built-in **Slate** theme now ships an original SVG mark
+  (`public/images/slate/slate.svg`) — a terminal window with a green `>_` prompt, drawn in the
+  theme's palette — wired as its `icon_img` (shown in the style switcher and as the corner motif).
+
 ## [0.2.0] - 2026-08-19
 
 ### Changed
@@ -53,6 +60,7 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/alle80/agent-devboard/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/alle80/agent-devboard/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/alle80/agent-devboard/releases/tag/v0.1.0
