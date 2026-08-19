@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-08-19
+
+### Changed
+- The **«+» between rows** now creates the task *at that position* (making room) and opens the modal in
+  title editing, like the «New task» button — instead of the inline title form (`createNew(?int $position)`).
+
 ## [0.12.0] - 2026-08-19
 
 ### Added

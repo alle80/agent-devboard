@@ -50,7 +50,7 @@
                 @else
                     <div class="group flex h-6 items-center justify-center">
                         <button
-                            wire:click="startInsert({{ $todo->order }})"
+                            wire:click="$dispatch('open-new-task', { position: {{ $todo->order }} })"
                             title="{{ __('devboard::t.insert_here') }}"
                             class="tl-num cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100 active:translate-y-px"
                         >+</button>

@@ -77,16 +77,23 @@ class IngredientModal extends Component
      * the list to this child component gets lost when the list re-renders after creating the todo.
      */
     #[On('open-new-task')]
-    public function createNew(): void
+    public function createNew(?int $position = null): void
     {
         $listId = Checklist::currentId();
         if (! $listId) {
             return;
         }
 
+        $active = Todo::where('checklist_id', $listId)->whereNull('archived_at');
+        $end = ((int) (clone $active)->max('order')) + 1;
+        $order = $position !== null ? max(1, min($end, $position)) : $end;
+        if ($order < $end) {
+            (clone $active)->where('order', '>=', $order)->increment('order'); // the «+» between rows: make room here
+        }
+
         $todo = Todo::create([
             'title' => '',
-            'order' => ((int) Todo::where('checklist_id', $listId)->whereNull('archived_at')->max('order')) + 1,
+            'order' => $order,
             'completed' => false,
             'checklist_id' => $listId,
         ]);
