@@ -21,7 +21,7 @@ class DevboardCheck extends Command
         {--take= : Id of the todo to mark as working (take in charge)}
         {--done= : Id of the todo to mark as completed}
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
-        {--progress= : Progress percentage 0-100 to set while working (use with --take; re-run to update)}
+        {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
         {--ask= : Id of the todo to ask questions about (state ❓)}
         {--q=* : Text of each question, repeatable}';
 
@@ -64,8 +64,11 @@ class DevboardCheck extends Command
                 if ($c = $this->option('comment')) {
                     $attrs['claude_comment'] = $c;
                 }
-                if ($opt === 'take' && $this->option('progress') !== null) {
-                    $attrs['progress'] = max(0, min(100, (int) $this->option('progress')));
+                if ($opt === 'take') {
+                    // Always show a percentage on a working todo: explicit value, else keep the current one, else start at 0%
+                    $attrs['progress'] = $this->option('progress') !== null
+                        ? max(0, min(100, (int) $this->option('progress')))
+                        : ($t->progress ?? 0);
                 }
                 if ($opt === 'done') {
                     $attrs['progress'] = null; // finished → no progress bar
@@ -74,7 +77,7 @@ class DevboardCheck extends Command
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
                     $t->ingredients()->update(['checked' => true]);
                 }
-                $this->info(sprintf('%s: «%s» (id:%d)', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id));
+                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%', $attrs['progress']) : ''));
             }
         }
 
@@ -102,7 +105,7 @@ class DevboardCheck extends Command
 
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->id));
+                $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%]', $t->progress) : '', $t->id));
                 if ($t->parent) {
                     $this->line(sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $t->parent->title, $t->parent->id));
                     if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $t->parent->notes));

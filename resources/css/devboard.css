@@ -421,8 +421,9 @@ select.setting-input { appearance: auto; }
 @keyframes db-work-spin { to { transform: rotate(360deg); } }
 
 .db-progress-pct { color: var(--tl-accent, #f59e0b); font-weight: 700; font-size: .82em; }
+.db-progress-track { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tl-accent, #f59e0b); opacity: .18; }
 .db-progress-bar {
-    position: absolute; left: 0; bottom: 0; height: 3px; max-width: 100%;
+    position: absolute; left: 0; bottom: 0; height: 3px; max-width: 100%; min-width: 3px;
     background: var(--tl-accent, #f59e0b); border-radius: 0 3px 3px 0;
     box-shadow: 0 0 6px var(--tl-accent, #f59e0b); transition: width .45s ease;
 }

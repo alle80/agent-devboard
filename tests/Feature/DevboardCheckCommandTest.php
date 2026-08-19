@@ -54,6 +54,25 @@ class DevboardCheckCommandTest extends TestCase
         $this->assertTrue($this->todo->ingredients()->first()->checked, 'sub-tasks ticked on done');
     }
 
+    public function test_progress_starts_at_zero_on_take_and_updates(): void
+    {
+        $this->artisan('devboard:check', ['--take' => $this->todo->id])->expectsOutputToContain('— 0%')->assertSuccessful();
+        $this->assertSame(0, $this->todo->fresh()->progress, '--take alone shows 0% (percentage always visible while working)');
+
+        $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 140])->expectsOutputToContain('— 100%')->assertSuccessful();
+        $this->assertSame(100, $this->todo->fresh()->progress, 'clamped to 100');
+
+        $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 45])->assertSuccessful();
+        $this->artisan('devboard:check')->expectsOutputToContain('🔧 #1 Add dark mode [45%]')->assertSuccessful();
+
+        // Re-taking without --progress keeps the current value
+        $this->artisan('devboard:check', ['--take' => $this->todo->id])->expectsOutputToContain('— 45%')->assertSuccessful();
+        $this->assertSame(45, $this->todo->fresh()->progress);
+
+        $this->artisan('devboard:check', ['--done' => $this->todo->id])->assertSuccessful();
+        $this->assertNull($this->todo->fresh()->progress, 'done clears the progress');
+    }
+
     public function test_alias_and_missing_list(): void
     {
         $this->artisan('sviluppo:check')->assertSuccessful();

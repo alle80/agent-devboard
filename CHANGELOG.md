@@ -5,7 +5,54 @@ All notable changes to `alle80/agent-devboard` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-$1
+## [Unreleased]
+
+## [0.9.3] - 2026-08-19
+
+### Fixed
+- The **progress percentage** was never visible in practice: `devboard:check --take=ID` left `progress`
+  at `null` unless `--progress` was passed, so a working todo showed the spinning icon but no `N%`.
+  Now `--take` always shows a percentage: the given `--progress`, else the current value, else **0%**.
+  Re-running `--take=ID --progress=N` updates it (live via Reverb); `--done` still clears it.
+- The progress bar has a faint **track** and a minimum width, so 0% is visible as an empty bar.
+
+### Changed
+- `devboard:check` prints `[N%]` after the title of a working todo and `— N%` when taking in charge.
+
+## [0.9.2] - 2026-08-19
+
+### Fixed
+- The multitasking **warning** in `/settings` now shows/hides instantly when the mode changes
+  (Alpine `x-show`), instead of waiting for a server re-render.
+
+## [0.9.1] - 2026-08-19
+
+### Added
+- Setting **`task_mode`** (`agent` group): `ordered` = one task at a time in list order (default),
+  `multitasking` = the agent may take several 🟢 tasks at once if independent. Shown in the settings
+  summary printed by `devboard:check`, with an inline warning in `/settings` for multitasking.
+
+## [0.9.0] - 2026-08-19
+
+### Added
+- **Animated icon** on the working todo: the working state badge (gear) spins continuously.
+- **Progress percentage**: `devboard:check --take=ID --progress=N` (0–100) shows `N%` next to the
+  title and a thin progress bar under the row; `--done` clears it. New `todos.progress` column
+  (dedicated migration for existing installs).
+
+## [0.8.1] - 2026-08-19
+
+### Changed
+- In the modal, the editable **title** is the first field of the body (above "Task"), no longer in the
+  header; the header keeps the theme icon, the state badge + commands and the close button.
+
+## [0.8.0] - 2026-08-19
+
+### Added
+- **Unseen results**: when the agent completes a todo (`devboard:check --done`), the row stays
+  highlighted (pulsing accent outline + "result" badge) until the user opens it; opening clears it
+  (live too). New `todos.result_seen` column (dedicated migration for existing installs).
+
 ## [0.7.3] - 2026-08-19
 
 ### Fixed
@@ -38,6 +85,8 @@ $1
 
 ### Added (dependency)
 - `league/commonmark ^2.4`.
+
+## [0.6.3] - 2026-08-19
 
 ### Changed
 - **Row icons** are now the SVG icon set with tooltips (a state badge coloured per state, plus
@@ -159,7 +208,10 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.9.3...HEAD
+[0.9.3]: https://github.com/alle80/agent-devboard/compare/v0.9.2...v0.9.3
+[0.9.2]: https://github.com/alle80/agent-devboard/compare/v0.9.1...v0.9.2
+[0.9.1]: https://github.com/alle80/agent-devboard/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/alle80/agent-devboard/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/alle80/agent-devboard/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/alle80/agent-devboard/compare/v0.7.3...v0.8.0

@@ -80,7 +80,8 @@ and acts with `devboard:check`.
 
 ```bash
 php artisan devboard:check                 # what to work on (🟢/🔧), in order; --all for everything
-php artisan devboard:check --take=ID       # take it in charge  → 🔧
+php artisan devboard:check --take=ID       # take it in charge  → 🔧 (shows 0%)
+php artisan devboard:check --take=ID --progress=60   # update the progress % on the row (re-run as you go)
 php artisan devboard:check --ask=ID --q="…" --q="…"   # ask, pausing it → ❓
 php artisan devboard:check --done=ID --comment="…"    # close it, with a note back to the user → ✔
 ```

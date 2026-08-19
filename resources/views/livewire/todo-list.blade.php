@@ -63,6 +63,7 @@
             <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $unseen ? 'db-unseen' : '' }}">
 
                 @if ($todo->working && $todo->progress !== null)
+                    <span class="db-progress-track" aria-hidden="true"></span>
                     <span class="db-progress-bar" style="width: {{ $todo->progress }}%" aria-hidden="true"></span>
                 @endif
 
