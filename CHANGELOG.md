@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.5] - 2026-08-19
+
+### Fixed
+- `/context`: the block editor spans the full width of the row (was squeezed on phones).
+
 ## [0.15.4] - 2026-08-19
 
 ### Changed

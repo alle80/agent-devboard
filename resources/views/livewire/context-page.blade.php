@@ -43,7 +43,7 @@
                                 <button type="submit" class="{{ $skin['back'] }} text-sm" aria-label="{{ __('devboard::t.save') }}"><x-devboard::icon name="check" /></button>
                             </form>
                         @else
-                            <span class="{{ $skin['h2'] }} block truncate">{{ $g->title }}</span>
+                            <span class="{{ $skin['h2'] }} block break-words sm:truncate">{{ $g->title }}</span>
                             <span class="{{ $skin['help'] }} text-xs">{{ __('devboard::t.ctx.group_stats', ['on' => $gOn, 'total' => $g->blocks->count(), 'tokens' => number_format($g->blocks->where('enabled', true)->sum->tokens())]) }}</span>
                         @endif
                     </span>
@@ -62,10 +62,10 @@
                 >
                     @forelse ($g->blocks as $b)
                         @php($sel = in_array($b->id, $selected, true))
-                        <li data-block-id="{{ $b->id }}" wire:key="ctx-block-{{ $b->id }}" class="db-ctx-block flex items-start gap-2 rounded border border-current/15 px-2 py-2 {{ $b->enabled ? '' : 'db-ctx-off' }} {{ $sel ? 'db-ctx-selected' : '' }}">
+                        <li data-block-id="{{ $b->id }}" wire:key="ctx-block-{{ $b->id }}" class="db-ctx-block flex flex-wrap items-start gap-2 rounded border border-current/15 px-2 py-2 {{ $b->enabled ? '' : 'db-ctx-off' }} {{ $sel ? 'db-ctx-selected' : '' }}">
                             <span class="ctx-block-handle mt-0.5 cursor-grab opacity-30 hover:opacity-100" title="{{ __('devboard::t.drag_to_reorder') }}"><x-devboard::icon name="grip" size="1.2em" /></span>
                             <input type="checkbox" class="db-skill-check mt-1 shrink-0" @checked($sel) wire:click="toggleSelect({{ $b->id }})" aria-label="{{ __('devboard::t.ctx.select') }}: {{ $b->title }}">
-                            <div class="min-w-0 flex-1">
+                            <div class="min-w-0 flex-1 {{ $editingId === $b->id ? 'order-last basis-full' : '' }}">
                                 @if ($editingId === $b->id)
                                     <form wire:submit="saveEdit" class="space-y-2">
                                         <input type="text" wire:model="titleDraft" placeholder="{{ __('devboard::t.ctx.block_title') }}" class="{{ $skin['input'] }} w-full text-sm">
