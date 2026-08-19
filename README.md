@@ -87,6 +87,11 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Agent context** (`/context`): import your instructions file (e.g. CLAUDE.md) with
+`php artisan devboard:context import --file=CLAUDE.md`; it becomes groups (`##`) and blocks you can switch on/off
+(single, multi-select, whole group), edit and reorder; `php artisan devboard:context export` prints the enabled
+context — write it back to the file from your host (see `scripts/sync-context.py` in the origin repo).
+
 **Modes**: `DEVBOARD_MODE=server` (default: login, lists per user; restrict access with
 `canAccessDevboard(): bool` on your user model or `DEVBOARD_ACCESS_GATE=<ability>`) or `DEVBOARD_MODE=local`
 (no authentication, one global set of lists — for your own machine only). Also switchable in `/settings`.

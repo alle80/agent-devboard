@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-08-19
+
+### Added
+- **Manageable agent context** (`/context`, link 📚 in the lists menu): the agent's instructions file is
+  imported as **groups** (`##` sections) and **blocks** (bullets / paragraphs / `###` sub-sections; fenced
+  code stays whole) — `php artisan devboard:context import --file=… [--replace]`. Each group and each block
+  has a switch; blocks can be **multi-selected** (per block or whole group) and enabled/disabled together;
+  blocks can be edited, added, deleted and reordered (drag), groups renamed/added/deleted/reordered.
+  Token estimate per block/group/total. `devboard:context export` prints the enabled context as markdown
+  (a host script writes it to the file), `devboard:context status` the summary. Models `ContextGroup`,
+  `ContextBlock`, support `Alle80\Devboard\Support\Context`.
+
 ## [0.14.2] - 2026-08-19
 
 ### Changed
