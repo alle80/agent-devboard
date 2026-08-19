@@ -37,7 +37,11 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 
 ## Rules
 
-- **Order:** take 🟢 items top-to-bottom (the user's drag-and-drop priority). One at a time.
+- **Order:** take 🟢 items top-to-bottom (the user's drag-and-drop priority). The `task_mode`
+  setting (shown at the top of `check`) decides how many at once: `ordered` = **one at a time**
+  (finish/close the one you took before taking another); `multitasking` = you *may* take several
+  at once, but **only if they're independent** (different files/areas) — otherwise stay serial to
+  avoid overlapping commits and edits to the same files.
 - **A question doesn't block the others** — move to the next 🟢 while one waits for an answer.
 - **Stop means stop:** if an item shows ⏹ (stopped), drop it at once and don't touch it until it
   is 🟢 again. Taking it (`--take`) clears the stop.

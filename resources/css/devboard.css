@@ -430,3 +430,18 @@ select.setting-input { appearance: auto; }
     .db-badge-working svg { animation: none; }
     .db-progress-bar { transition: none; }
 }
+
+/* ---------- Settings: inline warning helper (e.g. multitasking mode) ---------- */
+.db-setting-warn {
+    margin-top: .15rem;
+    padding: .55rem .7rem;
+    border-radius: .55rem;
+    font-size: .8rem; line-height: 1.4;
+    color: #92400e;
+    background: rgb(245 158 11 / .12);
+    border: 1px solid rgb(245 158 11 / .4);
+    border-left-width: 3px;
+}
+@media (prefers-color-scheme: dark) {
+    .db-setting-warn { color: #fcd34d; background: rgb(245 158 11 / .1); border-color: rgb(245 158 11 / .35); }
+}

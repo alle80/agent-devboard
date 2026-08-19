@@ -44,6 +44,9 @@ class AgentSettings extends Settings
     /** Alla chiusura di un task spunta automaticamente tutti i sotto-task. */
     public bool $check_subtasks_on_done;
 
+    /** 'ordered' = un task alla volta, in ordine; 'multitasking' = più task in parallelo (con cautela). */
+    public string $task_mode;
+
     public static function group(): string
     {
         return 'agent';
@@ -64,6 +67,7 @@ class AgentSettings extends Settings
             'commit_after_task' => 'bool', 'push_after_commit' => 'bool', 'autonomy' => 'select', 'notify_on_done' => 'bool',
             'notify_on_question' => 'bool', 'verify_before_close' => 'bool', 'comment_detail' => 'select', 'git_flow' => 'select',
             'daily_summary' => 'bool', 'daily_summary_time' => 'time', 'check_subtasks_on_done' => 'bool',
+            'task_mode' => 'select',
         ];
         $labels = (array) __('devboard::t.settings_fields');
         $options = (array) __('devboard::t.settings_options');

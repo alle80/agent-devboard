@@ -20,6 +20,7 @@ return new class extends SettingsMigration
             'agent.daily_summary' => false,
             'agent.daily_summary_time' => '21:00',
             'agent.check_subtasks_on_done' => true,
+            'agent.task_mode' => 'ordered',
             // App
             'app.default_style' => '',
             'app.title_max_length' => 50,
