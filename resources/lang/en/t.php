@@ -49,6 +49,7 @@ return [
     'note' => 'Task',
     'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
     'md' => ['bold' => 'Bold', 'italic' => 'Italic', 'code' => 'Code', 'codeblock' => 'Code block', 'list' => 'List', 'quote' => 'Quote', 'link' => 'Link', 'linktext' => 'text', 'table' => 'Table', 'separator' => 'Separator'],
+    'image_too_large' => 'Image too large (max :mp megapixel).',
     'image_description' => 'Image description',
     'image_no_description' => 'No description yet (the AI describes new images when enabled in Settings).',
     'move_to' => 'Move to list…',

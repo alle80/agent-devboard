@@ -32,6 +32,9 @@ Route::middleware(array_merge(array_values(array_diff((array) config('devboard.m
         Route::post('/devboard/push-subscriptions', [PushSubscriptionController::class, 'store'])->middleware('throttle:'.config('devboard.rate_limits.push_subscriptions', '30,1').',devboard-push')->name('devboard.push.store');
         Route::delete('/devboard/push-subscriptions', [PushSubscriptionController::class, 'destroy'])->middleware('throttle:'.config('devboard.rate_limits.push_subscriptions', '30,1').',devboard-push')->name('devboard.push.destroy');
         Route::post('/devboard/notifications/test', [PushSubscriptionController::class, 'test'])->middleware('throttle:'.config('devboard.rate_limits.notifications_test', '5,1').',devboard-notify-test')->name('devboard.notifications.test');
+        // Attachments through an authorised controller (the disk may be private)
+        Route::get('/devboard/attachments/{attachment}', \Alle80\Devboard\Http\Controllers\AttachmentController::class)->whereNumber('attachment')->name('devboard.attachment');
+
         // Speech to text (server mode): short recording → AI SDK transcription
         Route::post('/devboard/transcribe', \Alle80\Devboard\Http\Controllers\TranscribeController::class)->middleware('throttle:'.config('devboard.rate_limits.transcribe', '10,1').',devboard-transcribe')->name('devboard.transcribe');
 

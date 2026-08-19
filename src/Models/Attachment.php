@@ -26,8 +26,13 @@ class Attachment extends Model
         return $this->belongsTo(Todo::class);
     }
 
+    /** URL of the image: the authorised controller route (default) or the disk's public URL. */
     public function url(): string
     {
+        if (config('devboard.attachments_via_controller', true) && \Illuminate\Support\Facades\Route::has('devboard.attachment')) {
+            return route('devboard.attachment', $this->id);
+        }
+
         return Storage::disk(config('devboard.attachments_disk', 'public'))->url($this->path);
     }
 }

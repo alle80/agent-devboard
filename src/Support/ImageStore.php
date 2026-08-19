@@ -28,6 +28,14 @@ class ImageStore
         if (! in_array($mime, self::ALLOWED, true)) {
             throw new RuntimeException('Formato non supportato: '.$mime);
         }
+        // Decompression bombs: refuse huge pixel counts BEFORE decoding (a tiny PNG can be 20000×20000)
+        $info = @getimagesize($file->getRealPath());
+        if (! $info || empty($info[0]) || empty($info[1])) {
+            throw new RuntimeException('Immagine non leggibile');
+        }
+        if ($info[0] * $info[1] > self::MAX_PIXELS) {
+            throw new RuntimeException(__('devboard::t.image_too_large', ['mp' => (int) (self::MAX_PIXELS / 1_000_000)]));
+        }
 
         [$data, $ext, $w, $h, $outMime] = self::process($file->getRealPath(), $mime);
 
@@ -43,6 +51,9 @@ class ImageStore
             'height' => $h,
         ]);
     }
+
+    /** Max pixels accepted (width × height) before decoding: 40 megapixel. */
+    public const MAX_PIXELS = 40_000_000;
 
     /** @return array{0:string,1:string,2:int,3:int,4:string} [bytes, ext, width, height, mime] */
     private static function process(string $realPath, string $mime): array

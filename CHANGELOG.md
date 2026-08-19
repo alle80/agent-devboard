@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.29.3] - 2026-08-19
+
+### Security
+- Image uploads: the pixel count is checked **before decoding** (max 40 megapixel) — no decompression bombs.
+- Attachments are served by an **authorised route** (`/devboard/attachments/{id}`, only users of that list;
+  `nosniff` + sandbox CSP), so `attachments_disk` can be a private disk; `attachments_via_controller=false`
+  restores direct public URLs.
+
 ## [0.29.2] - 2026-08-19
 
 ### Security

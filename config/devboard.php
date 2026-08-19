@@ -52,8 +52,10 @@ return [
     // User model owning the lists
     'user_model' => env('DEVBOARD_USER_MODEL', 'App\\Models\\User'),
 
-    // Filesystem disk for image attachments (must be publicly reachable, e.g. the "public" disk with storage:link)
+    // Filesystem disk for image attachments. With `attachments_via_controller` (default) images are served by an
+    // authorised route, so the disk can be private (e.g. 'local'); set it to false to link the disk's public URLs.
     'attachments_disk' => env('DEVBOARD_ATTACHMENTS_DISK', 'public'),
+    'attachments_via_controller' => env('DEVBOARD_ATTACHMENTS_VIA_CONTROLLER', true),
 
     // Name of the list used as request channel between the user and the coding agent (devboard:check)
     'agent_list' => env('DEVBOARD_AGENT_LIST', 'dev'),
