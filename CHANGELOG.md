@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- (monorepo) repository hygiene for the open-source release: root `vendor/` untracked, compose parametrised
+  (`APP_URL`, `BACKUP_DIR`), personal paths/domains scrubbed from README/scripts/.env.example, root LICENSE (MIT),
+  third-party artwork removed.
+
 ## [0.29.3] - 2026-08-19
 
 ### Security
