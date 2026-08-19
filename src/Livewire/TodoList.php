@@ -290,19 +290,6 @@ class TodoList extends Component
         $this->dispatch('toast', message: __('devboard::t.msg.added', ['title' => $title]));
     }
 
-    /** "New task" button: create a blank todo at the end and open its modal straight in title editing. */
-    public function createAndOpen(): void
-    {
-        $todo = Todo::create([
-            'title' => '',
-            'order' => ((int) $this->active()->max('order')) + 1,
-            'completed' => false,
-            'checklist_id' => Checklist::currentId(),
-        ]);
-
-        $this->dispatch('open-ingredients', todoId: $todo->id, edit: true);
-    }
-
     /** @param array<int, int|string> $orderedIds Id dei todo nell'ordine mostrato dopo il drag. */
     public function reorder(array $orderedIds): void
     {

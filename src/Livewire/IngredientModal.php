@@ -71,6 +71,30 @@ class IngredientModal extends Component
         return $todo;
     }
 
+    /**
+     * "New task" button: create a blank todo in the current list and open it in title editing.
+     * Done in the modal (via a client dispatch) so it reliably opens — a server-side dispatch from
+     * the list to this child component gets lost when the list re-renders after creating the todo.
+     */
+    #[On('open-new-task')]
+    public function createNew(): void
+    {
+        $listId = Checklist::currentId();
+        if (! $listId) {
+            return;
+        }
+
+        $todo = Todo::create([
+            'title' => '',
+            'order' => ((int) Todo::where('checklist_id', $listId)->whereNull('archived_at')->max('order')) + 1,
+            'completed' => false,
+            'checklist_id' => $listId,
+        ]);
+
+        $this->dispatch('ingredients-updated'); // the list shows the new (empty) row
+        $this->openFor($todo->id, true);
+    }
+
     #[On('open-ingredients')]
     public function openFor(int $todoId, bool $edit = false): void
     {

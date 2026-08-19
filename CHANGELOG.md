@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-08-19
+
+### Fixed
+- The **New task** button created the task but the modal stayed closed: the list created the todo and
+  then dispatched `open-ingredients` to the child modal, and that server-side dispatch was lost when
+  the list re-rendered. The modal now creates-and-opens the task itself via a client dispatch
+  (`open-new-task`), so it opens reliably.
+
 ## [0.7.0] - 2026-08-19
 
 ### Added
@@ -139,7 +147,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/alle80/agent-devboard/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/alle80/agent-devboard/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/alle80/agent-devboard/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/alle80/agent-devboard/compare/v0.6.1...v0.6.2

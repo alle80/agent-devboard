@@ -18,15 +18,16 @@ class ModalCommandsTest extends TestCase
         $this->list = Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
     }
 
-    public function test_create_and_open_makes_a_blank_todo_and_opens_it_in_edit(): void
+    public function test_create_new_makes_a_blank_todo_and_opens_the_modal(): void
     {
-        Livewire::test(TodoList::class)
-            ->call('createAndOpen')
-            ->assertDispatched('open-ingredients');
+        $modal = Livewire::test(IngredientModal::class)
+            ->call('createNew')
+            ->assertDispatched('ingredients-updated');
 
         $todo = Todo::latest('id')->first();
         $this->assertSame('', $todo->title);
         $this->assertSame($this->list->id, $todo->checklist_id);
+        $this->assertTrue($modal->instance()->open, 'the modal opens for the new task');
     }
 
     public function test_state_key_reflects_the_todo(): void

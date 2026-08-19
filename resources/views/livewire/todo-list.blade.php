@@ -164,7 +164,7 @@
             @else
                 <div class="text-center">
                     <button
-                        wire:click="createAndOpen"
+                        wire:click="$dispatch('open-new-task')"
                         class="tl-card tl-display tl-add inline-block cursor-pointer px-6 py-2 transition hover:scale-105 active:translate-y-0.5"
                     >{{ $t['add'] }}</button>
                 </div>
