@@ -72,7 +72,7 @@ class IngredientModal extends Component
     }
 
     #[On('open-ingredients')]
-    public function openFor(int $todoId): void
+    public function openFor(int $todoId, bool $edit = false): void
     {
         $this->reachable()->findOrFail($todoId);
 
@@ -80,6 +80,11 @@ class IngredientModal extends Component
         $this->resetDrafts();
         $this->answers = Question::where('todo_id', $todoId)->pluck('answer', 'id')->map(fn ($v) => (string) $v)->all();
         $this->open = true;
+
+        // A brand-new task (created blank by "add") opens straight into title editing.
+        if ($edit) {
+            $this->titleDraft = (string) ($this->todo()?->title ?? '');
+        }
     }
 
     /** Aggiornamento live (Reverb) ricevuto dalla lista: il modale aperto si ri-renderizza. */
@@ -94,6 +99,16 @@ class IngredientModal extends Component
 
     public function close(): void
     {
+        // Abandoned new task (created blank by "add" and never titled) → drop it on close.
+        $todo = $this->todo();
+        if ($todo && trim((string) $todo->title) === ''
+            && trim((string) $todo->notes) === ''
+            && $todo->ingredients()->count() === 0
+            && $todo->attachments()->count() === 0) {
+            $todo->delete();
+            $this->dispatch('ingredients-updated');
+        }
+
         $this->open = false;
         $this->todoId = null;
         $this->resetDrafts();
@@ -223,6 +238,63 @@ class IngredientModal extends Component
         }
 
         $this->dispatch('resume-todo', todoId: $todo->id);
+    }
+
+    // ----- Comandi nella testata -----
+
+    /** State of the current todo, for the coloured badge: waiting|open|working|question|done. */
+    public function stateKey(): string
+    {
+        $todo = $this->todo();
+
+        return match (true) {
+            ! $todo => 'waiting',
+            (bool) $todo->completed => 'done',
+            (bool) $todo->question => 'question',
+            (bool) $todo->working => 'working',
+            (bool) $todo->open_to_work => 'open',
+            default => 'waiting',
+        };
+    }
+
+    /** Toggle open-to-work / stop, mirroring the row dot (no archived/order changes). */
+    public function toggleOpenToWork(): void
+    {
+        if (! ($todo = $this->editable())) {
+            return;
+        }
+
+        if ($todo->working) {
+            $todo->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
+            $this->dispatch('toast', message: __('devboard::t.msg.stopped', ['title' => $todo->title]), type: 'info');
+        } else {
+            $todo->open_to_work = ! $todo->open_to_work;
+            if ($todo->open_to_work) {
+                $todo->stopped_at = null;
+            }
+            $todo->save();
+            $this->dispatch('toast', message: __($todo->open_to_work ? 'devboard::t.msg.otw_on' : 'devboard::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
+        }
+
+        \Alle80\Devboard\Support\Live::todoChanged($todo);
+        $this->dispatch('ingredients-updated');
+    }
+
+    /** Archive / delete reuse the list logic (order reindex) then close the modal. */
+    public function archiveTodo(): void
+    {
+        if ($todo = $this->todo()) {
+            $this->dispatch('cmd-archive', todoId: $todo->id);
+            $this->close();
+        }
+    }
+
+    public function deleteTodo(): void
+    {
+        if ($todo = $this->todo()) {
+            $this->dispatch('cmd-delete', todoId: $todo->id);
+            $this->close();
+        }
     }
 
     // ----- Titolo -----

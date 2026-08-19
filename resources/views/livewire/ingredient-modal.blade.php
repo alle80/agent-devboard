@@ -16,6 +16,7 @@
                     <h2 class="tl-display tl-title text-2xl">
                         <x-theme-icon :theme="$t" /> @include('devboard::livewire.partials.modal-title')
                     </h2>
+                    ('"devboard::livewire.partials.modal-actions"')
                     <button
                         wire:click="close"
                         class="tl-check tl-display flex size-9 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px"

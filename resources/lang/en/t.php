@@ -46,7 +46,8 @@ return [
     'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => '🟢 Open to work', 'working' => '🔧 Working', 'question' => '❓ Questions'],
 
     // Modal
-    'note' => 'Note',
+    'note' => 'Task',
+    'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
     'note_placeholder' => 'Write a note…',
     'note_empty' => 'No note. Tap here to add one.',
     'note_empty_ro' => 'No note.',

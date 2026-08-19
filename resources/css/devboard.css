@@ -344,3 +344,21 @@ select.setting-input { appearance: auto; }
 .db-tab-left  .db-off { transform: translateX(-100%); opacity: 0; }
 .db-on { transform: translateX(0); opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .db-anim { transition: none; } }
+
+/* ---------- Modal header: state badge (distinct colors) + command icons (accent/green) ---------- */
+.db-badge { display: inline-flex; align-items: center; }
+.db-badge-waiting  { color: #94a3b8; }
+.db-badge-open     { color: var(--tl-accent, #22c55e); }
+.db-badge-working  { color: #f59e0b; }
+.db-badge-question { color: #a78bfa; }
+.db-badge-done     { color: #22c55e; }
+
+.db-cmd {
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--tl-accent, #22c55e); background: none; border: 0; padding: 4px; line-height: 0;
+    opacity: .8; transition: opacity .15s ease, transform .15s ease, color .15s ease;
+}
+.db-cmd:hover { opacity: 1; transform: scale(1.15); }
+.db-cmd:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
+.db-cmd-danger:hover { color: #ef4444; }
+@media (prefers-reduced-motion: reduce) { .db-cmd { transition: opacity .15s ease; } .db-cmd:hover { transform: none; } }

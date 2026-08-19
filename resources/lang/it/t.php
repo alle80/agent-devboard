@@ -43,7 +43,8 @@ return [
     'filter_help' => 'Filtro attivo: il riordino con trascinamento è disabilitato finché non torni a «Tutti» senza ricerca.',
     'filters' => ['all' => 'Tutti', 'todo' => 'Da fare', 'done' => 'Fatti', 'otw' => '🟢 Open to work', 'working' => '🔧 Working', 'question' => '❓ Domande'],
 
-    'note' => 'Nota',
+    'note' => 'Task',
+    'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],
     'note_placeholder' => 'Scrivi una nota…',
     'note_empty' => 'Nessuna nota. Tocca qui per aggiungerne una.',
     'note_empty_ro' => 'Nessuna nota.',

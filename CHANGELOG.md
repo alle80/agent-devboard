@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-08-19
+
+### Added
+- Reusable inline-SVG **icon set** (`<x-devboard::icon name="…">`) in the logo (slate) line style.
+
+### Changed
+- **Modal title bar** now carries a coloured **state badge** (waiting / open / working / question / done)
+  and the item **commands** — open-to-work (or resume, if done), archive, delete — as SVG icons.
+- The **New task** button now creates the task and opens its modal straight in title editing; an
+  untitled, untouched task is discarded on close.
+- The free-text description field is relabelled **Task** across all styles.
+
 ## [0.5.1] - 2026-08-19
 
 ### Fixed
@@ -94,7 +106,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/alle80/agent-devboard/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/alle80/agent-devboard/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/alle80/agent-devboard/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/alle80/agent-devboard/compare/v0.3.0...v0.4.0
