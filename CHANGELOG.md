@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.16.1] - 2026-08-19
+
+### Fixed
+- Speech to text on phones: the recognition session ends after every pause (Android/iOS); it now restarts
+  keeping what was already dictated (the text was being overwritten), ignores transient errors (`no-speech`)
+  and stops when the page goes to the background.
+
 ## [0.16.0] - 2026-08-19
 
 ### Added

@@ -29,18 +29,26 @@ window.devboardMic = function (getTarget, lang) {
           const t = ev.results[i][0].transcript;
           if (ev.results[i].isFinal) finalText += t; else interim += t;
         }
+        const said = (finalText + interim).trim();
+        if (!said) return;
         const sep = this.base && !/\s$/.test(this.base) ? ' ' : '';
-        el.value = this.base + sep + (finalText + interim).trim();
+        el.value = this.base + sep + said;
         el.dispatchEvent(new Event('input', { bubbles: true }));
         if (el.tagName === 'TEXTAREA') el.scrollTop = el.scrollHeight;
       };
-      rec.onerror = () => this.stop();
-      rec.onend = () => { if (this.on) { try { rec.start(); } catch (e) { this.on = false; } } };
+      rec.onerror = (ev) => { if (ev && (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture')) this.stop(); };
+      // Phones end a continuous session after every pause: keep what was dictated (new base) and restart
+      rec.onend = () => {
+        if (!this.on) return;
+        this.base = el.value;
+        try { rec.start(); } catch (e) { setTimeout(() => { if (this.on) { try { rec.start(); } catch (e2) { this.on = false; } } }, 250); }
+      };
       try { rec.start(); this.rec = rec; this.on = true; el.focus(); } catch (e) { this.on = false; }
     },
     stop() {
       this.on = false;
       if (this.rec) { try { this.rec.stop(); } catch (e) {} this.rec = null; }
     },
+    init() { document.addEventListener('visibilitychange', () => { if (document.hidden) this.stop(); }); },
   };
 };
