@@ -449,6 +449,13 @@ select.setting-input { appearance: auto; }
 .db-skill-check { width: 1rem; height: 1rem; accent-color: var(--tl-accent, #f59e0b); }
 
 /* ---------- /context: groups & blocks ---------- */
+.db-ctx-editor { min-height: 10rem; font-size: .8rem; }
+@media (max-width: 639px) {
+    /* Mobile: roomier text areas (markdown editor everywhere + context blocks) and readable font size */
+    .db-md .db-md-input { min-height: 9rem; font-size: 16px; line-height: 1.45; padding: .6rem .75rem; }
+    .db-ctx-editor { min-height: 14rem; font-size: 15px; }
+    .db-ctx-block .db-md-input { width: 100%; }
+}
 .db-ctx-off > summary, .db-ctx-block.db-ctx-off { opacity: .55; }
 .db-ctx-block.db-ctx-off .db-ctx-preview { text-decoration: line-through; }
 .db-ctx-selected { outline: 2px solid var(--tl-accent, #f59e0b); outline-offset: 1px; }

@@ -69,7 +69,8 @@
                                 @if ($editingId === $b->id)
                                     <form wire:submit="saveEdit" class="space-y-2">
                                         <input type="text" wire:model="titleDraft" placeholder="{{ __('devboard::t.ctx.block_title') }}" class="{{ $skin['input'] }} w-full text-sm">
-                                        <textarea wire:model="bodyDraft" rows="6" class="{{ $skin['input'] }} w-full font-mono text-xs" x-init="$el.focus()" wire:keydown.escape="cancelEdit"></textarea>
+                                        <x-devboard::md-editor model="bodyDraft" :rows="8" :inputClass="$skin['input'].' w-full font-mono text-xs db-ctx-editor'" wire:keydown.escape="cancelEdit" />
+                                        <p class="{{ $skin['help'] }} text-xs">{{ __('devboard::t.md_hint') }}</p>
                                         <div class="flex items-center justify-end gap-2">
                                             <button type="button" wire:click="cancelEdit" class="{{ $skin['help'] }} cursor-pointer text-sm hover:underline">{{ __('devboard::t.cancel') }}</button>
                                             <button type="submit" class="{{ $skin['back'] }} text-sm">{{ __('devboard::t.save') }}</button>

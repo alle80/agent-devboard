@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.4] - 2026-08-19
+
+### Changed
+- `/context`: blocks are edited with the **Markdown editor** (toolbar + auto-growing textarea).
+- **Mobile**: roomier text areas (markdown editor and context blocks: taller, 15–16px font).
+
 ## [0.15.3] - 2026-08-19
 
 ### Changed
