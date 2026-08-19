@@ -66,7 +66,9 @@ class Context
                 }
                 continue;
             }
-            if (preg_match('/^(- |\* |\d+\. |###\s)/', $line) && $buffer && ! preg_match('/^###\s/', end($buffer)) ) {
+            // New block also on a top-level bullet, a ### sub-heading, or a «**Bold lead**» line following plain text
+            if ($buffer && ! preg_match('/^###\s/', end($buffer))
+                && (preg_match('/^(- |\* |\d+\. |###\s)/', $line) || (preg_match('/^\*\*[^*]+\*\*/', $line) && ! preg_match('/^(\s+|- |\* |\d+\. )/', end($buffer))))) {
                 $flush();
             }
             $buffer[] = $line;
