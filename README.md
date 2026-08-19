@@ -87,6 +87,10 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Speech to text**: a microphone on every text field. With `laravel/ai` installed and a transcription provider
+configured (`AI_PROVIDER`/keys, `ai.default_for_transcription`) the clip is transcribed server-side (best
+quality); otherwise the browser's Web Speech API is used. Setting `speech_mode` (auto/server/browser).
+
 **Agent context** (`/context`): import your instructions file (e.g. CLAUDE.md) with
 `php artisan devboard:context import --file=CLAUDE.md`; it becomes groups (`##`) and blocks you can switch on/off
 (single, multi-select, whole group), edit and reorder; `php artisan devboard:context export` prints the enabled

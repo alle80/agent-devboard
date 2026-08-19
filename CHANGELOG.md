@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-08-19
+
+### Added
+- **Server-side speech to text** through the Laravel AI SDK (`Laravel\Ai\Transcription`, provider
+  `ai.default_for_transcription`): the microphone button records with MediaRecorder and uploads the clip to
+  `POST /devboard/transcribe`; the text comes back and is appended to the field. New `app.speech_mode`
+  setting: `auto` (default: server when the SDK + a provider key are configured, else the browser's Web
+  Speech API), `server`, `browser`. `Alle80\Devboard\Support\Speech`, `TranscribeController`,
+  `window.DEVBOARD_SPEECH`. The mic shows busy/error states.
+
 ## [0.16.1] - 2026-08-19
 
 ### Fixed

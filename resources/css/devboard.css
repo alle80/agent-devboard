@@ -450,6 +450,8 @@ select.setting-input { appearance: auto; }
 
 /* ---------- Speech to text (mic button) ---------- */
 .db-mic-on { color: #ef4444; animation: db-mic-pulse 1.2s ease-in-out infinite; }
+.db-mic-busy { opacity: .5; animation: db-mic-pulse .7s ease-in-out infinite; cursor: progress; }
+.db-mic-error { color: #ef4444; }
 @keyframes db-mic-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { .db-mic-on { animation: none; } }
 

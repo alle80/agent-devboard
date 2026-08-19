@@ -40,6 +40,9 @@ class AppSettings extends Settings
     /** Show the slide-out DASHBOARD tab (desktop). */
     public bool $show_dashboard_tab;
 
+    /** Speech to text: 'auto' (server if configured, else browser), 'server' (AI SDK transcription), 'browser' (Web Speech API). */
+    public string $speech_mode;
+
     /** Board notifications (task closed / question asked) in the in-app bell 🔔. */
     public bool $notify_in_app;
 
@@ -81,6 +84,11 @@ class AppSettings extends Settings
                 'local' => __('devboard::t.settings_options.mode_local'),
             ]],
             'show_dashboard_tab' => ['bool', []],
+            'speech_mode' => ['select', [
+                'auto' => __('devboard::t.settings_options.speech_auto'),
+                'server' => __('devboard::t.settings_options.speech_server'),
+                'browser' => __('devboard::t.settings_options.speech_browser'),
+            ]],
             'notify_in_app' => ['bool', []],
             'notify_webpush' => ['bool', []],
             'notify_mail' => ['bool', []],

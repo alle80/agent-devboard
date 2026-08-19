@@ -29,6 +29,8 @@ Route::middleware(array_merge(array_values(array_diff((array) config('devboard.m
         Route::post('/devboard/push-subscriptions', [PushSubscriptionController::class, 'store'])->name('devboard.push.store');
         Route::delete('/devboard/push-subscriptions', [PushSubscriptionController::class, 'destroy'])->name('devboard.push.destroy');
         Route::post('/devboard/notifications/test', [PushSubscriptionController::class, 'test'])->name('devboard.notifications.test');
+        // Speech to text (server mode): short recording → AI SDK transcription
+        Route::post('/devboard/transcribe', \Alle80\Devboard\Http\Controllers\TranscribeController::class)->name('devboard.transcribe');
 
         if ($dash = config('devboard.dashboard_route')) {
             Route::get($dash, \Alle80\Devboard\Livewire\DashboardTodoList::class)->name('devboard.dashboard');

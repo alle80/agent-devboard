@@ -13,9 +13,11 @@
     x-show="supported"
     x-cloak
     x-on:click="toggle()"
-    x-bind:class="on ? 'db-mic-on' : ''"
-    x-bind:title="on ? @js(__('devboard::t.mic_stop')) : @js(__('devboard::t.mic_start'))"
+    x-bind:class="{ 'db-mic-on': on, 'db-mic-busy': busy, 'db-mic-error': error }"
+    x-bind:title="error ? error : (busy ? @js(__('devboard::t.mic_busy')) : (on ? @js(__('devboard::t.mic_stop')) : @js(__('devboard::t.mic_start'))))"
     x-bind:aria-pressed="on ? 'true' : 'false'"
+    x-bind:aria-busy="busy ? 'true' : 'false'"
+    x-bind:disabled="busy"
     aria-label="{{ __('devboard::t.mic_start') }}"
     {{ $attributes->merge(['class' => 'db-mic cursor-pointer '.$class]) }}
 ><x-devboard::icon name="mic" /></button>
