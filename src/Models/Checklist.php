@@ -24,7 +24,8 @@ class Checklist extends Model
     /** Solo le liste dell'utente autenticato. */
     public static function mine(): Builder
     {
-        return static::where('user_id', auth()->id());
+        // Local mode: one global set of lists (no users); server mode: the logged-in user's lists
+        return \Alle80\Devboard\Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
     }
 
     /** Id della lista corrente dell'utente (dalla sessione, con fallback alla prima sua lista). */

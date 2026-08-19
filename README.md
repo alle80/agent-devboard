@@ -87,6 +87,10 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Modes**: `DEVBOARD_MODE=server` (default: login, lists per user; restrict access with
+`canAccessDevboard(): bool` on your user model or `DEVBOARD_ACCESS_GATE=<ability>`) or `DEVBOARD_MODE=local`
+(no authentication, one global set of lists — for your own machine only). Also switchable in `/settings`.
+
 **Notifications from the board**: on `--done` / `--ask` the list owner is notified by the app — in-app bell 🔔,
 Web Push (add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model and run
 `php artisan webpush:vapid`; users enable their devices in `/settings`) and mail — channels switchable in

@@ -1,11 +1,14 @@
 @php
     $side = 'right';
+    $show = true;
     try {
-        $side = app(\Alle80\Devboard\Settings\AppSettings::class)->tab_side ?: 'right';
+        $app = app(\Alle80\Devboard\Settings\AppSettings::class);
+        $side = $app->tab_side ?: 'right';
+        $show = (bool) $app->show_dashboard_tab;
     } catch (\Throwable $e) {
         // settings not migrated yet — fall back
     }
-    $dash = config('devboard.dashboard_route');
+    $dash = $show ? config('devboard.dashboard_route') : null;
     $onDashboard = $dash && request()->path() === ltrim($dash, '/');
 @endphp
 

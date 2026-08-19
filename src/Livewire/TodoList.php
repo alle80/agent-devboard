@@ -331,10 +331,9 @@ class TodoList extends Component
     /** Listeners: the private broadcast channel comes from config (devboard.broadcast_channel). */
     protected function getListeners(): array
     {
-        $channel = str_replace('{id}', '{userId}', (string) config('devboard.broadcast_channel', 'App.Models.User.{id}'));
 
         return [
-            'echo-private:'.$channel.',.TodoChanged' => 'onTodoChanged',
+            \Alle80\Devboard\Mode::echoListener() => 'onTodoChanged',
             'live-resync' => 'resync',
             'ingredients-updated' => 'refreshList',
             'resume-todo' => 'resume',

@@ -34,6 +34,12 @@ class AppSettings extends Settings
     /** Lato del pannello a scomparsa della dashboard su desktop: 'right' | 'left'. */
     public string $tab_side;
 
+    /** Board mode override: '' = follow config devboard.mode, 'local' = no authentication (global lists), 'server' = authenticated users. */
+    public string $mode;
+
+    /** Show the slide-out DASHBOARD tab (desktop). */
+    public bool $show_dashboard_tab;
+
     /** Board notifications (task closed / question asked) in the in-app bell 🔔. */
     public bool $notify_in_app;
 
@@ -69,6 +75,12 @@ class AppSettings extends Settings
             'ai_image_provider' => ['select', $providers],
             'ai_image_model' => ['text', []],
             'toast_console_changes' => ['bool', []],
+            'mode' => ['select', [
+                '' => __('devboard::t.settings_options.mode_config'),
+                'server' => __('devboard::t.settings_options.mode_server'),
+                'local' => __('devboard::t.settings_options.mode_local'),
+            ]],
+            'show_dashboard_tab' => ['bool', []],
             'notify_in_app' => ['bool', []],
             'notify_webpush' => ['bool', []],
             'notify_mail' => ['bool', []],

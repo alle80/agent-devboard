@@ -70,6 +70,9 @@
                             >
                         @endif
                     </li>
+                    @if ($key === 'mode')
+                        <p class="db-setting-warn" x-data x-show="$wire.get('values.app.mode') === 'local'" x-cloak>{{ __('devboard::t.settings_options.mode_warn') }}</p>
+                    @endif
                     @if ($key === 'task_mode')
                         {{-- Reso sempre, mostrato via Alpine quando è "multitasking": la sola @if lato
                              server non veniva inserita dal morph di Livewire al cambio della select. --}}
@@ -84,6 +87,7 @@
     @endforeach
 
     {{-- Web Push on this device (the channel toggles live in the App group above) --}}
+    @unless (\Alle80\Devboard\Mode::isLocal())
     <section
         class="{{ $skin['card'] }} mb-6"
         aria-labelledby="sec-notif"
@@ -112,6 +116,7 @@
             <span class="{{ $skin['help'] }} text-xs" x-show="sent">{{ __('devboard::t.notif.test_sent') }}</span>
         </div>
     </section>
+    @endunless
 
     {{-- Theme packs --}}
     <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }">

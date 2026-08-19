@@ -14,7 +14,7 @@ class OpenFromLink
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->isMethod('GET') && auth()->check()) {
+        if ($request->isMethod('GET') && (auth()->check() || \Alle80\Devboard\Mode::isLocal())) {
             if (($list = (int) $request->query('list')) && Checklist::mine()->whereKey($list)->exists()) {
                 session(['checklist_id' => $list]);
             }

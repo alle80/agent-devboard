@@ -20,9 +20,8 @@ class NotificationBell extends Component
 
     protected function getListeners(): array
     {
-        $channel = str_replace('{id}', '{userId}', (string) config('devboard.broadcast_channel', 'App.Models.User.{id}'));
 
-        return ['echo-private:'.$channel.',.TodoChanged' => '$refresh'];
+        return [\Alle80\Devboard\Mode::echoListener() => '$refresh'];
     }
 
     protected function user(): ?object

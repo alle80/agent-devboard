@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-08-19
+
+### Added
+- **Board modes** (`Alle80\Devboard\Mode`): config `devboard.mode` (`DEVBOARD_MODE`, default `server`),
+  overridable from `/settings` (`app.mode`, '' = follow the config, with a warning for local).
+  - **server**: authenticated users, lists per user, plus an access hook: `canAccessDevboard(): bool` on
+    the user model if defined, else the Gate ability in `devboard.access_gate` if set, else any logged-in
+    user (403 otherwise). Enforced by the new `DevboardAccess` middleware, which also plays the role of
+    `auth` (redirect to login) — `'auth'` in `devboard.middleware` is no longer needed and is ignored.
+  - **local**: no authentication at all, one **global** set of lists (no user); live updates on a public
+    channel (`devboard.local_channel`); no bell / push / logout in the UI. For a board on your own machine.
+- Setting `app.show_dashboard_tab` to show/hide the slide-out DASHBOARD tab.
+
+### Changed
+- Default `devboard.middleware` is now `['web']`.
+
 ## [0.13.0] - 2026-08-19
 
 ### Added

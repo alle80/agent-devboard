@@ -8,10 +8,11 @@ use Alle80\Devboard\Themes;
 use Alle80\Devboard\Http\Controllers\ThemeAssetController;
 use Alle80\Devboard\Http\Controllers\PushSubscriptionController;
 use Alle80\Devboard\Http\Controllers\ServiceWorkerController;
+use Alle80\Devboard\Http\Middleware\DevboardAccess;
 use Alle80\Devboard\Http\Middleware\OpenFromLink;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(array_merge((array) config('devboard.middleware', ['web', 'auth']), [RememberStyle::class, OpenFromLink::class]))
+Route::middleware(array_merge(array_values(array_diff((array) config('devboard.middleware', ['web']), ['auth'])), [DevboardAccess::class, RememberStyle::class, OpenFromLink::class]))
     ->prefix((string) config('devboard.route_prefix', ''))
     ->group(function () {
         if (config('devboard.home_route', true)) {

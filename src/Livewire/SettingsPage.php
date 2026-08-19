@@ -91,6 +91,7 @@ class SettingsPage extends Component
         }
 
         $settings->save();
+        \Alle80\Devboard\Mode::reset();
         $this->values[$group][$key] = $settings->{$key};
         $this->dispatch('toast', message: __('devboard::t.msg.setting_saved', ['label' => $field[0]]));
     }

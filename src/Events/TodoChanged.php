@@ -4,6 +4,7 @@ namespace Alle80\Devboard\Events;
 
 use Alle80\Devboard\Models\Todo;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -41,9 +42,13 @@ class TodoChanged implements ShouldBroadcastNow
         };
     }
 
-    public function broadcastOn(): PrivateChannel
+    public function broadcastOn(): PrivateChannel|Channel
     {
-        return new PrivateChannel(str_replace('{id}', (string) $this->userId, config('devboard.broadcast_channel', 'App.Models.User.{id}')));
+        if (\Alle80\Devboard\Mode::isLocal()) {
+            return new Channel(\Alle80\Devboard\Mode::broadcastChannel());
+        }
+
+        return new PrivateChannel(\Alle80\Devboard\Mode::broadcastChannel($this->userId));
     }
 
     public function broadcastAs(): string

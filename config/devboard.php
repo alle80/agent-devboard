@@ -5,8 +5,20 @@ return [
     // URL prefix of the package pages ('' = site root: /, /<theme>, /settings)
     'route_prefix' => env('DEVBOARD_ROUTE_PREFIX', ''),
 
-    // Middleware of the package routes (authentication is required: lists belong to users)
-    'middleware' => ['web', 'auth'],
+    // Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication,
+    // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
+    'mode' => env('DEVBOARD_MODE', 'server'),
+
+    // Server mode: who may open the board. If the user model has `canAccessDevboard(): bool` it decides;
+    // otherwise this Gate ability (e.g. 'access-devboard') if set; otherwise every authenticated user.
+    'access_gate' => env('DEVBOARD_ACCESS_GATE'),
+
+    // Middleware of the package routes. Authentication is enforced by the package itself according to the
+    // mode (Alle80\Devboard\Http\Middleware\DevboardAccess), so 'auth' is not needed here (and is ignored).
+    'middleware' => ['web'],
+
+    // Public broadcast channel used for live updates in local mode
+    'local_channel' => 'devboard.local',
 
     // Register the package routes at all (set false to define your own routes with the components)
     'register_routes' => true,

@@ -63,10 +63,10 @@
         </form>
 
         {{-- Utente e logout --}}
-        @php($logout = config('devboard.logout_route'))
+        @php($logout = \Alle80\Devboard\Mode::isLocal() ? null : config('devboard.logout_route'))
         <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="mt-1 flex items-center justify-between gap-2 border-t-2 border-black/20 px-2 pt-2 pb-1">
             @csrf
-            <span class="min-w-0 truncate text-xs opacity-60">👤 {{ auth()->user()->name }}</span>
+            <span class="min-w-0 truncate text-xs opacity-60">👤 {{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</span>
             <a href="{{ route('devboard.settings') }}" class="shrink-0 text-xs font-bold hover:underline" title="{{ __('devboard::t.settings') }}">⚙️ {{ __('devboard::t.settings') }}</a>
             @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
                 <button type="submit" class="shrink-0 cursor-pointer text-xs font-bold text-red-700 hover:underline">{{ __('devboard::t.logout') }}</button>
@@ -74,5 +74,7 @@
         </form>
     </div>
 </details>
-<livewire:devboard::notification-bell />
+@unless (\Alle80\Devboard\Mode::isLocal())
+    <livewire:devboard::notification-bell />
+@endunless
 </div>
