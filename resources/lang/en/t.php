@@ -10,7 +10,7 @@ return [
     'dashboard_open_full' => 'Open the full dashboard',
     'settings_title' => 'Settings',
     'logout' => 'Log out',
-    'back_to_list' => '← List',
+    'back_to_list' => 'List',
 
     // List
     'insert_here' => 'Insert here',
@@ -165,11 +165,11 @@ return [
     ],
 
     // Settings page
-    'settings_agent_title' => '🤖 How :agent works',
+    'settings_agent_title' => 'How :agent works',
     'settings_agent_intro' => 'Read every time it looks at the agent list; the agent follows them.',
-    'settings_optimization_title' => '⚡ Optimization',
+    'settings_optimization_title' => 'Optimization',
     'settings_optimization_intro' => 'Ways to make the agent spend fewer tokens (most of the cost is the chat context re-read at every step: fewer steps and shorter outputs = fewer tokens).',
-    'settings_app_title' => '📋 App',
+    'settings_app_title' => 'App',
     'settings_app_intro' => 'Behaviour of the board.',
     'local_mode' => 'local mode',
     'settings_saves' => 'Every change is saved immediately.',
@@ -225,7 +225,7 @@ return [
         'bell' => 'Notifications',
         'none' => 'No notifications yet.',
         'mark_all' => 'Mark all as read',
-        'section_title' => '🔔 Notifications',
+        'section_title' => 'Notifications',
         'section_intro' => 'The board itself notifies you when the agent closes a task or asks a question — in the bell, as Web Push on your devices, by e-mail.',
         'device_enable' => 'Enable Web Push on this device',
         'device_disable' => 'Disable on this device',
@@ -286,7 +286,7 @@ return [
         'tab_side_right' => 'Right', 'tab_side_left' => 'Left',
     ],
     'themes' => [
-        'title' => '🎨 Themes',
+        'title' => 'Themes',
         'intro' => 'Installable theme packs (zip with theme.json + theme.css + images). They appear in the Style menu.',
         'installed' => 'Installed themes',
         'none' => 'No theme pack installed.',

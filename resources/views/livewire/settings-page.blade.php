@@ -1,12 +1,12 @@
 <div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
     <div class="mb-6 flex items-center justify-between gap-3">
-        <h1 class="{{ $skin['h1'] }}">⚙️ {{ __('devboard::t.settings_title') }}</h1>
-        <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }}">{{ __('devboard::t.back_to_list') }}</a>
+        <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-devboard::icon name="settings" size="1em" /> {{ __('devboard::t.settings_title') }}</h1>
+        <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-devboard::icon name="arrow-left" /> {{ __('devboard::t.back_to_list') }}</a>
     </div>
 
     @foreach ($sections as $group => [$title, $intro, $fields])
         <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}">
-            <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }}">{{ $title }}</h2>
+            <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-devboard::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('devboard::t.settings_saves') }}</p>
 
             <ul class="{{ $skin['divide'] }}">
@@ -100,19 +100,19 @@
         }"
         x-init="refresh()"
     >
-        <h2 id="sec-notif" class="{{ $skin['h2'] }}">{{ __('devboard::t.notif.section_title') }}</h2>
+        <h2 id="sec-notif" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-devboard::icon name="bell" size="1em" /> {{ __('devboard::t.notif.section_title') }}</h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ __('devboard::t.notif.section_intro') }}</p>
         <p class="{{ $skin['help'] }} mb-2" x-cloak>
-            <span x-show="st === 'on'">✅ {{ __('devboard::t.notif.device_on') }}</span>
+            <span x-show="st === 'on'" class="inline-flex items-center gap-1"><x-devboard::icon name="check" /> {{ __('devboard::t.notif.device_on') }}</span>
             <span x-show="st === 'off'">{{ __('devboard::t.notif.device_off') }}</span>
-            <span x-show="st === 'denied'">🚫 {{ __('devboard::t.notif.device_denied') }}</span>
+            <span x-show="st === 'denied'" class="inline-flex items-center gap-1"><x-devboard::icon name="ban" /> {{ __('devboard::t.notif.device_denied') }}</span>
             <span x-show="st === 'unsupported'">{{ __('devboard::t.notif.device_unsupported') }}</span>
-            <span x-show="st === 'nokey'">⚠️ {{ __('devboard::t.notif.device_nokey') }}</span>
+            <span x-show="st === 'nokey'" class="inline-flex items-center gap-1"><x-devboard::icon name="alert" /> {{ __('devboard::t.notif.device_nokey') }}</span>
         </p>
         <div class="flex flex-wrap items-center gap-2" x-cloak>
-            <button type="button" class="{{ $skin['back'] }} text-sm" x-show="st === 'off'" x-bind:disabled="busy" x-on:click="enable()">🔔 {{ __('devboard::t.notif.device_enable') }}</button>
-            <button type="button" class="{{ $skin['back'] }} text-sm" x-show="st === 'on'" x-bind:disabled="busy" x-on:click="disable()">🔕 {{ __('devboard::t.notif.device_disable') }}</button>
-            <button type="button" class="{{ $skin['back'] }} text-sm" x-bind:disabled="busy" x-on:click="test()">📨 {{ __('devboard::t.notif.test') }}</button>
+            <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-show="st === 'off'" x-bind:disabled="busy" x-on:click="enable()"><x-devboard::icon name="bell" /> {{ __('devboard::t.notif.device_enable') }}</button>
+            <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-show="st === 'on'" x-bind:disabled="busy" x-on:click="disable()"><x-devboard::icon name="bell-off" /> {{ __('devboard::t.notif.device_disable') }}</button>
+            <button type="button" class="{{ $skin['back'] }} inline-flex items-center gap-1 text-sm" x-bind:disabled="busy" x-on:click="test()"><x-devboard::icon name="send" /> {{ __('devboard::t.notif.test') }}</button>
             <span class="{{ $skin['help'] }} text-xs" x-show="sent">{{ __('devboard::t.notif.test_sent') }}</span>
         </div>
     </section>
@@ -120,7 +120,7 @@
 
     {{-- Theme packs --}}
     <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }">
-        <h2 id="sec-themes" class="{{ $skin['h2'] }}">{{ __('devboard::t.themes.title') }}</h2>
+        <h2 id="sec-themes" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-devboard::icon name="palette" size="1em" /> {{ __('devboard::t.themes.title') }}</h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ __('devboard::t.themes.intro') }}</p>
 
         <ul class="{{ $skin['divide'] }}">
@@ -135,7 +135,7 @@
                         wire:click="uninstallTheme('{{ $slug }}')"
                         wire:confirm="{{ __('devboard::t.themes.uninstall_confirm', ['label' => $th['label']]) }}"
                         class="{{ $skin['back'] }} shrink-0 text-sm"
-                    >✕ {{ __('devboard::t.themes.uninstall') }}</button>
+                    ><x-devboard::icon name="close" /> {{ __('devboard::t.themes.uninstall') }}</button>
                 </li>
             @empty
                 <li class="{{ $skin['help'] }} py-2 italic">{{ __('devboard::t.themes.none') }}</li>
@@ -143,7 +143,7 @@
         </ul>
 
         <label class="{{ $skin['back'] }} mt-3 inline-flex cursor-pointer items-center gap-2 text-sm">
-            <span x-show="!uploading">📦 {{ __('devboard::t.themes.upload') }}</span>
+            <span x-show="!uploading" class="inline-flex items-center gap-1"><x-devboard::icon name="package" /> {{ __('devboard::t.themes.upload') }}</span>
             <span x-show="uploading" x-cloak>{{ __('devboard::t.themes.uploading') }}</span>
             <input
                 type="file"

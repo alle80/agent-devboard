@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.1] - 2026-08-19
+
+### Changed
+- `/settings` (and the back link of `/context`) use the SVG icon set instead of emoji: page title, section
+  titles (agent / optimization / app / notifications / themes), device state, buttons. New icons: `settings`,
+  `bot`, `bolt`, `board`, `bell`, `bell-off`, `palette`, `alert`, `send`, `package`, `arrow-left`.
+
 ## [0.21.0] - 2026-08-19
 
 ### Added
