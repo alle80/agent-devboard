@@ -115,6 +115,9 @@
                             @endif
                             @if ($todo->working && $todo->progress !== null)
                                 <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('devboard::t.progress') }}">{{ $todo->progress }}%</span>
+                                @if ($todo->phase)
+                                    <span class="db-phase min-w-0 truncate text-xs italic opacity-75" title="{{ $todo->phase }}">{{ $todo->phase }}</span>
+                                @endif
                             @endif
                     </button>
                     @endif

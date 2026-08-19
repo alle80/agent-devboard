@@ -28,6 +28,10 @@
 
                     @include('devboard::livewire.partials.modal-readonly')
 
+                    @if ($todo->working && ($todo->progress !== null || $todo->phase))
+                        <p class="db-phase-line inline-flex items-center gap-2 text-xs opacity-80"><span class="db-badge db-badge-working"><x-devboard::icon name="working" :stroke="2" /></span>@if ($todo->progress !== null)<span class="db-progress-pct tabular-nums">{{ $todo->progress }}%</span>@endif @if ($todo->phase)<span class="italic">{{ $todo->phase }}</span>@endif</p>
+                    @endif
+
                     @if ($todo->depends_on_id && $todo->dependsOn)
                         {{-- Plan chain: this task opens when the previous one is done --}}
                         <p class="db-chain-line inline-flex items-center gap-1 text-xs opacity-75"><x-devboard::icon name="link" /> {{ __('devboard::t.plan.after', ['title' => $todo->dependsOn->title]) }} — {{ $todo->dependsOn->completed ? __('devboard::t.plan.prev_done') : __('devboard::t.plan.prev_pending') }}</p>

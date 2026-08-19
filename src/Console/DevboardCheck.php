@@ -25,6 +25,7 @@ class DevboardCheck extends Command
         {--done= : Id of the todo to mark as completed}
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
         {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
+        {--phase= : Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the %}
         {--ask= : Id of the todo to ask questions about (state ❓)}
         {--q=* : Text of each question, repeatable}
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
@@ -58,7 +59,7 @@ class DevboardCheck extends Command
             foreach ($qs as $q) {
                 $t->questions()->create(['question' => $q, 'order' => $next++]);
             }
-            $t->update(['question' => true, 'working' => false, 'open_to_work' => false] + $this->tokenAttrs($t));
+            $t->update(['question' => true, 'working' => false, 'open_to_work' => false, 'phase' => null] + $this->tokenAttrs($t));
             Notify::questionAsked($t, $qs); // the app notifies the user (bell / web push / mail)
             $this->info(sprintf('❓ %d questions asked on «%s» (id:%d, waiting for answers)', count($qs), $t->title, $t->id));
         }
@@ -76,8 +77,12 @@ class DevboardCheck extends Command
                         ? max(0, min(100, (int) $this->option('progress')))
                         : ($t->progress ?? 0);
                 }
+                if ($opt === 'take' && $this->option('phase') !== null) {
+                    $attrs['phase'] = mb_substr(trim((string) $this->option('phase')), 0, 80) ?: null;
+                }
                 if ($opt === 'done') {
                     $attrs['progress'] = null; // finished → no progress bar
+                    $attrs['phase'] = null;
                 }
                 $t->update($attrs + $this->tokenAttrs($t));
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
@@ -86,7 +91,7 @@ class DevboardCheck extends Command
                 if ($opt === 'done') {
                     Notify::todoCompleted($t); // the app notifies the user (bell / web push / mail)
                 }
-                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%', $attrs['progress']) : ''));
+                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '') : ''));
                 if ($opt === 'done' && $t->hasStats()) {
                     $this->line('   📊 '.$t->statsLine());
                 }
@@ -127,7 +132,7 @@ class DevboardCheck extends Command
 
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%]', $t->progress) : '', $t->id));
+                $this->line(sprintf('%s [%s] %s #%d %s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', $t->id));
                 if ($t->parent) {
                     $this->line(sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $t->parent->title, $t->parent->id));
                     if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($t->parent->notes)));

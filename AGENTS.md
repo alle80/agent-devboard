@@ -50,8 +50,8 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots. If `check`
    prints `🧩 skills to activate for this task: …`, invoke those skills (Skill tool) while working on it.
    (The catalogue comes from `devboard:skills-import`; keep it fresh from your host with a JSON list.)
-   Keep the user posted: `devboard:check --take=ID --progress=N` updates the percentage on the row
-   (it starts at 0% when you take it).
+   Keep the user posted: `devboard:check --take=ID --progress=N --phase="testing"` updates the percentage
+   and the short «what I'm doing» text on the row (it starts at 0% when you take it).
 4. **If unclear, ask:** `devboard:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
    user answers in the app and restarts it (it comes back 🟢). Ask *after* taking.
 5. **Close it:** `devboard:check --done=ID --comment="what you did / how to try it"`. The comment

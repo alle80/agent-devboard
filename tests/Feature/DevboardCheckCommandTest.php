@@ -62,8 +62,9 @@ class DevboardCheckCommandTest extends TestCase
         $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 140])->expectsOutputToContain('— 100%')->assertSuccessful();
         $this->assertSame(100, $this->todo->fresh()->progress, 'clamped to 100');
 
-        $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 45])->assertSuccessful();
-        $this->artisan('devboard:check')->expectsOutputToContain('🔧 #1 Add dark mode [45%]')->assertSuccessful();
+        $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 45, '--phase' => 'writing code'])->expectsOutputToContain('— 45% · writing code')->assertSuccessful();
+        $this->assertSame('writing code', $this->todo->fresh()->phase);
+        $this->artisan('devboard:check')->expectsOutputToContain('🔧 #1 Add dark mode [45% · writing code]')->assertSuccessful();
 
         // Re-taking without --progress keeps the current value
         $this->artisan('devboard:check', ['--take' => $this->todo->id])->expectsOutputToContain('— 45%')->assertSuccessful();
@@ -71,6 +72,7 @@ class DevboardCheckCommandTest extends TestCase
 
         $this->artisan('devboard:check', ['--done' => $this->todo->id])->assertSuccessful();
         $this->assertNull($this->todo->fresh()->progress, 'done clears the progress');
+        $this->assertNull($this->todo->fresh()->phase, 'done clears the phase');
     }
 
     public function test_alias_and_missing_list(): void

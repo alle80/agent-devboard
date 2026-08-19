@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.24.0] - 2026-08-19
+
+### Added
+- **Agent phase**: `devboard:check --take=ID --progress=N --phase="writing code"` stores a short text of what
+  the agent is doing (`todos.phase`, cleared on done/ask) shown next to the % in the row and in the modal,
+  and printed by `devboard:check` (`[45% · writing code]`).
+
 ## [0.23.0] - 2026-08-19
 
 ### Added
