@@ -10,7 +10,7 @@
         wire:keydown.escape="cancelEditIngredient"
     />
     <div class="flex items-center justify-end gap-2">
-        <button type="button" wire:click="cancelEditIngredient" class="{{ $cancelClass }}" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}">✕</button>
-        <button type="submit" class="{{ $okClass }}" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save') }}">✔</button>
+        <button type="button" wire:click="cancelEditIngredient" class="{{ $cancelClass }}" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}"><x-devboard::icon name="close" /></button>
+        <button type="submit" class="{{ $okClass }}" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save') }}"><x-devboard::icon name="check" :stroke="2.5" /></button>
     </div>
 </form>

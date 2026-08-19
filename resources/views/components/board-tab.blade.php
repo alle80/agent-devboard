@@ -67,7 +67,7 @@
             <header class="db-tab-head">
                 <span class="db-tab-title">{{ __('devboard::t.dashboard_tab') }}</span>
                 <a href="{{ $dash }}" class="db-tab-open" title="{{ __('devboard::t.dashboard_open_full') }}" target="_top">⤢</a>
-                <button type="button" class="db-tab-close" @click="toggle()" aria-label="{{ __('devboard::t.close') }}">✕</button>
+                <button type="button" class="db-tab-close" @click="toggle()" aria-label="{{ __('devboard::t.close') }}"><x-devboard::icon name="close" /></button>
             </header>
             <iframe class="db-tab-frame" :src="open ? @js($dash) : 'about:blank'" loading="lazy"
                     title="{{ __('devboard::t.dashboard_tab') }}"></iframe>

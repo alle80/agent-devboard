@@ -37,7 +37,7 @@
                 <p class="px-2 py-1 text-xs uppercase tracking-wide opacity-60">{{ __('devboard::t.move_to') }}</p>
                 @foreach ($otherLists as $l)
                     <button type="button" role="menuitem" wire:click="moveTo({{ $l->id }})" x-on:click="o = false"
-                            class="db-menu-item flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-left">📋 <span class="truncate">{{ $l->name }}</span></button>
+                            class="db-menu-item flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-left"><x-devboard::icon name="list" /> <span class="truncate">{{ $l->name }}</span></button>
                 @endforeach
             </div>
         </details>

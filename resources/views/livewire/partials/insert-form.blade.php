@@ -13,5 +13,5 @@
     <x-devboard::mic class="tl-check tl-display shrink-0 px-2 py-1.5" within="form" target="input" />
     <span class="shrink-0 text-xs tabular-nums opacity-60" x-text="len + '/{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
     <button type="submit" class="tl-check tl-display shrink-0 cursor-pointer px-3 py-1.5 transition active:translate-y-px">{{ __('devboard::t.ok') }}</button>
-    <button type="button" wire:click="cancelInsert" class="tl-check tl-display shrink-0 cursor-pointer px-3 py-1.5 transition active:translate-y-px">✕</button>
+    <button type="button" wire:click="cancelInsert" class="tl-check tl-display shrink-0 cursor-pointer px-3 py-1.5 transition active:translate-y-px"><x-devboard::icon name="close" /></button>
 </form>

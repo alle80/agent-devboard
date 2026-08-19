@@ -17,8 +17,8 @@
         >
         <x-devboard::mic class="shrink-0 text-base leading-none opacity-70 hover:opacity-100" within="form" target="input" />
         <span class="shrink-0 text-xs font-normal tabular-nums opacity-70" style="font-family: system-ui, sans-serif" x-text="len + '/{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
-        <button type="submit" class="shrink-0 cursor-pointer text-lg leading-none" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save_title') }}">✔</button>
-        <button type="button" wire:click="cancelTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}">✕</button>
+        <button type="submit" class="shrink-0 cursor-pointer text-lg leading-none" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save_title') }}"><x-devboard::icon name="check" :stroke="2.5" /></button>
+        <button type="button" wire:click="cancelTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}"><x-devboard::icon name="close" /></button>
     </form>
 @elseif ($readonly)
     <span class="break-words">{{ $todo->title }}</span>
@@ -30,5 +30,5 @@
         aria-label="{{ __('devboard::t.title_rename', ['title' => $todo->title]) }}"
         class="group inline min-w-0 cursor-text break-words text-left"
         style="font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit"
-    >{{ $todo->title }} <span class="ml-1 inline-block text-[0.55em] align-middle opacity-40 transition group-hover:opacity-100" aria-hidden="true">✏️</span></button>
+    >{{ $todo->title }} <span class="ml-1 inline-block text-[0.55em] align-middle opacity-40 transition group-hover:opacity-100" aria-hidden="true"><x-devboard::icon name="edit" /></span></button>
 @endif

@@ -7,7 +7,7 @@
 @if ($readonly)
     <div class="{{ $readonlyClass ?? 'text-sm font-bold opacity-80' }} modal-readonly flex flex-wrap items-center gap-x-3 gap-y-2" role="status">
         <span class="flex items-center gap-2">
-            <span aria-hidden="true">🔒</span>
+            <x-devboard::icon name="lock" />
             <span>{{ __('devboard::t.readonly_notice') }}</span>
         </span>
         <button

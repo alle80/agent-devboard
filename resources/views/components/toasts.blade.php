@@ -31,7 +31,7 @@
             x-on:click="remove(t.id)"
             role="status"
         >
-            <span x-text="t.type === 'error' ? '⚠️' : (t.type === 'info' ? 'ℹ️' : '✅')"></span>
+            <span class="inline-flex" aria-hidden="true"><template x-if="t.type === 'error'"><x-devboard::icon name="alert" /></template><template x-if="t.type === 'info'"><x-devboard::icon name="bell" /></template><template x-if="t.type !== 'error' && t.type !== 'info'"><x-devboard::icon name="check" :stroke="2.5" /></template></span>
             <span x-text="t.message"></span>
         </div>
     </template>

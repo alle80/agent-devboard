@@ -10,7 +10,7 @@
             <a
                 href="{{ $s['url'] }}"
                 class="block rounded px-2 py-1.5 text-sm font-bold hover:bg-amber-100 {{ $current === $slug ? 'bg-amber-200' : '' }}"
-            ><x-devboard::theme-icon :theme="$s" /> {{ $s['label'] }}{{ $current === $slug ? ' ✓' : '' }}</a>
+            ><x-devboard::theme-icon :theme="$s" /> {{ $s['label'] }}@if ($current === $slug) <x-devboard::icon name="check" size=".9em" />@endif</a>
         @endforeach
     </div>
 </details>

@@ -40,12 +40,12 @@
         <div class="flex items-center gap-2">
             {{-- Da galleria / file --}}
             <label class="{{ $btnClass }} cursor-pointer">
-                {{ __('devboard::t.add_image') }}
+                <x-devboard::icon name="image" /> {{ __('devboard::t.add_image') }}
                 <input type="file" accept="image/jpeg,image/png,image/gif" multiple class="sr-only" wire:model="images">
             </label>
             {{-- Fotocamera (su smartphone apre direttamente la camera) --}}
             <label class="{{ $btnClass }} cursor-pointer sm:hidden">
-                {{ __('devboard::t.take_photo') }}
+                <x-devboard::icon name="camera" /> {{ __('devboard::t.take_photo') }}
                 <input type="file" accept="image/*" capture="environment" class="sr-only" wire:model="images">
             </label>
         </div>
@@ -73,7 +73,7 @@
                         title="{{ __('devboard::t.delete_image') }}"
                         class="absolute -top-1.5 -right-1.5 flex size-6 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-white text-xs font-bold text-red-600 shadow transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
                         aria-label="{{ __('devboard::t.delete_image') }}"
-                    >✕</button>
+                    ><x-devboard::icon name="close" /></button>
                 </div>
             @endforeach
 

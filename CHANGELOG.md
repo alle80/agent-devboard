@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-08-19
+
+### Changed
+- **No emoji left in the UI**: settings labels/options/help texts, modal (agent box, questions, stats,
+  skills, chain, images, sub-task checks, title pencil), rows (sub-tasks count, chain, agent reply, images),
+  toasts, switchers and readonly notice all use the SVG icon set or plain words. New icons `image`, `camera`,
+  `lock`, `chart`, `puzzle`, `link`, `clock`, `tasks`.
+
 ## [0.21.3] - 2026-08-19
 
 ### Changed

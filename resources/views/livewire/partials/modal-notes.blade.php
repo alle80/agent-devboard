@@ -57,14 +57,14 @@
                 wire:click="editNotes"
                 title="{{ __('devboard::t.note_edit') }}"
                 class="shrink-0 cursor-pointer text-lg opacity-40 transition hover:scale-110 hover:opacity-100"
-             aria-label="{{ __('devboard::t.note_edit') }}">✏️</button>
+             aria-label="{{ __('devboard::t.note_edit') }}"><x-devboard::icon name="edit" /></button>
         </div>
     @endif
 
     {{-- Commento dell'assistente (risposta a una richiesta): sola lettura, distinto dalla nota --}}
     @if ($todo->claude_comment)
         <div class="mt-3 border-t-2 border-dashed border-current/30 pt-2">
-            <span class="{{ $labelClass }}">{{ __('devboard::t.agent_box', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
+            <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-devboard::icon name="bot" /> {{ __('devboard::t.agent_box', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
             <div class="{{ $textClass }} db-prose break-words text-[0.95em] opacity-90">{!! \Alle80\Devboard\Support\Markdown::render($todo->claude_comment) !!}</div>
         </div>
     @endif
@@ -72,12 +72,12 @@
     {{-- Statistiche del task: tempo di lavoro dell'agente (intervalli 🔧) + token riportati --}}
     @if ($todo->hasStats())
         <dl class="db-stats mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-t-2 border-dashed border-current/30 pt-2 text-xs opacity-80" title="{{ __('devboard::t.stats_hint') }}">
-            <dt class="{{ $labelClass }} text-xs">📊 {{ __('devboard::t.stats') }}</dt>
+            <dt class="{{ $labelClass }} inline-flex items-center gap-1 text-xs"><x-devboard::icon name="chart" /> {{ __('devboard::t.stats') }}</dt>
             @if ($todo->workSeconds() > 0)
-                <dd class="tabular-nums" title="{{ __('devboard::t.stats_time') }}"><span aria-hidden="true">⏱</span> <span class="sr-only">{{ __('devboard::t.stats_time') }}:</span> {{ \Alle80\Devboard\Models\Todo::formatDuration($todo->workSeconds()) }}@if ($todo->working) <span class="db-stats-live" aria-label="live">…</span>@endif</dd>
+                <dd class="tabular-nums" title="{{ __('devboard::t.stats_time') }}"><x-devboard::icon name="clock" /> <span class="sr-only">{{ __('devboard::t.stats_time') }}:</span> {{ \Alle80\Devboard\Models\Todo::formatDuration($todo->workSeconds()) }}@if ($todo->working) <span class="db-stats-live" aria-label="live">…</span>@endif</dd>
             @endif
             @if ($todo->tokens_in > 0 || $todo->tokens_out > 0)
-                <dd class="tabular-nums" title="{{ __('devboard::t.stats_tokens') }}"><span aria-hidden="true">🪙</span> <span class="sr-only">{{ __('devboard::t.stats_tokens') }}:</span> {{ \Alle80\Devboard\Models\Todo::formatTokens((int) $todo->tokens_in) }} in / {{ \Alle80\Devboard\Models\Todo::formatTokens((int) $todo->tokens_out) }} out</dd>
+                <dd class="tabular-nums" title="{{ __('devboard::t.stats_tokens') }}"><x-devboard::icon name="coins" /> <span class="sr-only">{{ __('devboard::t.stats_tokens') }}:</span> {{ \Alle80\Devboard\Models\Todo::formatTokens((int) $todo->tokens_in) }} in / {{ \Alle80\Devboard\Models\Todo::formatTokens((int) $todo->tokens_out) }} out</dd>
             @endif
         </dl>
     @endif

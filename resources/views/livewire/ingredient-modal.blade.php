@@ -18,7 +18,7 @@
                     <button
                         wire:click="close"
                         class="tl-check tl-display flex size-9 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px"
-                    >✕</button>
+                    ><x-devboard::icon name="close" /></button>
                 </div>
 
                 <div class="modal-body max-h-[60vh] space-y-4 overflow-y-auto px-5 py-5">
@@ -30,7 +30,7 @@
 
                     @if ($todo->depends_on_id && $todo->dependsOn)
                         {{-- Plan chain: this task opens when the previous one is done --}}
-                        <p class="db-chain-line text-xs opacity-75">⛓ {{ __('devboard::t.plan.after', ['title' => $todo->dependsOn->title]) }} — {{ $todo->dependsOn->completed ? __('devboard::t.plan.prev_done') : __('devboard::t.plan.prev_pending') }}</p>
+                        <p class="db-chain-line inline-flex items-center gap-1 text-xs opacity-75"><x-devboard::icon name="link" /> {{ __('devboard::t.plan.after', ['title' => $todo->dependsOn->title]) }} — {{ $todo->dependsOn->completed ? __('devboard::t.plan.prev_done') : __('devboard::t.plan.prev_pending') }}</p>
                     @endif
 
                     {{-- Domande dell'assistente (in cima: se ci sono, sono la prima cosa da vedere) --}}
@@ -109,7 +109,7 @@
                                         class="tl-card flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-2 text-left transition {{ $ingredient->checked ? 'tl-done' : '' }}"
                                     >
                                         <span class="tl-check tl-display flex size-7 shrink-0 items-center justify-center {{ $ingredient->checked ? 'tl-check-on' : '' }}">
-                                            {{ $ingredient->checked ? '✔' : '' }}
+                                            @if ($ingredient->checked)<x-devboard::icon name="check" :stroke="3" />@endif
                                         </span>
                                         <span class="tl-item-title db-prose break-words {{ $ingredient->checked ? 'line-through' : '' }}">
                                             {!! \Alle80\Devboard\Support\Markdown::inline($ingredient->name) !!}
@@ -120,7 +120,7 @@
                                             wire:click="editIngredient({{ $ingredient->id }})"
                                             title="{{ __('devboard::t.edit_subtask') }}"
                                             class="shrink-0 cursor-pointer text-base opacity-25 transition hover:scale-125 hover:opacity-100"
-                                        >✏️</button>
+                                        ><x-devboard::icon name="edit" /></button>
                                         @endunless
                                     @unless($readonly)
                                     <button
@@ -128,7 +128,7 @@
                                         wire:confirm="{{ str_replace(':title', $ingredient->name, $t['confirm']) }}"
                                         title="{{ __('devboard::t.delete_subtask') }}"
                                         class="shrink-0 cursor-pointer text-lg opacity-25 transition hover:scale-125 hover:opacity-100"
-                                    >✕</button>
+                                    ><x-devboard::icon name="close" /></button>
                                     @endunless
                                     @endif
                                 </li>

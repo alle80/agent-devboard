@@ -78,7 +78,7 @@
                 <button
                     wire:click="toggle({{ $todo->id }})"
                     class="tl-check tl-display flex size-8 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px {{ $todo->completed ? 'tl-check-on' : '' }}"
-                >{{ $todo->completed ? '✔' : '' }}</button>
+                >@if ($todo->completed)<x-devboard::icon name="check" :stroke="3" />@endif</button>
 
                 {{-- Titolo (cliccabile se ha ingredienti o note) --}}
                 <div class="todo-title min-w-0 flex-1">
@@ -98,20 +98,20 @@
                             </span>
                             @if ($todo->ingredients->isNotEmpty())
                                 <span class="tl-mini shrink-0">
-                                    ☑ {{ $todo->ingredients->where('checked', true)->count() }}/{{ $todo->ingredients->count() }}
+                                    <x-devboard::icon name="tasks" /> {{ $todo->ingredients->where('checked', true)->count() }}/{{ $todo->ingredients->count() }}
                                 </span>
                             @endif
                             @if ($todo->claude_comment)
-                                <span class="shrink-0 text-sm" title="{{ __('devboard::t.agent_replied') }}">🤖</span>
+                                <span class="shrink-0 text-sm opacity-80" title="{{ __('devboard::t.agent_replied') }}"><x-devboard::icon name="bot" /></span>
                             @endif
                             @if ($todo->attachments_count)
-                                <span class="shrink-0 text-sm" title="{{ __('devboard::t.images_count', ['count' => $todo->attachments_count]) }}">📷{{ $todo->attachments_count }}</span>
+                                <span class="inline-flex shrink-0 items-center gap-0.5 text-sm" title="{{ __('devboard::t.images_count', ['count' => $todo->attachments_count]) }}"><x-devboard::icon name="image" />{{ $todo->attachments_count }}</span>
                             @endif
                             @if ($unseen)
                                 <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
                             @endif
                             @if ($todo->depends_on_id)
-                                <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('devboard::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}">⛓{{ $todo->dependsOn?->completed ? '✓' : '' }}</span>
+                                <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('devboard::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}"><x-devboard::icon name="link" />@if ($todo->dependsOn?->completed)<x-devboard::icon name="check" size=".9em" />@endif</span>
                             @endif
                             @if ($todo->working && $todo->progress !== null)
                                 <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('devboard::t.progress') }}">{{ $todo->progress }}%</span>

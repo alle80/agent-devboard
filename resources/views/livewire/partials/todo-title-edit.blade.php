@@ -13,6 +13,6 @@
         class="{{ $inputClass }} w-full min-w-0 flex-1"
     >
     <span class="shrink-0 text-xs tabular-nums opacity-60" x-text="len + '/{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
-    <button type="submit" class="{{ $okClass }}" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save') }}">✔</button>
-    <button type="button" wire:click="cancelEdit" class="{{ $cancelClass }}" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}">✕</button>
+    <button type="submit" class="{{ $okClass }}" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save') }}"><x-devboard::icon name="check" :stroke="2.5" /></button>
+    <button type="button" wire:click="cancelEdit" class="{{ $cancelClass }}" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}"><x-devboard::icon name="close" /></button>
 </form>

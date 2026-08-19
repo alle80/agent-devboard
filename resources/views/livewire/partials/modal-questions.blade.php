@@ -11,7 +11,7 @@
     @php($unanswered = $todo->questions->whereNull('answer')->count())
     <div class="{{ $boxClass }}">
         <div class="mb-2 flex items-center justify-between gap-2">
-            <span class="{{ $labelClass }}">{{ __('devboard::t.questions_title', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
+            <span class="{{ $labelClass }} inline-flex items-center gap-1"><span class="db-badge db-badge-question"><x-devboard::icon name="question" :stroke="2" /></span> {{ __('devboard::t.questions_title', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
             <span class="text-xs opacity-70">{{ __('devboard::t.answers_count', ['answered' => $todo->questions->count() - $unanswered, 'total' => $todo->questions->count()]) }}</span>
         </div>
 
@@ -31,7 +31,7 @@
                             class="{{ $inputClass }} block w-full min-w-0 flex-1 resize-y text-base"
                         ></textarea>
                         <button type="submit" class="{{ $okClass }} shrink-0" title="{{ __('devboard::t.save_answer') }}" aria-label="{{ __('devboard::t.save_answer') }}">
-                            {{ $q->answer ? '✔' : __('devboard::t.save') }}
+                            @if ($q->answer)<x-devboard::icon name="check" :stroke="2.5" />@else{{ __('devboard::t.save') }}@endif
                         </button>
                     </form>
                     @endif

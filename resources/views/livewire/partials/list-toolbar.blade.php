@@ -25,7 +25,7 @@
                 title="{{ __('devboard::t.clear_search') }}"
                 aria-label="{{ __('devboard::t.clear_search') }}"
                 class="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-lg opacity-50 hover:opacity-100"
-            >✕</button>
+            ><x-devboard::icon name="close" /></button>
         @endif
     </div>
 
@@ -49,7 +49,7 @@
             class="{{ $showArchived ? $chipOnClass : $btnClass }} cursor-pointer px-2.5 py-1 text-xs leading-none"
             aria-pressed="{{ $showArchived ? 'true' : 'false' }}"
             title="{{ $showArchived ? __('devboard::t.back_to_active') : __('devboard::t.show_archived') }}"
-        >📦 {{ $showArchived ? __('devboard::t.back_to_active') : __('devboard::t.archived') }} ({{ $archivedCount }})</button>
+        ><x-devboard::icon name="archive" /> {{ $showArchived ? __('devboard::t.back_to_active') : __('devboard::t.archived') }} ({{ $archivedCount }})</button>
     </div>
 
     @if ($showArchived)

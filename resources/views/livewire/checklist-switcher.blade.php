@@ -23,15 +23,15 @@
                             x-init="$el.focus(); $el.select()"
                             class="w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm font-bold focus:bg-emerald-50 focus:outline-none"
                         >
-                        <button type="submit" title="{{ __('devboard::t.save') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('devboard::t.save') }}">✔</button>
-                        <button type="button" wire:click="cancelRename" title="{{ __('devboard::t.cancel') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-white px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('devboard::t.cancel') }}">✕</button>
+                        <button type="submit" title="{{ __('devboard::t.save') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('devboard::t.save') }}"><x-devboard::icon name="check" :stroke="2.5" /></button>
+                        <button type="button" wire:click="cancelRename" title="{{ __('devboard::t.cancel') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-white px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('devboard::t.cancel') }}"><x-devboard::icon name="close" /></button>
                     </form>
                 @else
                     <button
                         wire:click="switchTo({{ $list->id }})"
                         class="min-w-0 flex-1 cursor-pointer px-2 py-1.5 text-left text-sm font-bold"
                     >
-                        <span class="block truncate">{{ $list->name }}{{ $list->id === $currentId ? ' ✓' : '' }}</span>
+                        <span class="block truncate">{{ $list->name }}@if ($list->id === $currentId) <x-devboard::icon name="check" size=".9em" />@endif</span>
                         <span class="block text-xs font-normal opacity-60">{{ $list->done_count }}/{{ $list->todos_count }} {{ __('devboard::t.done_short') }}</span>
                     </button>
                     <button
