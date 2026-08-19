@@ -25,6 +25,7 @@ Route::middleware(array_merge(array_values(array_diff((array) config('devboard.m
         Route::get('/settings', SettingsPage::class)->name('devboard.settings');
         Route::get('/context', \Alle80\Devboard\Livewire\ContextPage::class)->name('devboard.context');
         Route::get('/stats', \Alle80\Devboard\Livewire\StatsPage::class)->name('devboard.stats');
+        Route::get('/agents', \Alle80\Devboard\Livewire\AgentsPage::class)->name('devboard.agents');
 
         // Web Push subscriptions of the logged-in user (+ a test notification)
         Route::post('/devboard/push-subscriptions', [PushSubscriptionController::class, 'store'])->name('devboard.push.store');

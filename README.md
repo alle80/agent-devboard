@@ -117,6 +117,10 @@ Web Push (add `NotificationChannels\WebPush\HasPushSubscriptions` to your user m
 of the agent's skills; the modal shows them under the Task note as a 🧩 accordion and the chosen ones are
 printed by `devboard:check` for that task.
 
+**Agents status** (`/agents`): plan + usage windows (5h / 7d …) of your coding agents with used/remaining %,
+reset countdown and alert levels; feed it with `php artisan devboard:agent-status-import` (JSON snapshot) —
+see `scripts/agent-status.py` in the origin repo for Claude Code (credentials never leave the host).
+
 **Statistics page** (`/stats`): completed tasks per list with working time, tokens and cost (set the price
 per million tokens in Settings), per-day bars, overview of all lists.
 

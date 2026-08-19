@@ -54,6 +54,9 @@ return [
     // Private broadcast channel per user for live updates ({id} = user id); requires a broadcaster
     'broadcast_channel' => 'App.Models.User.{id}',
 
+    // Agents status snapshot (plan + usage windows), written by `devboard:agent-status-import`; shown in /agents
+    'agent_status_file' => env('DEVBOARD_AGENT_STATUS_FILE', storage_path('app/devboard/agent-status.json')),
+
     // Catalogue of the agent's skills (JSON written by `devboard:skills-import`; shown in the task modal)
     'skills_file' => env('DEVBOARD_SKILLS_FILE', storage_path('app/devboard/skills.json')),
 

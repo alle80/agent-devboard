@@ -460,6 +460,18 @@ select.setting-input { appearance: auto; }
 @keyframes db-mic-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { .db-mic-on { animation: none; } }
 
+/* ---------- /agents: usage windows ---------- */
+.db-agent-bar { background: color-mix(in srgb, currentColor 15%, transparent); }
+.db-agent-fill { background: var(--tl-accent, #22c55e); transition: width .4s ease; }
+.db-agent-fill-warn { background: #f59e0b; }
+.db-agent-fill-critical, .db-agent-fill-over { background: #ef4444; }
+.db-agent-fill-na { background: transparent; }
+.db-agent-badge { display: inline-block; border-radius: 999px; padding: 0 .45em; font-size: .7em; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; vertical-align: middle; }
+.db-agent-badge-warn { background: #f59e0b; color: #111; }
+.db-agent-badge-critical, .db-agent-badge-over { background: #ef4444; color: #fff; }
+.db-agent-stale, .db-agent-error { color: #ef4444; font-weight: 700; }
+.db-agent-error { color: #ef4444; }
+
 /* ---------- /stats ---------- */
 .db-series-bar { background: var(--tl-accent, #22c55e); opacity: .85; border-radius: 2px 2px 0 0; min-width: 2px; }
 .db-series { gap: 2px; }

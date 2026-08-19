@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.28.0] - 2026-08-19
+
+### Added
+- **Agents status** (`/agents`, link in the lists menu): plan and usage windows of the coding agents — used %,
+  remaining %, progress bar with ok/high/almost exhausted/over-the-limit levels, reset countdown, $ limits and
+  extra usage when exposed, «updated … / stale» meta; empty, not-configured and error states; auto-refresh
+  every minute. Data come from a snapshot imported with `devboard:agent-status-import` (the origin repo ships
+  `scripts/agent-status.py`: it reads the Claude Code OAuth credentials on the host and sends only
+  percentages). `Alle80\Devboard\Support\AgentStatus`, Livewire `AgentsPage`, config `agent_status_file`.
+
 ## [0.27.1] - 2026-08-19
 
 ### Added

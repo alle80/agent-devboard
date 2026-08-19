@@ -99,6 +99,7 @@
             <p class="mb-1.5 truncate px-1 text-xs opacity-60">{{ \Alle80\Devboard\Mode::isLocal() ? __('devboard::t.local_mode') : (auth()->user()?->name ?? '') }}</p>
             <nav class="grid grid-cols-2 gap-1" aria-label="{{ __('devboard::t.settings') }}">
                 <a href="{{ route('devboard.stats') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.stats_page.menu') }}</a>
+                <a href="{{ route('devboard.agents') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.agents.menu') }}</a>
                 <a href="{{ route('devboard.context') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.ctx.menu') }}</a>
                 <a href="{{ route('devboard.settings') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('devboard::t.settings') }}</a>
                 @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
