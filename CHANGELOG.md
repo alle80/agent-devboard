@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-08-19
+
+### Added
+- **Agent-agnostic**: config `devboard.agent_name` (`DEVBOARD_AGENT_NAME`, default «Agent») used by the UI
+  labels (🤖 box, skills, questions, settings, context); `Alle80\Devboard\Agent::name()`. The Italian
+  strings no longer hard-code «Claude». AGENTS.md/README: compatibility table for Claude Code, Codex CLI,
+  Gemini CLI and other CLI agents (instructions file per agent, skills folders, token stats).
+
 ## [0.20.1] - 2026-08-19
 
 ### Security

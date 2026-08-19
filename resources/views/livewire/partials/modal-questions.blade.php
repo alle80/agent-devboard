@@ -11,7 +11,7 @@
     @php($unanswered = $todo->questions->whereNull('answer')->count())
     <div class="{{ $boxClass }}">
         <div class="mb-2 flex items-center justify-between gap-2">
-            <span class="{{ $labelClass }}">{{ __('devboard::t.questions_title') }}</span>
+            <span class="{{ $labelClass }}">{{ __('devboard::t.questions_title', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
             <span class="text-xs opacity-70">{{ __('devboard::t.answers_count', ['answered' => $todo->questions->count() - $unanswered, 'total' => $todo->questions->count()]) }}</span>
         </div>
 

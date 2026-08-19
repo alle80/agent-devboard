@@ -20,7 +20,7 @@ class SettingsPageTest extends TestCase
     public function test_toggle_select_and_int_fields(): void
     {
         $page = Livewire::test(SettingsPage::class);
-        $page->assertSee('How the agent works');
+        $page->assertSee('How Agent works');
 
         $page->call('toggle', 'agent', 'commit_after_task');
         $this->assertFalse(app(AgentSettings::class)->refresh()->commit_after_task);

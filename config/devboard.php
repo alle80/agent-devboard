@@ -5,6 +5,9 @@ return [
     // URL prefix of the package pages ('' = site root: /, /<theme>, /settings)
     'route_prefix' => env('DEVBOARD_ROUTE_PREFIX', ''),
 
+    // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «🤖 Claude», «Claude's skills»
+    'agent_name' => env('DEVBOARD_AGENT_NAME', 'Agent'),
+
     // Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication,
     // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
     'mode' => env('DEVBOARD_MODE', 'server'),

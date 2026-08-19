@@ -177,6 +177,6 @@ class ContextPage extends Component
             'groups' => ContextGroup::with('blocks')->orderBy('order')->orderBy('id')->get(),
             'tokensOn' => $on,
             'tokensTotal' => $total,
-        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('devboard::t.ctx.title'));
+        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]));
     }
 }

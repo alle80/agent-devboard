@@ -87,6 +87,10 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Compatibility**: any CLI coding agent — Claude Code, OpenAI Codex CLI, Gemini CLI, Aider, Cursor, … — the
+contract is just the `devboard:check`/`devboard:watch` commands plus `AGENTS.md` (Codex/others), `CLAUDE.md`
+(Claude) or `GEMINI.md` (Gemini) carrying the same rules; `DEVBOARD_AGENT_NAME` sets how the UI calls it.
+
 **Plan mode**: create a list «as a plan» from a prompt: the AI SDK splits the goal into chained tasks
 (`depends_on_id`); completing one opens the next. Needs `laravel/ai` + a provider key (otherwise a single
 «Build the plan» task is created for the agent).

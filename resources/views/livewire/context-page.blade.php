@@ -1,6 +1,6 @@
 <div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
     <div class="mb-4 flex items-center justify-between gap-3">
-        <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-devboard::icon name="book" size="1em" /> {{ __('devboard::t.ctx.title') }}</h1>
+        <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-devboard::icon name="book" size="1em" /> {{ __('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]) }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }}">{{ __('devboard::t.back_to_list') }}</a>
     </div>
     <p class="{{ $skin['sub'] }} mb-2">{{ __('devboard::t.ctx.intro') }}</p>

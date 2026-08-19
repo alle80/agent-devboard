@@ -149,7 +149,7 @@ class SettingsPage extends Component
             'skin' => $skin,
             'installedThemes' => ThemeStore::installed(),
             'sections' => [
-                'agent' => [__('devboard::t.settings_agent_title'), __('devboard::t.settings_agent_intro'), AgentSettings::fields()],
+                'agent' => [__('devboard::t.settings_agent_title', ['agent' => \Alle80\Devboard\Agent::name()]), __('devboard::t.settings_agent_intro'), AgentSettings::fields()],
                 'optimization' => [__('devboard::t.settings_optimization_title'), __('devboard::t.settings_optimization_intro'), OptimizationSettings::fields()],
                 'app' => [__('devboard::t.settings_app_title'), __('devboard::t.settings_app_intro'), AppSettings::fields()],
             ],

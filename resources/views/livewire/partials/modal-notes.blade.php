@@ -64,7 +64,7 @@
     {{-- Commento dell'assistente (risposta a una richiesta): sola lettura, distinto dalla nota --}}
     @if ($todo->claude_comment)
         <div class="mt-3 border-t-2 border-dashed border-current/30 pt-2">
-            <span class="{{ $labelClass }}">{{ __('devboard::t.agent_box') }}</span>
+            <span class="{{ $labelClass }}">{{ __('devboard::t.agent_box', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
             <div class="{{ $textClass }} db-prose break-words text-[0.95em] opacity-90">{!! \Alle80\Devboard\Support\Markdown::render($todo->claude_comment) !!}</div>
         </div>
     @endif

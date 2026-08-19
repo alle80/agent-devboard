@@ -13,7 +13,7 @@
 @if ($catalogue)
     <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }}, q: '', hay: @js(array_values(array_map(fn ($sk) => $sk['name'].' '.($sk['description'] ?? '').' '.($sk['source'] ?? ''), $catalogue))), match(t) { return this.q.trim() === '' || t.toLowerCase().includes(this.q.trim().toLowerCase()); }, noMatch() { return this.q.trim() !== '' && ! this.hay.some(t => this.match(t)); } }" x-bind:open="o" x-on:toggle="o = $el.open">
         <summary class="flex cursor-pointer items-center justify-between gap-2 select-none">
-            <span class="{{ $labelClass }}">🧩 {{ __('devboard::t.skills') }}</span>
+            <span class="{{ $labelClass }}">🧩 {{ __('devboard::t.skills', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
             <span class="{{ $textClass }} text-xs opacity-70">{{ $chosen ? __('devboard::t.skills_chosen', ['count' => count($chosen)]) : __('devboard::t.skills_none') }}</span>
         </summary>
         <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('devboard::t.skills_hint') }}</p>

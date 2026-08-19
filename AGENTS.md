@@ -4,6 +4,24 @@ You are a coding agent driven by an **Agent Devboard**. The user queues work as 
 list (the **agent list**, `config('devboard.agent_list')`). Your job: pick them up, do them, close
 them — reacting to the board in real time.
 
+## Works with any CLI agent
+
+The board never talks to a specific vendor: it only needs a shell where `php artisan devboard:check`
+runs. Tested with **Claude Code**; works the same with **OpenAI Codex CLI**, **Gemini CLI**, Aider, Cursor
+CLI, Amp, … Hook it up per agent:
+
+| Agent | Instructions file it reads | How to connect |
+|-------|----------------------------|----------------|
+| Claude Code | `CLAUDE.md` | copy this file's rules into `CLAUDE.md` (or `@AGENTS.md`), then run `devboard:watch` |
+| Codex CLI | `AGENTS.md` | put this file at the repo root (Codex reads it natively) |
+| Gemini CLI | `GEMINI.md` | copy/`@include` this file as `GEMINI.md` |
+| others | their own file | same content; the only contract is the `devboard:check` CLI below |
+
+Skills: `devboard:skills-import` accepts any JSON list — the origin repo ships a sync script that reads
+`.claude/skills`, `~/.codex/skills`, `~/.agents/skills`, `~/.gemini/skills`. Token stats: report whatever
+your agent exposes with `--tokens-in/--tokens-out` (optional). The UI calls the agent by
+`config('devboard.agent_name')` («Claude», «Codex», …).
+
 ## Connect (once)
 
 ```bash
