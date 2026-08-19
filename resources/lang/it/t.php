@@ -174,6 +174,8 @@ return [
         'menu' => 'Statistiche',
         'intro' => 'Task completati per lista con tempo di lavoro, token e costo (listino in Impostazioni → App).',
         'list' => 'Lista',
+        'all_lists' => 'Tutte le liste',
+        'all_plans' => 'Tutti i piani (:n)',
         'all_time' => 'tutto',
         'no_list' => 'Nessuna lista.',
         'kpi_done' => 'Completati',

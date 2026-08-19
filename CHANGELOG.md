@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.27.1] - 2026-08-19
+
+### Added
+- `/stats`: the list selector also offers **All lists** and **All plans** (aggregated history with the list
+  name on each row).
+
 ## [0.27.0] - 2026-08-19
 
 ### Added

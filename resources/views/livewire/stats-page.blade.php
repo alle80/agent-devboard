@@ -9,8 +9,10 @@
     <div class="{{ $skin['card'] }} mb-4 flex flex-wrap items-center gap-2">
         <label class="{{ $skin['label'] }} text-sm" for="stats-list">{{ __('devboard::t.stats_page.list') }}</label>
         <select id="stats-list" class="{{ $skin['input'] }} w-full min-w-0 text-sm sm:w-auto sm:flex-1" wire:change="setList($event.target.value)">
+            <option value="0" @selected($selection === 0)>{{ __('devboard::t.stats_page.all_lists') }}</option>
+            @if ($plansCount > 0)<option value="-1" @selected($selection === -1)>{{ __('devboard::t.stats_page.all_plans', ['n' => $plansCount]) }}</option>@endif
             @foreach ($lists as $l)
-                <option value="{{ $l->id }}" @selected($list && $l->id === $list->id)>{{ $l->name }}</option>
+                <option value="{{ $l->id }}" @selected($selection === $l->id)>{{ $l->name }}</option>
             @endforeach
         </select>
         <span class="flex flex-wrap items-center gap-1 text-xs">
@@ -20,7 +22,7 @@
         </span>
     </div>
 
-    @if (! $list)
+    @if ($selectedCount === 0)
         <p class="{{ $skin['help'] }} text-center">{{ __('devboard::t.stats_page.no_list') }}</p>
     @else
         {{-- KPIs --}}
@@ -63,7 +65,7 @@
                         @php($t = $r['todo'])
                         <li wire:key="hm-{{ $t->id }}" class="py-2">
                             <div class="flex items-start justify-between gap-2">
-                                <span class="{{ $skin['label'] }} min-w-0 break-words">{{ $t->title }}</span>
+                                <span class="{{ $skin['label'] }} min-w-0 break-words">{{ $t->title }}@if ($selectedCount > 1) <span class="{{ $skin['help'] }} font-normal">· {{ $t->checklist?->name }}</span>@endif</span>
                                 <span class="{{ $skin['help'] }} shrink-0 text-xs tabular-nums">{{ $t->completed_at->format('d/m H:i') }}</span>
                             </div>
                             <div class="{{ $skin['help'] }} mt-0.5 grid grid-cols-3 gap-1 text-xs tabular-nums">
@@ -91,7 +93,7 @@
                                 <tr wire:key="h-{{ $t->id }}" class="align-top">
                                     <td class="py-1.5 pr-2 whitespace-nowrap tabular-nums {{ $skin['help'] }}">{{ $t->completed_at->format('d/m H:i') }}</td>
                                     <td class="py-1.5 pr-2">
-                                        <span class="{{ $skin['label'] }}">{{ $t->title }}</span>
+                                        <span class="{{ $skin['label'] }}">{{ $t->title }}</span>@if ($selectedCount > 1) <span class="{{ $skin['help'] }} text-xs">· {{ $t->checklist?->name }}</span>@endif
                                         <span class="{{ $skin['help'] }} block text-xs">
                                             @if ($t->archived_at)<span class="mr-1">{{ __('devboard::t.stats_page.archived') }}</span>@endif
                                             @if ($t->ingredients_count ?? $t->ingredients->count()){{ $t->ingredients_done_count }}/{{ $t->ingredients->count() }} {{ __('devboard::t.stats_page.subtasks') }}@endif
@@ -119,7 +121,7 @@
                     <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('devboard::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('devboard::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('devboard::t.stats_page.kpi_cost') }}</th></tr></thead>
                     <tbody class="{{ $skin['divide'] }}">
                         @foreach ($overview as $o)
-                            <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $o['list']->id === $list->id ? 'font-bold' : '' }}">
+                            <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $list && $o['list']->id === $list->id ? 'font-bold' : '' }}">
                                 <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}</button></td>
                                 <td class="py-1.5 pr-2 text-right tabular-nums">{{ $o['agg']['count'] }}</td>
                                 <td class="py-1.5 pr-2 text-right tabular-nums">{{ \Alle80\Devboard\Support\Stats::duration($o['agg']['timed_count'] ? $o['agg']['work_seconds'] : null) }}</td>

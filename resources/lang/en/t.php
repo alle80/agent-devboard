@@ -180,6 +180,8 @@ return [
         'menu' => 'Stats',
         'intro' => 'Completed tasks per list with working time, tokens and cost (price list in Settings → App).',
         'list' => 'List',
+        'all_lists' => 'All lists',
+        'all_plans' => 'All plans (:n)',
         'all_time' => 'all',
         'no_list' => 'No list yet.',
         'kpi_done' => 'Completed',

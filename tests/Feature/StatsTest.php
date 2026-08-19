@@ -105,6 +105,11 @@ class StatsTest extends TestCase
         // empty state
         $empty = Checklist::create(['name' => 'empty', 'user_id' => auth()->id()]);
         \Livewire\Livewire::test(\Alle80\Devboard\Livewire\StatsPage::class)->call('setList', $empty->id)->assertSee('No completed task in this period');
+        // all lists / all plans
+        $plan = Checklist::create(['name' => 'myplan', 'user_id' => auth()->id(), 'plan_prompt' => 'x']);
+        Todo::create(['title' => 'P1', 'order' => 1, 'checklist_id' => $plan->id, 'completed' => true, 'work_seconds' => 60]);
+        \Livewire\Livewire::test(\Alle80\Devboard\Livewire\StatsPage::class)->call('setList', 0)->assertSee('History — 3 completed tasks')->assertSee('· myplan')->assertSee('· proj');
+        \Livewire\Livewire::test(\Alle80\Devboard\Livewire\StatsPage::class)->call('setList', -1)->assertSee('History — 1 completed tasks')->assertSee('P1')->assertDontSee('B (untracked)');
         $this->assertSame(2, $overview->firstWhere('list.id', $this->list->id)['agg']['count']);
     }
 }
