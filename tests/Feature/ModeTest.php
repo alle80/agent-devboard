@@ -44,6 +44,11 @@ class ModeTest extends TestCase
         $this->get('/settings')->assertForbidden();
     }
 
+    public function test_access_middleware_is_persistent_on_livewire_updates(): void
+    {
+        $this->assertContains(\Alle80\Devboard\Http\Middleware\DevboardAccess::class, \Livewire\Livewire::getPersistentMiddleware(), 'DevboardAccess replaces auth, so Livewire must re-apply it on /livewire/update');
+    }
+
     public function test_local_mode_has_no_auth_and_global_lists(): void
     {
         config(['devboard.mode' => 'local']);

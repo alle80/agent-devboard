@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.1] - 2026-08-19
+
+### Security
+- `DevboardAccess` is registered as a **Livewire persistent middleware**: since 0.14.0 it replaces `auth` on
+  the package routes, but Livewire re-applies only persistent middleware on `/livewire/update`, so component
+  actions (settings, context, lists) were not re-checked for authentication/access on update requests.
+
 ## [0.20.0] - 2026-08-19
 
 ### Added
