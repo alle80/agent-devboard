@@ -31,13 +31,14 @@
 
     {{-- Filtri di stato + archivio --}}
     <div class="flex flex-wrap items-center gap-1.5">
+        @php($icons = ['todo' => 'waiting', 'done' => 'done', 'otw' => 'open', 'working' => 'working', 'question' => 'question'])
         @foreach (\Alle80\Devboard\Livewire\TodoList::filters() as $key => $label)
             <button
                 type="button"
                 wire:click="setFilter('{{ $key }}')"
-                class="{{ $filter === $key ? $chipOnClass : $chipClass }} cursor-pointer px-2.5 py-1 text-xs leading-none"
+                class="{{ $filter === $key ? $chipOnClass : $chipClass }} inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none"
                 aria-pressed="{{ $filter === $key ? 'true' : 'false' }}"
-            >{{ $label }}</button>
+            >@isset($icons[$key])<span class="db-badge db-badge-{{ $icons[$key] }}"><x-devboard::icon :name="$icons[$key]" size="1.1em" :stroke="2" /></span>@endisset{{ $label }}</button>
         @endforeach
 
         <span class="flex-1"></span>

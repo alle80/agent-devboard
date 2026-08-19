@@ -43,7 +43,7 @@ return [
     'show_archived' => 'Show archived items',
     'archive_help' => 'You are looking at the archive: these items are not in the list and do not count in the total. You can restore or delete them.',
     'filter_help' => 'Filter active: drag & drop reordering is disabled until you go back to «All» with no search.',
-    'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => '🟢 Open to work', 'working' => '🔧 Working', 'question' => '❓ Questions'],
+    'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => 'Open to work', 'working' => 'Working', 'question' => 'Questions'],
 
     // Modal
     'note' => 'Task',

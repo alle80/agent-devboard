@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.2] - 2026-08-19
+
+### Changed
+- The **state filters** in the toolbar use the SVG state icons (same as the rows: waiting / done / open /
+  working «Matrix» / question) instead of the old emoji.
+
 ## [0.15.1] - 2026-08-19
 
 ### Fixed

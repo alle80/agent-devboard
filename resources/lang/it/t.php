@@ -41,7 +41,7 @@ return [
     'show_archived' => 'Mostra gli elementi archiviati',
     'archive_help' => 'Stai guardando l\'archivio: gli elementi qui non compaiono nella lista e non contano nel totale. Puoi ripristinarli o eliminarli.',
     'filter_help' => 'Filtro attivo: il riordino con trascinamento è disabilitato finché non torni a «Tutti» senza ricerca.',
-    'filters' => ['all' => 'Tutti', 'todo' => 'Da fare', 'done' => 'Fatti', 'otw' => '🟢 Open to work', 'working' => '🔧 Working', 'question' => '❓ Domande'],
+    'filters' => ['all' => 'Tutti', 'todo' => 'Da fare', 'done' => 'Fatti', 'otw' => 'Open to work', 'working' => 'Working', 'question' => 'Domande'],
 
     'note' => 'Task',
     'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],
