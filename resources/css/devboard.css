@@ -461,6 +461,13 @@ select.setting-input { appearance: auto; }
 @media (prefers-reduced-motion: reduce) { .db-mic-on { animation: none; } }
 
 /* ---------- /context: groups & blocks ---------- */
+.db-ctx-title { font-size: 1.05rem; line-height: 1.3; }
+.db-ctx-h1 { font-size: 1.4rem; }
+@media (max-width: 639px) {
+    .db-ctx-title { font-size: .95rem; }
+    .db-ctx-h1 { font-size: 1.2rem; }
+    .db-ctx-group { padding: .9rem; }
+}
 .db-ctx-editor { min-height: 10rem; font-size: .8rem; }
 @media (max-width: 639px) {
     /* Mobile: roomier text areas (markdown editor everywhere + context blocks) and readable font size */

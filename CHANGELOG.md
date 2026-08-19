@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.1] - 2026-08-19
+
+### Changed
+- `/context` cards reorganised for phones: commands (handle, switch, select-all/rename/delete, chevron) on
+  the top row, title + stats wrapping below on their own line; block rows likewise (commands row, then the
+  text full width); smaller title fonts.
+
 ## [0.22.0] - 2026-08-19
 
 ### Changed
