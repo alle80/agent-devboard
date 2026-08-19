@@ -34,6 +34,15 @@ class AppSettings extends Settings
     /** Lato del pannello a scomparsa della dashboard su desktop: 'right' | 'left'. */
     public string $tab_side;
 
+    /** Board notifications (task closed / question asked) in the in-app bell 🔔. */
+    public bool $notify_in_app;
+
+    /** Board notifications as Web Push on the devices that enabled them. */
+    public bool $notify_webpush;
+
+    /** Board notifications by e-mail (needs a configured mailer). */
+    public bool $notify_mail;
+
     public static function group(): string
     {
         return 'app';
@@ -60,6 +69,9 @@ class AppSettings extends Settings
             'ai_image_provider' => ['select', $providers],
             'ai_image_model' => ['text', []],
             'toast_console_changes' => ['bool', []],
+            'notify_in_app' => ['bool', []],
+            'notify_webpush' => ['bool', []],
+            'notify_mail' => ['bool', []],
             'tab_side' => ['select', [
                 'right' => __('devboard::t.settings_options.tab_side_right'),
                 'left' => __('devboard::t.settings_options.tab_side_left'),

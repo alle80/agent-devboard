@@ -9,6 +9,10 @@
 @if (! empty($echo['key']))
     <script>window.DEVBOARD_ECHO = @json($echo);</script>
 @endif
+@if (auth()->check() && \Illuminate\Support\Facades\Route::has('devboard.push.store'))
+    @php($push = ['key' => (string) config('webpush.vapid.public_key', ''), 'subscribeUrl' => route('devboard.push.store'), 'testUrl' => route('devboard.notifications.test'), 'sw' => route('devboard.sw', absolute: false), 'csrf' => csrf_token()])
+    <script>window.DEVBOARD_PUSH = {!! json_encode($push) !!};</script>
+@endif
 @if ($mode === 'precompiled')
     @php($base = rtrim((string) config('devboard.assets_url', '/vendor/devboard/build'), '/'))
     @php($v = @filemtime(public_path(ltrim($base, '/').'/devboard.css')) ?: '1')

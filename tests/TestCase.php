@@ -26,7 +26,7 @@ abstract class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
-        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, DevboardServiceProvider::class];
+        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, \NotificationChannels\WebPush\WebPushServiceProvider::class, DevboardServiceProvider::class];
     }
 
     protected function defineEnvironment($app): void
@@ -37,6 +37,7 @@ abstract class TestCase extends Orchestra
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('devboard.user_model', User::class);
         $app['config']->set('devboard.agent_list', 'dev');
+        $app['config']->set('webpush.database_connection', 'testing');
         $app['config']->set('filesystems.disks.public', ['driver' => 'local', 'root' => storage_path('framework/testing/public'), 'url' => 'http://localhost/storage']);
     }
 

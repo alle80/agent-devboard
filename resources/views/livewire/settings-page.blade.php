@@ -83,6 +83,36 @@
         </section>
     @endforeach
 
+    {{-- Web Push on this device (the channel toggles live in the App group above) --}}
+    <section
+        class="{{ $skin['card'] }} mb-6"
+        aria-labelledby="sec-notif"
+        x-data="{
+            st: 'checking', busy: false, sent: false,
+            async refresh() { this.st = window.devboardPush ? await window.devboardPush.status() : 'unsupported'; },
+            async enable() { this.busy = true; try { this.st = await window.devboardPush.enable(); } catch (e) { console.error(e); } this.busy = false; },
+            async disable() { this.busy = true; try { this.st = await window.devboardPush.disable(); } catch (e) { console.error(e); } this.busy = false; },
+            async test() { this.busy = true; try { this.sent = await window.devboardPush.test(); } catch (e) { console.error(e); } this.busy = false; },
+        }"
+        x-init="refresh()"
+    >
+        <h2 id="sec-notif" class="{{ $skin['h2'] }}">{{ __('devboard::t.notif.section_title') }}</h2>
+        <p class="{{ $skin['sub'] }} mb-3">{{ __('devboard::t.notif.section_intro') }}</p>
+        <p class="{{ $skin['help'] }} mb-2" x-cloak>
+            <span x-show="st === 'on'">✅ {{ __('devboard::t.notif.device_on') }}</span>
+            <span x-show="st === 'off'">{{ __('devboard::t.notif.device_off') }}</span>
+            <span x-show="st === 'denied'">🚫 {{ __('devboard::t.notif.device_denied') }}</span>
+            <span x-show="st === 'unsupported'">{{ __('devboard::t.notif.device_unsupported') }}</span>
+            <span x-show="st === 'nokey'">⚠️ {{ __('devboard::t.notif.device_nokey') }}</span>
+        </p>
+        <div class="flex flex-wrap items-center gap-2" x-cloak>
+            <button type="button" class="{{ $skin['back'] }} text-sm" x-show="st === 'off'" x-bind:disabled="busy" x-on:click="enable()">🔔 {{ __('devboard::t.notif.device_enable') }}</button>
+            <button type="button" class="{{ $skin['back'] }} text-sm" x-show="st === 'on'" x-bind:disabled="busy" x-on:click="disable()">🔕 {{ __('devboard::t.notif.device_disable') }}</button>
+            <button type="button" class="{{ $skin['back'] }} text-sm" x-bind:disabled="busy" x-on:click="test()">📨 {{ __('devboard::t.notif.test') }}</button>
+            <span class="{{ $skin['help'] }} text-xs" x-show="sent">{{ __('devboard::t.notif.test_sent') }}</span>
+        </div>
+    </section>
+
     {{-- Theme packs --}}
     <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }">
         <h2 id="sec-themes" class="{{ $skin['h2'] }}">{{ __('devboard::t.themes.title') }}</h2>

@@ -6,5 +6,6 @@
 // Host app usage:  import '../../vendor/alle80/agent-devboard/resources/js/devboard.js';
 import Sortable from 'sortablejs';
 import './echo.js';
+import './push.js';
 
 window.Sortable = Sortable;

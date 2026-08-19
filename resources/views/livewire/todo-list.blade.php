@@ -185,6 +185,11 @@
         </div>
     </div>
 
+    @if ($openTodo = session()->pull('devboard_open_todo'))
+        {{-- Deep link (notification / bell): open the modal of that todo once the page is ready --}}
+        <div wire:ignore x-data x-init="setTimeout(() => Livewire.dispatch('open-ingredients', { todoId: {{ (int) $openTodo }} }), 400)"></div>
+    @endif
+
     <footer class="tl-display tl-footer mt-14 text-center opacity-70">
         {{ $t['footer'] }}
     </footer>

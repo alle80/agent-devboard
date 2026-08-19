@@ -87,6 +87,11 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Notifications from the board**: on `--done` / `--ask` the list owner is notified by the app — in-app bell 🔔,
+Web Push (add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model and run
+`php artisan webpush:vapid`; users enable their devices in `/settings`) and mail — channels switchable in
+`/settings`. Tables `notifications` / `push_subscriptions` are created by the package migration if missing.
+
 **Skills**: `php artisan devboard:skills-import --file=skills.json` (or JSON on stdin) loads the catalogue
 of the agent's skills; the modal shows them under the Task note as a 🧩 accordion and the chosen ones are
 printed by `devboard:check` for that task.

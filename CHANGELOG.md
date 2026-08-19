@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-08-19
+
+### Added
+- **The board notifies you itself** (Laravel Notifications) when the agent closes a task (`--done`) or asks
+  a question (`--ask`), on three switchable channels (`app` settings `notify_in_app` / `notify_webpush` /
+  `notify_mail`; the events follow the existing `notify_on_done` / `notify_on_question`):
+  - **In-app bell 🔔** next to the list switcher (`NotificationBell`, database channel, live via the same
+    private broadcast channel): unread badge, list, click → opens the task (switching list if needed),
+    «mark all as read».
+  - **Web Push** on the user's devices via `laravel-notification-channels/webpush` (new dependency): service
+    worker served at `/devboard-sw.js`, subscription endpoints `POST/DELETE /devboard/push-subscriptions`,
+    «Enable Web Push on this device» + «Send me a test notification» in `/settings`. Needs VAPID keys
+    (`php artisan webpush:vapid`) and the `HasPushSubscriptions` trait on the user model.
+  - **Mail** (`toMail`) when a mailer is configured.
+- Deep links `?list=ID&open=ID` (middleware `OpenFromLink`) open a task from a notification.
+- Idempotent migration creating `notifications` and `push_subscriptions` when the host app lacks them.
+- `Alle80\Devboard\Support\Notify`, notifications `TodoCompleted`, `QuestionAsked`, `TestNotification`.
+
 ## [0.12.2] - 2026-08-19
 
 ### Changed

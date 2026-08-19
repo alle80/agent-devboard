@@ -6,6 +6,7 @@ use Alle80\Devboard\Models\Checklist;
 use Alle80\Devboard\Models\Todo;
 use Alle80\Devboard\Settings\AgentSettings;
 use Alle80\Devboard\Settings\OptimizationSettings;
+use Alle80\Devboard\Support\Notify;
 use Illuminate\Console\Command;
 
 /**
@@ -58,6 +59,7 @@ class DevboardCheck extends Command
                 $t->questions()->create(['question' => $q, 'order' => $next++]);
             }
             $t->update(['question' => true, 'working' => false, 'open_to_work' => false] + $this->tokenAttrs($t));
+            Notify::questionAsked($t, $qs); // the app notifies the user (bell / web push / mail)
             $this->info(sprintf('❓ %d questions asked on «%s» (id:%d, waiting for answers)', count($qs), $t->title, $t->id));
         }
 
@@ -80,6 +82,9 @@ class DevboardCheck extends Command
                 $t->update($attrs + $this->tokenAttrs($t));
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
                     $t->ingredients()->update(['checked' => true]);
+                }
+                if ($opt === 'done') {
+                    Notify::todoCompleted($t); // the app notifies the user (bell / web push / mail)
                 }
                 $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%', $attrs['progress']) : ''));
                 if ($opt === 'done' && $t->hasStats()) {

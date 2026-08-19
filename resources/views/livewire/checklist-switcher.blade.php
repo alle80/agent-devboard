@@ -1,6 +1,7 @@
 {{-- Selettore della lista corrente, identico su tutte le pagine --}}
+<div class="fixed top-3 left-3 z-[60] flex items-start gap-2">
 <details
-    class="fixed top-3 left-3 z-[60]"
+    class="relative"
     style="font-family: system-ui, sans-serif"
     x-data="{ open: false }"
     x-bind:open="open"
@@ -73,3 +74,5 @@
         </form>
     </div>
 </details>
+<livewire:devboard::notification-bell />
+</div>
