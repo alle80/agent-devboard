@@ -62,6 +62,10 @@
             @php($unseen = $todo->completed && ! $todo->result_seen)
             <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $unseen ? 'db-unseen' : '' }}">
 
+                @if ($todo->working && $todo->progress !== null)
+                    <span class="db-progress-bar" style="width: {{ $todo->progress }}%" aria-hidden="true"></span>
+                @endif
+
                 <span
                     class="drag-handle shrink-0 cursor-grab touch-none text-xl leading-none opacity-30 transition select-none hover:opacity-100 active:cursor-grabbing"
                     title="{{ __('devboard::t.drag_to_reorder') }}"
@@ -105,6 +109,9 @@
                             @endif
                             @if ($unseen)
                                 <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
+                            @endif
+                            @if ($todo->working && $todo->progress !== null)
+                                <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('devboard::t.progress') }}">{{ $todo->progress }}%</span>
                             @endif
                     </button>
                     @endif

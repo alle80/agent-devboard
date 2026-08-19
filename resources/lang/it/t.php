@@ -49,6 +49,7 @@ return [
     'md_hint' => 'Supporta il Markdown (grassetto, codice, elenchi, tabelle…).',
     'result_new' => 'risultato',
     'result_new_hint' => 'Completato dall’agente — apri per vedere il risultato.',
+    'progress' => 'Avanzamento',
     'note_placeholder' => 'Scrivi una nota…',
     'note_empty' => 'Nessuna nota. Tocca qui per aggiungerne una.',
     'note_empty_ro' => 'Nessuna nota.',

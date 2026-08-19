@@ -52,6 +52,7 @@ return [
     'md_hint' => 'Markdown supported (bold, code, lists, tables…).',
     'result_new' => 'result',
     'result_new_hint' => 'The agent finished this — open to see the result.',
+    'progress' => 'Progress',
     'note_placeholder' => 'Write a note…',
     'note_empty' => 'No note. Tap here to add one.',
     'note_empty_ro' => 'No note.',

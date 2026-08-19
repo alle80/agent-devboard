@@ -34,6 +34,7 @@ return new class extends Migration
                 $table->text('notes')->nullable();
                 $table->text('claude_comment')->nullable();        // agent's answer (read-only in UI)
                 $table->boolean('result_seen')->default(true);     // false = agent completed it, user hasn't opened the result yet
+                $table->unsignedTinyInteger('progress')->nullable(); // 0-100 while working; set by devboard:check --progress
                 $table->timestamp('archived_at')->nullable()->index();
                 $table->timestamps();
                 $table->foreignId('checklist_id')->nullable()->constrained()->cascadeOnDelete();

@@ -21,6 +21,7 @@ class DevboardCheck extends Command
         {--take= : Id of the todo to mark as working (take in charge)}
         {--done= : Id of the todo to mark as completed}
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
+        {--progress= : Progress percentage 0-100 to set while working (use with --take; re-run to update)}
         {--ask= : Id of the todo to ask questions about (state ❓)}
         {--q=* : Text of each question, repeatable}';
 
@@ -62,6 +63,12 @@ class DevboardCheck extends Command
                 $t = $list->todos()->findOrFail((int) $id);
                 if ($c = $this->option('comment')) {
                     $attrs['claude_comment'] = $c;
+                }
+                if ($opt === 'take' && $this->option('progress') !== null) {
+                    $attrs['progress'] = max(0, min(100, (int) $this->option('progress')));
+                }
+                if ($opt === 'done') {
+                    $attrs['progress'] = null; // finished → no progress bar
                 }
                 $t->update($attrs);
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
