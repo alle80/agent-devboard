@@ -449,10 +449,7 @@ select.setting-input { appearance: auto; }
 .db-skill-check { width: 1rem; height: 1rem; accent-color: var(--tl-accent, #f59e0b); }
 
 /* ---------- Modal header: state badge menu ---------- */
-.db-state-trigger { display: inline-flex; align-items: center; gap: .1em; }
-.db-state-list { background: var(--tl-bg, #fff); color: var(--tl-fg, #111); }
-.db-state-opt:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
-.db-state-opt-on { font-weight: 700; }
+.db-state-trigger { display: inline-flex; align-items: center; }
 
 /* ---------- Speech to text (mic button) ---------- */
 .db-mic-on { color: #ef4444; animation: db-mic-pulse 1.2s ease-in-out infinite; }

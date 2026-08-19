@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.1] - 2026-08-19
+
+### Changed
+- The modal state badge is a plain **tap toggle** (waiting ⚪ ⇄ open to work 🟢; tap while the agent works =
+  stop, with confirmation) instead of a dropdown — same gesture as the dot in the row.
+
 ## [0.18.0] - 2026-08-19
 
 ### Added
