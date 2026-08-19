@@ -87,6 +87,9 @@ php artisan devboard:check --done=ID --comment="…"    # close it, with a note 
 php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N   # …and record the tokens spent
 ```
 
+**Configuration vs settings**: inventory, defaults and the backlog of future ones in
+[`docs/config-and-settings.md`](docs/config-and-settings.md).
+
 **Compatibility**: any CLI coding agent — Claude Code, OpenAI Codex CLI, Gemini CLI, Aider, Cursor, … — the
 contract is just the `devboard:check`/`devboard:watch` commands plus `AGENTS.md` (Codex/others), `CLAUDE.md`
 (Claude) or `GEMINI.md` (Gemini) carrying the same rules; `DEVBOARD_AGENT_NAME` sets how the UI calls it.
