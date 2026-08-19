@@ -232,3 +232,7 @@ and the live event. GitHub Actions runs it on PHP 8.3 / 8.4 on every push touchi
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Security
+
+See [`SECURITY.md`](SECURITY.md) for the security model, the hardening checklist and how to report a vulnerability.
