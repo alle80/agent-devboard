@@ -13,7 +13,8 @@
     @if (! empty($t['icon_img']))
         <link rel="icon" href="{{ asset($t['icon_img']) }}">
     @else
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{ $t['icon'] }}</text></svg>">
+        <link rel="icon" href="{{ asset('vendor/devboard/images/brand/mark.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ asset('vendor/devboard/images/brand/mark-180.png') }}">
     @endif
     @if (! empty($t['fonts']) && config('devboard.fonts_url'))
         <link rel="preconnect" href="{{ parse_url(config('devboard.fonts_url'), PHP_URL_SCHEME) }}://{{ parse_url(config('devboard.fonts_url'), PHP_URL_HOST) }}">

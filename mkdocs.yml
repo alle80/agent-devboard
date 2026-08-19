@@ -8,6 +8,8 @@ site_dir: site
 
 theme:
   name: material
+  logo: images/logo.svg
+  favicon: images/favicon.png
   features:
     - navigation.instant
     - navigation.tracking

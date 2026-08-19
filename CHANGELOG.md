@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.32.0] - 2026-08-19
+
+### Added
+- **Logo** («D with Check & Dot»): brand assets in `public/images/brand/` (mark in color / `currentColor` /
+  black / white, rounded-square app icons light/dark, horizontal and stacked lockups, PNG 16–512) published
+  with the `devboard-assets` tag. The themed layout now falls back to the brand mark (+ apple-touch icon)
+  when the theme has no `icon_img`; Web Push notifications carry the mark as system icon; the MkDocs site
+  and the README use the logo. Colours: Agent Green `#16A34A` (the existing accent), Devboard Ink `#0F172A`.
+
 ## [0.31.1] - 2026-08-19
 
 ### Added

@@ -83,6 +83,7 @@ abstract class DevboardNotification extends Notification
         return (new WebPushMessage)
             ->title($this->icon().' '.$this->title())
             ->body($this->body())
+            ->icon(asset('vendor/devboard/images/brand/mark-180.png'))
             ->tag('devboard-todo-'.$this->todo->id)
             ->data(['url' => $this->url(), 'todo_id' => $this->todo->id])
             ->options(['TTL' => 3600]);

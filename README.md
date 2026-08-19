@@ -1,3 +1,5 @@
+<p align="center"><img src="public/images/brand/lockup-horizontal.svg" width="380" alt="Agent Devboard"></p>
+
 # alle80/agent-devboard
 
 A **dev board for coding agents** on Laravel 12/13 + Livewire 4. You queue requests as todos; a
