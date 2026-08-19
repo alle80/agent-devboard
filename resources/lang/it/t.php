@@ -6,6 +6,8 @@ return [
     'lists' => 'Liste',
     'done_short' => 'fatti',
     'settings' => 'Impostazioni',
+    'dashboard_tab' => 'Dashboard',
+    'dashboard_open_full' => 'Apri la dashboard intera',
     'settings_title' => 'Impostazioni',
     'logout' => 'Esci',
     'back_to_list' => '← Lista',
@@ -157,6 +159,7 @@ return [
         'ai_image_provider' => ['Provider AI immagini', 'Quale provider usare per descrivere le immagini.'],
         'ai_image_model' => ['Modello AI immagini', 'Nome modello (vuoto = il più economico del provider / AI_IMAGE_MODEL).'],
         'toast_console_changes' => ['Toast per i cambi da console', 'Avviso in pagina quando Claude cambia lo stato di un elemento (🔧 ✔ ❓).'],
+        'tab_side' => ['Lato del pannello dashboard', 'Da quale lato della finestra si apre il pannello a scomparsa della dashboard (desktop).'],
     ],
     'settings_options' => [
         'autonomy' => ['ask' => 'Chiedi ❓ quando in dubbio', 'decide' => 'Decidi da solo e spiega nel commento 🤖'],
@@ -164,6 +167,7 @@ return [
         'git_flow' => ['main' => 'Direttamente su main', 'branch_pr' => 'Branch per task + Pull Request'],
         'default_style_none' => 'Tema predefinito (nessun redirect)',
         'ai_provider_env' => 'Da .env (AI_IMAGE_PROVIDERS / AI_PROVIDER)',
+        'tab_side_right' => 'Destra', 'tab_side_left' => 'Sinistra',
     ],
     'themes' => [
         'title' => '🎨 Temi',

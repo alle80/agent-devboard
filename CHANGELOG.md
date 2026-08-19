@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-19
+
+### Added
+- **Desktop dashboard**: a wider, roomier view of the board on a configurable route
+  (`config('devboard.dashboard_route')`, default `/dashboard`) — more readable on large screens.
+- **Slide-out board tab** (Laravel-debugbar style): a handle pinned to the right or left edge opens a
+  **resizable** panel that shows the dashboard on every page (desktop only). Remembers open state and
+  width, respects `prefers-reduced-motion`.
+- **Setting `tab_side`** (right / left) in `/settings`, and config key `dashboard_route`.
+
 ## [0.4.0] - 2026-08-19
 
 ### Added
@@ -78,7 +88,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/alle80/agent-devboard/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/alle80/agent-devboard/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alle80/agent-devboard/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/alle80/agent-devboard/compare/v0.1.0...v0.2.0

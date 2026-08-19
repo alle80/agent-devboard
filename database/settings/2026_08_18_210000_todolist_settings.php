@@ -28,6 +28,7 @@ return new class extends SettingsMigration
             'app.ai_image_provider' => '',
             'app.ai_image_model' => '',
             'app.toast_console_changes' => true,
+            'app.tab_side' => 'right',
         ];
 
         foreach ($defaults as $key => $value) {

@@ -20,6 +20,10 @@ Route::middleware(array_merge((array) config('devboard.middleware', ['web', 'aut
 
         Route::get('/settings', SettingsPage::class)->name('devboard.settings');
 
+        if ($dash = config('devboard.dashboard_route')) {
+            Route::get($dash, \Alle80\Devboard\Livewire\DashboardTodoList::class)->name('devboard.dashboard');
+        }
+
         // Generic themes (built-in, config, registered and installed packs); unknown slugs → 404 in mount().
         // Registered after the host app's routes, so its own paths always win.
         Route::get('/{theme}', ThemedTodoList::class)

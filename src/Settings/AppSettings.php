@@ -31,6 +31,9 @@ class AppSettings extends Settings
     /** Toast in pagina quando lo stato viene cambiato da console (es. Claude prende in carico). */
     public bool $toast_console_changes;
 
+    /** Lato del pannello a scomparsa della dashboard su desktop: 'right' | 'left'. */
+    public string $tab_side;
+
     public static function group(): string
     {
         return 'app';
@@ -57,6 +60,10 @@ class AppSettings extends Settings
             'ai_image_provider' => ['select', $providers],
             'ai_image_model' => ['text', []],
             'toast_console_changes' => ['bool', []],
+            'tab_side' => ['select', [
+                'right' => __('devboard::t.settings_options.tab_side_right'),
+                'left' => __('devboard::t.settings_options.tab_side_left'),
+            ]],
         ];
         $out = [];
         foreach ($def as $key => [$type, $opts]) {

@@ -1,4 +1,4 @@
-<div class="tl-page relative mx-auto max-w-2xl px-4 py-10">
+<div class="tl-page relative mx-auto {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }} px-4 py-10">
 
     {{-- ===== HEADER ===== --}}
     <header class="relative mb-10 text-center">

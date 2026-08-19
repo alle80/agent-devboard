@@ -1,4 +1,6 @@
 @php($theme = $theme ?? request()->route('theme'))
+@php($theme = ($theme && \Alle80\Devboard\Themes::has($theme)) ? $theme : \Alle80\Devboard\Http\Middleware\RememberStyle::current())
+@php($theme = \Alle80\Devboard\Themes::has($theme) ? $theme : \Alle80\Devboard\Themes::default())
 @php($t = \Alle80\Devboard\Themes::get($theme))
 <!DOCTYPE html>
 <html lang="it">
@@ -53,5 +55,7 @@
     <div class="relative">
         {{ $slot }}
     </div>
+
+    <x-devboard::board-tab />
 </body>
 </html>

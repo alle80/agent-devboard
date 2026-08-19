@@ -6,6 +6,8 @@ return [
     'lists' => 'Lists',
     'done_short' => 'done',
     'settings' => 'Settings',
+    'dashboard_tab' => 'Dashboard',
+    'dashboard_open_full' => 'Open the full dashboard',
     'settings_title' => 'Settings',
     'logout' => 'Log out',
     'back_to_list' => '← List',
@@ -163,6 +165,7 @@ return [
         'ai_image_provider' => ['AI provider for images', 'Which provider describes the images.'],
         'ai_image_model' => ['AI model for images', 'Model name (empty = cheapest of the provider / AI_IMAGE_MODEL).'],
         'toast_console_changes' => ['Toast for console changes', 'On-page notice when the agent changes the state of an item (🔧 ✔ ❓).'],
+        'tab_side' => ['Dashboard tab side', 'Which side of the window the slide-out dashboard tab opens from (desktop).'],
     ],
     'settings_options' => [
         'autonomy' => ['ask' => 'Ask ❓ when in doubt', 'decide' => 'Decide alone and explain in the 🤖 comment'],
@@ -170,6 +173,7 @@ return [
         'git_flow' => ['main' => 'Directly on main', 'branch_pr' => 'Branch per task + Pull Request'],
         'default_style_none' => 'Default theme (no redirect)',
         'ai_provider_env' => 'From .env (AI_IMAGE_PROVIDERS / AI_PROVIDER)',
+        'tab_side_right' => 'Right', 'tab_side_left' => 'Left',
     ],
     'themes' => [
         'title' => '🎨 Themes',
