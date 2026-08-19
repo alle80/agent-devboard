@@ -11,10 +11,12 @@
         </summary>
         <div class="mt-2 space-y-2 text-[0.95em]">
             @if ($todo->parent->notes)
-                <p class="{{ $textClass }} whitespace-pre-wrap break-words">{{ $todo->parent->notes }}</p>
+                <div class="{{ $textClass }} db-prose break-words">{!! \Alle80\Devboard\Support\Markdown::render($todo->parent->notes) !!}</div>
             @endif
             @if ($todo->parent->claude_comment)
-                <p class="{{ $textClass }} whitespace-pre-wrap break-words opacity-80"><span class="font-bold"><x-devboard::icon name="bot" /> {{ __('devboard::t.agent_box', ['agent' => \Alle80\Devboard\Agent::name()]) }}:</span> {{ $todo->parent->claude_comment }}</p>
+                <div class="{{ $textClass }} break-words opacity-80"><span class="font-bold"><x-devboard::icon name="bot" /> {{ __('devboard::t.agent_box', ['agent' => \Alle80\Devboard\Agent::name()]) }}:</span>
+                    <div class="db-prose">{!! \Alle80\Devboard\Support\Markdown::render($todo->parent->claude_comment) !!}</div>
+                </div>
             @endif
             @if ($todo->parent->ingredients->isNotEmpty())
                 <ul class="{{ $textClass }} list-inside space-y-0.5 opacity-80">

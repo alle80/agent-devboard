@@ -18,9 +18,13 @@
         <ol class="space-y-3">
             @foreach ($todo->questions as $q)
                 <li wire:key="q-{{ $q->id }}">
-                    <p class="{{ $textClass }} mb-1 whitespace-pre-wrap break-words"><span class="mr-1 opacity-60">{{ $loop->iteration }}.</span>{{ $q->question }}</p>
+                    <div class="{{ $textClass }} mb-1 break-words"><span class="mr-1 opacity-60">{{ $loop->iteration }}.</span><div class="db-prose inline-block align-top" style="max-width: calc(100% - 1.5rem);">{!! \Alle80\Devboard\Support\Markdown::render($q->question) !!}</div></div>
                     @if ($readonly)
-                        <p class="{{ $textClass }} whitespace-pre-wrap break-words pl-4 text-[0.95em] opacity-80">{{ $q->answer ?: __('devboard::t.no_answer') }}</p>
+                        @if ($q->answer)
+                            <div class="{{ $textClass }} db-prose break-words pl-4 text-[0.95em] opacity-80">{!! \Alle80\Devboard\Support\Markdown::render($q->answer) !!}</div>
+                        @else
+                            <p class="{{ $textClass }} break-words pl-4 text-[0.95em] opacity-80">{{ __('devboard::t.no_answer') }}</p>
+                        @endif
                     @else
                     <form wire:submit="saveAnswer({{ $q->id }})" class="flex items-start gap-2">
                         <textarea

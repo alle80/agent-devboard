@@ -15,7 +15,7 @@
         {{-- Elemento completato: la nota si legge soltanto --}}
         <span class="{{ $labelClass }}">{{ $label }}</span>
         @if ($todo->notes)
-            <p class="{{ $textClass }} whitespace-pre-wrap break-words">{{ $todo->notes }}</p>
+            <div class="{{ $textClass }} db-prose break-words">{!! \Alle80\Devboard\Support\Markdown::render($todo->notes) !!}</div>
         @else
             <p class="{{ $textClass }} italic opacity-50">{{ __('devboard::t.note_empty_ro') }}</p>
         @endif
