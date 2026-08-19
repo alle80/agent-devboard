@@ -15,7 +15,7 @@ return [
     'home_route' => true,
 
     // Generic theme used by the home route and as fallback
-    'default_theme' => 'linux',
+    'default_theme' => 'slate',
 
     // Extra generic themes (slug => definition, same keys as Alle80\Devboard\Themes::builtin())
     'themes' => [],

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-19
+
+### Changed
+- **Debranded the built-in theme**: the generic **Linux** theme (with the Tux mascot) is now a
+  brand-neutral **Slate** theme. The theme slug `linux` becomes `slate`, the CSS class
+  `.theme-linux` becomes `.theme-slate`, and `config('devboard.default_theme')` defaults to `slate`.
+  The Tux image (`public/images/linux/tux.svg`) and its terminal-flavoured copy were removed.
+
+### Upgrade notes
+- If you referenced the built-in theme by slug (`/linux`, `default_theme`/`default_style` = `linux`,
+  a `.theme-linux { … }` override, or `devboard:theme-export linux`), rename it to `slate`.
+- Installed theme packs and any custom themes you registered are unaffected.
+
 ## [0.1.0] - 2026-08-19
 
 First public release, extracted from the [laravel-dev](https://github.com/alle80/laravel-dev)
@@ -40,5 +53,6 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/alle80/agent-devboard/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/alle80/agent-devboard/releases/tag/v0.1.0

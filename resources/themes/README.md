@@ -7,7 +7,7 @@ fonts from bunny.net, texts, deco emoji, optional `icon_img` relative to the pac
 `theme.css` holds the CSS variables of the theme (`.theme-<slug> { --tl-… }`) and any extra rule
 scoped to `.theme-<slug>`; images go in `images/` and are referenced with relative URLs.
 
-Export any existing theme as a starting point: `php artisan devboard:theme-export linux`.
+Export any existing theme as a starting point: `php artisan devboard:theme-export slate`.
 
 - `pollon/` — the "Pollon" theme of the original app (Italian texts), exported with
   `devboard:theme-export pollon --css-from=resources/css/app.css`.

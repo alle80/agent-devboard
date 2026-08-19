@@ -5,7 +5,7 @@
  * (or the packages/ path when using a path repository).
  *
  * Contents: base a11y/touch rules, shared mobile layout hooks (.todo-row/.modal-*), the generic theme
- * system (.tl-*), the built-in "linux" theme, the settings page controls.
+ * system (.tl-*), the built-in "slate" theme, the settings page controls.
  */
 [x-cloak] { display: none !important; }
 
@@ -229,8 +229,8 @@ body { -webkit-tap-highlight-color: transparent; }
     background: var(--tl-head, transparent);
 }
 
-/* ---------- Linux: terminale ---------- */
-.theme-linux {
+/* ---------- Slate: minimal mono ---------- */
+.theme-slate {
     --tl-bg: #0d120d;
     --tl-fg: #33d17a;
     --tl-font: 'JetBrains Mono', monospace; --tl-display: 'JetBrains Mono', monospace;

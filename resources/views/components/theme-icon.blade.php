@@ -1,6 +1,6 @@
 @props(['theme', 'size' => '1em', 'class' => ''])
 
-{{-- Icona di un tema: immagine se il tema ne ha una (es. Tux), altrimenti l'emoji --}}
+{{-- Icona di un tema: immagine se il tema definisce icon_img, altrimenti l'emoji --}}
 @if (! empty($theme['icon_img']))
     <img
         src="{{ asset($theme['icon_img']) }}"

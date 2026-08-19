@@ -10,7 +10,7 @@ use Spatie\LaravelSettings\Settings;
  */
 class AppSettings extends Settings
 {
-    /** Stile aperto da «/»: '' = manga (nessun redirect), altrimenti slug (jack, c64, linux…). */
+    /** Stile aperto da «/»: '' = manga (nessun redirect), altrimenti slug (jack, c64, slate…). */
     public string $default_style;
 
     /** Lunghezza massima del titolo di un todo. */

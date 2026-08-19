@@ -43,9 +43,9 @@ class SettingsPageTest extends TestCase
     {
         $this->get('/')->assertOk();
         $s = app(AppSettings::class);
-        $s->default_style = 'linux';
+        $s->default_style = 'slate';
         $s->save();
-        $this->get('/')->assertRedirect('/linux');
+        $this->get('/')->assertRedirect('/slate');
         $this->get('/?stay=1')->assertOk();
     }
 }

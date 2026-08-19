@@ -7,7 +7,7 @@ namespace Alle80\Devboard;
  *
  * Two kinds of entries:
  *  - generic themes: rendered by ThemedTodoList with the shared views and CSS variables (.theme-<slug>);
- *    the package ships "linux"; more can be added via config('devboard.themes') or Themes::registerTheme().
+ *    the package ships "slate"; more can be added via config('devboard.themes') or Themes::registerTheme().
  *  - dedicated styles: routes with their own Livewire components/views (registered by the host app
  *    with Themes::registerStyle(), e.g. the manga/jacovitti/c64 versions of the original app).
  *
@@ -29,20 +29,18 @@ class Themes
     public static function builtin(): array
     {
         return [
-            'linux' => [
-                'label' => 'Linux',
-                'icon' => '🐧',
-                // Tux by Larry Ewing (lewing@isc.tamu.edu) and The GIMP
-                'icon_img' => '/vendor/devboard/images/linux/tux.svg',
+            'slate' => [
+                'label' => 'Slate',
+                'icon' => '🪨',
                 'fonts' => 'jetbrains-mono:400,700',
-                'claim' => '~/todo.txt',
+                'claim' => 'todo',
                 'counter' => 'done',
-                'done_all' => 'all jobs completed — shutdown -h now',
-                'add' => '$ touch new-todo',
-                'stamp' => 'exit 0',
-                'footer' => 'sudo todo --no-preserve-sanity',
-                'confirm' => 'rm -f «:title»: are you sure? [y/N]',
-                'placeholder' => '$ echo "…"',
+                'done_all' => 'all done',
+                'add' => 'add a task',
+                'stamp' => 'done',
+                'footer' => '',
+                'confirm' => 'delete «:title»?',
+                'placeholder' => 'write here…',
                 'deco' => [],
             ],
         ];
@@ -82,7 +80,7 @@ class Themes
 
     public static function default(): string
     {
-        $slug = (string) config('devboard.default_theme', 'linux');
+        $slug = (string) config('devboard.default_theme', 'slate');
 
         return static::has($slug) ? $slug : array_key_first(static::all());
     }

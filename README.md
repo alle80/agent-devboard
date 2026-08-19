@@ -7,7 +7,7 @@ themes, a settings page, and an **agent-friendly workflow** to drive a coding ag
 from the app itself.
 
 > Extracted from the original app at https://github.com/alle80/laravel-dev (phase 1: backend,
-> Livewire components, the generic theme system with the built-in **Linux** theme, English base
+> Livewire components, the generic theme system with the built-in **Slate** theme, English base
 > language with an Italian translation).
 
 ## Requirements
@@ -22,7 +22,7 @@ from the app itself.
 composer require alle80/agent-devboard
 php artisan migrate                                  # tables + settings defaults (idempotent)
 php artisan storage:link                             # attachments live on the "public" disk by default
-php artisan vendor:publish --tag=devboard-assets     # Tux image for the Linux theme
+php artisan vendor:publish --tag=devboard-assets     # precompiled build & theme assets
 ```
 
 ### Front-end assets: two modes
@@ -78,7 +78,7 @@ php artisan vendor:publish --tag=devboard-lang       # translations (en, it)
 ## Themes
 
 The package ships the generic theme system (shared views + CSS variables per `.theme-<slug>`)
-with the built-in **linux** theme. Add more generic themes in `config('devboard.themes')` or with
+with the built-in **slate** theme. Add more generic themes in `config('devboard.themes')` or with
 `Alle80\Devboard\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
 Fully custom styles (own components/views) can be plugged in with `Themes::registerStyle()` and
 `Themes::registerSkin()` — see the original app for six examples (manga, Jacovitti, C64, Star Wars,
@@ -92,7 +92,7 @@ scoped to `.theme-<slug>`) and optional `images/`. Install it from **/settings �
 `php artisan devboard:theme-import pack.zip`; packs live in `storage/app/themes/<slug>` and their
 files are served by `/devboard-themes/{slug}/{path}`. Uninstall from the same page or with
 `devboard:theme-import --uninstall=<slug>`. Export any theme as a starting point:
-`php artisan devboard:theme-export linux` (for themes defined in code add `--css-from=resources/css/app.css`
+`php artisan devboard:theme-export slate` (for themes defined in code add `--css-from=resources/css/app.css`
 to extract their CSS). A sample pack (`pollon`) is in `resources/themes/`.
 
 ## Agent workflow (`devboard:check`)

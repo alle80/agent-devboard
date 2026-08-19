@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 
 /**
- * Ricorda in sessione lo stile della lista che si sta guardando (manga, jack, c64, linux…),
+ * Ricorda in sessione lo stile della lista che si sta guardando (manga, jack, c64, slate…),
  * così le pagine "senza stile proprio" (es. /settings) si vestono allo stesso modo.
  */
 class RememberStyle

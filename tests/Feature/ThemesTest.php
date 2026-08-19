@@ -45,8 +45,8 @@ class ThemesTest extends TestCase
 
     public function test_registry_builtin_config_and_runtime(): void
     {
-        $this->assertArrayHasKey('linux', Themes::all());
-        $this->assertSame('linux', Themes::default());
+        $this->assertArrayHasKey('slate', Themes::all());
+        $this->assertSame('slate', Themes::default());
 
         config(['devboard.themes' => ['candy' => ['label' => 'Candy', 'icon' => '🍬']]]);
         Themes::registerTheme('night', ['label' => 'Night', 'icon' => '🌙']);
@@ -91,7 +91,7 @@ class ThemesTest extends TestCase
         $this->assertTrue(Themes::has('ocean'));
 
         $this->expectException(\RuntimeException::class);
-        ThemeStore::install($this->makePack('linux'));
+        ThemeStore::install($this->makePack('slate'));
     }
 
     public function test_settings_page_upload_and_uninstall(): void
@@ -109,27 +109,27 @@ class ThemesTest extends TestCase
 
     public function test_export_and_import_roundtrip(): void
     {
-        $out = storage_path('framework/testing/linux-export.zip');
+        $out = storage_path('framework/testing/slate-export.zip');
         $css = storage_path('framework/testing/app.css');
-        File::put($css, ".theme-linux { --tl-bg: #000; }\n.other { color: red; }\n.theme-linux .tl-card { border: 0; }\n");
-        $this->artisan('devboard:theme-export', ['slug' => 'linux', '--out' => $out, '--css-from' => $css])->assertSuccessful();
+        File::put($css, ".theme-slate { --tl-bg: #000; }\n.other { color: red; }\n.theme-slate .tl-card { border: 0; }\n");
+        $this->artisan('devboard:theme-export', ['slug' => 'slate', '--out' => $out, '--css-from' => $css])->assertSuccessful();
 
         $zip = new ZipArchive;
         $zip->open($out);
-        $this->assertStringContainsString('.theme-linux .tl-card', $zip->getFromName('theme.css'));
+        $this->assertStringContainsString('.theme-slate .tl-card', $zip->getFromName('theme.css'));
         $this->assertStringNotContainsString('.other', $zip->getFromName('theme.css'));
         $def = json_decode($zip->getFromName('theme.json'), true);
         $zip->close();
-        $this->assertSame('linux', $def['slug']);
+        $this->assertSame('slate', $def['slug']);
 
-        // linux is built-in → import must be refused; a renamed copy installs fine
+        // slate is built-in → import must be refused; a renamed copy installs fine
         $this->artisan('devboard:theme-import', ['zip' => $out])->assertFailed();
-        $def['slug'] = 'linux-copy';
+        $def['slug'] = 'slate-copy';
         $zip = new ZipArchive;
         $zip->open($out, ZipArchive::OVERWRITE);
         $zip->addFromString('theme.json', json_encode($def));
         $zip->close();
         $this->artisan('devboard:theme-import', ['zip' => $out])->assertSuccessful();
-        $this->assertTrue(Themes::has('linux-copy'));
+        $this->assertTrue(Themes::has('slate-copy'));
     }
 }
