@@ -124,14 +124,16 @@
 
                         {{-- Nuovo ingrediente --}}
                         @unless($readonly)
-                        <form wire:submit="addIngredient" class="mt-3 flex items-center gap-2">
-                            <input
-                                type="text"
-                                wire:model="newIngredient"
-                                placeholder="{{ $t['placeholder'] }}"
-                                class="tl-input w-full min-w-0 flex-1 px-3 py-1.5 focus:outline-none"
-                            >
-                            <button type="submit" class="tl-check tl-display shrink-0 cursor-pointer px-3 py-1.5 transition active:translate-y-px">+</button>
+                        <form wire:submit="addIngredient" class="mt-3 space-y-2">
+                            <x-devboard::md-editor
+                                model="newIngredient"
+                                :rows="1"
+                                :placeholder="$t['placeholder']"
+                                inputClass="tl-input px-3 py-1.5 focus:outline-none"
+                            />
+                            <div class="flex justify-end">
+                                <button type="submit" class="tl-check tl-display cursor-pointer px-3 py-1.5 transition active:translate-y-px">+</button>
+                            </div>
                         </form>
                         @endunless
                     </div>

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-08-19
+
+### Changed
+- The markdown editor **textarea auto-resizes** to its content (no manual dragging).
+- The markdown **editor (toolbar) is now on sub-tasks too** (add and edit), not only the Task field.
+
 ## [0.7.1] - 2026-08-19
 
 ### Fixed
@@ -147,7 +153,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/alle80/agent-devboard/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/alle80/agent-devboard/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/alle80/agent-devboard/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/alle80/agent-devboard/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/alle80/agent-devboard/compare/v0.6.2...v0.6.3

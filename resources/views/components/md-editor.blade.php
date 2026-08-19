@@ -10,7 +10,8 @@
 --}}
 <div class="db-md" x-data="{
     ta() { return this.$refs.ta; },
-    sync() { this.ta().dispatchEvent(new Event('input', { bubbles: true })); this.ta().focus(); },
+    grow() { const t = this.ta(); t.style.height = 'auto'; t.style.height = Math.max(t.scrollHeight, 40) + 'px'; },
+    sync() { this.ta().dispatchEvent(new Event('input', { bubbles: true })); this.grow(); this.ta().focus(); },
     wrap(before, after, ph) {
         const t = this.ta(); const s = t.selectionStart, e = t.selectionEnd;
         const sel = t.value.slice(s, e) || ph;
@@ -46,5 +47,6 @@
         <button type="button" class="db-md-btn" @click="insert('\n\n---\n\n')" title="{{ __('devboard::t.md.separator') }}">&mdash;</button>
     </div>
     <textarea x-ref="ta" wire:model="{{ $model }}" rows="{{ $rows }}" placeholder="{{ $placeholder }}"
+              x-init="$nextTick(() => grow())" @input="grow()" style="overflow:hidden; resize:none;"
               {{ $attributes->merge(['class' => 'db-md-input '.$inputClass]) }}></textarea>
 </div>
