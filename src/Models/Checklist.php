@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Checklist extends Model
 {
-    protected $fillable = ['name', 'user_id', 'plan_prompt'];
+    protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused'];
+
+    protected function casts(): array
+    {
+        return ['plan_paused' => 'boolean'];
+    }
 
     public function todos(): HasMany
     {

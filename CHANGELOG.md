@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.27.0] - 2026-08-19
+
+### Added
+- **Pause / resume a plan**: the plan bar shows «Pause the plan» while it runs (open tasks go back to waiting,
+  `checklists.plan_paused` stops the chain from opening the next task) and «Resume the plan» when paused /
+  stopped (clears the pause and opens the next not-started task). Icon `pause`.
+
 ## [0.26.3] - 2026-08-19
 
 ### Fixed

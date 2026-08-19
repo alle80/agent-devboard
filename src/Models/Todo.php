@@ -167,7 +167,7 @@ class Todo extends Model
 
         // Plan chain: when a task gets completed, the tasks waiting for it become open to work 🟢
         static::saved(function (Todo $todo) {
-            if ($todo->completed && $todo->wasChanged('completed')) {
+            if ($todo->completed && $todo->wasChanged('completed') && ! ($todo->checklist?->plan_paused)) {
                 $todo->dependents()->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->whereNull('archived_at')
                     ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => true, 'stopped_at' => null]));
             }

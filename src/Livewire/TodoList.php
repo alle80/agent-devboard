@@ -125,14 +125,30 @@ class TodoList extends Component
         $next = $todos->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->question);
         $running = $todos->contains(fn ($t) => ! $t->completed && ($t->open_to_work || $t->working || $t->question));
 
-        return ['next' => $next?->id, 'done' => $todos->where('completed', true)->count(), 'total' => $todos->count(), 'running' => $running];
+        return ['next' => $next?->id, 'done' => $todos->where('completed', true)->count(), 'total' => $todos->count(), 'running' => $running, 'paused' => (bool) $list?->plan_paused];
+    }
+
+    /** Pause the plan: open tasks go back to waiting ⚪, the chain stops opening the next ones (a working task is left to the agent). */
+    public function pausePlan(): void
+    {
+        if (! $this->planStatus()) {
+            return;
+        }
+        $list = Checklist::find(Checklist::currentId());
+        $list?->update(['plan_paused' => true]);
+        $this->active()->where('completed', false)->where('open_to_work', true)->where('working', false)->update(['open_to_work' => false]);
+        $this->dispatch('toast', message: __('devboard::t.plan.paused'), type: 'info');
     }
 
     /** Start (or resume) the plan: the first not-started task becomes open to work 🟢; the chain does the rest. */
     public function startPlan(): void
     {
         $status = $this->planStatus();
-        if (! $status || ! $status['next']) {
+        if (! $status) {
+            return;
+        }
+        Checklist::whereKey(Checklist::currentId())->update(['plan_paused' => false]);
+        if (! $status['next']) {
             return;
         }
         $todo = $this->active()->findOrFail($status['next']);

@@ -129,6 +129,34 @@ class PlanTest extends TestCase
         $this->assertNull($y->depends_on_id);
     }
 
+    public function test_pause_and_resume_the_plan(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'A'], ['title' => 'B'], ['title' => 'C']];
+        $list = Checklist::create(['name' => 'Plan', 'user_id' => auth()->id()]);
+        Plan::build($list, 'Go');
+        session(['checklist_id' => $list->id]);
+        [$a, $b, $c] = $list->todos()->orderBy('order')->get()->all();
+        $cmp = Livewire::test(\Alle80\Devboard\Livewire\TodoList::class);
+        $cmp->call('startPlan');
+        $this->assertTrue($a->fresh()->open_to_work);
+        $cmp->assertSee('Pause the plan');
+
+        $cmp->call('pausePlan')->assertDispatched('toast');
+        $this->assertTrue($list->fresh()->plan_paused);
+        $this->assertFalse($a->fresh()->open_to_work, 'open task back to waiting');
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->assertSee('paused')->assertSee('Resume the plan');
+
+        // completing while paused does not open the next one
+        $a->fresh()->update(['completed' => true]);
+        $this->assertFalse($b->fresh()->open_to_work);
+
+        Livewire::test(\Alle80\Devboard\Livewire\TodoList::class)->call('startPlan');
+        $this->assertFalse($list->fresh()->plan_paused);
+        $this->assertTrue($b->fresh()->open_to_work, 'resume opens the next not-started task');
+        $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
+        $this->assertTrue($c->fresh()->open_to_work, 'chain works again');
+    }
+
     public function test_fallback_without_ai_creates_a_plan_request_task(): void
     {
         $this->assertFalse(Plan::available());

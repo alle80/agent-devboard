@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
                 $table->string('name');
                 $table->text('plan_prompt')->nullable();                // plan mode: the prompt the list was built from
+                $table->boolean('plan_paused')->default(false);      // plan mode: paused = the chain does not open the next task
                 $table->timestamps();
             });
         }
