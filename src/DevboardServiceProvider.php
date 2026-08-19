@@ -9,6 +9,7 @@ use Alle80\Devboard\Console\ThemeImport;
 use Alle80\Devboard\Console\AgentStatusImport;
 use Alle80\Devboard\Console\ContextCommand;
 use Alle80\Devboard\Console\DevboardCheck;
+use Alle80\Devboard\Console\DocsBuild;
 use Alle80\Devboard\Console\SkillsImport;
 use Alle80\Devboard\Console\Watch;
 use Alle80\Devboard\Settings\AgentSettings;
@@ -54,7 +55,7 @@ class DevboardServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([DevboardCheck::class, AgentStatusImport::class, ContextCommand::class, SkillsImport::class, Watch::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
+            $this->commands([DevboardCheck::class, AgentStatusImport::class, ContextCommand::class, DocsBuild::class, SkillsImport::class, Watch::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
 
             $this->publishes([__DIR__.'/../config/devboard.php' => config_path('devboard.php')], 'devboard-config');
             $this->publishes([__DIR__.'/../AGENTS.md' => base_path('AGENTS.md')], 'devboard-agents');

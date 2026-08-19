@@ -233,6 +233,11 @@ and the live event. GitHub Actions runs it on PHP 8.3 / 8.4 on every push touchi
 
 MIT — see [LICENSE](LICENSE).
 
+## Documentation
+
+Full docs live in [`docs/`](docs/index.md) (MkDocs, Material theme): build the static site with
+`php artisan devboard:docs-build` (needs `pip install mkdocs-material`, or `--docker`), preview with `--serve`.
+
 ## Security
 
 See [`SECURITY.md`](SECURITY.md) for the security model, the hardening checklist and how to report a vulnerability.

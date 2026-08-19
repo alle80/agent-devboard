@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.30.0] - 2026-08-19
+
 ### Added
+- **Documentation site**: Markdown docs in `docs/` (installation, usage, agent side, plans, notifications, context,
+  skills, statistics & agents status, themes, configuration, security, development) with `mkdocs.yml` (Material for
+  MkDocs) and the command **`devboard:docs-build`** (`--out`, `--serve`, `--docker`, `--strict`) that builds the
+  static HTML site, with clear errors when MkDocs is missing or the build fails.
 - `SECURITY.md` (reporting, security model, hardening checklist) and a Security section in the README.
 
 ## [0.29.4] - 2026-08-19
