@@ -61,10 +61,6 @@
             {{-- Riga todo --}}
             <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }}">
 
-                @if ($todo->completed)
-                    <span class="tl-stamp tl-display pointer-events-none absolute top-1/2 right-10 -translate-y-1/2" aria-hidden="true">{{ $t['stamp'] }}</span>
-                @endif
-
                 <span
                     class="drag-handle shrink-0 cursor-grab touch-none text-xl leading-none opacity-30 transition select-none hover:opacity-100 active:cursor-grabbing"
                     title="{{ __('devboard::t.drag_to_reorder') }}"
@@ -111,17 +107,18 @@
                 </div>
 
                     @if ($editingId !== $todo->id)
+                    @php($st = $todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting')))
                     <button
                         wire:click="toggleOpenToWork({{ $todo->id }})"
                         @if ($todo->working) wire:confirm="{{ __('devboard::t.stop_confirm', ['title' => $todo->title]) }}" @endif
                         title="{{ $todo->question ? __('devboard::t.dot_question') : ($todo->working ? __('devboard::t.dot_working') : ($todo->open_to_work ? __('devboard::t.dot_otw_on') : __('devboard::t.dot_otw_off'))) }}"
-                        class="todo-action otw-btn shrink-0 cursor-pointer text-base transition hover:scale-125 {{ ($todo->open_to_work || $todo->working || $todo->question) ? 'otw-on' : 'opacity-25 hover:opacity-100' }}"
-                    >{{ $todo->question ? '❓' : ($todo->working ? '🔧' : ($todo->open_to_work ? '🟢' : '⚪')) }}</button>
+                        class="todo-action db-badge db-badge-{{ $st }} shrink-0 cursor-pointer transition hover:scale-125 {{ $st === 'waiting' ? 'opacity-40 hover:opacity-100' : '' }}"
+                    ><x-devboard::icon :name="$st" size="1.2em" :stroke="2" /></button>
                     <button
                         wire:click="startEdit({{ $todo->id }})"
                         title="{{ __('devboard::t.rename') }}"
-                        class="todo-action shrink-0 cursor-pointer text-base opacity-25 transition hover:scale-125 hover:opacity-100"
-                    >✏️</button>
+                        class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
+                    ><x-devboard::icon name="edit" size="1.05em" /></button>
                     @endif
 
                 {{-- Elimina --}}
@@ -130,30 +127,30 @@
                         wire:click="unarchive({{ $todo->id }})"
                         title="{{ __('devboard::t.restore') }}"
                         aria-label="{{ __('devboard::t.restore') }}"
-                        class="todo-action shrink-0 cursor-pointer text-base opacity-25 transition hover:scale-125 hover:opacity-100"
-                    >↩</button>
+                        class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
+                    ><x-devboard::icon name="restore" size="1.05em" /></button>
                 @else
                     <button
                         wire:click="archive({{ $todo->id }})"
                         title="{{ __('devboard::t.archive_hint') }}"
                         aria-label="{{ __('devboard::t.archive') }}"
-                        class="todo-action shrink-0 cursor-pointer text-base opacity-25 transition hover:scale-125 hover:opacity-100"
-                    >📦</button>
+                        class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
+                    ><x-devboard::icon name="archive" size="1.05em" /></button>
                 @endif
                     @if ($todo->completed)
                         <button
                             wire:click="resume({{ $todo->id }})"
                             title="{{ __('devboard::t.resume_hint') }}"
                             aria-label="{{ __('devboard::t.resume') }}"
-                            class="todo-action shrink-0 cursor-pointer text-base opacity-25 transition hover:scale-125 hover:opacity-100"
-                        >↻</button>
+                            class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
+                        ><x-devboard::icon name="resume" size="1.05em" /></button>
                     @endif
                 <button
                     wire:click="delete({{ $todo->id }})"
                     wire:confirm="{{ str_replace(':title', $todo->title, $t['confirm']) }}"
                     title="{{ __('devboard::t.delete') }}"
-                    class="todo-action shrink-0 cursor-pointer text-lg opacity-25 transition hover:scale-125 hover:opacity-100"
-                >✕</button>
+                    class="todo-action db-cmd-danger shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
+                ><x-devboard::icon name="trash" size="1.05em" /></button>
             </div>
         </div>
         @endforeach

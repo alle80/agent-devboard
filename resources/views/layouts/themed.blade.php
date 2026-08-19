@@ -41,11 +41,6 @@
         </div>
     @endif
 
-    @if (! empty($t['icon_img']))
-        {{-- Mascotte del tema: immagine nell'angolo se il tema definisce icon_img --}}
-        <img src="{{ asset($t['icon_img']) }}" alt="" width="512" height="607" class="pointer-events-none fixed right-3 bottom-3 hidden w-28 opacity-90 select-none sm:block lg:w-40" aria-hidden="true">
-    @endif
-
     <x-devboard::style-switcher :current="$theme" />
 
     <livewire:devboard::checklist-switcher />
