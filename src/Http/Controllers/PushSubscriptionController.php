@@ -15,7 +15,11 @@ class PushSubscriptionController
             return response()->json(['ok' => false, 'error' => 'push not available'], 422);
         }
         $data = $request->validate([
-            'endpoint' => ['required', 'string', 'max:500'],
+            'endpoint' => ['required', 'string', 'max:500', 'url', 'starts_with:https://', function (string $attr, mixed $value, \Closure $fail) {
+                if (! self::endpointAllowed((string) $value)) {
+                    $fail('push endpoint host not allowed');
+                }
+            }],
             'keys.p256dh' => ['nullable', 'string'],
             'keys.auth' => ['nullable', 'string'],
             'contentEncoding' => ['nullable', 'string', 'max:20'],
@@ -23,6 +27,26 @@ class PushSubscriptionController
         $user->updatePushSubscription($data['endpoint'], $data['keys']['p256dh'] ?? null, $data['keys']['auth'] ?? null, $data['contentEncoding'] ?? null);
 
         return response()->json(['ok' => true]);
+    }
+
+    /** Only https endpoints of known push services (config devboard.push_allowed_hosts; empty = any https host). */
+    public static function endpointAllowed(string $endpoint): bool
+    {
+        $host = strtolower((string) parse_url($endpoint, PHP_URL_HOST));
+        if ($host === '' || strtolower((string) parse_url($endpoint, PHP_URL_SCHEME)) !== 'https') {
+            return false;
+        }
+        $allowed = (array) config('devboard.push_allowed_hosts', []);
+        if ($allowed === []) {
+            return true;
+        }
+        foreach ($allowed as $pattern) {
+            if (fnmatch(strtolower($pattern), $host)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function destroy(Request $request): JsonResponse

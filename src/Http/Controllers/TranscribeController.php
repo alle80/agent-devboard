@@ -27,7 +27,7 @@ class TranscribeController
         } catch (\Throwable $e) {
             Log::warning('devboard: transcription failed: '.$e->getMessage());
 
-            return response()->json(['ok' => false, 'error' => $e->getMessage()], 502);
+            return response()->json(['ok' => false, 'error' => __('devboard::t.mic_error')], 502); // details only in the log
         }
 
         return response()->json(['ok' => true, 'text' => trim($text)]);

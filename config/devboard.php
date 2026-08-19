@@ -64,6 +64,16 @@ return [
     // Private broadcast channel per user for live updates ({id} = user id); requires a broadcaster
     'broadcast_channel' => 'App.Models.User.{id}',
 
+    // Web Push: hosts a browser subscription endpoint may point to (https only). Wildcards allowed. Empty = any https host.
+    'push_allowed_hosts' => ['fcm.googleapis.com', '*.push.apple.com', 'updates.push.services.mozilla.com', '*.notify.windows.com', 'wns2-*.notify.windows.com', '*.push.mozilla.com', 'push.services.mozilla.com', '*.ucweb.com', '*.huawei.com'],
+
+    // Rate limits (Laravel throttle definitions) of the expensive endpoints
+    'rate_limits' => [
+        'transcribe' => env('DEVBOARD_RATE_TRANSCRIBE', '10,1'),
+        'notifications_test' => env('DEVBOARD_RATE_NOTIFICATIONS_TEST', '5,1'),
+        'push_subscriptions' => env('DEVBOARD_RATE_PUSH_SUBSCRIPTIONS', '30,1'),
+    ],
+
     // Agents status snapshot (plan + usage windows), written by `devboard:agent-status-import`; shown in /agents
     'agent_status_file' => env('DEVBOARD_AGENT_STATUS_FILE', storage_path('app/devboard/agent-status.json')),
 

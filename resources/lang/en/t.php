@@ -383,6 +383,7 @@ return [
         'err_zip' => 'The file is not a valid zip.',
         'err_too_many_files' => 'Too many files in the pack (max :max).',
         'err_too_big_total' => 'The pack is too big once extracted (max :max MB).',
+        'err_generic' => 'The theme pack could not be installed.',
         'err_missing_json' => 'theme.json not found in the pack.',
         'err_invalid_json' => 'theme.json is invalid (a slug of lowercase letters, digits and dashes is required).',
         'err_reserved' => 'The slug «:slug» is reserved by a built-in theme or style.',

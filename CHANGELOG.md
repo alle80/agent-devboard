@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.29.2] - 2026-08-19
+
+### Security
+- Web Push subscriptions accept only **https endpoints of known push services** (`devboard.push_allowed_hosts`,
+  wildcards; empty = any https host) — closes the blind SSRF.
+- **Rate limits** on the expensive endpoints (`devboard.rate_limits`: transcribe 10/min, notification test
+  5/min, push subscriptions 30/min; per-route buckets).
+- Generic error messages to the browser for transcription and theme install failures (details in the log).
+
 ## [0.29.1] - 2026-08-19
 
 ### Security

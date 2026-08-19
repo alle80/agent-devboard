@@ -94,17 +94,28 @@ class NotificationsTest extends TestCase
 
     public function test_push_subscription_endpoints_and_service_worker(): void
     {
-        $this->post(route('devboard.push.store'), ['endpoint' => 'https://push.example/abc', 'keys' => ['p256dh' => 'K', 'auth' => 'A'], 'contentEncoding' => 'aesgcm'])->assertOk()->assertJson(['ok' => true]);
+        // only https endpoints of known push services (SSRF)
+        $this->postJson(route('devboard.push.store'), ['endpoint' => 'http://127.0.0.1:8080/apps/x', 'keys' => ['p256dh' => 'K', 'auth' => 'A']])->assertStatus(422);
+        $this->postJson(route('devboard.push.store'), ['endpoint' => 'https://evil.example/abc', 'keys' => ['p256dh' => 'K', 'auth' => 'A']])->assertStatus(422);
+        $this->post(route('devboard.push.store'), ['endpoint' => 'https://fcm.googleapis.com/fcm/send/abc', 'keys' => ['p256dh' => 'K', 'auth' => 'A'], 'contentEncoding' => 'aesgcm'])->assertOk()->assertJson(['ok' => true]);
         $this->assertSame(1, $this->user->pushSubscriptions()->count());
         $this->assertSame('K', $this->user->pushSubscriptions()->first()->public_key);
+        $this->assertTrue(\Alle80\Devboard\Http\Controllers\PushSubscriptionController::endpointAllowed('https://web.push.apple.com/QWxh'));
+        $this->assertFalse(\Alle80\Devboard\Http\Controllers\PushSubscriptionController::endpointAllowed('https://attacker.push.apple.com.evil.test/x'));
+        config(['devboard.push_allowed_hosts' => []]);
+        $this->assertTrue(\Alle80\Devboard\Http\Controllers\PushSubscriptionController::endpointAllowed('https://any.host/x'), 'empty list = any https');
+        $this->assertFalse(\Alle80\Devboard\Http\Controllers\PushSubscriptionController::endpointAllowed('http://any.host/x'));
 
-        $this->delete(route('devboard.push.destroy'), ['endpoint' => 'https://push.example/abc'])->assertOk();
+        $this->delete(route('devboard.push.destroy'), ['endpoint' => 'https://fcm.googleapis.com/fcm/send/abc'])->assertOk();
         $this->assertSame(0, $this->user->pushSubscriptions()->count());
 
         $this->get('/devboard-sw.js')->assertOk()->assertHeader('Content-Type', 'application/javascript; charset=utf-8')->assertSee('notificationclick');
 
         $this->post(route('devboard.notifications.test'))->assertOk();
         $this->assertSame(1, $this->user->unreadNotifications()->count(), 'test notification lands in the bell');
+        // throttled: 5 per minute on the test endpoint
+        for ($i = 0; $i < 4; $i++) { $this->post(route('devboard.notifications.test'))->assertOk(); }
+        $this->post(route('devboard.notifications.test'))->assertStatus(429);
     }
 
     public function test_deep_link_switches_list_and_opens_the_todo(): void

@@ -122,8 +122,11 @@ class SettingsPage extends Component
             $this->dispatch('toast', message: __('devboard::t.themes.installed_ok', ['label' => $def['label']]));
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('toast', message: collect($e->errors())->flatten()->first(), type: 'error');
+        } catch (\RuntimeException $e) {
+            $this->dispatch('toast', message: $e->getMessage(), type: 'error'); // ThemeStore's own, translated messages
         } catch (\Throwable $e) {
-            $this->dispatch('toast', message: $e->getMessage(), type: 'error');
+            \Illuminate\Support\Facades\Log::warning('devboard: theme install failed: '.$e->getMessage());
+            $this->dispatch('toast', message: __('devboard::t.themes.err_generic'), type: 'error');
         }
 
         $this->themeZip = null;
