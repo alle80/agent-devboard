@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.47.1] - 2026-08-20
+
+### Fixed
+- `griglia:docs-generate` now always writes the settings page in the English base language with a neutral
+  agent name, so `--check` does not depend on the locale (or the agent) of whoever runs it.
+
 ## [0.47.0] - 2026-08-20
 
 ### Added

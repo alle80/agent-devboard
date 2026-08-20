@@ -177,14 +177,28 @@ class DocsGenerate extends Command
 
     protected function renderSettings(): string
     {
+        // Always the English base language and a neutral agent name: the page must not change with the
+        // locale (or the agent) of whoever runs the command, or `--check` would never be green.
+        $locale = app()->getLocale();
+        app()->setLocale('en');
+
+        try {
+            return $this->settingsBody();
+        } finally {
+            app()->setLocale($locale);
+        }
+    }
+
+    protected function settingsBody(): string
+    {
         $md = $this->header(
             'Settings',
-            'The options of the `/settings` page (stored in the database, changed at run time). '
-            .'Labels and help come from the translations, so this page shows them in the language of the app.'
+            'The options of the `/settings` page: stored in the database, changed at run time, no deploy. '
+            .'Labels and help are the ones the page shows (here in the English base language).'
         );
 
         $groups = [
-            'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), AgentSettings::fields()],
+            'agent' => [__('griglia::t.settings_agent_title', ['agent' => 'the agent']), AgentSettings::fields()],
             'optimization' => [__('griglia::t.settings_optimization_title'), OptimizationSettings::fields()],
             'app' => [__('griglia::t.settings_app_title'), AppSettings::fields()],
         ];
