@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.0] - 2026-08-20
+
+### Added
+- `griglia:watch --agent=<key>` applies the same effective-agent scope as `griglia:check`, including task
+  overrides and list defaults, so supervised multi-agent workers do not wake for each other's jobs.
+- `griglia:watch --once` prints tasks that were already waiting on its first snapshot; use `--no-initial`
+  for baseline-only monitoring. This makes one-shot polling safe across worker restarts.
+
 ## [0.62.0] - 2026-08-20
 
 ### Added
@@ -1129,7 +1137,11 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.63.0...HEAD
+[0.63.0]: https://github.com/alle80/griglia/compare/v0.62.0...v0.63.0
+[0.62.0]: https://github.com/alle80/griglia/compare/v0.61.0...v0.62.0
+[0.61.0]: https://github.com/alle80/griglia/compare/v0.60.0...v0.61.0
+[0.60.0]: https://github.com/alle80/griglia/compare/v0.59.1...v0.60.0
 [0.12.0]: https://github.com/alle80/griglia/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/alle80/griglia/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/alle80/griglia/compare/v0.9.3...v0.10.0

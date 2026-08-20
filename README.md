@@ -80,7 +80,9 @@ php artisan griglia:watch      # prints ONLY the changes the agent must react to
 
 `watch` polls the list and emits a line when something needs the agent — an item goes **open to
 work**, the **answers** to a paused question arrive, or a **stop** is requested. The agent then reads
-and acts with `griglia:check`.
+and acts with `griglia:check`. `--agent=codex` limits events to that agent; `--once` includes work that
+was already waiting, so an external cron or service can restart without missing it. Add `--no-initial`
+when the first snapshot must only establish a baseline.
 
 ### The state of each row
 
@@ -130,6 +132,7 @@ GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"
 
 ```bash
 php artisan griglia:check --agent=codex     # each agent sees only its own tasks
+php artisan griglia:watch --agent=codex     # and only its own events
 ```
 
 ### Plan mode

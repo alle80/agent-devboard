@@ -180,13 +180,14 @@ php artisan griglia:theme-import [--uninstall [UNINSTALL]] [--] <zip>
 Watch the agent list and print only changes (open-to-work, answers, stops)
 
 ```bash
-php artisan griglia:watch [--interval [INTERVAL]] [--list [LIST]] [--once] [--no-initial]
+php artisan griglia:watch [--interval [INTERVAL]] [--list [LIST]] [--agent [AGENT]] [--once] [--no-initial]
 ```
 
 | Argument / option | What it does | Default |
 |---|---|---|
 | `--interval` | Seconds between polls | `10` |
 | `--list` | List name to watch (default: config griglia.agent_list) | — |
+| `--agent` | Only events for this agent key (default: GRIGLIA_AGENT_KEY, or the default configured agent) | — |
 | `--once` | Poll once and exit (for testing/cron) | flag |
 | `--no-initial` | Do not list the items already open to work when starting | flag |
 

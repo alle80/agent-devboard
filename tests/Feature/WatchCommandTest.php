@@ -4,6 +4,7 @@ namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Console\Watch;
 use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Tests\TestCase;
 
 class WatchCommandTest extends TestCase
@@ -21,6 +22,20 @@ class WatchCommandTest extends TestCase
         Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
 
         $this->artisan('griglia:watch', ['--once' => true])->assertSuccessful();
+    }
+
+    public function test_once_prints_items_already_waiting_for_the_selected_agent(): void
+    {
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
+        $user = $this->actingAsUser();
+        $list = Checklist::create(['name' => 'dev', 'user_id' => $user->id, 'agent' => 'claude']);
+        Todo::create(['title' => 'Claude task', 'order' => 1, 'open_to_work' => true, 'checklist_id' => $list->id]);
+        Todo::create(['title' => 'Codex task', 'order' => 2, 'open_to_work' => true, 'agent' => 'codex', 'checklist_id' => $list->id]);
+
+        $this->artisan('griglia:watch', ['--once' => true, '--agent' => 'codex'])
+            ->expectsOutputToContain('Codex task')
+            ->doesntExpectOutputToContain('Claude task')
+            ->assertSuccessful();
     }
 
     public function test_detects_open_to_work(): void

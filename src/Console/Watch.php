@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Console;
 
+use Alle80\Griglia\Agent;
 use Alle80\Griglia\Models\Checklist;
 use Illuminate\Console\Command;
 
@@ -18,6 +19,7 @@ class Watch extends Command
     protected $signature = 'griglia:watch
         {--interval=10 : Seconds between polls}
         {--list= : List name to watch (default: config griglia.agent_list)}
+        {--agent= : Only events for this agent key (default: GRIGLIA_AGENT_KEY, or the default configured agent)}
         {--once : Poll once and exit (for testing/cron)}
         {--no-initial : Do not list the items already open to work when starting}';
 
@@ -26,6 +28,7 @@ class Watch extends Command
     public function handle(): int
     {
         $name = (string) ($this->option('list') ?: config('griglia.agent_list', 'dev'));
+        $agent = (string) ($this->option('agent') ?: (Agent::many() ? Agent::defaultKey() : ''));
         $interval = max(2, (int) $this->option('interval'));
 
         if (! Checklist::where('name', $name)->exists()) {
@@ -35,13 +38,14 @@ class Watch extends Command
         }
 
         if (! $this->option('once')) {
-            $this->info(sprintf('👀 watching list "%s" every %ds — Ctrl-C to stop', $name, $interval));
+            $suffix = $agent !== '' ? sprintf(' for agent "%s"', $agent) : '';
+            $this->info(sprintf('👀 watching list "%s"%s every %ds — Ctrl-C to stop', $name, $suffix, $interval));
         }
 
         $prev = null;
         do {
-            $snap = $this->snapshot($name);
-            if ($prev === null && ! $this->option('once') && ! $this->option('no-initial')) {
+            $snap = $this->snapshot($name, $agent);
+            if ($prev === null && ! $this->option('no-initial')) {
                 // Items already open to work when the monitor starts would otherwise never be
                 // announced: the first snapshot is only a baseline. List them once, up front.
                 foreach (self::pending($snap, now()->format('H:i:s')) as $line) {
@@ -65,7 +69,7 @@ class Watch extends Command
     }
 
     /** @return array<int,array<string,mixed>> keyed by todo id */
-    private function snapshot(string $name): array
+    private function snapshot(string $name, string $agent): array
     {
         $list = Checklist::where('name', $name)->first();
         if (! $list) {
@@ -77,7 +81,11 @@ class Watch extends Command
             ->where(fn ($q) => $q->whereNotNull('plan_prompt')->orWhereHas('todos', fn ($t) => $t->whereNotNull('depends_on_id')))
             ->pluck('id')->push($list->id)->all();
         $out = [];
-        foreach (\Alle80\Griglia\Models\Todo::whereIn('checklist_id', $ids)->whereNull('archived_at')->where('completed', false)->with('questions')->get() as $t) {
+        foreach (\Alle80\Griglia\Models\Todo::whereIn('checklist_id', $ids)->whereNull('archived_at')->where('completed', false)->with(['questions', 'checklist'])->get() as $t) {
+            if ($agent !== '' && Agent::effective($t) !== $agent) {
+                continue;
+            }
+
             $out[$t->id] = [
                 'title' => $t->title,
                 'otw' => (bool) $t->open_to_work,

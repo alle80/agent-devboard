@@ -5,6 +5,7 @@ The board never talks to a specific vendor: the contract is a CLI. Give your age
 
 ```bash
 php artisan griglia:watch                       # prints only the changes it must react to (events)
+php artisan griglia:watch --agent=codex         # only events assigned to one agent
 php artisan griglia:check                       # what is open to work or already taken, settings, plans
 php artisan griglia:check --take=ID             # take in charge: the task turns to working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testing"
@@ -33,6 +34,10 @@ Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list 
 (toolbar selector), a task may override it (modal header). Each agent runs `griglia:check --agent=<its key>`
 (or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id. The [skills](skills.md)
 offered on a task are filtered the same way: only the ones its agent has installed.
+
+Use the same key with `griglia:watch --agent=<key>`. With `--once`, the command also prints tasks that
+were already waiting when it started, which makes it suitable for cron jobs and supervised workers;
+`--no-initial` keeps baseline-only behaviour.
 
 ## See also
 
