@@ -11,7 +11,7 @@
 
 /* ==================== Accessibilità e touch (Web Interface Guidelines) ==================== */
 /* Molti controlli usano focus:outline-none per estetica: qui il sostituto visibile, solo da tastiera */
-:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 3px solid var(--tl-accent, #2563eb); outline-offset: 2px; border-radius: 4px; }
 button, [role="button"], a, input, textarea, select, summary, label { touch-action: manipulation; }
 body { -webkit-tap-highlight-color: transparent; }
 /* Lo scroll dentro modali e menu non deve trascinare la pagina sotto */

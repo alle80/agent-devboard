@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.4] - 2026-08-20
+
+### Changed
+- The keyboard focus ring (`:focus-visible`) uses the theme accent (`--tl-accent`) instead of a fixed blue,
+  so it no longer clashes on dark themes (blue fallback kept where no theme is active).
+
 ## [0.33.3] - 2026-08-20
 
 ### Changed
