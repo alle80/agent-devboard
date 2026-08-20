@@ -9,19 +9,23 @@
         <h2 class="{{ $skin['h2'] }}">{{ __('griglia::t.plan.goal_label') }}</h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ $aiAvailable ? __('griglia::t.plan.hint') : __('griglia::t.plan.hint_no_ai') }}</p>
 
-        <textarea
-            id="plan-goal"
-            wire:model="prompt"
-            rows="12"
-            autofocus
-            x-on:keydown.ctrl.enter="$wire.create()"
-            x-on:keydown.meta.enter="$wire.create()"
-            placeholder="{{ __('griglia::t.plan.prompt_placeholder') }}"
-            class="db-plan-goal {{ $skin['input'] }} min-h-[14rem] w-full resize-y leading-relaxed"
-        ></textarea>
+        <div class="flex items-start gap-2">
+            <textarea
+                id="plan-goal"
+                wire:model.live.debounce.400ms="prompt"
+                rows="12"
+                autofocus
+                x-on:keydown.ctrl.enter="$wire.create()"
+                x-on:keydown.meta.enter="$wire.create()"
+                placeholder="{{ __('griglia::t.plan.prompt_placeholder') }}"
+                class="db-plan-goal {{ $skin['input'] }} min-h-[14rem] w-full flex-1 resize-y leading-relaxed"
+            ></textarea>
+            <x-griglia::mic class="tl-btn tl-btn-icon shrink-0" within="form" target=".db-plan-goal" />
+        </div>
+        <p class="{{ $skin['help'] }} mt-1 text-right tabular-nums">{{ mb_strlen(trim($prompt)) }}</p>
         @error('prompt')<p class="db-setting-warn mt-2">{{ $message }}</p>@enderror
 
-        <div class="mt-5">
+        <div class="mt-6 border-t border-current/15 pt-4">
             <label for="plan-name" class="{{ $skin['label'] }}">{{ __('griglia::t.plan.name_label') }}</label>
             <p class="{{ $skin['help'] }} mb-1">{{ __('griglia::t.plan.name_help') }}</p>
             <input
@@ -33,6 +37,19 @@
                 class="{{ $skin['input'] }} w-full"
             >
         </div>
+
+        @if (count($agents) > 1)
+            <div class="mt-4">
+                <label for="plan-agent" class="{{ $skin['label'] }}">{{ __('griglia::t.agent_of_list') }}</label>
+                <p class="{{ $skin['help'] }} mb-1">{{ __('griglia::t.plan.agent_help') }}</p>
+                <select id="plan-agent" wire:model="agent" class="setting-input {{ $skin['input'] }} w-full sm:w-auto sm:min-w-[14rem]">
+                    <option value="">{{ __('griglia::t.agent_default', ['agent' => \Alle80\Griglia\Agent::label(null)]) }}</option>
+                    @foreach ($agents as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
         <div class="mt-6 flex flex-wrap items-center gap-2">
             <button type="submit" class="{{ $skin['back'] }} inline-flex items-center gap-1" wire:loading.attr="disabled" wire:target="create" x-bind:aria-busy="$wire.__instance?.loading ? 'true' : 'false'">

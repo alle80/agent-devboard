@@ -21,6 +21,9 @@ class PlanPage extends Component
     /** Optional: derived from the goal when left empty. */
     public string $name = '';
 
+    /** Agent of the list, when more than one is configured ('' = the default one). */
+    public string $agent = '';
+
     public function create(): void
     {
         $prompt = trim($this->prompt);
@@ -31,9 +34,12 @@ class PlanPage extends Component
             return;
         }
 
+        $agents = \Alle80\Griglia\Agent::all();
+
         $list = Checklist::create([
             'name' => $this->listName($prompt),
             'user_id' => auth()->id(),
+            'agent' => isset($agents[$this->agent]) ? $this->agent : null,
         ]);
 
         $built = Plan::build($list, $prompt);
@@ -70,6 +76,7 @@ class PlanPage extends Component
         return view('griglia::livewire.plan-page', [
             'skin' => $skin,
             'aiAvailable' => Plan::available(),
+            'agents' => \Alle80\Griglia\Agent::all(),
         ])->layout($skin['layout'], $skin['layoutData'] + ['title' => __('griglia::t.plan.page_title')])
             ->title(__('griglia::t.plan.page_title'));
     }

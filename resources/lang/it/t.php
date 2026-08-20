@@ -249,6 +249,7 @@ return [
         'name_help' => 'Lascialo vuoto: il nome lo ricaviamo dalle prime parole dell\'obiettivo.',
         'build' => 'Costruisci il piano',
         'new_menu' => 'Nuovo piano…',
+        'agent_help' => 'Quale agente lavora questo piano; si cambia anche dopo, dalla barra degli strumenti.',
         'as_plan' => 'Crea come piano (task da un prompt)',
         'prompt_placeholder' => 'Descrivi l\'obiettivo: il piano viene spezzato in task concatenati…',
         'prompt_required' => 'Scrivi prima il prompt del piano.',

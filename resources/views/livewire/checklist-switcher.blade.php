@@ -115,7 +115,7 @@
         </div>
 
         {{-- Nuova lista --}}
-        <form wire:submit="create" class="tl-menu-sep mt-1.5 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }" @if ($showArchived) hidden @endif>
+        <form wire:submit="create" class="tl-menu-sep mt-1.5 p-1 pt-2" @if ($showArchived) hidden @endif>
             <div class="flex items-center gap-1">
                 <input
                     type="text"
@@ -132,19 +132,6 @@
                 <x-griglia::icon name="ruler" /> {{ __('griglia::t.plan.new_menu') }}
             </a>
 
-            {{-- Plan mode: build the list from a prompt (chained tasks) --}}
-            <label class="mt-1.5 flex cursor-pointer items-center gap-1.5 px-1 text-xs select-none">
-                <input type="checkbox" x-model="plan" class="db-skill-check">
-                <span class="inline-flex items-center gap-1"><x-griglia::icon name="ruler" /> {{ __('griglia::t.plan.as_plan') }}</span>
-            </label>
-            <div x-show="plan" x-cloak class="mt-1.5 space-y-1 px-1">
-                <div class="flex items-start gap-1">
-                    <textarea wire:model="planPrompt" rows="4" placeholder="{{ __('griglia::t.plan.prompt_placeholder') }}" class="db-plan-prompt tl-input w-full min-w-0 flex-1 px-2 py-1 text-sm focus:outline-none"></textarea>
-                    <x-griglia::mic class="tl-btn tl-btn-icon shrink-0" within="form" target=".db-plan-prompt" />
-                </div>
-                <p class="text-[11px] opacity-60">{{ \Alle80\Griglia\Support\Plan::available() ? __('griglia::t.plan.hint') : __('griglia::t.plan.hint_no_ai') }}</p>
-                <p class="text-[11px] font-bold" wire:loading wire:target="create">⏳ {{ __('griglia::t.plan.building') }}</p>
-            </div>
         </form>
 
         {{-- Utente, pagine e uscita --}}

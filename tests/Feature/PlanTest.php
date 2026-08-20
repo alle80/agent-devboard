@@ -196,18 +196,20 @@ class PlanTest extends TestCase
         $this->assertStringContainsString('Make a thing', $t->notes);
     }
 
-    public function test_switcher_creates_the_list_as_a_plan(): void
+    public function test_the_lists_menu_only_creates_plain_lists_and_links_the_plan_page(): void
     {
-        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two']];
-        Livewire::test(ChecklistSwitcher::class)->set('newName', 'Roadmap')->set('asPlan', true)->set('planPrompt', '')->call('create')->assertDispatched('toast');
-        $this->assertNull(Checklist::where('name', 'Roadmap')->first(), 'prompt required');
+        // A plan is written on its own page: the dropdown has no prompt any more, only the link.
+        Livewire::test(ChecklistSwitcher::class)
+            ->set('newName', 'Roadmap')
+            ->call('create');
 
-        Livewire::test(ChecklistSwitcher::class)->set('newName', 'Roadmap')->set('asPlan', true)->set('planPrompt', 'Go')->call('create');
         $list = Checklist::where('name', 'Roadmap')->first();
         $this->assertNotNull($list);
-        $this->assertSame(2, $list->todos()->count());
+        $this->assertSame(0, $list->todos()->count());
+        $this->assertNull($list->plan_prompt);
         $this->assertSame($list->id, session('checklist_id'));
-        $this->assertSame('Go', $list->plan_prompt);
+
+        $this->get(route('griglia.home'))->assertOk()->assertSee(route('griglia.plans.create'), false);
     }
 
     public function test_the_plan_page_opens_and_builds_a_plan(): void

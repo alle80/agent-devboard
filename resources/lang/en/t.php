@@ -255,6 +255,7 @@ return [
         'name_help' => 'Leave it empty and the first words of the goal become the name.',
         'build' => 'Build the plan',
         'new_menu' => 'New plan…',
+        'agent_help' => 'Which agent works this plan; you can change it later from the toolbar.',
         'as_plan' => 'Create as a plan (tasks from a prompt)',
         'prompt_placeholder' => 'Describe the goal: the plan is split into chained tasks…',
         'prompt_required' => 'Write the prompt of the plan first.',

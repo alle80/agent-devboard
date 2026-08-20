@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.51.0] - 2026-08-20
+
+### Changed
+- **The plan form has moved out of the lists dropdown.** The checkbox and the four-row textarea are gone
+  from the menu, which is back to doing one thing (a new list) plus a «New plan…» link. On the page the
+  goal has the microphone next to it, a character count, and — when the install declares several agents —
+  the agent of the plan, in its own section under the name.
+
 ### Docs
 - **The site wears the board's own skin.** JetBrains Mono everywhere, the Slate palette (deep green
   background, `#33d17a` for headings and links, thin green borders with the 6px radius of the cards) in

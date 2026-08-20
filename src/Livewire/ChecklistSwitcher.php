@@ -61,9 +61,7 @@ class ChecklistSwitcher extends Component
     }
 
     /** Plan mode: the new list is built from a prompt (chained tasks). */
-    public bool $asPlan = false;
 
-    public string $planPrompt = '';
 
     public function create(): void
     {
@@ -72,17 +70,8 @@ class ChecklistSwitcher extends Component
         if ($name === '') {
             return;
         }
-        if ($this->asPlan && trim($this->planPrompt) === '') {
-            $this->dispatch('toast', message: __('griglia::t.plan.prompt_required'), type: 'error');
-
-            return;
-        }
-
+        // A plan is written on its own page (/plans/new): here we only create plain lists.
         $list = Checklist::create(['name' => $name, 'user_id' => auth()->id()]);
-        if ($this->asPlan) {
-            $n = \Alle80\Griglia\Support\Plan::build($list, trim($this->planPrompt));
-            session()->flash('griglia_toast', $n > 0 ? ['message' => __('griglia::t.plan.built', ['count' => $n]), 'type' => 'success'] : ['message' => __('griglia::t.plan.not_built'), 'type' => 'info']);
-        }
         session(['checklist_id' => $list->id]);
         $this->js('window.location.reload()');
     }
