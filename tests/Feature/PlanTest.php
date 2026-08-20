@@ -349,4 +349,27 @@ class PlanTest extends TestCase
         $this->assertSame($one->id, $three->depends_on_id);
         $this->assertFalse($three->open_to_work, 'the first is not done yet: nothing opens');
     }
+
+    public function test_the_dead_end_warning_only_talks_about_started_plans(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two']];
+        Checklist::firstOrCreate(['name' => config('griglia.agent_list', 'dev'), 'user_id' => auth()->id()]);
+
+        $fresh = Checklist::create(['name' => 'Never started', 'user_id' => auth()->id()]);
+        Plan::build($fresh, 'A plan waiting for the play button');
+
+        \Illuminate\Support\Facades\Artisan::call('griglia:check');
+        $this->assertStringNotContainsString('Never started', \Illuminate\Support\Facades\Artisan::output(),
+            'a plan nobody started is not a dead end, it is just waiting for ▶');
+
+        // Started, then stuck: the first task done, the next one archived away.
+        $stuck = Checklist::create(['name' => 'Stuck halfway', 'user_id' => auth()->id()]);
+        Plan::build($stuck, 'A plan that got stuck');
+        [$one, $two] = $stuck->todos()->orderBy('order')->get()->all();
+        $one->update(['completed' => true]);
+        $two->update(['open_to_work' => false]);
+
+        \Illuminate\Support\Facades\Artisan::call('griglia:check');
+        $this->assertStringContainsString('Stuck halfway', \Illuminate\Support\Facades\Artisan::output());
+    }
 }

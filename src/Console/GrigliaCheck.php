@@ -219,8 +219,11 @@ class GrigliaCheck extends Command
             $pending = $pl->todos()->whereNull('archived_at')->where('completed', false)->count();
             $openable = $pl->todos()->whereNull('archived_at')->where('completed', false)
                 ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true))->count();
+            // A plan nobody has started yet is not a dead end: it is simply waiting for ▶. Warn only about
+            // plans that were started (or paused) and now have nothing the agent may take.
+            $started = $pl->plan_paused || $pl->todos()->whereNull('archived_at')->where('completed', true)->exists();
 
-            if ($pending > 0 && $openable === 0) {
+            if ($started && $pending > 0 && $openable === 0) {
                 $this->warn(sprintf('⚠ Plan «%s» (list id:%d): %d task(s) left but none is open to work%s — start it with ▶ on the board, or open one by hand.',
                     $pl->name, $pl->id, $pending, $pl->plan_paused ? ' (the plan is paused)' : ''));
             }

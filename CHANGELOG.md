@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.59.1] - 2026-08-20
+
+### Fixed
+- The dead-end warning of `griglia:check` shouted at plans nobody had started yet, which are not stuck —
+  they are waiting for ▶. It now talks only about plans that were started (or paused) and have nothing the
+  agent may take.
+
 ## [0.59.0] - 2026-08-20
 
 ### Added
