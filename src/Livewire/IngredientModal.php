@@ -541,8 +541,10 @@ class IngredientModal extends Component
         }
         $name = trim($name);
         $chosen = array_values((array) $todo->skills);
-        if (! in_array($name, $chosen, true) && ! isset(\Alle80\Griglia\Support\Skills::all()[$name])) {
-            return; // unknown skill
+        // Only a skill the agent of this task can really invoke; an already chosen one stays togglable, so a
+        // leftover from another agent can still be removed
+        if (! in_array($name, $chosen, true) && ! isset($this->skillCatalogue($todo)[$name])) {
+            return; // unknown skill, or not available to this agent
         }
         $chosen = in_array($name, $chosen, true) ? array_values(array_diff($chosen, [$name])) : [...$chosen, $name];
         $todo->skills = $chosen ?: null;
@@ -647,6 +649,12 @@ class IngredientModal extends Component
         return view('griglia::livewire.ingredient-modal', $this->viewData() + ['t' => Themes::get(Themes::default())]);
     }
 
+    /** Le skill che l'agente assegnato a questo task può davvero invocare (task 375). */
+    protected function skillCatalogue(Todo $todo): array
+    {
+        return \Alle80\Griglia\Support\Skills::forAgent(\Alle80\Griglia\Agent::effective($todo));
+    }
+
     /** Dati comuni a tutte le viste del modale (base e stili dedicati). */
     protected function viewData(): array
     {
@@ -655,7 +663,8 @@ class IngredientModal extends Component
         return [
             'todo' => $todo,
             'readonly' => (bool) $todo?->completed,
-            'skills' => \Alle80\Griglia\Support\Skills::all(),
+            'skills' => $todo ? $this->skillCatalogue($todo) : \Alle80\Griglia\Support\Skills::all(),
+            'skillsAgent' => $todo ? \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)) : \Alle80\Griglia\Agent::name(),
             'otherLists' => $todo ? Checklist::mine()->whereKeyNot($todo->checklist_id)->orderBy('name')->get(['id', 'name']) : collect(),
         ];
     }

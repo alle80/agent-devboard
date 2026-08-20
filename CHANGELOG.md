@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.61.0] - 2026-08-20
+
+### Changed
+- **Skills that belong to the right agent.** The skill catalogue now records, for every skill, which agents can
+  actually invoke it (`agents` in the import JSON, filled by `scripts/sync-skills.py` from the folder it comes
+  from), and the task modal only offers the ones the agent of that task really has: no more ticking a Claude Code
+  built-in for a Codex CLI task. Skills with no `agents` — the shared `~/.agents/skills` folder, or catalogues
+  imported before this release — stay available to everybody, and a skill already ticked remains visible so it can
+  be removed.
+
 ## [0.60.0] - 2026-08-20
 
 ### Added

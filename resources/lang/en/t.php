@@ -76,7 +76,7 @@ return [
     'skills_none' => 'none — open to choose',
     'skills_search' => 'Search skills…',
     'skills_no_match' => 'No skill matches.',
-    'skills_hint' => 'Skills the agent will activate while working on this task (catalogue from griglia:skills-import).',
+    'skills_hint' => 'Skills the agent will activate while working on this task: only the ones :agent really has (catalogue from griglia:skills-import).',
     'stats_time' => 'Agent working time',
     'stats_tokens' => 'Tokens (input / output)',
     'stats_hint' => 'Working time is measured while the row is «working»; tokens are those reported by the agent.',

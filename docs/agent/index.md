@@ -31,7 +31,8 @@ you to run `/clear` — it cannot run it for you.
 
 Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list (project) has a default agent
 (toolbar selector), a task may override it (modal header). Each agent runs `griglia:check --agent=<its key>`
-(or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id.
+(or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id. The [skills](skills.md)
+offered on a task are filtered the same way: only the ones its agent has installed.
 
 ## See also
 

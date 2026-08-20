@@ -1,22 +1,24 @@
 {{--
     Skills of the coding agent for this task: an accordion (under the Task note) with one checkbox per
     skill of the catalogue (`griglia:skills-import`); the chosen ones are saved in `todos.skills` and
-    printed by `griglia:check`, so the agent invokes them while working on the task.
-    Expected: $todo, $skills (catalogue), $readonly; style classes $boxClass, $labelClass, $textClass.
+    printed by `griglia:check`, so the agent invokes them while working on the task. The catalogue only holds
+    the skills the agent of this task can invoke (Skills::forAgent(), task 375).
+    Expected: $todo, $skills (catalogue), $readonly, $skillsAgent (label of the agent); style classes
+    $boxClass, $labelClass, $textClass.
 --}}
 @php($chosen = array_values((array) $todo->skills))
 @php($catalogue = $skills)
 @foreach ($chosen as $name)
-    @php($catalogue[$name] ??= ['name' => $name, 'description' => '', 'source' => ''])
+    @php($catalogue[$name] ??= ['name' => $name, 'description' => '', 'source' => '', 'agents' => []])
 @endforeach
 @php(uksort($catalogue, fn ($a, $b) => [! in_array($a, $chosen, true), strtolower($a)] <=> [! in_array($b, $chosen, true), strtolower($b)]))
 @if ($catalogue)
     <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }}, q: '', hay: @js(array_values(array_map(fn ($sk) => $sk['name'].' '.($sk['description'] ?? '').' '.($sk['source'] ?? ''), $catalogue))), match(t) { return this.q.trim() === '' || t.toLowerCase().includes(this.q.trim().toLowerCase()); }, noMatch() { return this.q.trim() !== '' && ! this.hay.some(t => this.match(t)); } }" x-bind:open="o" x-on:toggle="o = $el.open">
         <summary class="flex cursor-pointer items-center justify-between gap-2 select-none">
-            <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-griglia::icon name="puzzle" /> {{ __('griglia::t.skills', ['agent' => \Alle80\Griglia\Agent::name()]) }}</span>
+            <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-griglia::icon name="puzzle" /> {{ __('griglia::t.skills', ['agent' => $skillsAgent ?? \Alle80\Griglia\Agent::name()]) }}</span>
             <span class="{{ $textClass }} text-xs opacity-70">{{ $chosen ? __('griglia::t.skills_chosen', ['count' => count($chosen)]) : __('griglia::t.skills_none') }}</span>
         </summary>
-        <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('griglia::t.skills_hint') }}</p>
+        <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('griglia::t.skills_hint', ['agent' => $skillsAgent ?? \Alle80\Griglia\Agent::name()]) }}</p>
         {{-- Live search (client-side, Alpine): filters the list below while typing --}}
         <input
             type="search"
