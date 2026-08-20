@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.38.1] - 2026-08-20
+
+### Fixed
+- **Invisible README header on GitHub in dark mode.** The lockup is dark ink (`#0F1720`) on transparent,
+  and GitHub serves SVGs as `<img>`, so `currentColor` cannot help. Added `lockup-horizontal-dark.svg` /
+  `lockup-stacked-dark.svg` (wordmark in `#E6EDF3`) and the README header now picks one with a `<picture>`
+  + `media="(prefers-color-scheme: dark)"`.
+
 ## [0.38.0] - 2026-08-20
 
 ### Changed

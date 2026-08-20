@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360">
+<g transform="translate(20 18) scale(.62)">
+
+<g fill="none" stroke="#E6EDF3" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M92 126 H382 V362 H92 Z"/>
+  <path d="M188 126 V362 M284 126 V362"/>
+  <path d="M92 244 H382"/>
+</g>
+<path d="M174 307 l35 35 70-82" fill="none" stroke="#22C55E" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="397" cy="245" r="48" fill="#22C55E"/>
+</g>
+<text x="390" y="215" fill="#E6EDF3" font-family="Inter, Manrope, Arial, sans-serif" font-size="150" font-weight="700">griglia</text>
+</svg>

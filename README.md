@@ -1,4 +1,9 @@
-<p align="center"><img src="public/images/brand/lockup-horizontal.svg" width="380" alt="Griglia"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/images/brand/lockup-horizontal-dark.svg">
+    <img src="public/images/brand/lockup-horizontal.svg" width="380" alt="Griglia">
+  </picture>
+</p>
 
 # alle80/griglia
 
