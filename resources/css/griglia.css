@@ -25,25 +25,26 @@ body { -webkit-tap-highlight-color: transparent; }
 /* Open to work: pallino verde acceso, sempre visibile */
 .otw-on { opacity: 1; filter: drop-shadow(0 0 4px rgb(34 197 94 / 0.8)); }
 
+/* ==================== Righe della lista: due livelli, a ogni larghezza ==================== */
+/* Nata sul telefono e poi estesa a tutti i formati (task 328): la riga è
+   [maniglia · numero · check · … · azioni] sopra e titolo + badge a tutta larghezza sotto.
+   Su una riga sola il titolo restava schiacciato fra i comandi e i badge, con un buco in mezzo. */
+.todo-row { flex-wrap: wrap; row-gap: 0.35rem; }
+.todo-row > .todo-title { order: 10; flex-basis: 100%; min-width: 0; }
+.todo-row > .todo-title > button { flex-wrap: wrap; row-gap: 0.25rem; }
+/* le azioni restano sulla prima riga, allineate a destra: tutto ciò che sta tra check e azioni si sposta */
+.todo-row > .todo-action { margin-left: 0; }
+.todo-row > .todo-title ~ .todo-action:first-of-type,
+.todo-row > .todo-title + * { margin-left: auto; }
+/* il timbro (DAJE, K.O.!, GROG…) sulla riga a due livelli si sovrapporrebbe: in alto a destra, più piccolo */
+.todo-row > [aria-hidden="true"][class*="stamp"],
+.todo-row > .hanko,
+.todo-row > .jac-slurp { top: 0.35rem; right: 4.5rem; transform: translateY(0) rotate(-12deg) scale(0.8); }
+
 /* ==================== Layout mobile condiviso (< 640px) ==================== */
-/* Le righe della lista sono un unico flex orizzontale: su un telefono il titolo
-   resta con un terzo dello spazio e va a capo ogni due parole. Sotto sm la riga
-   diventa a due livelli: [maniglia · numero · check · matita · ✕] sopra,
-   titolo + badge a tutta larghezza sotto. */
 @media (max-width: 639px) {
-    .todo-row { flex-wrap: wrap; row-gap: 0.35rem; }
-    .todo-row > .todo-title { order: 10; flex-basis: 100%; min-width: 0; }
-    .todo-row > .todo-title > button { flex-wrap: wrap; row-gap: 0.25rem; }
-    /* le azioni restano sulla prima riga, allineate a destra: tutto ciò che sta tra check e azioni si sposta */
-    .todo-row > .todo-action { margin-left: 0; }
-    .todo-row > .todo-title ~ .todo-action:first-of-type,
-    .todo-row > .todo-title + * { margin-left: auto; }
     /* target touch più generosi */
     .todo-row > .todo-action { padding: 0.25rem 0.4rem; opacity: 0.55; }
-    /* il timbro (DAJE, K.O.!, GROG…) sopra la riga a due livelli si sovrappone: lo spostiamo in alto a destra e lo riduciamo */
-    .todo-row > [aria-hidden="true"][class*="stamp"],
-    .todo-row > .hanko,
-    .todo-row > .jac-slurp { top: 0.35rem; right: 4.5rem; transform: translateY(0) rotate(-12deg) scale(0.8); }
 
     /* Modale a tutto schermo (sopra i menu fissi) con contenuto scrollabile */
     .modal-shell { align-items: stretch !important; padding: 0 !important; z-index: 70 !important; }

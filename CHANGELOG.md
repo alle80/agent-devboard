@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.44.0] - 2026-08-20
+
+### Changed
+- **Task rows use the two-level layout everywhere.** The compact card born for phones — handle, number,
+  checkbox and actions on the first line, title and badges at full width underneath — now applies at every
+  width. On a wide screen the single-line row squeezed the title between the controls and the badges and
+  left a hole in the middle; the row now shows long titles and every badge. Below 640px nothing changes
+  beyond the roomier touch targets that were already there.
+
 ## [0.43.0] - 2026-08-20
 
 ### Changed
