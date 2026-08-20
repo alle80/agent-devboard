@@ -39,6 +39,12 @@
             @elseif ($plan['done'] === $plan['total'] && $plan['total'] > 0)
                 <span class="inline-flex items-center gap-1 text-xs opacity-80"><x-griglia::icon name="done" /> {{ __('griglia::t.plan.completed') }}</span>
             @endif
+            {{-- L'obiettivo del piano si corregge dalla sua pagina (task 344) --}}
+            <a href="{{ route('griglia.plans.edit', ['list' => \Alle80\Griglia\Models\Checklist::currentId()]) }}"
+               class="{{ $btnClass }} inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none"
+               title="{{ __('griglia::t.plan.edit_title') }}">
+                <x-griglia::icon name="edit" /> {{ __('griglia::t.plan.edit_title') }}
+            </a>
         </div>
     @endif
     {{-- Ricerca --}}

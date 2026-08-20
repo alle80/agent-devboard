@@ -241,4 +241,55 @@ class PlanTest extends TestCase
 
         $this->assertSame(0, Checklist::mine()->count(), 'no half-created list');
     }
+
+    public function test_the_draft_survives_leaving_the_page(): void
+    {
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+            ->set('prompt', 'A goal I started writing and did not finish');
+
+        // Coming back: the text is still there.
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+            ->assertSet('prompt', 'A goal I started writing and did not finish');
+
+        // Cancelling throws it away.
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)->call('cancel');
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)->assertSet('prompt', '');
+    }
+
+    public function test_editing_a_plan_saves_the_goal_without_touching_the_tasks(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The first goal of the plan');
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class, ['list' => $list])
+            ->assertSet('prompt', 'The first goal of the plan')
+            ->set('prompt', 'A better written goal for the plan')
+            ->call('saveGoal')
+            ->assertHasNoErrors();
+
+        $this->assertSame('A better written goal for the plan', $list->fresh()->plan_prompt);
+        $this->assertSame(2, $list->todos()->count(), 'the tasks are untouched');
+    }
+
+    public function test_rebuilding_replaces_only_the_tasks_nobody_started(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two'], ['title' => 'Three']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The goal of the plan');
+
+        $done = $list->todos()->orderBy('order')->first();
+        $done->update(['completed' => true, 'completed_at' => now()]);
+        $working = $list->todos()->orderBy('order')->skip(1)->first();
+        $working->update(['working' => true, 'working_since' => now()]);
+
+        Plan::$resolver = fn () => [['title' => 'New one'], ['title' => 'New two']];
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class, ['list' => $list])
+            ->call('rebuild')
+            ->assertHasNoErrors();
+
+        $titles = $list->todos()->orderBy('order')->pluck('title')->all();
+        $this->assertSame(['One', 'Two', 'New one', 'New two'], $titles);
+    }
 }

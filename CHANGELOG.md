@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.0] - 2026-08-20
+
+### Added
+- **Editing a plan.** `/plans/{list}/edit`, reachable from the Plan bar: change the goal (and the name and
+  agent of the list) without touching the tasks, or rebuild them — and only the ones nobody has started.
+  Tasks already done, taken by the agent or waiting for an answer are never replaced, and the confirmation
+  says how many will be.
+
+### Changed
+- **Nothing gets lost on the plan page.** What you type is kept as a draft, so leaving and coming back finds
+  the text where you left it; cancelling asks first and then throws the draft away; and if the AI fails
+  while building, the half-created list is removed instead of being left behind empty.
+
 ## [0.51.0] - 2026-08-20
 
 ### Changed
