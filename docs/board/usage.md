@@ -50,6 +50,11 @@ The modal has ‹ and › next to the state badge, with the position of the task
 the previous and the next task without closing the modal — the way to follow a plan from one step to the
 next. The **left and right arrow keys** do the same, unless you are typing in a field.
 
+### Copying what is in a note
+
+Notes and agent answers are Markdown: a **code block has a copy button** in its corner (commands, prompts,
+snippets), **inline code copies itself with one click**, and links open in a new tab.
+
 ## Toolbar
 
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state filters, archive.

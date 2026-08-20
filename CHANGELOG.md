@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.59.0] - 2026-08-20
+
+### Added
+- **Code blocks in notes and answers can be copied.** A button in the corner of every block copies it (with
+  a «copied» confirmation), inline code copies itself with a click, and links inside a note open in a new
+  tab. Those blocks hold commands and prompts meant to be pasted somewhere else — selecting them by hand in
+  a modal was the wrong way to get them out.
+
 ## [0.58.0] - 2026-08-20
 
 ### Added

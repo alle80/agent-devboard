@@ -9,6 +9,8 @@
 @if (! empty($echo['key']))
     <script>window.GRIGLIA_ECHO = @json($echo);</script>
 @endif
+{{-- Etichette usate dal JS (pulsante «copia» dei blocchi di codice) --}}
+<script>window.GRIGLIA_I18N = {!! json_encode(['copy' => __('griglia::t.copy'), 'copied' => __('griglia::t.copied'), 'copy_failed' => __('griglia::t.copy_failed'), 'copy_block' => __('griglia::t.copy_block')]) !!};</script>
 @if (\Illuminate\Support\Facades\Route::has('griglia.transcribe'))
     @php($speech = ['mode' => \Alle80\Griglia\Support\Speech::mode(), 'url' => route('griglia.transcribe'), 'csrf' => csrf_token(), 'lang' => \Alle80\Griglia\Support\Speech::language(), 'busy' => __('griglia::t.mic_busy'), 'error' => __('griglia::t.mic_error')])
     <script>window.GRIGLIA_SPEECH = {!! json_encode($speech) !!};</script>

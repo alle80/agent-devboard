@@ -471,6 +471,25 @@ select.setting-input { appearance: auto; }
 .db-prose code { font-family: ui-monospace, monospace; font-size: .9em; padding: .1em .35em; border-radius: 4px; background: var(--tl-input, rgb(0 0 0 / .12)); }
 .db-prose pre { margin: .6em 0; padding: .7em .9em; overflow-x: auto; border-radius: 6px; background: var(--tl-input, rgb(0 0 0 / .12)); }
 .db-prose pre code { padding: 0; background: none; }
+
+/* «Copia» sui blocchi di codice di note e commenti (task 367) */
+.db-prose pre.db-copy-host { position: relative; padding-top: 1.9em; }
+.db-copy {
+    position: absolute; top: .35em; right: .35em;
+    display: inline-flex; align-items: center; gap: .3em;
+    padding: .15em .5em;
+    font-size: .72em; font-family: inherit; line-height: 1.4;
+    color: inherit; cursor: pointer;
+    border: 1px solid var(--tl-bcol, currentColor); border-radius: 4px;
+    background: var(--tl-card, rgb(255 255 255 / .08));
+    opacity: .55; transition: opacity .15s, background .15s;
+}
+.db-copy:hover, .db-copy:focus-visible { opacity: 1; background: var(--tl-chrome-hover, rgb(255 255 255 / .16)); }
+.db-copy.is-copied { opacity: 1; color: var(--tl-accent, #16a34a); border-color: var(--tl-accent, #16a34a); }
+.db-copy.is-failed { opacity: 1; color: #ef4444; border-color: #ef4444; }
+.db-prose code.is-copied { outline: 1px solid var(--tl-accent, #16a34a); }
+.db-prose code.is-failed { outline: 1px solid #ef4444; }
+.db-prose > p code, .db-prose li code { cursor: copy; }
 .db-prose ul, .db-prose ol { margin: .5em 0; padding-left: 1.4em; }
 .db-prose ul { list-style: disc; } .db-prose ol { list-style: decimal; }
 .db-prose li { margin: .2em 0; }

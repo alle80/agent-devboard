@@ -40,4 +40,11 @@ class AssetsTest extends TestCase
         $this->assertStringContainsString('.tl-card', $css);
         $this->assertStringContainsString('.setting-switch', $css);
     }
+
+    public function test_the_labels_of_the_copy_button_reach_the_browser(): void
+    {
+        // The copy button on code blocks is drawn by JS: its labels come from the translations (task 367).
+        $this->actingAsUser();
+        $this->get('/')->assertOk()->assertSee('GRIGLIA_I18N', false)->assertSee('"copied"', false);
+    }
 }
