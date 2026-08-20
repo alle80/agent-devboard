@@ -1,0 +1,17 @@
+/* Griglia — small brand tweaks on top of Material for MkDocs. */
+
+:root {
+  --md-primary-fg-color: #16a34a;
+  --md-primary-fg-color--light: #22c55e;
+  --md-primary-fg-color--dark: #15803d;
+  --md-accent-fg-color: #16a34a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #22c55e;
+  --md-accent-fg-color: #4ade80;
+}
+
+/* State dots and numbers read better aligned in the tables of the docs. */
+.md-typeset table td:first-child { white-space: nowrap; }
+.md-typeset table { font-variant-numeric: tabular-nums; }

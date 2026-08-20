@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs
+- **Site structure.** The documentation is now organised in folders (getting started, board, agent,
+  features, configuration, reference, operations, contributing) with new pages — quickstart, front-end
+  assets, AI features, access & modes, artisan commands, events, upgrading, troubleshooting,
+  contributing — and an `mkdocs.yml` ready to publish on GitHub Pages (`site_url`, theme overrides,
+  tabbed/details extensions). `mkdocs build --strict` is green.
+
 ## [0.45.0] - 2026-08-20
 
 ### Changed

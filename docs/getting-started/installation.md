@@ -35,7 +35,7 @@ import '../../vendor/alle80/griglia/resources/js/griglia.js';
 or use the precompiled build: `GRIGLIA_ASSETS=precompiled` + `php artisan vendor:publish --tag=griglia-assets`.
 
 Routes are registered under `griglia.route_prefix` (default: site root — `/`, `/settings`, `/stats`, …) and
-protected by the package itself according to the [mode](configuration.md#modes).
+protected by the package itself according to the [mode](../configuration/access.md#modes).
 
 ## Live updates (optional)
 
@@ -53,4 +53,4 @@ Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; user
 ## First user and administrators
 
 Registration is up to your app. By default the **first registered user** is the board administrator (settings,
-agent context, theme packs); see [Security](security.md) for `GRIGLIA_ADMINS`, `canManageDevboard()` or a Gate.
+agent context, theme packs); see [Security](../operations/security.md) for `GRIGLIA_ADMINS`, `canManageDevboard()` or a Gate.

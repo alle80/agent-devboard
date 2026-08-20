@@ -14,10 +14,13 @@ prompt, statistics, an agent-context manager and a theme system.
 
 ## Where to go next
 
-- [Installation](installation.md) — requirements, composer, migrations, assets, Reverb.
-- [Using the board](usage.md) — lists, states, modal, filters, mobile.
-- [The agent side](agent.md) — the CLI contract and the rules the agent follows.
-- [Plans](plans.md), [Notifications](notifications.md), [Agent context](context.md), [Skills](skills.md),
-  [Statistics & agents status](stats.md), [Themes](themes.md).
-- [Configuration & settings](configuration.md), [Security](security.md), [Development](development.md),
-  [Building this site](docs-site.md).
+- [Installation](getting-started/installation.md) — requirements, composer, migrations, assets.
+- [Quickstart](getting-started/quickstart.md) — from an empty board to the first task worked by an agent.
+- [Using the board](board/usage.md) — lists, states, modal, filters, mobile.
+- [The agent side](agent/index.md) — the CLI contract and the rules the agent follows.
+- [Plans](features/plans.md), [Notifications](features/notifications.md), [Themes](features/themes.md),
+  [AI features](features/ai.md).
+- [Configuration](configuration/index.md), [Access & modes](configuration/access.md),
+  [Command reference](reference/commands.md).
+- [Security](operations/security.md), [Troubleshooting](operations/troubleshooting.md),
+  [Contributing](contributing/contributing.md).

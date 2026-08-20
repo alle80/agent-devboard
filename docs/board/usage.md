@@ -3,7 +3,7 @@
 ## Lists
 
 The lists menu (top left) switches between your lists, creates new ones (optionally **as a plan**, see
-[Plans](plans.md)), renames or deletes them. The **agent list** (config `agent_list`) is the channel with the
+[Plans](../features/plans.md)), renames or deletes them. The **agent list** (config `agent_list`) is the channel with the
 coding agent; any other list is yours (or a plan).
 
 ## Tasks and states
@@ -32,7 +32,7 @@ sub-tasks (Markdown, sortable), questions/answers, resume-from context. Header: 
 ## Toolbar
 
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state filters, archive.
-On a plan list the **Plan** bar shows progress and ▶ / ⏸ (see [Plans](plans.md)).
+On a plan list the **Plan** bar shows progress and ▶ / ⏸ (see [Plans](../features/plans.md)).
 
 ## Mobile
 

@@ -1,58 +1,113 @@
 site_name: Griglia
-site_description: A Livewire dev board to queue and drive coding-agent work
-site_url: https://github.com/alle80/griglia
+site_description: A Livewire dev board where you queue work for a coding agent and follow it live
+site_author: Alessandro (alle80)
+site_url: https://alle80.github.io/griglia/
 repo_url: https://github.com/alle80/griglia
 repo_name: alle80/griglia
+edit_uri: edit/master/docs/
+copyright: MIT — Alessandro (alle80)
 docs_dir: docs
 site_dir: site
 
 theme:
   name: material
+  custom_dir: overrides
+  language: en
   logo: images/logo.svg
   favicon: images/favicon.png
+  icon:
+    repo: fontawesome/brands/github
   features:
     - navigation.instant
     - navigation.tracking
     - navigation.sections
+    - navigation.indexes
     - navigation.top
+    - navigation.footer
+    - toc.follow
     - search.suggest
+    - search.highlight
     - content.code.copy
+    - content.code.annotate
+    - content.action.edit
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: green
       accent: green
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: green
       accent: green
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
 
+extra_css:
+  - stylesheets/griglia.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/alle80/griglia
+      name: Griglia on GitHub
+    - icon: fontawesome/brands/php
+      link: https://packagist.org/packages/alle80/griglia
+      name: Griglia on Packagist
+
+plugins:
+  - search
+
 markdown_extensions:
+  - abbr
   - admonition
+  - attr_list
+  - def_list
+  - md_in_html
   - tables
   - toc:
       permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
   - pymdownx.superfences
-  - pymdownx.highlight
+  - pymdownx.tabbed:
+      alternate_style: true
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Using the board: usage.md
-  - The agent side: agent.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Front-end assets: getting-started/assets.md
+  - Using the board: board/usage.md
+  - The agent side:
+      - agent/index.md
+      - Skills: agent/skills.md
+      - Agent context: agent/context.md
+      - Statistics & agents status: agent/stats.md
   - Features:
-      - Plans: plans.md
-      - Notifications: notifications.md
-      - Agent context: context.md
-      - Skills: skills.md
-      - Statistics & agents status: stats.md
-      - Themes: themes.md
-  - Configuration & settings: configuration.md
-  - Config inventory: config-and-settings.md
-  - Security: security.md
-  - Development: development.md
-  - Building this site: docs-site.md
+      - Plans: features/plans.md
+      - Notifications: features/notifications.md
+      - Themes: features/themes.md
+      - AI features: features/ai.md
+  - Configuration:
+      - configuration/index.md
+      - Access, administrators and modes: configuration/access.md
+  - Reference:
+      - Artisan commands: reference/commands.md
+      - Events and broadcasting: reference/events.md
+      - Config & settings inventory: reference/config-and-settings.md
+  - Operations:
+      - Security: operations/security.md
+      - Upgrading: operations/upgrading.md
+      - Troubleshooting: operations/troubleshooting.md
+  - Contributing:
+      - Contributing: contributing/contributing.md
+      - Development: contributing/development.md
+      - Building this site: contributing/docs-site.md
