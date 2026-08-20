@@ -11,8 +11,8 @@ php artisan griglia:context status
 
 Each group and block has a switch; blocks can be multi-selected and enabled/disabled together, edited (Markdown
 editor), added, deleted and reordered; a token estimate is shown. On the host, a small script writes the export
-back to the instruction files (see `scripts/sync-context.py` in the origin repository — CLAUDE.md and AGENTS.md,
-cron every minute). Token-saving switches live in Settings → Optimization.
+back to the instruction files: `scripts/sync-context.py`, shipped with the package (see [the scripts](scripts.md)
+— CLAUDE.md and AGENTS.md, cron every minute). Token-saving switches live in Settings → Optimization.
 
 ## Keeping the original files
 

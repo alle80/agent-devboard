@@ -27,6 +27,7 @@ Optional, when you want them:
 php artisan vendor:publish --tag=griglia-config     # config/griglia.php
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding agent
 php artisan vendor:publish --tag=griglia-assets     # re-publish the assets by hand
+php artisan vendor:publish --tag=griglia-scripts    # host helpers → scripts/ (see docs/agent/scripts.md)
 ```
 
 !!! note "Why `-W`"

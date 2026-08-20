@@ -1,0 +1,16 @@
+[
+ {"name": "frontend-design", "description": "Direzione estetica quando si crea o rifà una UI (Anthropic).", "source": "plugin frontend-design"},
+ {"name": "code-review", "description": "Revisione del diff corrente (bug di correttezza, semplificazioni, efficienza).", "source": "built-in"},
+ {"name": "simplify", "description": "Rivede il codice modificato per riuso/semplificazione/efficienza e applica le correzioni.", "source": "built-in"},
+ {"name": "security-review", "description": "Revisione di sicurezza delle modifiche pendenti sul branch.", "source": "built-in"},
+ {"name": "run", "description": "Avvia l'app e verifica una modifica nel prodotto reale (non solo test).", "source": "built-in"},
+ {"name": "design", "description": "Canvas di design multi-artboard (mockup UI, landing, poster) come artifact.", "source": "built-in"},
+ {"name": "dataviz", "description": "Grafici, dashboard e visualizzazioni dati coerenti e accessibili.", "source": "built-in"},
+ {"name": "artifact-design", "description": "Linee guida di design per gli artifact (report/pagine pubblicate).", "source": "built-in"},
+ {"name": "artifact-diagramming", "description": "Diagrammi SVG negli artifact.", "source": "built-in"},
+ {"name": "claude-api", "description": "Riferimento API Claude / Anthropic SDK (modelli, prezzi, streaming, tool use).", "source": "built-in"},
+ {"name": "claude-in-chrome", "description": "Automazione del browser Chrome (click, form, screenshot, console).", "source": "built-in"},
+ {"name": "update-config", "description": "Configura Claude Code via settings.json (hook, permessi, env).", "source": "built-in"},
+ {"name": "schedule", "description": "Agenti cloud schedulati (routine cron).", "source": "built-in"},
+ {"name": "loop", "description": "Esegue un prompt/comando a intervalli ricorrenti.", "source": "built-in"}
+]

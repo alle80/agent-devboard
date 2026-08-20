@@ -94,6 +94,7 @@ nav:
       - Skills: agent/skills.md
       - Agent context: agent/context.md
       - Statistics & agents status: agent/stats.md
+      - Host scripts: agent/scripts.md
   - Features:
       - features/index.md
       - Plans: features/plans.md

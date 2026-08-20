@@ -38,4 +38,4 @@ offered on a task are filtered the same way: only the ones its agent has install
 
 - [Quickstart](../getting-started/quickstart.md) — the same flow, step by step.
 - [Artisan commands](../reference/commands.md) — every command and option, generated from the code.
-- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md)
+- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md) · [Host scripts](scripts.md)

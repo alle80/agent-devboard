@@ -7,8 +7,17 @@ php artisan griglia:skills-import --file=skills.json   # or JSON on stdin: [{nam
 ```
 
 The task modal shows it as an accordion (with live search); the skills you tick for a task are printed by
-`griglia:check` (`skills to activate for this task: …`) so the agent invokes them. The origin repository ships
-`scripts/sync-skills.py` which reads Claude Code, Codex and Gemini skill folders.
+`griglia:check` (`skills to activate for this task: …`) so the agent invokes them. You do not have to write the
+JSON: the package ships `sync-skills.py`, which reads the Claude Code, Codex and Gemini skill folders of the
+machine the agent runs on and imports them.
+
+```bash
+php artisan vendor:publish --tag=griglia-scripts   # → scripts/ in your project
+scripts/sync-skills.py                             # host: reads the folders and imports (--print to just look)
+```
+
+These helpers run **on the host**, not in the container: they read files that only exist there (skills, agent
+credentials, transcripts). See [the scripts](scripts.md).
 
 ## One catalogue, several agents
 

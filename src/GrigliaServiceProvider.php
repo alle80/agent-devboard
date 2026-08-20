@@ -63,6 +63,9 @@ class GrigliaServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../AGENTS.md' => base_path('AGENTS.md')], 'griglia-agents');
             $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/griglia')], 'griglia-views');
             $this->publishes([__DIR__.'/../resources/lang' => $this->app->langPath('vendor/griglia')], 'griglia-lang');
+            // The host-side helpers (they run on the machine where the agent runs, not in the container):
+            // skills catalogue, agent context, token stats, agent status — see docs/agent/*.md
+            $this->publishes([__DIR__.'/../scripts' => base_path('scripts')], 'griglia-scripts');
             // Also under Laravel's own tag: a default app republishes `laravel-assets` after every
             // composer update, so the precompiled build stays in sync without anyone remembering.
             $this->publishes([__DIR__.'/../public' => public_path('vendor/griglia')], ['griglia-assets', 'laravel-assets']);

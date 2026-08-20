@@ -163,8 +163,9 @@ php artisan griglia:context import --file=CLAUDE.md   # file → groups/blocks
 php artisan griglia:context export                    # enabled blocks → stdout
 ```
 
-Write the export back to your instruction files from the host (see `scripts/sync-context.py` in the origin
-repo, which also keeps the originals and restores them when the sync is switched off).
+Write the export back to your instruction files from the host with the shipped `scripts/sync-context.py`
+(`vendor:publish --tag=griglia-scripts`), which also keeps the originals and restores them when the sync is
+switched off.
 
 ### Access, administrators and modes
 
@@ -221,7 +222,7 @@ php artisan griglia:skills-import --file=skills.json   # or JSON on stdin
 php artisan griglia:agent-status-import --file=snapshot.json
 ```
 
-(see `scripts/agent-status.py` in the origin repo for Claude Code — credentials never leave the host).
+(the shipped `scripts/agent-status.py` does it for Claude Code — credentials never leave the host).
 
 ### Configuration vs settings
 
@@ -273,6 +274,7 @@ sources: `cd vendor/alle80/griglia && npm install && npm run build`.
 php artisan vendor:publish --tag=griglia-config     # config/griglia.php
 php artisan vendor:publish --tag=griglia-views      # override the Blade views
 php artisan vendor:publish --tag=griglia-lang       # translations (en, it)
+php artisan vendor:publish --tag=griglia-scripts    # host helpers → scripts/ (skills, context, tokens, status)
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md (agent workflow)
 ```
 

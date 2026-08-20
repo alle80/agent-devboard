@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.62.0] - 2026-08-20
+
+### Added
+- **The host helpers ship with the package.** `sync-skills.py`, `sync-context.py`, `claude-tokens.py` and
+  `agent-status.py` — the scripts that fill the skill catalogue, write the agent context back to CLAUDE.md /
+  AGENTS.md, count the tokens of a task and read the agent's plan — used to live only in the origin repository,
+  so the docs kept pointing at a repo you do not have. They are now part of the package and land in your project
+  with `php artisan vendor:publish --tag=griglia-scripts`; they find the project root on their own (or take it
+  from `GRIGLIA_PROJECT_ROOT`), so they also work run straight from `vendor/alle80/griglia/scripts`.
+  New documentation page: «Host scripts».
+
 ## [0.61.0] - 2026-08-20
 
 ### Changed
