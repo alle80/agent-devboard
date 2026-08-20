@@ -1,26 +1,128 @@
-/* Griglia — small brand tweaks on top of Material for MkDocs. */
+/* Griglia — the site wears the board's own skin (Slate): dark greens, JetBrains Mono,
+   cards with a thin green border. The tokens below are the ones of `.theme-slate` in
+   resources/css/griglia.css, plus a light counterpart built on the brand ink and green. */
 
 :root {
-  --md-primary-fg-color: #16a34a;
-  --md-primary-fg-color--light: #22c55e;
-  --md-primary-fg-color--dark: #15803d;
-  --md-accent-fg-color: #16a34a;
+  --gr-green: #16a34a;
+  --gr-green-bright: #33d17a;
+  --gr-ink: #0f1720;
+
+  --md-primary-fg-color: #0d120d;
+  --md-primary-fg-color--light: #16351f;
+  --md-primary-fg-color--dark: #05130a;
+  --md-primary-bg-color: #e6f5ec;
+  --md-primary-bg-color--light: #b9dcc8;
+
+  --md-accent-fg-color: var(--gr-green);
+  --md-accent-fg-color--transparent: rgb(22 163 74 / 0.1);
+  --md-typeset-a-color: var(--gr-green);
+
+  /* the board's card look, on light paper */
+  --gr-card-bg: #ffffff;
+  --gr-card-border: rgb(22 163 74 / 0.28);
+  --gr-radius: 6px;
+  --gr-code-bg: #f2f7f3;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #22c55e;
-  --md-accent-fg-color: #4ade80;
+  --md-default-bg-color: #0d120d;
+  --md-default-fg-color: #cfe8d8;
+  --md-default-fg-color--light: #9dc4ad;
+  --md-default-fg-color--lighter: rgb(51 209 122 / 0.45);
+  --md-default-fg-color--lightest: rgb(51 209 122 / 0.15);
+
+  --md-primary-fg-color: #101c14;
+  --md-primary-bg-color: var(--gr-green-bright);
+
+  --md-accent-fg-color: var(--gr-green-bright);
+  --md-accent-fg-color--transparent: rgb(51 209 122 / 0.12);
+  --md-typeset-a-color: var(--gr-green-bright);
+
+  --md-code-bg-color: #05130a;
+  --md-code-fg-color: #b9e8cd;
+  --md-footer-bg-color: #0c150f;
+  --md-footer-bg-color--dark: #05130a;
+
+  --gr-card-bg: rgb(20 30 20 / 0.7);
+  --gr-card-border: #2c5c3f;
+  --gr-code-bg: #05130a;
 }
 
-/* State dots and numbers read better aligned in the tables of the docs. */
+/* Headings: the display face of the board, in its green. */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--gr-ink);
+}
+[data-md-color-scheme="slate"] .md-typeset h1,
+[data-md-color-scheme="slate"] .md-typeset h2,
+[data-md-color-scheme="slate"] .md-typeset h3 {
+  color: var(--gr-green-bright);
+}
+.md-typeset h2 { border-bottom: 1px solid var(--gr-card-border); padding-bottom: 0.3rem; }
+
+/* Prose in a monospaced face needs a little more air than the default. */
+.md-typeset { font-size: 0.76rem; line-height: 1.75; }
+.md-typeset code { border-radius: 4px; background: var(--gr-code-bg); }
+.md-typeset pre > code { border: 1px solid var(--gr-card-border); border-radius: var(--gr-radius); }
+
+/* Header and footer: the chrome of the board. */
+.md-header, .md-tabs { background: var(--md-primary-fg-color); }
+.md-header { border-bottom: 1px solid var(--gr-card-border); box-shadow: none; }
+.md-footer-meta { border-top: 1px solid var(--gr-card-border); }
+
+/* Tables like the board's lists: a quiet head bar, thin separators. */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--gr-card-border);
+  border-radius: var(--gr-radius);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset table:not([class]) th {
+  background: color-mix(in srgb, var(--md-accent-fg-color) 12%, transparent);
+  font-weight: 700;
+}
 .md-typeset table td:first-child { white-space: nowrap; }
-.md-typeset table { font-variant-numeric: tabular-nums; }
+
+/* Cards and admonitions: the tl-card look — thin green border, small radius. */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--gr-card-bg);
+  border: 1px solid var(--gr-card-border);
+  border-radius: var(--gr-radius);
+  box-shadow: none;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: none;
+}
+
+/* Buttons like tl-btn: square-ish, bordered, accent when primary. */
+.md-typeset .md-button {
+  border-radius: var(--gr-radius);
+  border-width: 1px;
+  font-weight: 700;
+}
+.md-typeset .md-button--primary {
+  background: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  color: #04180c;
+}
+
+/* Search and navigation keep the same green language. */
+.md-nav__link--active, .md-nav__link:focus, .md-nav__link:hover { color: var(--md-accent-fg-color); }
+.md-search__form { border-radius: var(--gr-radius); }
 
 /* ---- Landing hero (overrides/home.html) ------------------------------- */
 
 .gr-hero {
-  background: linear-gradient(160deg, #0f1720 0%, #14532d 55%, #166534 100%);
-  color: #e6edf3;
+  background:
+    radial-gradient(120% 120% at 15% 0%, rgb(51 209 122 / 0.18) 0%, transparent 55%),
+    linear-gradient(165deg, #0d120d 0%, #10221a 60%, #05130a 100%);
+  color: #cfe8d8;
+  border-bottom: 1px solid #2c5c3f;
   padding: 3.2rem 0 3.6rem;
 }
 
@@ -33,25 +135,22 @@
   padding: 0 .8rem;
 }
 
-.gr-hero__logo {
-  width: min(320px, 72vw);
-  height: auto;
-}
+.gr-hero__logo { width: min(320px, 72vw); height: auto; }
 
 .gr-hero__title {
   margin: 0;
   font-size: 1.9rem;
   font-weight: 700;
   line-height: 1.15;
-  color: #fff;
+  color: var(--gr-green-bright);
 }
 
 .gr-hero__text {
   margin: 0;
   max-width: 46rem;
-  font-size: .95rem;
-  line-height: 1.6;
-  color: #cfe3d5;
+  font-size: .8rem;
+  line-height: 1.7;
+  color: #b9dcc8;
 }
 
 .gr-hero__actions {
@@ -63,35 +162,36 @@
 }
 
 .gr-hero .md-button {
-  color: #e6edf3;
-  border-color: #e6edf3;
+  /* Material styles .md-button only inside .md-typeset: the hero needs the whole rule. */
+  display: inline-block;
+  padding: .55rem 1.4rem;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.4;
+  border: 1px solid var(--gr-green-bright);
+  border-radius: var(--gr-radius);
+  color: var(--gr-green-bright);
+  text-decoration: none;
+  transition: background .2s, color .2s;
 }
 
-.gr-hero .md-button--primary {
-  background: #22c55e;
-  border-color: #22c55e;
-  color: #08120b;
-}
-
+.gr-hero .md-button--primary,
 .gr-hero .md-button:hover {
-  background: #22c55e;
-  border-color: #22c55e;
-  color: #08120b;
+  background: var(--gr-green-bright);
+  border-color: var(--gr-green-bright);
+  color: #04180c;
 }
 
 .gr-hero__meta {
   margin: .3rem 0 0;
-  font-size: .72rem;
-  letter-spacing: .04em;
+  font-size: .62rem;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: #9fc2ac;
+  color: #7fae94;
 }
 
 @media screen and (min-width: 60em) {
   .gr-hero { padding: 4.2rem 0 4.6rem; }
   .gr-hero__title { font-size: 2.4rem; }
-  .gr-hero__text { font-size: 1rem; }
+  .gr-hero__text { font-size: .85rem; }
 }
-
-/* Cards on the landing page keep the same rhythm in both schemes. */
-.md-typeset .grid.cards > ul > li { border-radius: .5rem; }

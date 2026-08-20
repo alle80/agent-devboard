@@ -6,7 +6,7 @@ hide:
   - toc
 ---
 
-## What it is
+# What Griglia is
 
 **Griglia** is a Laravel + Livewire board you install in your own app. One list is the channel with your
 coding agent: you write requests as tasks, mark them **open to work**, and the agent — Claude Code, Codex

@@ -13,6 +13,9 @@ theme:
   name: material
   custom_dir: overrides
   language: en
+  font:
+    text: JetBrains Mono
+    code: JetBrains Mono
   logo: images/logo.svg
   favicon: images/favicon.png
   icon:
@@ -33,15 +36,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: green
-      accent: green
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: green
-      accent: green
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode

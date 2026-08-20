@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs
+- **The site wears the board's own skin.** JetBrains Mono everywhere, the Slate palette (deep green
+  background, `#33d17a` for headings and links, thin green borders with the 6px radius of the cards) in
+  dark, its light counterpart on paper, and the header/footer in the colour of the board's chrome. The
+  landing hero and the feature cards follow the same tokens.
+
 ## [0.50.0] - 2026-08-20
 
 ### Added
