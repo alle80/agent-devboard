@@ -1,14 +1,14 @@
-# Agent Devboard
+# Griglia
 
-**Agent Devboard** is a Laravel + Livewire board that lets you queue work for a coding agent (Claude Code, Codex CLI,
+**Griglia** is a Laravel + Livewire board that lets you queue work for a coding agent (Claude Code, Codex CLI,
 Gemini CLI, …) and follow it in real time: lists of tasks with notes, sub-tasks, images and questions; a small CLI
-contract (`devboard:check` / `devboard:watch`) the agent drives; live updates, notifications, plans built from a
+contract (`griglia:check` / `griglia:watch`) the agent drives; live updates, notifications, plans built from a
 prompt, statistics, an agent-context manager and a theme system.
 
 ## How it works in one minute
 
 1. You write requests as tasks in the **agent list** (default name `dev`) and mark them **open to work** 🟢.
-2. The agent runs `php artisan devboard:watch` (events) and `devboard:check` (what to do), takes a task (🔧),
+2. The agent runs `php artisan griglia:watch` (events) and `griglia:check` (what to do), takes a task (🔧),
    asks questions (❓) when needed, updates progress/phase, and closes it with a comment (✔).
 3. The board shows everything live (Reverb/Echo), notifies you (bell, Web Push, mail) and keeps statistics.
 

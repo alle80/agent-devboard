@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Tests;
+namespace Alle80\Griglia\Tests;
 
-use Alle80\Devboard\Tests\Support\User;
-use Alle80\Devboard\DevboardServiceProvider;
+use Alle80\Griglia\Tests\Support\User;
+use Alle80\Griglia\GrigliaServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -16,7 +16,7 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-        \Alle80\Devboard\Mode::reset(); // static cache must not leak between tests
+        \Alle80\Griglia\Mode::reset(); // static cache must not leak between tests
         $this->withoutVite();
 
         // Users table of the host app + package migrations (tables + settings defaults)
@@ -27,7 +27,7 @@ abstract class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
-        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, \NotificationChannels\WebPush\WebPushServiceProvider::class, DevboardServiceProvider::class];
+        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, \NotificationChannels\WebPush\WebPushServiceProvider::class, GrigliaServiceProvider::class];
     }
 
     protected function defineEnvironment($app): void
@@ -36,8 +36,8 @@ abstract class TestCase extends Orchestra
         $app['config']->set('database.connections.testing', ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '', 'foreign_key_constraints' => true]);
         $app['config']->set('app.key', 'base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10=');
         $app['config']->set('auth.providers.users.model', User::class);
-        $app['config']->set('devboard.user_model', User::class);
-        $app['config']->set('devboard.agent_list', 'dev');
+        $app['config']->set('griglia.user_model', User::class);
+        $app['config']->set('griglia.agent_list', 'dev');
         $app['config']->set('webpush.database_connection', 'testing');
         $app['config']->set('filesystems.disks.public', ['driver' => 'local', 'root' => storage_path('framework/testing/public'), 'url' => 'http://localhost/storage']);
     }

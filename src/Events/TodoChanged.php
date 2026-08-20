@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Events;
+namespace Alle80\Griglia\Events;
 
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 /**
  * Qualcosa è cambiato in un todo (stato, titolo, sotto-task…): lo si dice via
  * Reverb al proprietario della lista, così le pagine aperte (desktop, telefono)
- * si aggiornano senza ricaricare. Vedi Alle80\Devboard\Support\Live.
+ * si aggiornano senza ricaricare. Vedi Alle80\Griglia\Support\Live.
  */
 class TodoChanged implements ShouldBroadcastNow
 {
@@ -44,11 +44,11 @@ class TodoChanged implements ShouldBroadcastNow
 
     public function broadcastOn(): PrivateChannel|Channel
     {
-        if (\Alle80\Devboard\Mode::isLocal()) {
-            return new Channel(\Alle80\Devboard\Mode::broadcastChannel());
+        if (\Alle80\Griglia\Mode::isLocal()) {
+            return new Channel(\Alle80\Griglia\Mode::broadcastChannel());
         }
 
-        return new PrivateChannel(\Alle80\Devboard\Mode::broadcastChannel($this->userId));
+        return new PrivateChannel(\Alle80\Griglia\Mode::broadcastChannel($this->userId));
     }
 
     public function broadcastAs(): string

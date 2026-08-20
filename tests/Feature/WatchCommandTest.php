@@ -1,16 +1,16 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Console\Watch;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Console\Watch;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Tests\TestCase;
 
 class WatchCommandTest extends TestCase
 {
     public function test_warns_on_unknown_list(): void
     {
-        $this->artisan('devboard:watch', ['--once' => true, '--list' => 'nope'])
+        $this->artisan('griglia:watch', ['--once' => true, '--list' => 'nope'])
             ->expectsOutputToContain('No list named')
             ->assertFailed();
     }
@@ -20,7 +20,7 @@ class WatchCommandTest extends TestCase
         $user = $this->actingAsUser();
         Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
 
-        $this->artisan('devboard:watch', ['--once' => true])->assertSuccessful();
+        $this->artisan('griglia:watch', ['--once' => true])->assertSuccessful();
     }
 
     public function test_detects_open_to_work(): void

@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Events\TodoChanged;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Events\TodoChanged;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Event;
 
 class LiveEventTest extends TestCase
@@ -13,7 +13,7 @@ class LiveEventTest extends TestCase
     public function test_todo_changes_broadcast_to_the_owner_channel(): void
     {
         $user = $this->actingAsUser();
-        config(['broadcasting.default' => 'reverb', 'devboard.broadcast_channel' => 'App.Models.User.{id}']);
+        config(['broadcasting.default' => 'reverb', 'griglia.broadcast_channel' => 'App.Models.User.{id}']);
         Event::fake([TodoChanged::class]);
 
         $todo = Todo::create(['title' => 'T', 'order' => 1, 'checklist_id' => Checklist::currentId()]);

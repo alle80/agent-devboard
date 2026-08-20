@@ -1,15 +1,15 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Models\Attachment;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Ingredient;
-use Alle80\Devboard\Models\Question;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Support\ImageDescription;
-use Alle80\Devboard\Support\ImageStore;
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Models\Attachment;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Ingredient;
+use Alle80\Griglia\Models\Question;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Support\ImageDescription;
+use Alle80\Griglia\Support\ImageStore;
+use Alle80\Griglia\Themes;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -63,7 +63,7 @@ class IngredientModal extends Component
         $todo = $this->todo();
 
         if ($todo && $todo->completed) {
-            $this->dispatch('toast', message: __('devboard::t.msg.readonly'), type: 'info');
+            $this->dispatch('toast', message: __('griglia::t.msg.readonly'), type: 'info');
 
             return null;
         }
@@ -133,7 +133,7 @@ class IngredientModal extends Component
         $todo = $this->todo();
         if ($todo && $todo->completed && ! $todo->result_seen) {
             $todo->update(['result_seen' => true]);
-            \Alle80\Devboard\Support\Live::todoChanged($todo);
+            \Alle80\Griglia\Support\Live::todoChanged($todo);
         }
     }
 
@@ -193,9 +193,9 @@ class IngredientModal extends Component
             $this->validate([
                 'images.*' => ['image', 'mimes:jpeg,jpg,png,gif', 'max:20480'],
             ], [
-                'images.*.image' => __('devboard::t.msg.not_an_image'),
-                'images.*.mimes' => __('devboard::t.msg.image_formats'),
-                'images.*.max' => __('devboard::t.msg.image_too_big'),
+                'images.*.image' => __('griglia::t.msg.not_an_image'),
+                'images.*.mimes' => __('griglia::t.msg.image_formats'),
+                'images.*.max' => __('griglia::t.msg.image_too_big'),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->imageError = collect($e->errors())->flatten()->first();
@@ -226,7 +226,7 @@ class IngredientModal extends Component
         $this->dispatch('ingredients-updated');
 
         if ($saved > 0) {
-            $this->dispatch('toast', message: $saved === 1 ? __('devboard::t.msg.image_uploaded') : __('devboard::t.msg.images_uploaded', ['count' => $saved]));
+            $this->dispatch('toast', message: $saved === 1 ? __('griglia::t.msg.image_uploaded') : __('griglia::t.msg.images_uploaded', ['count' => $saved]));
         }
     }
 
@@ -239,7 +239,7 @@ class IngredientModal extends Component
         Attachment::where('todo_id', $this->todoId)->whereKey($attachmentId)->first()?->delete();
 
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.image_deleted'), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.msg.image_deleted'), type: 'info');
     }
 
     // ----- Domande dell'assistente -----
@@ -258,7 +258,7 @@ class IngredientModal extends Component
         $q->answer = $answer === '' ? null : $answer;
         $q->save();
 
-        $this->dispatch('toast', message: __($q->answer ? 'devboard::t.msg.answer_saved' : 'devboard::t.msg.answer_removed'), type: $q->answer ? 'success' : 'info');
+        $this->dispatch('toast', message: __($q->answer ? 'griglia::t.msg.answer_saved' : 'griglia::t.msg.answer_removed'), type: $q->answer ? 'success' : 'info');
     }
 
     /** Ultimo passo: tutte le domande hanno risposta → l'elemento torna "open to work". */
@@ -269,7 +269,7 @@ class IngredientModal extends Component
         }
 
         if ($todo->questions()->whereNull('answer')->exists()) {
-            $this->dispatch('toast', message: __('devboard::t.msg.answer_all_first'), type: 'error');
+            $this->dispatch('toast', message: __('griglia::t.msg.answer_all_first'), type: 'error');
 
             return;
         }
@@ -277,7 +277,7 @@ class IngredientModal extends Component
         $todo->update(['question' => false, 'open_to_work' => true, 'working' => false]);
 
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.restarted', ['title' => $todo->title]));
+        $this->dispatch('toast', message: __('griglia::t.msg.restarted', ['title' => $todo->title]));
     }
 
     /** «Riprendi» dal modale: la logica (posizione, scoping) sta in TodoList::resume. */
@@ -316,17 +316,17 @@ class IngredientModal extends Component
 
         if ($todo->working) {
             $todo->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
-            $this->dispatch('toast', message: __('devboard::t.msg.stopped', ['title' => $todo->title]), type: 'info');
+            $this->dispatch('toast', message: __('griglia::t.msg.stopped', ['title' => $todo->title]), type: 'info');
         } else {
             $todo->open_to_work = ! $todo->open_to_work;
             if ($todo->open_to_work) {
                 $todo->stopped_at = null;
             }
             $todo->save();
-            $this->dispatch('toast', message: __($todo->open_to_work ? 'devboard::t.msg.otw_on' : 'devboard::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
+            $this->dispatch('toast', message: __($todo->open_to_work ? 'griglia::t.msg.otw_on' : 'griglia::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
         }
 
-        \Alle80\Devboard\Support\Live::todoChanged($todo);
+        \Alle80\Griglia\Support\Live::todoChanged($todo);
         $this->dispatch('ingredients-updated');
     }
 
@@ -350,8 +350,8 @@ class IngredientModal extends Component
             $attrs['stopped_at'] = now();
         }
         $todo->update($attrs);
-        $this->dispatch('toast', message: __('devboard::t.msg.state_set', ['state' => __('devboard::t.state.'.$state), 'title' => $todo->title]), type: $state === 'done' ? 'success' : 'info');
-        \Alle80\Devboard\Support\Live::todoChanged($todo);
+        $this->dispatch('toast', message: __('griglia::t.msg.state_set', ['state' => __('griglia::t.state.'.$state), 'title' => $todo->title]), type: $state === 'done' ? 'success' : 'info');
+        \Alle80\Griglia\Support\Live::todoChanged($todo);
         $this->dispatch('ingredients-updated');
     }
 
@@ -363,7 +363,7 @@ class IngredientModal extends Component
             return;
         }
         $agent = trim($agent);
-        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Devboard\Agent::all())) {
+        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
             return;
         }
         $todo->update(['agent' => $agent ?: null]);
@@ -385,7 +385,7 @@ class IngredientModal extends Component
             Todo::where('checklist_id', $from)->whereNull('archived_at')->where('order', '>', $order)->decrement('order'); // close the gap
         }
         $target = Checklist::find($checklistId);
-        $this->dispatch('toast', message: __('devboard::t.msg.moved', ['title' => $todo->title, 'list' => $target?->name]));
+        $this->dispatch('toast', message: __('griglia::t.msg.moved', ['title' => $todo->title, 'list' => $target?->name]));
         $this->dispatch('ingredients-updated');
         $this->close();
     }
@@ -436,7 +436,7 @@ class IngredientModal extends Component
         }
 
         if (mb_strlen($title) > TodoList::titleMax()) {
-            $this->dispatch('toast', message: __('devboard::t.msg.title_too_long', ['max' => TodoList::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
+            $this->dispatch('toast', message: __('griglia::t.msg.title_too_long', ['max' => TodoList::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
 
             return;
         }
@@ -444,7 +444,7 @@ class IngredientModal extends Component
         $todo->update(['title' => $title]);
         $this->titleDraft = null;
         $this->dispatch('ingredients-updated'); // la lista mostra il nuovo titolo
-        $this->dispatch('toast', message: __('devboard::t.msg.renamed'));
+        $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
     }
 
     // ----- Nota -----
@@ -475,7 +475,7 @@ class IngredientModal extends Component
 
         $this->notesDraft = null;
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.note_saved'));
+        $this->dispatch('toast', message: __('griglia::t.msg.note_saved'));
     }
 
     // ----- Skills of the agent chosen for this task -----
@@ -488,7 +488,7 @@ class IngredientModal extends Component
         }
         $name = trim($name);
         $chosen = array_values((array) $todo->skills);
-        if (! in_array($name, $chosen, true) && ! isset(\Alle80\Devboard\Support\Skills::all()[$name])) {
+        if (! in_array($name, $chosen, true) && ! isset(\Alle80\Griglia\Support\Skills::all()[$name])) {
             return; // unknown skill
         }
         $chosen = in_array($name, $chosen, true) ? array_values(array_diff($chosen, [$name])) : [...$chosen, $name];
@@ -528,7 +528,7 @@ class IngredientModal extends Component
 
         $this->cancelEditIngredient();
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.subtask_renamed'));
+        $this->dispatch('toast', message: __('griglia::t.msg.subtask_renamed'));
     }
 
     public function addIngredient(): void
@@ -548,7 +548,7 @@ class IngredientModal extends Component
 
         $this->newIngredient = '';
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.subtask_added'));
+        $this->dispatch('toast', message: __('griglia::t.msg.subtask_added'));
     }
 
     /** @param array<int, int|string> $orderedIds Id dei sotto-task nell'ordine mostrato dopo il drag. */
@@ -572,7 +572,7 @@ class IngredientModal extends Component
         Ingredient::where('todo_id', $this->todoId)->whereKey($ingredientId)->first()?->delete();
 
         $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('devboard::t.msg.subtask_deleted'), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.msg.subtask_deleted'), type: 'info');
     }
 
     public function toggleIngredient(int $ingredientId): void
@@ -591,7 +591,7 @@ class IngredientModal extends Component
     public function render()
     {
         // Default view: the generic themed modal with the default theme (dedicated styles override render())
-        return view('devboard::livewire.ingredient-modal', $this->viewData() + ['t' => Themes::get(Themes::default())]);
+        return view('griglia::livewire.ingredient-modal', $this->viewData() + ['t' => Themes::get(Themes::default())]);
     }
 
     /** Dati comuni a tutte le viste del modale (base e stili dedicati). */
@@ -602,7 +602,7 @@ class IngredientModal extends Component
         return [
             'todo' => $todo,
             'readonly' => (bool) $todo?->completed,
-            'skills' => \Alle80\Devboard\Support\Skills::all(),
+            'skills' => \Alle80\Griglia\Support\Skills::all(),
             'otherLists' => $todo ? Checklist::mine()->whereKeyNot($todo->checklist_id)->orderBy('name')->get(['id', 'name']) : collect(),
         ];
     }

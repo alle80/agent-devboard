@@ -1,18 +1,18 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Http\Middleware\RememberStyle;
-use Alle80\Devboard\Models\ContextBlock;
-use Alle80\Devboard\Models\ContextGroup;
-use Alle80\Devboard\Support\Context;
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Models\ContextBlock;
+use Alle80\Griglia\Models\ContextGroup;
+use Alle80\Griglia\Support\Context;
+use Alle80\Griglia\Themes;
 use Livewire\Component;
 
 /**
  * /context — the agent's context (instructions file) as groups and blocks: switch a whole group or single
  * blocks, select many blocks and enable/disable them together, edit/add/delete/reorder blocks and groups.
- * What is enabled here is what `devboard:context export` returns (and the host script writes to the file).
+ * What is enabled here is what `griglia:context export` returns (and the host script writes to the file).
  */
 class ContextPage extends Component
 {
@@ -36,16 +36,16 @@ class ContextPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Devboard\Admin::check(), 403, 'Administrators only.');
+        abort_unless(\Alle80\Griglia\Admin::check(), 403, 'Administrators only.');
     }
 
     /** Switch «generate the instruction files from the board» (host sync honours it). */
     public function toggleSync(): void
     {
-        $s = app(\Alle80\Devboard\Settings\AppSettings::class);
+        $s = app(\Alle80\Griglia\Settings\AppSettings::class);
         $s->context_sync = ! $s->context_sync;
         $s->save();
-        $this->dispatch('toast', message: __($s->context_sync ? 'devboard::t.ctx.sync_on' : 'devboard::t.ctx.sync_off'), type: $s->context_sync ? 'success' : 'info');
+        $this->dispatch('toast', message: __($s->context_sync ? 'griglia::t.ctx.sync_on' : 'griglia::t.ctx.sync_off'), type: $s->context_sync ? 'success' : 'info');
     }
 
     // ----- Groups -----
@@ -187,12 +187,12 @@ class ContextPage extends Component
         $skin = Themes::settingsSkin($style);
         [$on, $total] = Context::tokens();
 
-        return view('devboard::livewire.context-page', [
+        return view('griglia::livewire.context-page', [
             'skin' => $skin,
             'groups' => ContextGroup::with('blocks')->orderBy('order')->orderBy('id')->get(),
             'tokensOn' => $on,
             'tokensTotal' => $total,
-            'syncOn' => (bool) app(\Alle80\Devboard\Settings\AppSettings::class)->context_sync,
-        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('devboard::t.ctx.title', ['agent' => \Alle80\Devboard\Agent::name()]));
+            'syncOn' => (bool) app(\Alle80\Griglia\Settings\AppSettings::class)->context_sync,
+        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('griglia::t.ctx.title', ['agent' => \Alle80\Griglia\Agent::name()]));
     }
 }

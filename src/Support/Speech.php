@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Settings\AppSettings;
 
 /**
  * Speech to text mode: 'browser' = Web Speech API in the browser (free, quality varies, phones restart

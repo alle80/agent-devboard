@@ -1,10 +1,10 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AppSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 

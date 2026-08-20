@@ -1,18 +1,18 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
- * `devboard:docs-build` — builds the package documentation (docs/ + mkdocs.yml, Material for MkDocs) into a
+ * `griglia:docs-build` — builds the package documentation (docs/ + mkdocs.yml, Material for MkDocs) into a
  * static HTML site. Uses the local `mkdocs` (or `python3 -m mkdocs`), or the official Docker image with --docker.
  */
 class DocsBuild extends Command
 {
-    protected $signature = 'devboard:docs-build
+    protected $signature = 'griglia:docs-build
         {--out= : Output directory (default: <package>/site)}
         {--serve : Run `mkdocs serve` (live preview) instead of building}
         {--docker : Use the squidfunk/mkdocs-material Docker image instead of a local mkdocs}

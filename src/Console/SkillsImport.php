@@ -1,17 +1,17 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Support\Skills;
+use Alle80\Griglia\Support\Skills;
 use Illuminate\Console\Command;
 
 /**
  * Imports the catalogue of the agent's skills (JSON list of {name, description, source}) from a file
- * or from stdin: `scripts/sync-skills.py | docker exec -i app php artisan devboard:skills-import`.
+ * or from stdin: `scripts/sync-skills.py | docker exec -i app php artisan griglia:skills-import`.
  */
 class SkillsImport extends Command
 {
-    protected $signature = 'devboard:skills-import {--file= : JSON file (default: stdin)}';
+    protected $signature = 'griglia:skills-import {--file= : JSON file (default: stdin)}';
 
     protected $description = 'Imports the list of skills the agent can use (shown in the task modal)';
 

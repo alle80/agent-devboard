@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Support\ImageStore;
-use Alle80\Devboard\Tests\Support\User;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Support\ImageStore;
+use Alle80\Griglia\Tests\Support\User;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +22,7 @@ class AttachmentsTest extends TestCase
 
         $a = ImageStore::store($todo, UploadedFile::fake()->image('ok.png', 40, 30));
         $this->assertSame(40, $a->width);
-        $this->assertStringContainsString('/devboard/attachments/'.$a->id, $a->url(), 'served by the authorised route');
+        $this->assertStringContainsString('/griglia/attachments/'.$a->id, $a->url(), 'served by the authorised route');
         $this->get($a->url())->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
 
         // another user cannot fetch it
@@ -43,7 +43,7 @@ class AttachmentsTest extends TestCase
         }
 
         // public disk url when the controller is disabled
-        config(['devboard.attachments_via_controller' => false]);
+        config(['griglia.attachments_via_controller' => false]);
         $this->assertStringContainsString('/storage/', $a->url());
     }
 }

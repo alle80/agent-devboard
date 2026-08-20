@@ -1,14 +1,14 @@
 <?php
 
-namespace Alle80\Devboard;
+namespace Alle80\Griglia;
 
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Settings\AppSettings;
 
 /**
  * Board mode: «server» (default) = authenticated users, each with their own lists, access optionally
- * restricted (see DevboardAccess); «local» = no authentication at all, one global set of lists (no
- * user), for a board running on the developer's machine. Chosen by config `devboard.mode`
- * (DEVBOARD_MODE) and overridable from /settings (AppSettings::$mode, '' = follow the config).
+ * restricted (see GrigliaAccess); «local» = no authentication at all, one global set of lists (no
+ * user), for a board running on the developer's machine. Chosen by config `griglia.mode`
+ * (GRIGLIA_MODE) and overridable from /settings (AppSettings::$mode, '' = follow the config).
  */
 class Mode
 {
@@ -33,7 +33,7 @@ class Mode
             $mode = ''; // a local override from the UI is only honoured where allowed
         }
         if (! in_array($mode, [self::LOCAL, self::SERVER], true)) {
-            $mode = (string) config('devboard.mode', self::SERVER);
+            $mode = (string) config('griglia.mode', self::SERVER);
         }
 
         return self::$resolved = ($mode === self::LOCAL ? self::LOCAL : self::SERVER);
@@ -47,7 +47,7 @@ class Mode
     /** May the UI switch the board to local mode? Only in the `local` environment or when explicitly allowed. */
     public static function localFromUiAllowed(): bool
     {
-        return (bool) config('devboard.allow_local_from_ui', false) || app()->environment('local');
+        return (bool) config('griglia.allow_local_from_ui', false) || app()->environment('local');
     }
 
     /** Forget the resolved value (settings changed, tests). */
@@ -60,10 +60,10 @@ class Mode
     public static function broadcastChannel(?int $userId = null): string
     {
         if (self::isLocal()) {
-            return (string) config('devboard.local_channel', 'devboard.local');
+            return (string) config('griglia.local_channel', 'griglia.local');
         }
 
-        return str_replace('{id}', (string) ($userId ?? auth()->id() ?? 0), (string) config('devboard.broadcast_channel', 'App.Models.User.{id}'));
+        return str_replace('{id}', (string) ($userId ?? auth()->id() ?? 0), (string) config('griglia.broadcast_channel', 'App.Models.User.{id}'));
     }
 
     /** Livewire listener key for the live event on the right channel. */
@@ -71,6 +71,6 @@ class Mode
     {
         return self::isLocal()
             ? 'echo:'.self::broadcastChannel().','.$event
-            : 'echo-private:'.str_replace('{id}', '{userId}', (string) config('devboard.broadcast_channel', 'App.Models.User.{id}')).','.$event;
+            : 'echo-private:'.str_replace('{id}', '{userId}', (string) config('griglia.broadcast_channel', 'App.Models.User.{id}')).','.$event;
     }
 }

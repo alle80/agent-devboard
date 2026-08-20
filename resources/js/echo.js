@@ -2,9 +2,9 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 // Reverb / Pusher-protocol WebSocket client for the live updates. Configuration comes from
-// window.DEVBOARD_ECHO (runtime, printed by <x-devboard::assets />) with a fallback on the Vite env
+// window.GRIGLIA_ECHO (runtime, printed by <x-griglia::assets />) with a fallback on the Vite env
 // of the host build. Livewire finds window.Echo and wires the #[On('echo-private:...')] listeners.
-const cfg = window.DEVBOARD_ECHO ?? {};
+const cfg = window.GRIGLIA_ECHO ?? {};
 const key = cfg.key ?? import.meta.env.VITE_REVERB_APP_KEY;
 const host = cfg.host ?? import.meta.env.VITE_REVERB_HOST;
 const port = Number(cfg.port ?? import.meta.env.VITE_REVERB_PORT ?? 443);

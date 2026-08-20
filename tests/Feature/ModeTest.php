@@ -1,13 +1,13 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\ChecklistSwitcher;
-use Alle80\Devboard\Mode;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Tests\Support\User;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\ChecklistSwitcher;
+use Alle80\Griglia\Mode;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Tests\Support\User;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -31,8 +31,8 @@ class ModeTest extends TestCase
         $this->get('/stats')->assertOk();
 
         // Gate ability from config
-        config(['devboard.access_gate' => 'access-devboard']);
-        Gate::define('access-devboard', fn ($user) => $user->email === 'boss@example.com');
+        config(['griglia.access_gate' => 'access-griglia']);
+        Gate::define('access-griglia', fn ($user) => $user->email === 'boss@example.com');
         $this->get('/stats')->assertForbidden();
         $this->actingAs(User::create(['name' => 'Boss', 'email' => 'boss@example.com', 'password' => bcrypt('x')]));
         $this->get('/stats')->assertOk();
@@ -46,12 +46,12 @@ class ModeTest extends TestCase
 
     public function test_access_middleware_is_persistent_on_livewire_updates(): void
     {
-        $this->assertContains(\Alle80\Devboard\Http\Middleware\DevboardAccess::class, \Livewire\Livewire::getPersistentMiddleware(), 'DevboardAccess replaces auth, so Livewire must re-apply it on /livewire/update');
+        $this->assertContains(\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Livewire\Livewire::getPersistentMiddleware(), 'GrigliaAccess replaces auth, so Livewire must re-apply it on /livewire/update');
     }
 
     public function test_local_mode_has_no_auth_and_global_lists(): void
     {
-        config(['devboard.mode' => 'local']);
+        config(['griglia.mode' => 'local']);
         Mode::reset();
         $this->assertTrue(Mode::isLocal());
 
@@ -68,8 +68,8 @@ class ModeTest extends TestCase
         Livewire::test(ChecklistSwitcher::class)->assertSee('of A');
 
         // public broadcast channel + listener
-        $this->assertSame('devboard.local', Mode::broadcastChannel());
-        $this->assertSame('echo:devboard.local,.TodoChanged', Mode::echoListener());
+        $this->assertSame('griglia.local', Mode::broadcastChannel());
+        $this->assertSame('echo:griglia.local,.TodoChanged', Mode::echoListener());
     }
 
     public function test_mode_setting_overrides_the_config_and_dashboard_tab_switch(): void
@@ -81,7 +81,7 @@ class ModeTest extends TestCase
         $app->save();
         Mode::reset();
         $this->assertFalse(Mode::isLocal(), 'a local override from the UI is ignored unless allowed');
-        config(['devboard.allow_local_from_ui' => true]);
+        config(['griglia.allow_local_from_ui' => true]);
         Mode::reset();
         $this->assertTrue(Mode::isLocal());
         auth()->logout();

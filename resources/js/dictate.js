@@ -1,10 +1,10 @@
-// alle80/agent-devboard — speech to text. Two modes, chosen by the server (window.DEVBOARD_SPEECH.mode):
-//  - 'server'  : record with MediaRecorder, upload to DEVBOARD_SPEECH.url, the AI SDK transcribes (best quality);
+// alle80/griglia — speech to text. Two modes, chosen by the server (window.GRIGLIA_SPEECH.mode):
+//  - 'server'  : record with MediaRecorder, upload to GRIGLIA_SPEECH.url, the AI SDK transcribes (best quality);
 //  - 'browser' : the browser's Web Speech API (free; phones restart the session at every pause, handled).
-// Alpine data used by <x-devboard::mic>: window.devboardMic(getTarget) → { supported, on, busy, toggle(), stop() }
+// Alpine data used by <x-griglia::mic>: window.grigliaMic(getTarget) → { supported, on, busy, toggle(), stop() }
 // Recognised text is appended to the target input/textarea and an `input` event is dispatched (wire:model).
 const SR = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
-const cfg = () => window.DEVBOARD_SPEECH || {};
+const cfg = () => window.GRIGLIA_SPEECH || {};
 const canRecord = () => typeof window !== 'undefined' && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
 
 function append(el, text) {
@@ -22,7 +22,7 @@ function pickMime() {
   return c.find((m) => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
 }
 
-window.devboardMic = function (getTarget, lang) {
+window.grigliaMic = function (getTarget, lang) {
   const serverMode = cfg().mode === 'server' && canRecord();
   return {
     supported: serverMode || !!SR,
@@ -68,7 +68,7 @@ window.devboardMic = function (getTarget, lang) {
             if (!r.ok || !j.ok) throw new Error(j.error || ('HTTP ' + r.status));
             append(el, j.text);
           } catch (e) {
-            console.error('devboard speech:', e);
+            console.error('griglia speech:', e);
             this.error = cfg().error || 'error';
             setTimeout(() => { this.error = ''; }, 4000);
           } finally {
@@ -80,7 +80,7 @@ window.devboardMic = function (getTarget, lang) {
         this.mr = mr;
         this.on = true;
       } catch (e) {
-        console.error('devboard speech:', e);
+        console.error('griglia speech:', e);
         this.on = false;
         this.error = cfg().error || 'error';
         setTimeout(() => { this.error = ''; }, 4000);

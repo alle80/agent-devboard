@@ -6,13 +6,13 @@
     <input
         type="text"
         wire:model="titleDraft"
-        maxlength="{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}"
+        maxlength="{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}"
         x-on:input="len = $event.target.value.length"
         wire:keydown.escape="cancelEdit"
         x-init="$el.focus(); $el.select()"
         class="{{ $inputClass }} w-full min-w-0 flex-1"
     >
-    <span class="shrink-0 text-xs tabular-nums opacity-60" x-text="len + '/{{ \Alle80\Devboard\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
-    <button type="submit" class="{{ $okClass }}" title="{{ __('devboard::t.save') }}" aria-label="{{ __('devboard::t.save') }}"><x-devboard::icon name="check" :stroke="2.5" /></button>
-    <button type="button" wire:click="cancelEdit" class="{{ $cancelClass }}" title="{{ __('devboard::t.cancel') }}" aria-label="{{ __('devboard::t.cancel') }}"><x-devboard::icon name="close" /></button>
+    <span class="shrink-0 text-xs tabular-nums opacity-60" x-text="len + '/{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
+    <button type="submit" class="{{ $okClass }}" title="{{ __('griglia::t.save') }}" aria-label="{{ __('griglia::t.save') }}"><x-griglia::icon name="check" :stroke="2.5" /></button>
+    <button type="button" wire:click="cancelEdit" class="{{ $cancelClass }}" title="{{ __('griglia::t.cancel') }}" aria-label="{{ __('griglia::t.cancel') }}"><x-griglia::icon name="close" /></button>
 </form>

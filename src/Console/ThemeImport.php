@@ -1,13 +1,13 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\ThemeStore;
+use Alle80\Griglia\ThemeStore;
 use Illuminate\Console\Command;
 
 class ThemeImport extends Command
 {
-    protected $signature = 'devboard:theme-import {zip : Path of the theme pack (zip)} {--uninstall= : Instead of importing, uninstall the theme with this slug}';
+    protected $signature = 'griglia:theme-import {zip : Path of the theme pack (zip)} {--uninstall= : Instead of importing, uninstall the theme with this slug}';
 
     protected $description = 'Installs (or uninstalls) a theme pack in storage/app/themes';
 
@@ -34,7 +34,7 @@ class ThemeImport extends Command
             return self::FAILURE;
         }
 
-        $this->info(sprintf('Installed theme «%s» (%s) → %s', $def['label'], $def['slug'], \Alle80\Devboard\Themes::url($def['slug'])));
+        $this->info(sprintf('Installed theme «%s» (%s) → %s', $def['label'], $def['slug'], \Alle80\Griglia\Themes::url($def['slug'])));
 
         return self::SUCCESS;
     }

@@ -7,14 +7,14 @@
 @if ($readonly)
     <div class="{{ $readonlyClass ?? 'text-sm font-bold opacity-80' }} modal-readonly flex flex-wrap items-center gap-x-3 gap-y-2" role="status">
         <span class="flex items-center gap-2">
-            <x-devboard::icon name="lock" />
-            <span>{{ __('devboard::t.readonly_notice') }}</span>
+            <x-griglia::icon name="lock" />
+            <span>{{ __('griglia::t.readonly_notice') }}</span>
         </span>
         <button
             type="button"
             wire:click="resumeTodo"
             class="cursor-pointer rounded border-2 border-current px-2 py-0.5 text-xs font-bold whitespace-nowrap transition hover:opacity-100"
-            title="{{ __('devboard::t.resume_with_changes_hint') }}"
-        >{{ __('devboard::t.resume_with_changes') }}</button>
+            title="{{ __('griglia::t.resume_with_changes_hint') }}"
+        >{{ __('griglia::t.resume_with_changes') }}</button>
     </div>
 @endif

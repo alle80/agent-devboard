@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Http\Middleware;
+namespace Alle80\Griglia\Http\Middleware;
 
-use Alle80\Devboard\Models\Checklist;
+use Alle80\Griglia\Models\Checklist;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -14,12 +14,12 @@ class OpenFromLink
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->isMethod('GET') && (auth()->check() || \Alle80\Devboard\Mode::isLocal())) {
+        if ($request->isMethod('GET') && (auth()->check() || \Alle80\Griglia\Mode::isLocal())) {
             if (($list = (int) $request->query('list')) && Checklist::mine()->whereKey($list)->exists()) {
                 session(['checklist_id' => $list]);
             }
             if ($open = (int) $request->query('open')) {
-                session(['devboard_open_todo' => $open]);
+                session(['griglia_open_todo' => $open]);
             }
         }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Themes;
 
 class ThemedIngredientModal extends IngredientModal
 {
@@ -10,7 +10,7 @@ class ThemedIngredientModal extends IngredientModal
 
     public function render()
     {
-        return view('devboard::livewire.ingredient-modal', $this->viewData() + [
+        return view('griglia::livewire.ingredient-modal', $this->viewData() + [
             't' => Themes::get($this->theme),
         ]);
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Models;
+namespace Alle80\Griglia\Models;
 
-use Alle80\Devboard\Support\Live;
+use Alle80\Griglia\Support\Live;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +18,7 @@ class Attachment extends Model
         static::deleted(fn ($m) => $m->todo && Live::todoChanged($m->todo));
 
         // Cancellando il record sparisce anche il file
-        static::deleted(fn (Attachment $a) => Storage::disk(config('devboard.attachments_disk', 'public'))->delete($a->path));
+        static::deleted(fn (Attachment $a) => Storage::disk(config('griglia.attachments_disk', 'public'))->delete($a->path));
     }
 
     public function todo(): BelongsTo
@@ -29,10 +29,10 @@ class Attachment extends Model
     /** URL of the image: the authorised controller route (default) or the disk's public URL. */
     public function url(): string
     {
-        if (config('devboard.attachments_via_controller', true) && \Illuminate\Support\Facades\Route::has('devboard.attachment')) {
-            return route('devboard.attachment', $this->id);
+        if (config('griglia.attachments_via_controller', true) && \Illuminate\Support\Facades\Route::has('griglia.attachment')) {
+            return route('griglia.attachment', $this->id);
         }
 
-        return Storage::disk(config('devboard.attachments_disk', 'public'))->url($this->path);
+        return Storage::disk(config('griglia.attachments_disk', 'public'))->url($this->path);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Models;
+namespace Alle80\Griglia\Models;
 
-use Alle80\Devboard\Support\Live;
+use Alle80\Griglia\Support\Live;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -115,7 +115,7 @@ class Todo extends Model
     /** Estimated cost from the price list in AppSettings (null when no prices or no tokens). */
     public function cost(): ?float
     {
-        return \Alle80\Devboard\Support\Stats::cost((int) $this->tokens_in, (int) $this->tokens_out);
+        return \Alle80\Griglia\Support\Stats::cost((int) $this->tokens_in, (int) $this->tokens_out);
     }
 
     /** One-line summary for CLI/UI: "⏱ 1h 12m · 🪙 1.2M in / 12k out". */

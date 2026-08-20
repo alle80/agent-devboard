@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Http\Controllers;
+namespace Alle80\Griglia\Http\Controllers;
 
-use Alle80\Devboard\ThemeStore;
+use Alle80\Griglia\ThemeStore;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** Serves the files of installed theme packs (CSS, images, fonts) from storage/app/themes. */

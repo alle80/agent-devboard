@@ -1,7 +1,7 @@
 // Standalone build of the package assets: `npm install && npm run build` writes
-// public/build/devboard.css and public/build/devboard.js (no hashes, no manifest), which the
-// host app publishes with `php artisan vendor:publish --tag=devboard-assets` and includes through
-// <x-devboard::assets /> when config('devboard.assets') === 'precompiled'.
+// public/build/griglia.css and public/build/griglia.js (no hashes, no manifest), which the
+// host app publishes with `php artisan vendor:publish --tag=griglia-assets` and includes through
+// <x-griglia::assets /> when config('griglia.assets') === 'precompiled'.
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -15,9 +15,9 @@ export default defineConfig({
         rollupOptions: {
             input: 'resources/js/standalone.js',
             output: {
-                entryFileNames: 'devboard.js',
-                chunkFileNames: 'devboard-[name].js',
-                assetFileNames: 'devboard.[ext]',
+                entryFileNames: 'griglia.js',
+                chunkFileNames: 'griglia-[name].js',
+                assetFileNames: 'griglia.[ext]',
             },
         },
     },

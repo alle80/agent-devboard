@@ -1,13 +1,13 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Settings\AgentSettings;
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Settings\OptimizationSettings;
-use Alle80\Devboard\Http\Middleware\RememberStyle;
-use Alle80\Devboard\Themes;
-use Alle80\Devboard\ThemeStore;
+use Alle80\Griglia\Settings\AgentSettings;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Settings\OptimizationSettings;
+use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Themes;
+use Alle80\Griglia\ThemeStore;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -35,7 +35,7 @@ class SettingsPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Devboard\Admin::check(), 403, 'Administrators only.');
+        abort_unless(\Alle80\Griglia\Admin::check(), 403, 'Administrators only.');
     }
 
     public function mount(): void
@@ -58,7 +58,7 @@ class SettingsPage extends Component
         $settings->save();
 
         $this->values[$group][$key] = $settings->{$key};
-        $this->dispatch('toast', message: __($settings->{$key} ? 'devboard::t.msg.setting_on' : 'devboard::t.msg.setting_off', ['label' => $field[0]]), type: $settings->{$key} ? 'success' : 'info');
+        $this->dispatch('toast', message: __($settings->{$key} ? 'griglia::t.msg.setting_on' : 'griglia::t.msg.setting_off', ['label' => $field[0]]), type: $settings->{$key} ? 'success' : 'info');
     }
 
     /** Salvataggio di select/int/text/time (wire:change). */
@@ -74,9 +74,9 @@ class SettingsPage extends Component
                     $this->values[$group][$key] = $settings->{$key};
                     return;
                 }
-                if ($group === 'app' && $key === 'mode' && $value === 'local' && ! \Alle80\Devboard\Mode::localFromUiAllowed()) {
+                if ($group === 'app' && $key === 'mode' && $value === 'local' && ! \Alle80\Griglia\Mode::localFromUiAllowed()) {
                     $this->values[$group][$key] = $settings->{$key};
-                    $this->dispatch('toast', message: __('devboard::t.msg.local_not_allowed'), type: 'error');
+                    $this->dispatch('toast', message: __('griglia::t.msg.local_not_allowed'), type: 'error');
                     return;
                 }
                 $settings->{$key} = (string) $value;
@@ -89,7 +89,7 @@ class SettingsPage extends Component
             case 'time':
                 if (! preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', (string) $value)) {
                     $this->values[$group][$key] = $settings->{$key};
-                    $this->dispatch('toast', message: __('devboard::t.msg.invalid_time'), type: 'error');
+                    $this->dispatch('toast', message: __('griglia::t.msg.invalid_time'), type: 'error');
                     return;
                 }
                 $settings->{$key} = (string) $value;
@@ -102,9 +102,9 @@ class SettingsPage extends Component
         }
 
         $settings->save();
-        \Alle80\Devboard\Mode::reset();
+        \Alle80\Griglia\Mode::reset();
         $this->values[$group][$key] = $settings->{$key};
-        $this->dispatch('toast', message: __('devboard::t.msg.setting_saved', ['label' => $field[0]]));
+        $this->dispatch('toast', message: __('griglia::t.msg.setting_saved', ['label' => $field[0]]));
     }
 
     // ----- Theme packs -----
@@ -117,16 +117,16 @@ class SettingsPage extends Component
         }
 
         try {
-            $this->validate(['themeZip' => ['file', 'max:20480']], ['themeZip.max' => __('devboard::t.themes.err_too_big')]);
+            $this->validate(['themeZip' => ['file', 'max:20480']], ['themeZip.max' => __('griglia::t.themes.err_too_big')]);
             $def = ThemeStore::install($this->themeZip->getRealPath());
-            $this->dispatch('toast', message: __('devboard::t.themes.installed_ok', ['label' => $def['label']]));
+            $this->dispatch('toast', message: __('griglia::t.themes.installed_ok', ['label' => $def['label']]));
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('toast', message: collect($e->errors())->flatten()->first(), type: 'error');
         } catch (\RuntimeException $e) {
             $this->dispatch('toast', message: $e->getMessage(), type: 'error'); // ThemeStore's own, translated messages
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('devboard: theme install failed: '.$e->getMessage());
-            $this->dispatch('toast', message: __('devboard::t.themes.err_generic'), type: 'error');
+            $this->dispatch('toast', message: __('griglia::t.themes.err_generic'), type: 'error');
         }
 
         $this->themeZip = null;
@@ -141,7 +141,7 @@ class SettingsPage extends Component
                 $app->save();
                 $this->values['app']['default_style'] = '';
             }
-            $this->dispatch('toast', message: __('devboard::t.themes.uninstalled_ok'), type: 'info');
+            $this->dispatch('toast', message: __('griglia::t.themes.uninstalled_ok'), type: 'info');
         }
     }
 
@@ -159,15 +159,15 @@ class SettingsPage extends Component
         $style = RememberStyle::current();
         $skin = Themes::settingsSkin($style);
 
-        return view('devboard::livewire.settings-page', [
+        return view('griglia::livewire.settings-page', [
             'skin' => $skin,
             'installedThemes' => ThemeStore::installed(),
             'pushSubscriptions' => method_exists(auth()->user() ?? new \stdClass, 'pushSubscriptions') ? auth()->user()->pushSubscriptions()->count() : 0,
             'sections' => [
-                'agent' => [__('devboard::t.settings_agent_title', ['agent' => \Alle80\Devboard\Agent::name()]), __('devboard::t.settings_agent_intro'), AgentSettings::fields()],
-                'optimization' => [__('devboard::t.settings_optimization_title'), __('devboard::t.settings_optimization_intro'), OptimizationSettings::fields()],
-                'app' => [__('devboard::t.settings_app_title'), __('devboard::t.settings_app_intro'), AppSettings::fields()],
+                'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), __('griglia::t.settings_agent_intro'), AgentSettings::fields()],
+                'optimization' => [__('griglia::t.settings_optimization_title'), __('griglia::t.settings_optimization_intro'), OptimizationSettings::fields()],
+                'app' => [__('griglia::t.settings_app_title'), __('griglia::t.settings_app_intro'), AppSettings::fields()],
             ],
-        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Impostazioni'])->title(__('devboard::t.settings_title'));
+        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Impostazioni'])->title(__('griglia::t.settings_title'));
     }
 }

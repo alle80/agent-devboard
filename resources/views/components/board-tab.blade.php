@@ -2,13 +2,13 @@
     $side = 'right';
     $show = true;
     try {
-        $app = app(\Alle80\Devboard\Settings\AppSettings::class);
+        $app = app(\Alle80\Griglia\Settings\AppSettings::class);
         $side = $app->tab_side ?: 'right';
         $show = (bool) $app->show_dashboard_tab;
     } catch (\Throwable $e) {
         // settings not migrated yet — fall back
     }
-    $dash = $show ? config('devboard.dashboard_route') : null;
+    $dash = $show ? config('griglia.dashboard_route') : null;
     $onDashboard = $dash && request()->path() === ltrim($dash, '/');
 @endphp
 
@@ -54,23 +54,23 @@
     >
         {{-- Handle (visible when closed) --}}
         <button type="button" class="db-tab-handle" @click="toggle()" x-show="!open" :aria-expanded="open"
-                aria-label="{{ __('devboard::t.dashboard_tab') }}">
-            <span class="db-tab-handle-txt">{{ __('devboard::t.dashboard_tab') }}</span>
+                aria-label="{{ __('griglia::t.dashboard_tab') }}">
+            <span class="db-tab-handle-txt">{{ __('griglia::t.dashboard_tab') }}</span>
         </button>
 
         {{-- Panel --}}
         <aside class="db-tab-panel" x-show="open"
                x-transition:enter="db-anim" x-transition:enter-start="db-off" x-transition:enter-end="db-on"
                x-transition:leave="db-anim" x-transition:leave-start="db-on" x-transition:leave-end="db-off"
-               aria-label="{{ __('devboard::t.dashboard_tab') }}">
+               aria-label="{{ __('griglia::t.dashboard_tab') }}">
             <div class="db-resize" @mousedown="startResize($event)" title="↔"></div>
             <header class="db-tab-head">
-                <span class="db-tab-title">{{ __('devboard::t.dashboard_tab') }}</span>
-                <a href="{{ $dash }}" class="db-tab-open" title="{{ __('devboard::t.dashboard_open_full') }}" target="_top">⤢</a>
-                <button type="button" class="db-tab-close" @click="toggle()" aria-label="{{ __('devboard::t.close') }}"><x-devboard::icon name="close" /></button>
+                <span class="db-tab-title">{{ __('griglia::t.dashboard_tab') }}</span>
+                <a href="{{ $dash }}" class="db-tab-open" title="{{ __('griglia::t.dashboard_open_full') }}" target="_top">⤢</a>
+                <button type="button" class="db-tab-close" @click="toggle()" aria-label="{{ __('griglia::t.close') }}"><x-griglia::icon name="close" /></button>
             </header>
             <iframe class="db-tab-frame" :src="open ? @js($dash) : 'about:blank'" loading="lazy"
-                    title="{{ __('devboard::t.dashboard_tab') }}"></iframe>
+                    title="{{ __('griglia::t.dashboard_tab') }}"></iframe>
         </aside>
     </div>
 @endif

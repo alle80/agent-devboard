@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Support;
+namespace Alle80\Griglia\Tests\Support;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

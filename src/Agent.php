@@ -1,30 +1,30 @@
 <?php
 
-namespace Alle80\Devboard;
+namespace Alle80\Griglia;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
 
 /**
  * The coding agents driven by the board — any CLI agent works (Claude Code, Codex CLI, Gemini CLI, …): the
- * board only talks through `devboard:check`/`devboard:watch`, AGENTS.md and the generated context file.
+ * board only talks through `griglia:check`/`griglia:watch`, AGENTS.md and the generated context file.
  *
- * Several agents can be active at once: config `devboard.agents` (key => label, e.g. claude => Claude Code) lists
+ * Several agents can be active at once: config `griglia.agents` (key => label, e.g. claude => Claude Code) lists
  * them; a list (project) has a default agent (`checklists.agent`) and a task may override it (`todos.agent`);
- * each agent runs `devboard:check --agent=<key>` (or DEVBOARD_AGENT_KEY) and sees only its tasks.
+ * each agent runs `griglia:check --agent=<key>` (or GRIGLIA_AGENT_KEY) and sees only its tasks.
  * `agent_name` stays the generic label of "the agent" in the UI when there is only one.
  */
 class Agent
 {
     public static function name(): string
     {
-        return (string) (config('devboard.agent_name') ?: 'Agent');
+        return (string) (config('griglia.agent_name') ?: 'Agent');
     }
 
     /** key => label of the configured agents (at least one: the default one). */
     public static function all(): array
     {
-        $raw = config('devboard.agents');
+        $raw = config('griglia.agents');
         $out = [];
         if (is_string($raw) && trim($raw) !== '') {
             foreach (explode(',', $raw) as $pair) {
@@ -43,14 +43,14 @@ class Agent
         return $out;
     }
 
-    /** Key of the default agent (config devboard.agent_key, else the first configured, else 'agent'). */
+    /** Key of the default agent (config griglia.agent_key, else the first configured, else 'agent'). */
     public static function defaultKey(): string
     {
-        $key = (string) (config('devboard.agent_key') ?: '');
+        $key = (string) (config('griglia.agent_key') ?: '');
         if ($key !== '') {
             return $key;
         }
-        $raw = config('devboard.agents');
+        $raw = config('griglia.agents');
         if (is_string($raw) && trim($raw) !== '') {
             return trim(explode(':', explode(',', $raw)[0], 2)[0]);
         }

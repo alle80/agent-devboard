@@ -1,8 +1,8 @@
 {
-    "name": "@alle80/agent-devboard-assets",
+    "name": "@alle80/agent-griglia-assets",
     "private": true,
     "type": "module",
-    "description": "Standalone build of the alle80/agent-devboard assets (public/build/devboard.css + devboard.js)",
+    "description": "Standalone build of the alle80/griglia assets (public/build/griglia.css + griglia.js)",
     "scripts": {
         "build": "vite build"
     },

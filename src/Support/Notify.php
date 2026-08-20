@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Notifications\QuestionAsked;
-use Alle80\Devboard\Notifications\TodoCompleted;
-use Alle80\Devboard\Settings\AgentSettings;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Notifications\QuestionAsked;
+use Alle80\Griglia\Notifications\TodoCompleted;
+use Alle80\Griglia\Settings\AgentSettings;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -29,11 +29,11 @@ class Notify
         }
     }
 
-    /** The user who owns the todo's list (config devboard.user_model), or null. */
+    /** The user who owns the todo's list (config griglia.user_model), or null. */
     public static function recipient(Todo $todo): ?object
     {
         $userId = $todo->checklist?->user_id;
-        $model = (string) config('devboard.user_model', 'App\\Models\\User');
+        $model = (string) config('griglia.user_model', 'App\\Models\\User');
         if (! $userId || ! class_exists($model)) {
             return null;
         }

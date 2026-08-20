@@ -1,15 +1,15 @@
-// alle80/agent-devboard — Web Push client. Reads window.DEVBOARD_PUSH = { key, subscribeUrl, csrf, sw }
-// (printed by <x-devboard::assets />) and exposes window.devboardPush for the settings page (Alpine).
+// alle80/griglia — Web Push client. Reads window.GRIGLIA_PUSH = { key, subscribeUrl, csrf, sw }
+// (printed by <x-griglia::assets />) and exposes window.grigliaPush for the settings page (Alpine).
 function b64ToUint8(base64) {
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
   const raw = atob((base64 + padding).replace(/-/g, '+').replace(/_/g, '/'));
   return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)));
 }
-const cfg = () => window.DEVBOARD_PUSH || {};
+const cfg = () => window.GRIGLIA_PUSH || {};
 const supported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 
 async function registration() {
-  return navigator.serviceWorker.register(cfg().sw || '/devboard-sw.js', { scope: '/' });
+  return navigator.serviceWorker.register(cfg().sw || '/griglia-sw.js', { scope: '/' });
 }
 async function current() {
   if (!supported()) return null;
@@ -25,7 +25,7 @@ async function send(method, body) {
   if (!r.ok) throw new Error('HTTP ' + r.status);
 }
 
-window.devboardPush = {
+window.grigliaPush = {
   supported,
   configured: () => !!cfg().key,
   /** 'unsupported' | 'nokey' | 'denied' | 'on' | 'off' */
@@ -68,13 +68,13 @@ window.devboardPush = {
     if (!supported()) return false;
     const reg = await navigator.serviceWorker.getRegistration('/') || await registration();
     await navigator.serviceWorker.ready;
-    await reg.showNotification(title || 'Agent Devboard', { body: body || 'local test', tag: 'devboard-local-test' });
+    await reg.showNotification(title || 'Griglia', { body: body || 'local test', tag: 'griglia-local-test' });
     return true;
   },
   /** Listen for pushes that reached this device (the service worker posts a message). */
   onPush(cb) {
     if (!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'devboard-push') cb(e.data); });
+    navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'griglia-push') cb(e.data); });
   },
   async test() {
     const r = await fetch(cfg().testUrl, { method: 'POST', credentials: 'same-origin', headers: { 'X-CSRF-TOKEN': cfg().csrf, Accept: 'application/json' } });

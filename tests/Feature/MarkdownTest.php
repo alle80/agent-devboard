@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Support\Markdown;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Support\Markdown;
+use Alle80\Griglia\Tests\TestCase;
 
 class MarkdownTest extends TestCase
 {

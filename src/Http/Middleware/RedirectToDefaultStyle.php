@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Http\Middleware;
+namespace Alle80\Griglia\Http\Middleware;
 
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Themes;
 use Closure;
 use Illuminate\Http\Request;
 

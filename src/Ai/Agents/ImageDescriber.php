@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Ai\Agents;
+namespace Alle80\Griglia\Ai\Agents;
 
 use Laravel\Ai\Attributes\MaxTokens;
 use Laravel\Ai\Attributes\Timeout;
@@ -14,7 +14,7 @@ use Stringable;
  *
  * Provider e modello NON sono fissati qui: arrivano da config('ai.image_description')
  * (env AI_IMAGE_PROVIDERS / AI_IMAGE_MODEL) e in mancanza dal provider di default
- * dell'SDK, col modello più economico del provider. Vedi Alle80\Devboard\Support\ImageDescription.
+ * dell'SDK, col modello più economico del provider. Vedi Alle80\Griglia\Support\ImageDescription.
  */
 #[UseCheapestModel]
 #[MaxTokens(300)]

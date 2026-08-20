@@ -3,41 +3,41 @@
 return [
 
     // URL prefix of the package pages ('' = site root: /, /<theme>, /settings)
-    'route_prefix' => env('DEVBOARD_ROUTE_PREFIX', ''),
+    'route_prefix' => env('GRIGLIA_ROUTE_PREFIX', ''),
 
     // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «🤖 Claude», «Claude's skills»
-    'agent_name' => env('DEVBOARD_AGENT_NAME', 'Agent'),
+    'agent_name' => env('GRIGLIA_AGENT_NAME', 'Agent'),
 
-    // Several agents at once (key => label), e.g. DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI". A list
-    // (project) chooses its default agent, a task may override it; each agent runs `devboard:check --agent=<key>`
-    // (or sets DEVBOARD_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`.
-    'agents' => env('DEVBOARD_AGENTS'),
-    'agent_key' => env('DEVBOARD_AGENT_KEY'),
+    // Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list
+    // (project) chooses its default agent, a task may override it; each agent runs `griglia:check --agent=<key>`
+    // (or sets GRIGLIA_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`.
+    'agents' => env('GRIGLIA_AGENTS'),
+    'agent_key' => env('GRIGLIA_AGENT_KEY'),
 
     // Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication,
     // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
-    'mode' => env('DEVBOARD_MODE', 'server'),
+    'mode' => env('GRIGLIA_MODE', 'server'),
 
     // Server mode: who may open the board. If the user model has `canAccessDevboard(): bool` it decides;
     // otherwise this Gate ability (e.g. 'access-devboard') if set; otherwise every authenticated user.
-    'access_gate' => env('DEVBOARD_ACCESS_GATE'),
+    'access_gate' => env('GRIGLIA_ACCESS_GATE'),
 
     // Server mode: who may ADMINISTER the board (settings, agent context, theme packs). Checked in this order:
     // `canManageDevboard(): bool` on the user model if defined; else this Gate ability if set; else the ids/e-mails
-    // in `admins` (DEVBOARD_ADMINS="1,alice@example.com") if set; else the first registered user only.
-    'admin_gate' => env('DEVBOARD_ADMIN_GATE'),
-    'admins' => env('DEVBOARD_ADMINS'),
+    // in `admins` (GRIGLIA_ADMINS="1,alice@example.com") if set; else the first registered user only.
+    'admin_gate' => env('GRIGLIA_ADMIN_GATE'),
+    'admins' => env('GRIGLIA_ADMINS'),
 
     // Allow switching the board to local mode (no authentication) from /settings. Off by default: the override
     // is accepted from the UI only when the app runs in the `local` environment.
-    'allow_local_from_ui' => env('DEVBOARD_ALLOW_LOCAL_FROM_UI', false),
+    'allow_local_from_ui' => env('GRIGLIA_ALLOW_LOCAL_FROM_UI', false),
 
     // Middleware of the package routes. Authentication is enforced by the package itself according to the
-    // mode (Alle80\Devboard\Http\Middleware\DevboardAccess), so 'auth' is not needed here (and is ignored).
+    // mode (Alle80\Griglia\Http\Middleware\GrigliaAccess), so 'auth' is not needed here (and is ignored).
     'middleware' => ['web'],
 
     // Public broadcast channel used for live updates in local mode
-    'local_channel' => 'devboard.local',
+    'local_channel' => 'griglia.local',
 
     // Register the package routes at all (set false to define your own routes with the components)
     'register_routes' => true,
@@ -47,24 +47,24 @@ return [
 
     // Desktop dashboard: a wider, more readable view of the board on its own route.
     // Set to null/false to disable the route and the slide-out board tab.
-    'dashboard_route' => env('DEVBOARD_DASHBOARD_ROUTE', '/dashboard'),
+    'dashboard_route' => env('GRIGLIA_DASHBOARD_ROUTE', '/dashboard'),
 
     // Generic theme used by the home route and as fallback
     'default_theme' => 'slate',
 
-    // Extra generic themes (slug => definition, same keys as Alle80\Devboard\Themes::builtin())
+    // Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin())
     'themes' => [],
 
     // User model owning the lists
-    'user_model' => env('DEVBOARD_USER_MODEL', 'App\\Models\\User'),
+    'user_model' => env('GRIGLIA_USER_MODEL', 'App\\Models\\User'),
 
     // Filesystem disk for image attachments. With `attachments_via_controller` (default) images are served by an
     // authorised route, so the disk can be private (e.g. 'local'); set it to false to link the disk's public URLs.
-    'attachments_disk' => env('DEVBOARD_ATTACHMENTS_DISK', 'public'),
-    'attachments_via_controller' => env('DEVBOARD_ATTACHMENTS_VIA_CONTROLLER', true),
+    'attachments_disk' => env('GRIGLIA_ATTACHMENTS_DISK', 'public'),
+    'attachments_via_controller' => env('GRIGLIA_ATTACHMENTS_VIA_CONTROLLER', true),
 
-    // Name of the list used as request channel between the user and the coding agent (devboard:check)
-    'agent_list' => env('DEVBOARD_AGENT_LIST', 'dev'),
+    // Name of the list used as request channel between the user and the coding agent (griglia:check)
+    'agent_list' => env('GRIGLIA_AGENT_LIST', 'dev'),
 
     // Name of the default list created for a new user
     'default_list_name' => 'My list',
@@ -77,23 +77,23 @@ return [
 
     // Rate limits (Laravel throttle definitions) of the expensive endpoints
     'rate_limits' => [
-        'transcribe' => env('DEVBOARD_RATE_TRANSCRIBE', '10,1'),
-        'notifications_test' => env('DEVBOARD_RATE_NOTIFICATIONS_TEST', '5,1'),
-        'push_subscriptions' => env('DEVBOARD_RATE_PUSH_SUBSCRIPTIONS', '30,1'),
+        'transcribe' => env('GRIGLIA_RATE_TRANSCRIBE', '10,1'),
+        'notifications_test' => env('GRIGLIA_RATE_NOTIFICATIONS_TEST', '5,1'),
+        'push_subscriptions' => env('GRIGLIA_RATE_PUSH_SUBSCRIPTIONS', '30,1'),
     ],
 
-    // Agents status snapshot (plan + usage windows), written by `devboard:agent-status-import`; shown in /agents
-    'agent_status_file' => env('DEVBOARD_AGENT_STATUS_FILE', storage_path('app/devboard/agent-status.json')),
+    // Agents status snapshot (plan + usage windows), written by `griglia:agent-status-import`; shown in /agents
+    'agent_status_file' => env('GRIGLIA_AGENT_STATUS_FILE', storage_path('app/griglia/agent-status.json')),
 
-    // Catalogue of the agent's skills (JSON written by `devboard:skills-import`; shown in the task modal)
-    'skills_file' => env('DEVBOARD_SKILLS_FILE', storage_path('app/devboard/skills.json')),
+    // Catalogue of the agent's skills (JSON written by `griglia:skills-import`; shown in the task modal)
+    'skills_file' => env('GRIGLIA_SKILLS_FILE', storage_path('app/griglia/skills.json')),
 
-    // Front-end assets: 'vite' = the host app bundles resources/css/devboard.css + resources/js/devboard.js
+    // Front-end assets: 'vite' = the host app bundles resources/css/griglia.css + resources/js/griglia.js
     // in its own Vite build (entries below); 'precompiled' = use the files built by the package and
-    // published with `vendor:publish --tag=devboard-assets` (public/vendor/devboard/build)
-    'assets' => env('DEVBOARD_ASSETS', 'vite'),
+    // published with `vendor:publish --tag=griglia-assets` (public/vendor/griglia/build)
+    'assets' => env('GRIGLIA_ASSETS', 'vite'),
     'vite_entries' => ['resources/css/app.css', 'resources/js/app.js'],
-    'assets_url' => '/vendor/devboard/build',
+    'assets_url' => '/vendor/griglia/build',
 
     // Runtime configuration of the Echo client (live updates). Empty key = no WebSocket at all.
     'echo' => [
@@ -105,6 +105,6 @@ return [
 
     // Web fonts of the themes: URL prefix that receives the theme's `fonts` string (bunny.net by default,
     // Google-compatible); '' disables external fonts (self-host them in your CSS instead)
-    'fonts_url' => env('DEVBOARD_FONTS_URL', 'https://fonts.bunny.net/css?family='),
+    'fonts_url' => env('GRIGLIA_FONTS_URL', 'https://fonts.bunny.net/css?family='),
 
 ];

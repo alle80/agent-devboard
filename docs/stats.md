@@ -11,8 +11,8 @@ Deleting a list or a task is a **soft delete**: the statistics survive, and tras
 `/stats` (marked "(deleted)"). To really free the data — statistics included — empty the trash:
 
 ```bash
-php artisan devboard:empty-trash --dry-run      # what would be purged
-php artisan devboard:empty-trash --days=30      # only items deleted more than 30 days ago
+php artisan griglia:empty-trash --dry-run      # what would be purged
+php artisan griglia:empty-trash --days=30      # only items deleted more than 30 days ago
 ```
 
 ## Agents status (`/agents`)
@@ -21,7 +21,7 @@ Plan and usage windows of your coding agents (used %, remaining %, reset countdo
 exhausted/over the limit). Data come from a snapshot imported with:
 
 ```bash
-php artisan devboard:agent-status-import --file=snapshot.json   # {updated_at, agents:[{key,name,plan,windows:[…]}]}
+php artisan griglia:agent-status-import --file=snapshot.json   # {updated_at, agents:[{key,name,plan,windows:[…]}]}
 ```
 
 The origin repository ships `scripts/agent-status.py` for Claude Code: it reads the OAuth credentials **on the

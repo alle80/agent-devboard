@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
 use Carbon\CarbonImmutable;
 
 /**
- * Status of the coding agents (plan + usage windows): reads the snapshot written by `devboard:agent-status-import`
+ * Status of the coding agents (plan + usage windows): reads the snapshot written by `griglia:agent-status-import`
  * (produced on the host by scripts/agent-status.py, which keeps the credentials there and sends only percentages)
  * and computes the derived values for the UI: used %, remaining %, bar width, level, reset countdown, staleness.
  */
@@ -15,7 +15,7 @@ class AgentStatus
 
     public static function path(): string
     {
-        return (string) (config('devboard.agent_status_file') ?: storage_path('app/devboard/agent-status.json'));
+        return (string) (config('griglia.agent_status_file') ?: storage_path('app/griglia/agent-status.json'));
     }
 
     /** Raw snapshot (['updated_at' => ISO, 'agents' => [...]]) or null when never imported. */

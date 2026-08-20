@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Http\Middleware\RememberStyle;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Support\Stats;
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Support\Stats;
+use Alle80\Griglia\Themes;
 use Carbon\CarbonImmutable;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -84,7 +84,7 @@ class StatsPage extends Component
         $allRows = $merge(null);
         $plansCount = $lists->filter(fn (Checklist $l) => $l->plan_prompt || $l->todos()->whereNotNull('depends_on_id')->exists())->count();
 
-        return view('devboard::livewire.stats-page', [
+        return view('griglia::livewire.stats-page', [
             'skin' => $skin,
             'lists' => $lists,
             'list' => $list,
@@ -98,6 +98,6 @@ class StatsPage extends Component
             'overview' => Stats::overview($lists, $from),
             'prices' => Stats::prices(),
             'currency' => Stats::currency(),
-        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Stats'])->title(__('devboard::t.stats_page.title'));
+        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Stats'])->title(__('griglia::t.stats_page.title'));
     }
 }

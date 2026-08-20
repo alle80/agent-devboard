@@ -1,14 +1,14 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Support\AgentStatus;
+use Alle80\Griglia\Support\AgentStatus;
 use Illuminate\Console\Command;
 
-/** `devboard:agent-status-import [--file=]` — stores the agents' plan/usage snapshot (JSON from file or stdin). */
+/** `griglia:agent-status-import [--file=]` — stores the agents' plan/usage snapshot (JSON from file or stdin). */
 class AgentStatusImport extends Command
 {
-    protected $signature = 'devboard:agent-status-import {--file= : JSON file (default: stdin)}';
+    protected $signature = 'griglia:agent-status-import {--file= : JSON file (default: stdin)}';
 
     protected $description = 'Imports the agents status snapshot (plan + usage windows) shown in /agents';
 

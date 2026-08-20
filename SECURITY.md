@@ -9,11 +9,11 @@ and noted in the `CHANGELOG.md` under **Security**.
 
 ## Security model (what the package does for you)
 
-- **Access**: in server mode every board route requires an authenticated user (`DevboardAccess`, also on Livewire
-  update requests) and, optionally, `canAccessDevboard()` / `devboard.access_gate`. Lists, tasks, attachments and
+- **Access**: in server mode every board route requires an authenticated user (`GrigliaAccess`, also on Livewire
+  update requests) and, optionally, `canAccessDevboard()` / `griglia.access_gate`. Lists, tasks, attachments and
   notifications are always scoped to the owner.
-- **Administration**: global settings, the agent context and theme packs are admin-only (`Alle80\Devboard\Admin`:
-  `canManageDevboard()`, `devboard.admin_gate`, `DEVBOARD_ADMINS`, or the first user). Switching to local mode from
+- **Administration**: global settings, the agent context and theme packs are admin-only (`Alle80\Griglia\Admin`:
+  `canManageDevboard()`, `griglia.admin_gate`, `GRIGLIA_ADMINS`, or the first user). Switching to local mode from
   the UI is refused outside `APP_ENV=local`.
 - **Local mode** has no authentication by design: use it only on a machine that is not exposed (banner on every page).
 - **Theme packs** (zip) are treated as untrusted: no SVG, sanitised CSS (no `@import`/external urls), size and entry
@@ -27,6 +27,6 @@ and noted in the `CHANGELOG.md` under **Security**.
 ## Hardening checklist for operators
 
 - `APP_DEBUG=false`, HTTPS, security headers at the proxy (HSTS, nosniff, frame options).
-- Set `DEVBOARD_ADMINS` explicitly; keep `DEVBOARD_MODE=server` on shared hosts.
-- Prefer a private disk for attachments (`DEVBOARD_ATTACHMENTS_DISK=local`).
+- Set `GRIGLIA_ADMINS` explicitly; keep `GRIGLIA_MODE=server` on shared hosts.
+- Prefer a private disk for attachments (`GRIGLIA_ATTACHMENTS_DISK=local`).
 - Rotate the VAPID keys / agent credentials if a host is compromised.

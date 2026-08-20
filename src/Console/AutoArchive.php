@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AppSettings;
 use Illuminate\Console\Command;
 
 /**
@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
  */
 class AutoArchive extends Command
 {
-    protected $signature = 'devboard:auto-archive {--dry-run : Only show what would be archived}';
+    protected $signature = 'griglia:auto-archive {--dry-run : Only show what would be archived}';
 
     protected $aliases = ['todos:auto-archive'];
 

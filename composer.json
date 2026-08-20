@@ -1,6 +1,6 @@
 {
-    "name": "alle80/agent-devboard",
-    "description": "Agent Devboard: a Livewire dev board where you queue requests for a coding agent (open to work → working → done, questions, stop, resume) — multiple lists, sub-tasks, notes, images, live updates, themes, settings.",
+    "name": "alle80/griglia",
+    "description": "Griglia: a Livewire dev board where you queue requests for a coding agent (open to work → working → done, questions, stop, resume) — multiple lists, sub-tasks, notes, images, live updates, themes, settings.",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -8,7 +8,7 @@
         "livewire",
         "todo",
         "todolist",
-        "devboard",
+        "griglia",
         "agent",
         "checklist"
     ],
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Alle80\\Devboard\\": "src/"
+            "Alle80\\Griglia\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Alle80\\Devboard\\DevboardServiceProvider"
+                "Alle80\\Griglia\\GrigliaServiceProvider"
             ]
         }
     },
@@ -53,7 +53,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alle80\\Devboard\\Tests\\": "tests/"
+            "Alle80\\Griglia\\Tests\\": "tests/"
         }
     },
     "scripts": {

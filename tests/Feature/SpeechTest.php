@@ -1,10 +1,10 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Support\Speech;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Support\Speech;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 
 /** Speech to text mode resolution + the transcription endpoint guard (the AI SDK is not installed here). */
@@ -28,12 +28,12 @@ class SpeechTest extends TestCase
         $this->assertSame('browser', Speech::mode(), 'server requested but unavailable → browser');
 
         $this->assertSame('en', Speech::language());
-        $this->get('/settings')->assertOk()->assertSee('DEVBOARD_SPEECH', false)->assertSee('"mode":"browser"', false);
+        $this->get('/settings')->assertOk()->assertSee('GRIGLIA_SPEECH', false)->assertSee('"mode":"browser"', false);
     }
 
     public function test_transcribe_endpoint_refuses_when_not_configured(): void
     {
-        $this->post(route('devboard.transcribe'), ['audio' => UploadedFile::fake()->create('speech.webm', 10, 'audio/webm')])
+        $this->post(route('griglia.transcribe'), ['audio' => UploadedFile::fake()->create('speech.webm', 10, 'audio/webm')])
             ->assertStatus(422)->assertJson(['ok' => false]);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Console\Command;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Console\Command;
  */
 class EmptyTrash extends Command
 {
-    protected $signature = 'devboard:empty-trash
+    protected $signature = 'griglia:empty-trash
         {--days=0 : Only purge items deleted more than N days ago (0 = everything)}
         {--dry-run : Show what would be purged without deleting}';
 

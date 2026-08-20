@@ -1,39 +1,39 @@
-# Agent Devboard — instructions for the coding agent
+# Griglia — instructions for the coding agent
 
-You are a coding agent driven by an **Agent Devboard**. The user queues work as todos in one
-list (the **agent list**, `config('devboard.agent_list')`). Your job: pick them up, do them, close
+You are a coding agent driven by an **Griglia**. The user queues work as todos in one
+list (the **agent list**, `config('griglia.agent_list')`). Your job: pick them up, do them, close
 them — reacting to the board in real time.
 
 ## Works with any CLI agent
 
-The board never talks to a specific vendor: it only needs a shell where `php artisan devboard:check`
+The board never talks to a specific vendor: it only needs a shell where `php artisan griglia:check`
 runs. Tested with **Claude Code**; works the same with **OpenAI Codex CLI**, **Gemini CLI**, Aider, Cursor
 CLI, Amp, … Hook it up per agent:
 
 | Agent | Instructions file it reads | How to connect |
 |-------|----------------------------|----------------|
-| Claude Code | `CLAUDE.md` | copy this file's rules into `CLAUDE.md` (or `@AGENTS.md`), then run `devboard:watch` |
+| Claude Code | `CLAUDE.md` | copy this file's rules into `CLAUDE.md` (or `@AGENTS.md`), then run `griglia:watch` |
 | Codex CLI | `AGENTS.md` | put this file at the repo root (Codex reads it natively) |
 | Gemini CLI | `GEMINI.md` | copy/`@include` this file as `GEMINI.md` |
-| others | their own file | same content; the only contract is the `devboard:check` CLI below |
+| others | their own file | same content; the only contract is the `griglia:check` CLI below |
 
-Skills: `devboard:skills-import` accepts any JSON list — the origin repo ships a sync script that reads
+Skills: `griglia:skills-import` accepts any JSON list — the origin repo ships a sync script that reads
 `.claude/skills`, `~/.codex/skills`, `~/.agents/skills`, `~/.gemini/skills`. Token stats: report whatever
 your agent exposes with `--tokens-in/--tokens-out` (optional). The UI calls the agent by
-`config('devboard.agent_name')` («Claude», «Codex», …).
+`config('griglia.agent_name')` («Claude», «Codex», …).
 
 ## Several agents on one board
 
-If the board lists several agents (`check` prints `🤝 agents: …`), run `devboard:check --agent=<your key>` (or
-export `DEVBOARD_AGENT_KEY`) so you only see the tasks assigned to you.
+If the board lists several agents (`check` prints `🤝 agents: …`), run `griglia:check --agent=<your key>` (or
+export `GRIGLIA_AGENT_KEY`) so you only see the tasks assigned to you.
 
 ## Connect (once)
 
 ```bash
-php artisan devboard:watch      # in one terminal: prints only the changes you must react to
+php artisan griglia:watch      # in one terminal: prints only the changes you must react to
 ```
 
-Then, whenever `watch` reports something (or to start), read and act with `devboard:check`.
+Then, whenever `watch` reports something (or to start), read and act with `griglia:check`.
 
 ## The dot on each row = the state
 
@@ -48,18 +48,18 @@ Then, whenever `watch` reports something (or to start), read and act with `devbo
 
 ## The loop
 
-1. **See the work:** `php artisan devboard:check` (only 🟢/🔧; `--all` for everything).
-2. **Take it FIRST:** `php artisan devboard:check --take=ID` is your *first* action on a task —
+1. **See the work:** `php artisan griglia:check` (only 🟢/🔧; `--all` for everything).
+2. **Take it FIRST:** `php artisan griglia:check --take=ID` is your *first* action on a task —
    before reading details, exploring code, or asking. The dot turns 🔧 in real time so the user
    sees it's in progress. (`ID` = the `id:N` shown, not the row position.)
 3. **Do the work.** The todo's note = details, sub-tasks = a checklist, images = screenshots. If `check`
    prints `🧩 skills to activate for this task: …`, invoke those skills (Skill tool) while working on it.
-   (The catalogue comes from `devboard:skills-import`; keep it fresh from your host with a JSON list.)
-   Keep the user posted: `devboard:check --take=ID --progress=N --phase="testing"` updates the percentage
+   (The catalogue comes from `griglia:skills-import`; keep it fresh from your host with a JSON list.)
+   Keep the user posted: `griglia:check --take=ID --progress=N --phase="testing"` updates the percentage
    and the short «what I'm doing» text on the row (it starts at 0% when you take it).
-4. **If unclear, ask:** `devboard:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
+4. **If unclear, ask:** `griglia:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
    user answers in the app and restarts it (it comes back 🟢). Ask *after* taking.
-5. **Close it:** `devboard:check --done=ID --comment="what you did / how to try it"`. The comment
+5. **Close it:** `griglia:check --done=ID --comment="what you did / how to try it"`. The comment
    is shown to the user; never write into the user's note. If you know how many tokens you spent on
    it, add `--tokens-in=N --tokens-out=N` (also allowed on `--take`/`--ask`): the board keeps per-todo
    **stats** (working time is timed automatically while the row is 🔧).

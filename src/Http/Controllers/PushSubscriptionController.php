@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Http\Controllers;
+namespace Alle80\Griglia\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,14 +29,14 @@ class PushSubscriptionController
         return response()->json(['ok' => true]);
     }
 
-    /** Only https endpoints of known push services (config devboard.push_allowed_hosts; empty = any https host). */
+    /** Only https endpoints of known push services (config griglia.push_allowed_hosts; empty = any https host). */
     public static function endpointAllowed(string $endpoint): bool
     {
         $host = strtolower((string) parse_url($endpoint, PHP_URL_HOST));
         if ($host === '' || strtolower((string) parse_url($endpoint, PHP_URL_SCHEME)) !== 'https') {
             return false;
         }
-        $allowed = (array) config('devboard.push_allowed_hosts', []);
+        $allowed = (array) config('griglia.push_allowed_hosts', []);
         if ($allowed === []) {
             return true;
         }
@@ -65,7 +65,7 @@ class PushSubscriptionController
     {
         $user = $request->user();
         if ($user && method_exists($user, 'notify')) {
-            $user->notify(new \Alle80\Devboard\Notifications\TestNotification);
+            $user->notify(new \Alle80\Griglia\Notifications\TestNotification);
         }
 
         return response()->json(['ok' => true]);

@@ -1,7 +1,7 @@
 {{--
     Skills of the coding agent for this task: an accordion (under the Task note) with one checkbox per
-    skill of the catalogue (`devboard:skills-import`); the chosen ones are saved in `todos.skills` and
-    printed by `devboard:check`, so the agent invokes them while working on the task.
+    skill of the catalogue (`griglia:skills-import`); the chosen ones are saved in `todos.skills` and
+    printed by `griglia:check`, so the agent invokes them while working on the task.
     Expected: $todo, $skills (catalogue), $readonly; style classes $boxClass, $labelClass, $textClass.
 --}}
 @php($chosen = array_values((array) $todo->skills))
@@ -13,20 +13,20 @@
 @if ($catalogue)
     <details class="{{ $boxClass }} db-skills" wire:key="skills-{{ $todo->id }}" x-data="{ o: {{ $chosen ? 'true' : 'false' }}, q: '', hay: @js(array_values(array_map(fn ($sk) => $sk['name'].' '.($sk['description'] ?? '').' '.($sk['source'] ?? ''), $catalogue))), match(t) { return this.q.trim() === '' || t.toLowerCase().includes(this.q.trim().toLowerCase()); }, noMatch() { return this.q.trim() !== '' && ! this.hay.some(t => this.match(t)); } }" x-bind:open="o" x-on:toggle="o = $el.open">
         <summary class="flex cursor-pointer items-center justify-between gap-2 select-none">
-            <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-devboard::icon name="puzzle" /> {{ __('devboard::t.skills', ['agent' => \Alle80\Devboard\Agent::name()]) }}</span>
-            <span class="{{ $textClass }} text-xs opacity-70">{{ $chosen ? __('devboard::t.skills_chosen', ['count' => count($chosen)]) : __('devboard::t.skills_none') }}</span>
+            <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-griglia::icon name="puzzle" /> {{ __('griglia::t.skills', ['agent' => \Alle80\Griglia\Agent::name()]) }}</span>
+            <span class="{{ $textClass }} text-xs opacity-70">{{ $chosen ? __('griglia::t.skills_chosen', ['count' => count($chosen)]) : __('griglia::t.skills_none') }}</span>
         </summary>
-        <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('devboard::t.skills_hint') }}</p>
+        <p class="{{ $textClass }} mt-1 text-xs opacity-60">{{ __('griglia::t.skills_hint') }}</p>
         {{-- Live search (client-side, Alpine): filters the list below while typing --}}
         <input
             type="search"
             x-model="q"
             x-on:keydown.escape.stop="q = ''"
-            placeholder="{{ __('devboard::t.skills_search') }}"
-            aria-label="{{ __('devboard::t.skills_search') }}"
+            placeholder="{{ __('griglia::t.skills_search') }}"
+            aria-label="{{ __('griglia::t.skills_search') }}"
             class="tl-input db-skills-search mt-2 w-full px-3 py-1.5 text-sm focus:outline-none"
         >
-        <p class="{{ $textClass }} mt-1 text-xs opacity-60" x-show="noMatch()" x-cloak>{{ __('devboard::t.skills_no_match') }}</p>
+        <p class="{{ $textClass }} mt-1 text-xs opacity-60" x-show="noMatch()" x-cloak>{{ __('griglia::t.skills_no_match') }}</p>
         <ul class="mt-2 space-y-1.5" role="list">
             @foreach ($catalogue as $name => $sk)
                 @php($on = in_array($name, $chosen, true))

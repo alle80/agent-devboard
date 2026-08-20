@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Tests\TestCase;
 
 class DashboardTest extends TestCase
 {
@@ -15,7 +15,7 @@ class DashboardTest extends TestCase
         $list = Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
         Todo::create(['title' => 'Ship it', 'order' => 1, 'checklist_id' => $list->id]);
 
-        $this->get(config('devboard.dashboard_route'))
+        $this->get(config('griglia.dashboard_route'))
             ->assertOk()
             ->assertSee('Ship it')
             ->assertSee('max-w-5xl', false); // wider desktop container

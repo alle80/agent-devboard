@@ -34,19 +34,19 @@
     },
 }">
     <div class="db-md-bar">
-        <button type="button" class="db-md-btn" @click="wrap('**','**','{{ __('devboard::t.md.bold') }}')" title="{{ __('devboard::t.md.bold') }}"><span style="font-weight:800">B</span></button>
-        <button type="button" class="db-md-btn" @click="wrap('*','*','{{ __('devboard::t.md.italic') }}')" title="{{ __('devboard::t.md.italic') }}"><span style="font-style:italic">I</span></button>
-        <button type="button" class="db-md-btn" @click="wrap('`','`','{{ __('devboard::t.md.code') }}')" title="{{ __('devboard::t.md.code') }}"><span style="font-family:monospace">&lt;&gt;</span></button>
-        <button type="button" class="db-md-btn" @click="insert('\n```\n{{ __('devboard::t.md.code') }}\n```\n')" title="{{ __('devboard::t.md.codeblock') }}"><span style="font-family:monospace">{ }</span></button>
+        <button type="button" class="db-md-btn" @click="wrap('**','**','{{ __('griglia::t.md.bold') }}')" title="{{ __('griglia::t.md.bold') }}"><span style="font-weight:800">B</span></button>
+        <button type="button" class="db-md-btn" @click="wrap('*','*','{{ __('griglia::t.md.italic') }}')" title="{{ __('griglia::t.md.italic') }}"><span style="font-style:italic">I</span></button>
+        <button type="button" class="db-md-btn" @click="wrap('`','`','{{ __('griglia::t.md.code') }}')" title="{{ __('griglia::t.md.code') }}"><span style="font-family:monospace">&lt;&gt;</span></button>
+        <button type="button" class="db-md-btn" @click="insert('\n```\n{{ __('griglia::t.md.code') }}\n```\n')" title="{{ __('griglia::t.md.codeblock') }}"><span style="font-family:monospace">{ }</span></button>
         <span class="db-md-sep"></span>
-        <button type="button" class="db-md-btn" @click="prefix('- ')" title="{{ __('devboard::t.md.list') }}">&bull;</button>
-        <button type="button" class="db-md-btn" @click="prefix('> ')" title="{{ __('devboard::t.md.quote') }}">&ldquo;</button>
-        <button type="button" class="db-md-btn" @click="wrap('[','](https://)','{{ __('devboard::t.md.linktext') }}')" title="{{ __('devboard::t.md.link') }}">&#128279;</button>
+        <button type="button" class="db-md-btn" @click="prefix('- ')" title="{{ __('griglia::t.md.list') }}">&bull;</button>
+        <button type="button" class="db-md-btn" @click="prefix('> ')" title="{{ __('griglia::t.md.quote') }}">&ldquo;</button>
+        <button type="button" class="db-md-btn" @click="wrap('[','](https://)','{{ __('griglia::t.md.linktext') }}')" title="{{ __('griglia::t.md.link') }}">&#128279;</button>
         <span class="db-md-sep"></span>
-        <button type="button" class="db-md-btn" @click="insert('\n| a | b |\n| --- | --- |\n| 1 | 2 |\n')" title="{{ __('devboard::t.md.table') }}">&#8862;</button>
-        <button type="button" class="db-md-btn" @click="insert('\n\n---\n\n')" title="{{ __('devboard::t.md.separator') }}">&mdash;</button>
+        <button type="button" class="db-md-btn" @click="insert('\n| a | b |\n| --- | --- |\n| 1 | 2 |\n')" title="{{ __('griglia::t.md.table') }}">&#8862;</button>
+        <button type="button" class="db-md-btn" @click="insert('\n\n---\n\n')" title="{{ __('griglia::t.md.separator') }}">&mdash;</button>
         <span class="db-md-sep"></span>
-        <x-devboard::mic class="db-md-btn" within=".db-md" target="textarea" />
+        <x-griglia::mic class="db-md-btn" within=".db-md" target="textarea" />
     </div>
     <textarea x-ref="ta" wire:model="{{ $model }}" rows="{{ $rows }}" placeholder="{{ $placeholder }}"
               x-init="$nextTick(() => grow())" @input="grow()" style="overflow:hidden; resize:none;"

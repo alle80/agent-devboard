@@ -1,10 +1,10 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Themes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -30,16 +30,16 @@ class TodoList extends Component
 
     public static function titleMax(): int
     {
-        return (int) (app(\Alle80\Devboard\Settings\AppSettings::class)->title_max_length ?: self::TITLE_MAX);
+        return (int) (app(\Alle80\Griglia\Settings\AppSettings::class)->title_max_length ?: self::TITLE_MAX);
     }
 
-    /** Filter keys (labels come from the translations: devboard::t.filters). */
+    /** Filter keys (labels come from the translations: griglia::t.filters). */
     public const FILTERS = ['all', 'todo', 'done', 'otw', 'working', 'question'];
 
     /** key => translated label */
     public static function filters(): array
     {
-        $labels = (array) __('devboard::t.filters');
+        $labels = (array) __('griglia::t.filters');
 
         return array_combine(self::FILTERS, array_map(fn ($k) => $labels[$k] ?? $k, self::FILTERS));
     }
@@ -115,11 +115,11 @@ class TodoList extends Component
     public function setListAgent(string $agent): void
     {
         $agent = trim($agent);
-        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Devboard\Agent::all())) {
+        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
             return;
         }
         Checklist::mine()->whereKey(Checklist::currentId())->update(['agent' => $agent ?: null]);
-        $this->dispatch('toast', message: __('devboard::t.agent_set', ['agent' => \Alle80\Devboard\Agent::label($agent ?: \Alle80\Devboard\Agent::defaultKey())]));
+        $this->dispatch('toast', message: __('griglia::t.agent_set', ['agent' => \Alle80\Griglia\Agent::label($agent ?: \Alle80\Griglia\Agent::defaultKey())]));
     }
 
     /* ---------- Plan mode: start / status ---------- */
@@ -148,7 +148,7 @@ class TodoList extends Component
         $list = Checklist::find(Checklist::currentId());
         $list?->update(['plan_paused' => true]);
         $this->active()->where('completed', false)->where('open_to_work', true)->where('working', false)->update(['open_to_work' => false]);
-        $this->dispatch('toast', message: __('devboard::t.plan.paused'), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.plan.paused'), type: 'info');
     }
 
     /** Start (or resume) the plan: the first not-started task becomes open to work 🟢; the chain does the rest. */
@@ -164,7 +164,7 @@ class TodoList extends Component
         }
         $todo = $this->active()->findOrFail($status['next']);
         $todo->update(['open_to_work' => true, 'stopped_at' => null]);
-        $this->dispatch('toast', message: __('devboard::t.plan.started', ['title' => $todo->title]), type: 'success');
+        $this->dispatch('toast', message: __('griglia::t.plan.started', ['title' => $todo->title]), type: 'success');
     }
 
     protected function archivedCount(): int
@@ -186,14 +186,14 @@ class TodoList extends Component
 
         // Richiude il buco nella numerazione degli attivi
         $this->active()->where('order', '>', $todo->order)->decrement('order');
-        $this->dispatch('toast', message: __('devboard::t.msg.archived', ['title' => $todo->title]), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.msg.archived', ['title' => $todo->title]), type: 'info');
     }
 
     public function unarchive(int $todoId): void
     {
         $todo = $this->scoped()->whereNotNull('archived_at')->findOrFail($todoId);
         $todo->update(['archived_at' => null, 'order' => ((int) $this->active()->max('order')) + 1]);
-        $this->dispatch('toast', message: __('devboard::t.msg.restored', ['title' => $todo->title]));
+        $this->dispatch('toast', message: __('griglia::t.msg.restored', ['title' => $todo->title]));
     }
 
     /** Nome della lista corrente: è il titolo di tutte le pagine. */
@@ -208,7 +208,7 @@ class TodoList extends Component
         $todo->completed = ! $todo->completed;
         $todo->save();
 
-        $this->dispatch('toast', message: __($todo->completed ? 'devboard::t.msg.completed' : 'devboard::t.msg.reopened', ['title' => $todo->title]), type: $todo->completed ? 'success' : 'info');
+        $this->dispatch('toast', message: __($todo->completed ? 'griglia::t.msg.completed' : 'griglia::t.msg.reopened', ['title' => $todo->title]), type: $todo->completed ? 'success' : 'info');
     }
 
     public function toggleOpenToWork(int $todoId): void
@@ -225,7 +225,7 @@ class TodoList extends Component
         // In lavorazione (🔧): il click ferma il lavoro dell'assistente → torna ⚪ e resta traccia in stopped_at
         if ($todo->working) {
             $todo->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
-            $this->dispatch('toast', message: __('devboard::t.msg.stopped', ['title' => $todo->title]), type: 'info');
+            $this->dispatch('toast', message: __('griglia::t.msg.stopped', ['title' => $todo->title]), type: 'info');
 
             return;
         }
@@ -236,7 +236,7 @@ class TodoList extends Component
         }
         $todo->save();
 
-        $this->dispatch('toast', message: __($todo->open_to_work ? 'devboard::t.msg.otw_on' : 'devboard::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
+        $this->dispatch('toast', message: __($todo->open_to_work ? 'griglia::t.msg.otw_on' : 'griglia::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
     }
 
     /**
@@ -249,7 +249,7 @@ class TodoList extends Component
         $old = $this->scoped()->findOrFail($todoId);
 
         if (! $old->completed) {
-            $this->dispatch('toast', message: __('devboard::t.msg.resume_only_done'), type: 'error');
+            $this->dispatch('toast', message: __('griglia::t.msg.resume_only_done'), type: 'error');
 
             return;
         }
@@ -270,7 +270,7 @@ class TodoList extends Component
             $this->showArchived = false;
         }
 
-        $this->dispatch('toast', message: __('devboard::t.msg.resumed'));
+        $this->dispatch('toast', message: __('griglia::t.msg.resumed'));
         $this->dispatch('open-ingredients', todoId: $new->id);
     }
 
@@ -297,7 +297,7 @@ class TodoList extends Component
 
         $this->scoped()->whereKey($this->editingId)->update(['title' => $title]);
         $this->cancelEdit();
-        $this->dispatch('toast', message: __('devboard::t.msg.renamed'));
+        $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
     }
 
     /** Titolo entro il limite? Altrimenti avvisa e non salva (niente troncamenti silenziosi). */
@@ -307,7 +307,7 @@ class TodoList extends Component
             return true;
         }
 
-        $this->dispatch('toast', message: __('devboard::t.msg.title_too_long', ['max' => self::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
+        $this->dispatch('toast', message: __('griglia::t.msg.title_too_long', ['max' => self::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
 
         return false;
     }
@@ -343,7 +343,7 @@ class TodoList extends Component
         ]);
 
         $this->cancelInsert();
-        $this->dispatch('toast', message: __('devboard::t.msg.added', ['title' => $title]));
+        $this->dispatch('toast', message: __('griglia::t.msg.added', ['title' => $title]));
     }
 
     /** @param array<int, int|string> $orderedIds Id dei todo nell'ordine mostrato dopo il drag. */
@@ -384,7 +384,7 @@ class TodoList extends Component
         if (! $todo->archived_at) {
             $this->active()->where('order', '>', $todo->order)->decrement('order');
         }
-        $this->dispatch('toast', message: __('devboard::t.msg.deleted', ['title' => $todo->title]), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.msg.deleted', ['title' => $todo->title]), type: 'info');
     }
 
     /** Proprietario delle liste: identifica il canale privato Reverb su cui arrivano gli aggiornamenti. */
@@ -406,7 +406,7 @@ class TodoList extends Component
     {
 
         return [
-            \Alle80\Devboard\Mode::echoListener() => 'onTodoChanged',
+            \Alle80\Griglia\Mode::echoListener() => 'onTodoChanged',
             'live-resync' => 'resync',
             'ingredients-updated' => 'refreshList',
             'resume-todo' => 'resume',
@@ -423,7 +423,7 @@ class TodoList extends Component
 
         $this->dispatch('todo-changed-live'); // il modale, se aperto, si aggiorna
 
-        if (($event['source'] ?? '') === 'cli' && ! empty($event['state_changed']) && app(\Alle80\Devboard\Settings\AppSettings::class)->toast_console_changes) {
+        if (($event['source'] ?? '') === 'cli' && ! empty($event['state_changed']) && app(\Alle80\Griglia\Settings\AppSettings::class)->toast_console_changes) {
             $title = (string) ($event['title'] ?? '');
             [$key, $type] = match ($event['state'] ?? '') {
                 'working' => ['agent_working', 'info'],
@@ -431,7 +431,7 @@ class TodoList extends Component
                 'question' => ['agent_question', 'info'],
                 default => ['agent_updated', 'info'],
             };
-            $message = __('devboard::t.msg.'.$key, ['title' => $title]);
+            $message = __('griglia::t.msg.'.$key, ['title' => $title]);
             $this->dispatch('toast', message: $message, type: $type);
         }
     }
@@ -453,7 +453,7 @@ class TodoList extends Component
         // Default: the generic themed view with the default theme (dedicated styles override render())
         $t = Themes::get(Themes::default());
 
-        return view('devboard::livewire.todo-list', [
+        return view('griglia::livewire.todo-list', [
             'todos' => $this->todos(),
             't' => $t,
             'theme' => Themes::default(),
@@ -462,6 +462,6 @@ class TodoList extends Component
             'filtering' => $this->isFiltering(),
             'plan' => $this->planStatus(),
             'listAgent' => (string) (Checklist::find(Checklist::currentId())?->agent ?? ''),
-        ])->layout('devboard::layouts.themed', ['theme' => Themes::default()])->title($this->listName());
+        ])->layout('griglia::layouts.themed', ['theme' => Themes::default()])->title($this->listName());
     }
 }

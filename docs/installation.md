@@ -10,26 +10,26 @@
 ## Steps
 
 ```bash
-composer require alle80/agent-devboard
-php artisan vendor:publish --tag=devboard-config     # config/devboard.php (optional)
+composer require alle80/griglia
+php artisan vendor:publish --tag=griglia-config     # config/devboard.php (optional)
 php artisan migrate                                  # tables + settings defaults
-php artisan vendor:publish --tag=devboard-agents     # AGENTS.md for your coding agent (optional)
+php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding agent (optional)
 ```
 
 Add the package assets to your Vite build (default `assets = vite`):
 
 ```css
 /* resources/css/app.css */
-@import '../../vendor/alle80/agent-devboard/resources/css/devboard.css';
+@import '../../vendor/alle80/griglia/resources/css/griglia.css';
 ```
 ```js
 // resources/js/app.js
-import '../../vendor/alle80/agent-devboard/resources/js/devboard.js';
+import '../../vendor/alle80/griglia/resources/js/griglia.js';
 ```
 
-or use the precompiled build: `DEVBOARD_ASSETS=precompiled` + `php artisan vendor:publish --tag=devboard-assets`.
+or use the precompiled build: `GRIGLIA_ASSETS=precompiled` + `php artisan vendor:publish --tag=griglia-assets`.
 
-Routes are registered under `devboard.route_prefix` (default: site root — `/`, `/settings`, `/stats`, …) and
+Routes are registered under `griglia.route_prefix` (default: site root — `/`, `/settings`, `/stats`, …) and
 protected by the package itself according to the [mode](configuration.md#modes).
 
 ## Live updates (optional)
@@ -48,4 +48,4 @@ Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; user
 ## First user and administrators
 
 Registration is up to your app. By default the **first registered user** is the board administrator (settings,
-agent context, theme packs); see [Security](security.md) for `DEVBOARD_ADMINS`, `canManageDevboard()` or a Gate.
+agent context, theme packs); see [Security](security.md) for `GRIGLIA_ADMINS`, `canManageDevboard()` or a Gate.

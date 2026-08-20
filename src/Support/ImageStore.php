@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Models\Attachment;
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Attachment;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,13 +34,13 @@ class ImageStore
             throw new RuntimeException('Immagine non leggibile');
         }
         if ($info[0] * $info[1] > self::MAX_PIXELS) {
-            throw new RuntimeException(__('devboard::t.image_too_large', ['mp' => (int) (self::MAX_PIXELS / 1_000_000)]));
+            throw new RuntimeException(__('griglia::t.image_too_large', ['mp' => (int) (self::MAX_PIXELS / 1_000_000)]));
         }
 
         [$data, $ext, $w, $h, $outMime] = self::process($file->getRealPath(), $mime);
 
         $path = sprintf('attachments/%d/%s.%s', $todo->id, Str::ulid(), $ext);
-        Storage::disk(config('devboard.attachments_disk', 'public'))->put($path, $data);
+        Storage::disk(config('griglia.attachments_disk', 'public'))->put($path, $data);
 
         return $todo->attachments()->create([
             'path' => $path,

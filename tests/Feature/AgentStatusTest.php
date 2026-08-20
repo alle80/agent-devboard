@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Support\AgentStatus;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Support\AgentStatus;
+use Alle80\Griglia\Tests\TestCase;
 use Carbon\CarbonImmutable;
 
 /** Agents status: derived values (used/remaining/level/reset), import command, page states. */
@@ -12,7 +12,7 @@ class AgentStatusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config(['devboard.agent_status_file' => sys_get_temp_dir().'/devboard-agent-status-'.getmypid().'.json']);
+        config(['griglia.agent_status_file' => sys_get_temp_dir().'/griglia-agent-status-'.getmypid().'.json']);
         @unlink(AgentStatus::path());
         $this->actingAsUser();
     }
@@ -65,8 +65,8 @@ class AgentStatusTest extends TestCase
             ['key' => 'broken', 'name' => 'Broken', 'error' => 'usage endpoint: 401'],
             ['name' => 'no key → ignored'],
         ]]));
-        $this->artisan('devboard:agent-status-import', ['--file' => $file])->expectsOutputToContain('3 agents imported')->assertSuccessful();
-        $this->artisan('devboard:agent-status-import', ['--file' => '/nope.json'])->assertFailed();
+        $this->artisan('griglia:agent-status-import', ['--file' => $file])->expectsOutputToContain('3 agents imported')->assertSuccessful();
+        $this->artisan('griglia:agent-status-import', ['--file' => '/nope.json'])->assertFailed();
 
         $status = AgentStatus::agents();
         $this->assertFalse($status['stale']);

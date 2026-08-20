@@ -36,24 +36,24 @@
     x-on:dragover.prevent
 >
     <div class="mb-2 flex items-center justify-between gap-2">
-        <span class="{{ $labelClass }}">{{ __('devboard::t.images') }}</span>
+        <span class="{{ $labelClass }}">{{ __('griglia::t.images') }}</span>
         <div class="flex items-center gap-2">
             {{-- Da galleria / file --}}
             <label class="{{ $btnClass }} cursor-pointer">
-                <x-devboard::icon name="image" /> {{ __('devboard::t.add_image') }}
+                <x-griglia::icon name="image" /> {{ __('griglia::t.add_image') }}
                 <input type="file" accept="image/jpeg,image/png,image/gif" multiple class="sr-only" wire:model="images">
             </label>
             {{-- Fotocamera (su smartphone apre direttamente la camera) --}}
             <label class="{{ $btnClass }} cursor-pointer sm:hidden">
-                <x-devboard::icon name="camera" /> {{ __('devboard::t.take_photo') }}
+                <x-griglia::icon name="camera" /> {{ __('griglia::t.take_photo') }}
                 <input type="file" accept="image/*" capture="environment" class="sr-only" wire:model="images">
             </label>
         </div>
     </div>
 
-    <p class="{{ $hintClass }} mb-2 text-xs" x-show="!uploading">{{ __('devboard::t.paste_hint') }}</p>
-    <p class="{{ $hintClass }} mb-2 text-xs" x-show="uploading" x-cloak>{{ __('devboard::t.uploading') }} <span x-text="progress"></span>%</p>
-    <p class="{{ $hintClass }} mb-2 text-xs" wire:loading wire:target="images">{{ __('devboard::t.processing_image') }}</p>
+    <p class="{{ $hintClass }} mb-2 text-xs" x-show="!uploading">{{ __('griglia::t.paste_hint') }}</p>
+    <p class="{{ $hintClass }} mb-2 text-xs" x-show="uploading" x-cloak>{{ __('griglia::t.uploading') }} <span x-text="progress"></span>%</p>
+    <p class="{{ $hintClass }} mb-2 text-xs" wire:loading wire:target="images">{{ __('griglia::t.processing_image') }}</p>
 
     @if ($imageError)
         <p class="mb-2 text-sm font-bold text-red-600">{{ $imageError }}</p>
@@ -69,11 +69,11 @@
                     <button
                         type="button"
                         wire:click="deleteAttachment({{ $img->id }})"
-                        wire:confirm="{{ __('devboard::t.delete_image_confirm', ['name' => $img->original_name]) }}"
-                        title="{{ __('devboard::t.delete_image') }}"
+                        wire:confirm="{{ __('griglia::t.delete_image_confirm', ['name' => $img->original_name]) }}"
+                        title="{{ __('griglia::t.delete_image') }}"
                         class="absolute -top-1.5 -right-1.5 flex size-6 cursor-pointer items-center justify-center rounded-full border-2 border-black bg-white text-xs font-bold text-red-600 shadow transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
-                        aria-label="{{ __('devboard::t.delete_image') }}"
-                    ><x-devboard::icon name="close" /></button>
+                        aria-label="{{ __('griglia::t.delete_image') }}"
+                    ><x-griglia::icon name="close" /></button>
                 </div>
             @endforeach
 
@@ -83,8 +83,8 @@
                     <img :src="zoom" :alt="caption || name" class="min-h-0 max-w-full flex-1 object-contain">
                     {{-- AI description of the picture (what the search sees), under the image --}}
                     <figcaption x-show="caption || name" class="db-lightbox-caption max-h-[30vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-black/60 px-4 py-3 text-center text-sm leading-relaxed text-white" x-on:click.stop>
-                        <span class="block text-xs uppercase tracking-wide opacity-60">{{ __('devboard::t.image_description') }}</span>
-                        <span x-text="caption || @js(__('devboard::t.image_no_description'))" x-bind:class="caption ? '' : 'italic opacity-60'"></span>
+                        <span class="block text-xs uppercase tracking-wide opacity-60">{{ __('griglia::t.image_description') }}</span>
+                        <span x-text="caption || @js(__('griglia::t.image_no_description'))" x-bind:class="caption ? '' : 'italic opacity-60'"></span>
                     </figcaption>
                 </div>
             </template>

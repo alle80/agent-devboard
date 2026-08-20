@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Settings;
+namespace Alle80\Griglia\Settings;
 
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Themes;
 use Spatie\LaravelSettings\Settings;
 
 /**
@@ -34,7 +34,7 @@ class AppSettings extends Settings
     /** Lato del pannello a scomparsa della dashboard su desktop: 'right' | 'left'. */
     public string $tab_side;
 
-    /** Board mode override: '' = follow config devboard.mode, 'local' = no authentication (global lists), 'server' = authenticated users. */
+    /** Board mode override: '' = follow config griglia.mode, 'local' = no authentication (global lists), 'server' = authenticated users. */
     public string $mode;
 
     /** Show the slide-out DASHBOARD tab (desktop). */
@@ -71,17 +71,17 @@ class AppSettings extends Settings
 
     public static function fields(): array
     {
-        $styles = ['' => __('devboard::t.settings_options.default_style_none')];
+        $styles = ['' => __('griglia::t.settings_options.default_style_none')];
         foreach (Themes::switcher() as $slug => $s) {
             $styles[$slug] = ($s['icon'] ?? '').' '.$s['label'];
         }
 
-        $providers = ['' => __('devboard::t.settings_options.ai_provider_env')];
+        $providers = ['' => __('griglia::t.settings_options.ai_provider_env')];
         foreach (array_keys((array) config('ai.providers', [])) as $name) {
             $providers[$name] = $name;
         }
 
-        $labels = (array) __('devboard::t.settings_fields');
+        $labels = (array) __('griglia::t.settings_fields');
         $def = [
             'default_style' => ['select', $styles],
             'title_max_length' => ['int', ['min' => 10, 'max' => 200]],
@@ -91,15 +91,15 @@ class AppSettings extends Settings
             'ai_image_model' => ['text', []],
             'toast_console_changes' => ['bool', []],
             'mode' => ['select', array_filter([
-                '' => __('devboard::t.settings_options.mode_config'),
-                'server' => __('devboard::t.settings_options.mode_server'),
-                'local' => \Alle80\Devboard\Mode::localFromUiAllowed() ? __('devboard::t.settings_options.mode_local') : null,
+                '' => __('griglia::t.settings_options.mode_config'),
+                'server' => __('griglia::t.settings_options.mode_server'),
+                'local' => \Alle80\Griglia\Mode::localFromUiAllowed() ? __('griglia::t.settings_options.mode_local') : null,
             ])],
             'show_dashboard_tab' => ['bool', []],
             'speech_mode' => ['select', [
-                'auto' => __('devboard::t.settings_options.speech_auto'),
-                'server' => __('devboard::t.settings_options.speech_server'),
-                'browser' => __('devboard::t.settings_options.speech_browser'),
+                'auto' => __('griglia::t.settings_options.speech_auto'),
+                'server' => __('griglia::t.settings_options.speech_server'),
+                'browser' => __('griglia::t.settings_options.speech_browser'),
             ]],
             'cost_per_m_in' => ['text', []],
             'cost_per_m_out' => ['text', []],
@@ -109,8 +109,8 @@ class AppSettings extends Settings
             'notify_webpush' => ['bool', []],
             'notify_mail' => ['bool', []],
             'tab_side' => ['select', [
-                'right' => __('devboard::t.settings_options.tab_side_right'),
-                'left' => __('devboard::t.settings_options.tab_side_left'),
+                'right' => __('griglia::t.settings_options.tab_side_right'),
+                'left' => __('griglia::t.settings_options.tab_side_left'),
             ]],
         ];
         $out = [];

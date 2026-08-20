@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Models\Checklist;
+use Alle80\Griglia\Models\Checklist;
 use Livewire\Component;
 
 /**
@@ -21,7 +21,7 @@ class NotificationBell extends Component
     protected function getListeners(): array
     {
 
-        return [\Alle80\Devboard\Mode::echoListener() => '$refresh'];
+        return [\Alle80\Griglia\Mode::echoListener() => '$refresh'];
     }
 
     protected function user(): ?object
@@ -49,7 +49,7 @@ class NotificationBell extends Component
             return;
         }
         if ($listId && $listId !== Checklist::currentId() && Checklist::mine()->whereKey($listId)->exists()) {
-            session(['checklist_id' => $listId, 'devboard_open_todo' => $todoId]);
+            session(['checklist_id' => $listId, 'griglia_open_todo' => $todoId]);
             $this->js('window.location.reload()');
 
             return;
@@ -66,7 +66,7 @@ class NotificationBell extends Component
     {
         $u = $this->user();
 
-        return view('devboard::livewire.notification-bell', [
+        return view('griglia::livewire.notification-bell', [
             'items' => $u ? $u->notifications()->latest()->limit(20)->get() : collect(),
             'unread' => $u ? $u->unreadNotifications()->count() : 0,
         ]);

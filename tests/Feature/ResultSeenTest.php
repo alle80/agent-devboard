@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\IngredientModal;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\IngredientModal;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
 class ResultSeenTest extends TestCase
@@ -21,7 +21,7 @@ class ResultSeenTest extends TestCase
     {
         $todo = Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $this->list->id, 'open_to_work' => true]);
 
-        $this->artisan('devboard:check', ['--done' => $todo->id, '--comment' => 'Shipped'])->assertSuccessful();
+        $this->artisan('griglia:check', ['--done' => $todo->id, '--comment' => 'Shipped'])->assertSuccessful();
 
         $todo->refresh();
         $this->assertTrue($todo->completed);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Ai\Agents;
+namespace Alle80\Griglia\Ai\Agents;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Attributes\MaxTokens;

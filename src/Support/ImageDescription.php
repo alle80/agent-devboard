@@ -1,10 +1,10 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Ai\Agents\ImageDescriber;
-use Alle80\Devboard\Models\Attachment;
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Ai\Agents\ImageDescriber;
+use Alle80\Griglia\Models\Attachment;
+use Alle80\Griglia\Settings\AppSettings;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Files\Image;
@@ -43,7 +43,7 @@ class ImageDescription
 
     public static function describe(Attachment $attachment): ?string
     {
-        if (! self::enabled() || ! Storage::disk(config('devboard.attachments_disk', 'public'))->exists($attachment->path)) {
+        if (! self::enabled() || ! Storage::disk(config('griglia.attachments_disk', 'public'))->exists($attachment->path)) {
             return null;
         }
 
@@ -53,7 +53,7 @@ class ImageDescription
 
             $response = (new ImageDescriber)->prompt(
                 'Describe this image.',
-                attachments: [Image::fromStorage($attachment->path, config('devboard.attachments_disk', 'public'))],
+                attachments: [Image::fromStorage($attachment->path, config('griglia.attachments_disk', 'public'))],
                 provider: count($providers) > 1 ? $providers : $providers[0],
                 model: $model,
             );

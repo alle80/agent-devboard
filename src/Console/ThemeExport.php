@@ -1,13 +1,13 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\ThemeStore;
+use Alle80\Griglia\ThemeStore;
 use Illuminate\Console\Command;
 
 class ThemeExport extends Command
 {
-    protected $signature = 'devboard:theme-export {slug : Slug of a generic theme (installed, config, registered or built-in)} {--out= : Output zip (default storage/app/theme-<slug>.zip)} {--css-from= : CSS file to extract the .theme-<slug> rules from (for themes defined in code)}';
+    protected $signature = 'griglia:theme-export {slug : Slug of a generic theme (installed, config, registered or built-in)} {--out= : Output zip (default storage/app/theme-<slug>.zip)} {--css-from= : CSS file to extract the .theme-<slug> rules from (for themes defined in code)}';
 
     protected $description = 'Exports a generic theme as an installable zip pack';
 

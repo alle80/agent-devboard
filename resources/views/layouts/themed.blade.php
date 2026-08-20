@@ -1,7 +1,7 @@
 @php($theme = $theme ?? request()->route('theme'))
-@php($theme = ($theme && \Alle80\Devboard\Themes::has($theme)) ? $theme : \Alle80\Devboard\Http\Middleware\RememberStyle::current())
-@php($theme = \Alle80\Devboard\Themes::has($theme) ? $theme : \Alle80\Devboard\Themes::default())
-@php($t = \Alle80\Devboard\Themes::get($theme))
+@php($theme = ($theme && \Alle80\Griglia\Themes::has($theme)) ? $theme : \Alle80\Griglia\Http\Middleware\RememberStyle::current())
+@php($theme = \Alle80\Griglia\Themes::has($theme) ? $theme : \Alle80\Griglia\Themes::default())
+@php($t = \Alle80\Griglia\Themes::get($theme))
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -11,18 +11,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#111111">
-    <title>{{ $title ?? 'Agent Devboard — '.$t['label'] }}</title>
+    <title>{{ $title ?? 'Griglia — '.$t['label'] }}</title>
     @if (! empty($t['icon_img']))
         <link rel="icon" href="{{ asset($t['icon_img']) }}">
     @else
-        <link rel="icon" href="{{ asset('vendor/devboard/images/brand/mark.svg') }}" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="{{ asset('vendor/devboard/images/brand/mark-180.png') }}">
+        <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ asset('vendor/griglia/images/brand/mark-180.png') }}">
     @endif
-    @if (! empty($t['fonts']) && config('devboard.fonts_url'))
-        <link rel="preconnect" href="{{ parse_url(config('devboard.fonts_url'), PHP_URL_SCHEME) }}://{{ parse_url(config('devboard.fonts_url'), PHP_URL_HOST) }}">
-        <link href="{{ config('devboard.fonts_url') }}{{ $t['fonts'] }}" rel="stylesheet">
+    @if (! empty($t['fonts']) && config('griglia.fonts_url'))
+        <link rel="preconnect" href="{{ parse_url(config('griglia.fonts_url'), PHP_URL_SCHEME) }}://{{ parse_url(config('griglia.fonts_url'), PHP_URL_HOST) }}">
+        <link href="{{ config('griglia.fonts_url') }}{{ $t['fonts'] }}" rel="stylesheet">
     @endif
-    <x-devboard::assets />
+    <x-griglia::assets />
     @if (! empty($t['css_url']))
         <link rel="stylesheet" href="{{ $t['css_url'] }}">
     @endif
@@ -44,16 +44,16 @@
         </div>
     @endif
 
-    <x-devboard::style-switcher :current="$theme" />
+    <x-griglia::style-switcher :current="$theme" />
 
-    <livewire:devboard::checklist-switcher />
+    <livewire:griglia::checklist-switcher />
 
-    <x-devboard::toasts />
+    <x-griglia::toasts />
 
-    @if (\Alle80\Devboard\Mode::isLocal())
+    @if (\Alle80\Griglia\Mode::isLocal())
         {{-- Local mode: no authentication — say it loudly on every page --}}
         <div class="db-local-banner fixed right-3 bottom-3 z-[70] max-w-xs rounded-lg border-2 border-black bg-amber-200 px-3 py-2 text-xs font-bold text-black shadow-[2px_2px_0_#000]" role="status" style="font-family: system-ui, sans-serif">
-            {{ __('devboard::t.local_banner') }}
+            {{ __('griglia::t.local_banner') }}
         </div>
     @endif
 
@@ -61,6 +61,6 @@
         {{ $slot }}
     </div>
 
-    <x-devboard::board-tab />
+    <x-griglia::board-tab />
 </body>
 </html>

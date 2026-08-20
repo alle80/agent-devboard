@@ -1,24 +1,24 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\AgentSettings;
-use Alle80\Devboard\Settings\OptimizationSettings;
-use Alle80\Devboard\Support\Notify;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AgentSettings;
+use Alle80\Griglia\Settings\OptimizationSettings;
+use Alle80\Griglia\Support\Notify;
 use Illuminate\Console\Command;
 
 /**
- * Communication channel user → coding agent: the "agent list" (config devboard.agent_list, e.g. «dev»)
+ * Communication channel user → coding agent: the "agent list" (config griglia.agent_list, e.g. «dev»)
  * holds requests as todos. Workflow on the row dot: ⚪ waiting (do not touch) → 🟢 open to work (user)
  * → 🔧 working (agent, --take) → ✔ done (--done --comment); ❓ questions (--ask --q) pause the item
  * until the user answers and restarts it. This command lists what the agent may work on, with notes,
  * sub-tasks, questions/answers, the context of resumed items and the agent settings to follow.
  */
-class DevboardCheck extends Command
+class GrigliaCheck extends Command
 {
-    protected $signature = 'devboard:check
+    protected $signature = 'griglia:check
         {--all : Also show completed items and items not open to work}
         {--json : Machine-readable output}
         {--take= : Id of the todo to mark as working (take in charge)}
@@ -30,19 +30,19 @@ class DevboardCheck extends Command
         {--q=* : Text of each question, repeatable}
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
         {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
-        {--agent= : Only the tasks of this agent key (multi-agent; default: DEVBOARD_AGENT_KEY, or every task when one agent)}';
+        {--agent= : Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)}';
 
     protected $aliases = ['sviluppo:check'];
 
-    protected $description = 'Lists the open requests of the agent list (see config devboard.agent_list)';
+    protected $description = 'Lists the open requests of the agent list (see config griglia.agent_list)';
 
     public function handle(): int
     {
-        $name = (string) config('devboard.agent_list', 'dev');
+        $name = (string) config('griglia.agent_list', 'dev');
         $list = Checklist::where('name', $name)->first();
 
         if (! $list) {
-            $this->warn(sprintf('No list named "%s" (config devboard.agent_list).', $name));
+            $this->warn(sprintf('No list named "%s" (config griglia.agent_list).', $name));
 
             return self::SUCCESS;
         }
@@ -113,11 +113,11 @@ class DevboardCheck extends Command
             return self::SUCCESS; // compact: the result line is enough, no settings/listing (token saving)
         }
 
-        $marker = storage_path('app/devboard-last-check');
+        $marker = storage_path('app/griglia-last-check');
         $last = is_file($marker) ? (int) file_get_contents($marker) : 0;
 
         // Multi-agent: which agent am I? (option, else config key); with several agents only my tasks are listed
-        $me = (string) ($this->option('agent') ?: (\Alle80\Devboard\Agent::many() ? \Alle80\Devboard\Agent::defaultKey() : ''));
+        $me = (string) ($this->option('agent') ?: (\Alle80\Griglia\Agent::many() ? \Alle80\Griglia\Agent::defaultKey() : ''));
         $workable = function (Checklist $l) use ($me) {
             $query = $l->todos()->whereNull('archived_at')->with(['ingredients', 'questions', 'parent.ingredients'])->orderBy('order');
             if (! $this->option('all')) {
@@ -126,7 +126,7 @@ class DevboardCheck extends Command
             }
             $todos = $query->get();
             if ($me !== '') {
-                $todos = $todos->filter(fn ($t) => \Alle80\Devboard\Agent::effective($t, $l) === $me)->values();
+                $todos = $todos->filter(fn ($t) => \Alle80\Griglia\Agent::effective($t, $l) === $me)->values();
             }
 
             return $todos;
@@ -141,8 +141,8 @@ class DevboardCheck extends Command
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
             $this->line('⚡ optimization: '.$opt->summary());
-            if (\Alle80\Devboard\Agent::many()) {
-                $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(\Alle80\Devboard\Agent::all()), \Alle80\Devboard\Agent::all())), $me, \Alle80\Devboard\Agent::label($me)));
+            if (\Alle80\Griglia\Agent::many()) {
+                $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(\Alle80\Griglia\Agent::all()), \Alle80\Griglia\Agent::all())), $me, \Alle80\Griglia\Agent::label($me)));
             }
             if ($opt->terse_agent) {
                 $this->line('⚡ '.$opt->terseRules());
@@ -158,7 +158,7 @@ class DevboardCheck extends Command
             $render = function ($todos) use ($last, $opt) {
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Devboard\Agent::many() ? ' {agent: '.\Alle80\Devboard\Agent::effective($t).'}' : '', $t->id));
+                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Griglia\Agent::many() ? ' {agent: '.\Alle80\Griglia\Agent::effective($t).'}' : '', $t->id));
                 if ($t->parent) {
                     $this->line(sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $t->parent->title, $t->parent->id));
                     if ($t->parent->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($t->parent->notes)));

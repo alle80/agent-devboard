@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Http\Controllers;
+namespace Alle80\Griglia\Http\Controllers;
 
-use Alle80\Devboard\Support\Speech;
+use Alle80\Griglia\Support\Speech;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +27,7 @@ class TranscribeController
         } catch (\Throwable $e) {
             Log::warning('devboard: transcription failed: '.$e->getMessage());
 
-            return response()->json(['ok' => false, 'error' => __('devboard::t.mic_error')], 502); // details only in the log
+            return response()->json(['ok' => false, 'error' => __('griglia::t.mic_error')], 502); // details only in the log
         }
 
         return response()->json(['ok' => true, 'text' => trim($text)]);

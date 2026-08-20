@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Http\Controllers;
+namespace Alle80\Griglia\Http\Controllers;
 
-use Alle80\Devboard\Models\Attachment;
-use Alle80\Devboard\Models\Checklist;
+use Alle80\Griglia\Models\Attachment;
+use Alle80\Griglia\Models\Checklist;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -15,7 +15,7 @@ class AttachmentController
         $a = Attachment::findOrFail($attachment);
         $list = $a->todo?->checklist;
         abort_unless($list && Checklist::mine()->whereKey($list->id)->exists(), 404);
-        $disk = Storage::disk(config('devboard.attachments_disk', 'public'));
+        $disk = Storage::disk(config('griglia.attachments_disk', 'public'));
         abort_unless($disk->exists($a->path), 404);
 
         return $disk->response($a->path, null, [

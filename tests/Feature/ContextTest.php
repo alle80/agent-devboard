@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\ContextPage;
-use Alle80\Devboard\Models\ContextBlock;
-use Alle80\Devboard\Models\ContextGroup;
-use Alle80\Devboard\Support\Context;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\ContextPage;
+use Alle80\Griglia\Models\ContextBlock;
+use Alle80\Griglia\Models\ContextGroup;
+use Alle80\Griglia\Support\Context;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
 /** Agent context as switchable groups/blocks: parse/import/export + the /context page. */
@@ -58,8 +58,8 @@ MD;
     {
         $file = sys_get_temp_dir().'/ctx.md';
         file_put_contents($file, self::MD);
-        $this->artisan('devboard:context', ['action' => 'import', '--file' => $file])->expectsOutputToContain('3 groups, 6 blocks imported')->assertSuccessful();
-        $this->artisan('devboard:context', ['action' => 'import', '--file' => $file])->assertFailed();
+        $this->artisan('griglia:context', ['action' => 'import', '--file' => $file])->expectsOutputToContain('3 groups, 6 blocks imported')->assertSuccessful();
+        $this->artisan('griglia:context', ['action' => 'import', '--file' => $file])->assertFailed();
         $this->assertSame(3, ContextGroup::count());
 
         // Everything enabled → export reproduces the content
@@ -77,8 +77,8 @@ MD;
         $this->assertStringContainsString('## Skills', Context::export(all: true));
         [$on, $total] = Context::tokens();
         $this->assertLessThan($total, $on);
-        $this->artisan('devboard:context', ['action' => 'status'])->expectsOutputToContain('3 groups, 6 blocks')->assertSuccessful();
-        $this->artisan('devboard:context', ['action' => 'export'])->expectsOutputToContain('Artisan')->assertSuccessful();
+        $this->artisan('griglia:context', ['action' => 'status'])->expectsOutputToContain('3 groups, 6 blocks')->assertSuccessful();
+        $this->artisan('griglia:context', ['action' => 'export'])->expectsOutputToContain('Artisan')->assertSuccessful();
     }
 
     public function test_page_toggles_selects_and_edits(): void

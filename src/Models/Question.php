@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Models;
+namespace Alle80\Griglia\Models;
 
-use Alle80\Devboard\Support\Live;
+use Alle80\Griglia\Support\Live;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

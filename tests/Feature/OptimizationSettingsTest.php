@@ -1,15 +1,15 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\SettingsPage;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\OptimizationSettings;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\SettingsPage;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\OptimizationSettings;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
-/** «Optimization» settings group: token-saving switches read by devboard:check and shown in /settings. */
+/** «Optimization» settings group: token-saving switches read by griglia:check and shown in /settings. */
 class OptimizationSettingsTest extends TestCase
 {
     protected Todo $todo;
@@ -33,7 +33,7 @@ class OptimizationSettingsTest extends TestCase
         $this->assertTrue($opt->token_report);
 
         // Plain check: settings + optimization line + listing
-        $this->artisan('devboard:check')
+        $this->artisan('griglia:check')
             ->expectsOutputToContain('FOLLOW THEM')
             ->expectsOutputToContain('⚡ optimization: ')
             ->expectsOutputToContain('🟢 #2 Add dark mode')
@@ -41,7 +41,7 @@ class OptimizationSettingsTest extends TestCase
             ->assertSuccessful();
 
         // Action with compact on: only the result line
-        $this->artisan('devboard:check', ['--take' => $this->todo->id])
+        $this->artisan('griglia:check', ['--take' => $this->todo->id])
             ->expectsOutputToContain('taken in charge')
             ->doesntExpectOutputToContain('FOLLOW THEM')
             ->doesntExpectOutputToContain('#2 Add dark mode')
@@ -50,7 +50,7 @@ class OptimizationSettingsTest extends TestCase
         // Compact off: the action prints the listing again
         $opt->compact_check = false;
         $opt->save();
-        $this->artisan('devboard:check', ['--take' => $this->todo->id, '--progress' => 40])
+        $this->artisan('griglia:check', ['--take' => $this->todo->id, '--progress' => 40])
             ->expectsOutputToContain('taken in charge')
             ->expectsOutputToContain('FOLLOW THEM')
             ->expectsOutputToContain('🔧 #2 Add dark mode [40%]')
@@ -64,7 +64,7 @@ class OptimizationSettingsTest extends TestCase
         $opt->context_max_chars = 100;
         $opt->save();
 
-        $this->artisan('devboard:check')
+        $this->artisan('griglia:check')
             ->expectsOutputToContain('TERSE MODE ON')
             ->expectsOutputToContain(str_repeat('x', 100).' […]')
             ->doesntExpectOutputToContain(str_repeat('x', 101))

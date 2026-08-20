@@ -1,13 +1,13 @@
 <?php
 
-namespace Alle80\Devboard;
+namespace Alle80\Griglia;
 
 /**
  * Registry of the visual styles.
  *
  * Two kinds of entries:
  *  - generic themes: rendered by ThemedTodoList with the shared views and CSS variables (.theme-<slug>);
- *    the package ships "slate"; more can be added via config('devboard.themes') or Themes::registerTheme().
+ *    the package ships "slate"; more can be added via config('griglia.themes') or Themes::registerTheme().
  *  - dedicated styles: routes with their own Livewire components/views (registered by the host app
  *    with Themes::registerStyle(), e.g. the manga/jacovitti/c64 versions of the original app).
  *
@@ -32,7 +32,7 @@ class Themes
             'slate' => [
                 'label' => 'Slate',
                 'icon' => '🪨',
-                'icon_img' => '/vendor/devboard/images/slate/slate.svg',
+                'icon_img' => '/vendor/griglia/images/slate/slate.svg',
                 'fonts' => 'jetbrains-mono:400,700',
                 'claim' => 'todo',
                 'counter' => 'done',
@@ -62,11 +62,11 @@ class Themes
         static::$skins[$slug] = $skin;
     }
 
-    /** All generic themes: built-in + config('devboard.themes') + runtime registrations. */
+    /** All generic themes: built-in + config('griglia.themes') + runtime registrations. */
     public static function all(): array
     {
         // Installed packs (storage) override themes registered in code, never the built-in ones
-        return array_merge(static::builtin(), (array) config('devboard.themes', []), static::$themes, array_diff_key(ThemeStore::installed(), static::builtin()));
+        return array_merge(static::builtin(), (array) config('griglia.themes', []), static::$themes, array_diff_key(ThemeStore::installed(), static::builtin()));
     }
 
     public static function has(string $slug): bool
@@ -81,7 +81,7 @@ class Themes
 
     public static function default(): string
     {
-        $slug = (string) config('devboard.default_theme', 'slate');
+        $slug = (string) config('griglia.default_theme', 'slate');
 
         return static::has($slug) ? $slug : array_key_first(static::all());
     }
@@ -112,7 +112,7 @@ class Themes
     /** URL of a generic theme page (honours the route prefix). */
     public static function url(string $slug): string
     {
-        return '/'.trim(config('devboard.route_prefix', '').'/'.$slug, '/');
+        return '/'.trim(config('griglia.route_prefix', '').'/'.$slug, '/');
     }
 
     /** Is this slug a known style (generic theme or dedicated)? */
@@ -136,7 +136,7 @@ class Themes
         }
 
         return [
-            'layout' => 'devboard::layouts.themed', 'layoutData' => ['theme' => $style], 'home' => static::url($style),
+            'layout' => 'griglia::layouts.themed', 'layoutData' => ['theme' => $style], 'home' => static::url($style),
             'card' => 'tl-card p-5',
             'h1' => 'tl-display tl-title text-2xl',
             'h2' => 'tl-display tl-accent text-xl',

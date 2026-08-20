@@ -3,7 +3,7 @@
     {{-- ===== HEADER ===== --}}
     <header class="relative mb-10 text-center">
         <div class="tl-card inline-block px-7 py-4">
-            <h1 class="tl-display tl-title"><x-devboard::logo size="1.1em" /> {{ $listName }} <x-devboard::logo size="1.1em" class="max-sm:hidden" /></h1>
+            <h1 class="tl-display tl-title"><x-griglia::logo size="1.1em" /> {{ $listName }} <x-griglia::logo size="1.1em" class="max-sm:hidden" /></h1>
             <p class="tl-claim mt-1.5">{{ $t['claim'] }}</p>
         </div>
 
@@ -16,7 +16,7 @@
     </header>
 
     {{-- Ricerca, filtri, archivio --}}
-    @include('devboard::livewire.partials.list-toolbar', [
+    @include('griglia::livewire.partials.list-toolbar', [
         'wrapClass' => '',
         'inputClass' => 'tl-input px-3 py-2 focus:outline-none',
         'chipClass' => 'tl-check tl-display',
@@ -46,12 +46,12 @@
             {{-- Separatore "+" per inserire PRIMA di questo todo --}}
             <div>
                 @if ($insertAt === $todo->order)
-                    @include('devboard::livewire.partials.insert-form')
+                    @include('griglia::livewire.partials.insert-form')
                 @else
                     <div class="group flex h-6 items-center justify-center">
                         <button
                             wire:click="$dispatch('open-new-task', { position: {{ $todo->order }} })"
-                            title="{{ __('devboard::t.insert_here') }}"
+                            title="{{ __('griglia::t.insert_here') }}"
                             class="tl-num cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100 active:translate-y-px"
                         >+</button>
                     </div>
@@ -69,7 +69,7 @@
 
                 <span
                     class="drag-handle shrink-0 cursor-grab touch-none text-xl leading-none opacity-30 transition select-none hover:opacity-100 active:cursor-grabbing"
-                    title="{{ __('devboard::t.drag_to_reorder') }}"
+                    title="{{ __('griglia::t.drag_to_reorder') }}"
                 >⠿</span>
 
                 <span class="tl-num tl-display shrink-0">{{ $todo->order }}</span>
@@ -78,12 +78,12 @@
                 <button
                     wire:click="toggle({{ $todo->id }})"
                     class="tl-check tl-display flex size-8 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px {{ $todo->completed ? 'tl-check-on' : '' }}"
-                >@if ($todo->completed)<x-devboard::icon name="check" :stroke="3" />@endif</button>
+                >@if ($todo->completed)<x-griglia::icon name="check" :stroke="3" />@endif</button>
 
                 {{-- Titolo (cliccabile se ha ingredienti o note) --}}
                 <div class="todo-title min-w-0 flex-1">
                     @if ($editingId === $todo->id)
-                        @include('devboard::livewire.partials.todo-title-edit', [
+                        @include('griglia::livewire.partials.todo-title-edit', [
                             'inputClass' => 'tl-input px-3 py-1.5 focus:outline-none',
                             'okClass' => 'tl-check tl-display tl-check-on cursor-pointer px-3 py-1.5 active:translate-y-px',
                             'cancelClass' => 'tl-check tl-display cursor-pointer px-3 py-1.5 active:translate-y-px',
@@ -98,26 +98,26 @@
                             </span>
                             @if ($todo->ingredients->isNotEmpty())
                                 <span class="tl-mini shrink-0">
-                                    <x-devboard::icon name="tasks" /> {{ $todo->ingredients->where('checked', true)->count() }}/{{ $todo->ingredients->count() }}
+                                    <x-griglia::icon name="tasks" /> {{ $todo->ingredients->where('checked', true)->count() }}/{{ $todo->ingredients->count() }}
                                 </span>
                             @endif
                             @if ($todo->claude_comment)
-                                <span class="shrink-0 text-sm opacity-80" title="{{ __('devboard::t.agent_replied') }}"><x-devboard::icon name="bot" /></span>
+                                <span class="shrink-0 text-sm opacity-80" title="{{ __('griglia::t.agent_replied') }}"><x-griglia::icon name="bot" /></span>
                             @endif
                             @if ($todo->attachments_count)
-                                <span class="inline-flex shrink-0 items-center gap-0.5 text-sm" title="{{ __('devboard::t.images_count', ['count' => $todo->attachments_count]) }}"><x-devboard::icon name="image" />{{ $todo->attachments_count }}</span>
+                                <span class="inline-flex shrink-0 items-center gap-0.5 text-sm" title="{{ __('griglia::t.images_count', ['count' => $todo->attachments_count]) }}"><x-griglia::icon name="image" />{{ $todo->attachments_count }}</span>
                             @endif
                             @if ($unseen)
-                                <span class="db-unseen-badge shrink-0" title="{{ __('devboard::t.result_new_hint') }}">{{ __('devboard::t.result_new') }}</span>
+                                <span class="db-unseen-badge shrink-0" title="{{ __('griglia::t.result_new_hint') }}">{{ __('griglia::t.result_new') }}</span>
                             @endif
-                            @if (\Alle80\Devboard\Agent::many() && $todo->agent)
-                                <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('devboard::t.agent_of_task') }}">{{ \Alle80\Devboard\Agent::label($todo->agent) }}</span>
+                            @if (\Alle80\Griglia\Agent::many() && $todo->agent)
+                                <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('griglia::t.agent_of_task') }}">{{ \Alle80\Griglia\Agent::label($todo->agent) }}</span>
                             @endif
                             @if ($todo->depends_on_id)
-                                <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('devboard::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}"><x-devboard::icon name="link" />@if ($todo->dependsOn?->completed)<x-devboard::icon name="check" size=".9em" />@endif</span>
+                                <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('griglia::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}"><x-griglia::icon name="link" />@if ($todo->dependsOn?->completed)<x-griglia::icon name="check" size=".9em" />@endif</span>
                             @endif
                             @if ($todo->working && $todo->progress !== null)
-                                <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('devboard::t.progress') }}">{{ $todo->progress }}%</span>
+                                <span class="db-progress-pct shrink-0 tabular-nums" title="{{ __('griglia::t.progress') }}">{{ $todo->progress }}%</span>
                                 @if ($todo->phase)
                                     <span class="db-phase min-w-0 truncate text-xs italic opacity-75" title="{{ $todo->phase }}">{{ $todo->phase }}</span>
                                 @endif
@@ -130,47 +130,47 @@
                     @php($st = $todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting')))
                     <button
                         wire:click="toggleOpenToWork({{ $todo->id }})"
-                        @if ($todo->working) wire:confirm="{{ __('devboard::t.stop_confirm', ['title' => $todo->title]) }}" @endif
-                        title="{{ $todo->question ? __('devboard::t.dot_question') : ($todo->working ? __('devboard::t.dot_working') : ($todo->open_to_work ? __('devboard::t.dot_otw_on') : __('devboard::t.dot_otw_off'))) }}"
+                        @if ($todo->working) wire:confirm="{{ __('griglia::t.stop_confirm', ['title' => $todo->title]) }}" @endif
+                        title="{{ $todo->question ? __('griglia::t.dot_question') : ($todo->working ? __('griglia::t.dot_working') : ($todo->open_to_work ? __('griglia::t.dot_otw_on') : __('griglia::t.dot_otw_off'))) }}"
                         class="todo-action db-badge db-badge-{{ $st }} shrink-0 cursor-pointer transition hover:scale-125 {{ $st === 'waiting' ? 'opacity-40 hover:opacity-100' : '' }}"
-                    ><x-devboard::icon :name="$st" size="1.2em" :stroke="2" /></button>
+                    ><x-griglia::icon :name="$st" size="1.2em" :stroke="2" /></button>
                     <button
                         wire:click="startEdit({{ $todo->id }})"
-                        title="{{ __('devboard::t.rename') }}"
+                        title="{{ __('griglia::t.rename') }}"
                         class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
-                    ><x-devboard::icon name="edit" size="1.05em" /></button>
+                    ><x-griglia::icon name="edit" size="1.05em" /></button>
                     @endif
 
                 {{-- Elimina --}}
                 @if ($showArchived)
                     <button
                         wire:click="unarchive({{ $todo->id }})"
-                        title="{{ __('devboard::t.restore') }}"
-                        aria-label="{{ __('devboard::t.restore') }}"
+                        title="{{ __('griglia::t.restore') }}"
+                        aria-label="{{ __('griglia::t.restore') }}"
                         class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
-                    ><x-devboard::icon name="restore" size="1.05em" /></button>
+                    ><x-griglia::icon name="restore" size="1.05em" /></button>
                 @else
                     <button
                         wire:click="archive({{ $todo->id }})"
-                        title="{{ __('devboard::t.archive_hint') }}"
-                        aria-label="{{ __('devboard::t.archive') }}"
+                        title="{{ __('griglia::t.archive_hint') }}"
+                        aria-label="{{ __('griglia::t.archive') }}"
                         class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
-                    ><x-devboard::icon name="archive" size="1.05em" /></button>
+                    ><x-griglia::icon name="archive" size="1.05em" /></button>
                 @endif
                     @if ($todo->completed)
                         <button
                             wire:click="resume({{ $todo->id }})"
-                            title="{{ __('devboard::t.resume_hint') }}"
-                            aria-label="{{ __('devboard::t.resume') }}"
+                            title="{{ __('griglia::t.resume_hint') }}"
+                            aria-label="{{ __('griglia::t.resume') }}"
                             class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
-                        ><x-devboard::icon name="resume" size="1.05em" /></button>
+                        ><x-griglia::icon name="resume" size="1.05em" /></button>
                     @endif
                 <button
                     wire:click="delete({{ $todo->id }})"
                     wire:confirm="{{ str_replace(':title', $todo->title, $t['confirm']) }}"
-                    title="{{ __('devboard::t.delete') }}"
+                    title="{{ __('griglia::t.delete') }}"
                     class="todo-action db-cmd-danger shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
-                ><x-devboard::icon name="trash" size="1.05em" /></button>
+                ><x-griglia::icon name="trash" size="1.05em" /></button>
             </div>
         </div>
         @endforeach
@@ -180,7 +180,7 @@
         <div wire:key="gap-end" class="pt-5">
             @unless ($showArchived)
             @if ($insertAt === $endPos)
-                @include('devboard::livewire.partials.insert-form')
+                @include('griglia::livewire.partials.insert-form')
             @else
                 <div class="text-center">
                     <button
@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    @if ($openTodo = session()->pull('devboard_open_todo'))
+    @if ($openTodo = session()->pull('griglia_open_todo'))
         {{-- Deep link (notification / bell): open the modal of that todo once the page is ready --}}
         <div wire:ignore x-data x-init="setTimeout(() => Livewire.dispatch('open-ingredients', { todoId: {{ (int) $openTodo }} }), 400)"></div>
     @endif
@@ -204,5 +204,5 @@
 
     {{-- wire:key: senza chiave stabile il modale viene ricreato (perdendo open=true) quando la lista
          si ri-renderizza dopo aver aggiunto una riga → il pulsante «nuovo task» non apriva il modale. --}}
-    <livewire:devboard::themed-ingredient-modal :theme="$theme" wire:key="devboard-ingredient-modal" />
+    <livewire:griglia::themed-ingredient-modal :theme="$theme" wire:key="griglia-ingredient-modal" />
 </div>

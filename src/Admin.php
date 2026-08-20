@@ -1,14 +1,15 @@
 <?php
 
-namespace Alle80\Devboard;
+namespace Alle80\Griglia;
 
 use Illuminate\Support\Facades\Gate;
 
 /**
  * Who may administer the board (global settings, agent context, theme packs): in local mode everybody;
- * in server mode, in this order, `canManageDevboard(): bool` on the user model if defined, else the Gate
- * ability `devboard.admin_gate` if set, else membership in `devboard.admins` (ids or e-mails, DEVBOARD_ADMINS)
- * if set, else the first registered user (lowest id) only.
+ * in server mode, in this order, `canManageGriglia(): bool` on the user model if defined (the pre-rename
+ * `canManageDevboard()` is still honoured), else the Gate ability `griglia.admin_gate` if set, else
+ * membership in `griglia.admins` (ids or e-mails, GRIGLIA_ADMINS) if set, else the first registered user
+ * (lowest id) only.
  */
 class Admin
 {
@@ -20,13 +21,16 @@ class Admin
         if (! $user) {
             return false;
         }
-        if (method_exists($user, 'canManageDevboard')) {
+        if (method_exists($user, 'canManageGriglia')) {
+            return (bool) $user->canManageGriglia();
+        }
+        if (method_exists($user, 'canManageDevboard')) {   // pre-rename hook, still honoured
             return (bool) $user->canManageDevboard();
         }
-        if ($gate = config('devboard.admin_gate')) {
+        if ($gate = config('griglia.admin_gate')) {
             return Gate::forUser($user)->allows($gate);
         }
-        $admins = config('devboard.admins');
+        $admins = config('griglia.admins');
         if (is_string($admins)) {
             $admins = array_values(array_filter(array_map('trim', explode(',', $admins))));
         }

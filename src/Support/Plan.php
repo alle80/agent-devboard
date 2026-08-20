@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
 use Closure;
 use Illuminate\Support\Facades\Log;
 
@@ -37,7 +37,7 @@ class Plan
             if (self::$resolver) {
                 return self::normalize((self::$resolver)($prompt));
             }
-            $response = (new \Alle80\Devboard\Ai\Agents\PlanBuilder)->prompt($prompt);
+            $response = (new \Alle80\Griglia\Ai\Agents\PlanBuilder)->prompt($prompt);
             $data = method_exists($response, 'toArray') ? $response->toArray() : (array) $response;
 
             return self::normalize($data['tasks'] ?? $data);
@@ -59,8 +59,8 @@ class Plan
         $order = (int) $list->todos()->whereNull('archived_at')->max('order');
         if (! $tasks) {
             $list->todos()->create([
-                'title' => __('devboard::t.plan.request_title'),
-                'notes' => __('devboard::t.plan.request_notes')."\n\n".$prompt,
+                'title' => __('griglia::t.plan.request_title'),
+                'notes' => __('griglia::t.plan.request_notes')."\n\n".$prompt,
                 'order' => $order + 1,
             ]);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Events\TodoChanged;
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Events\TodoChanged;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Support\Facades\Log;
 
 /**

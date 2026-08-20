@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Settings;
+namespace Alle80\Griglia\Settings;
 
 use Spatie\LaravelSettings\Settings;
 
@@ -8,7 +8,7 @@ use Spatie\LaravelSettings\Settings;
  * «Optimization» group: switches that make the agent spend fewer tokens.
  * Most of an agent session's cost is the context re-read at every turn, so the levers are: fewer turns
  * (batching, no re-listing after actions), smaller command outputs, and less prose in the chat.
- * `devboard:check` reads them: it trims its own output and prints the terse-mode instructions
+ * `griglia:check` reads them: it trims its own output and prints the terse-mode instructions
  * the agent must follow. Edited from /settings.
  */
 class OptimizationSettings extends Settings
@@ -19,7 +19,7 @@ class OptimizationSettings extends Settings
     /** Terse mode: the agent keeps chat prose to a minimum (batched commands, no recaps). Human readability of the chat is sacrificed. */
     public bool $terse_agent;
 
-    /** Max characters of previous context (🤖 comment / note of a resumed item, agent comments) shown by devboard:check; 0 = unlimited. */
+    /** Max characters of previous context (🤖 comment / note of a resumed item, agent comments) shown by griglia:check; 0 = unlimited. */
     public int $context_max_chars;
 
     /** The agent updates the progress % only piggybacked on other commands (never a turn just for it). */
@@ -34,7 +34,7 @@ class OptimizationSettings extends Settings
     }
 
     /**
-     * Fields for the settings page and devboard:check.
+     * Fields for the settings page and griglia:check.
      * key => [label, help, type (bool|int), options]
      */
     public static function fields(): array
@@ -46,7 +46,7 @@ class OptimizationSettings extends Settings
             'progress_piggyback' => ['bool', []],
             'token_report' => ['bool', []],
         ];
-        $labels = (array) __('devboard::t.settings_fields');
+        $labels = (array) __('griglia::t.settings_fields');
         $out = [];
         foreach ($types as $key => [$type, $opts]) {
             [$label, $help] = $labels[$key] ?? [$key, ''];
@@ -56,14 +56,14 @@ class OptimizationSettings extends Settings
         return $out;
     }
 
-    /** Compact one-liner for devboard:check. */
+    /** Compact one-liner for griglia:check. */
     public function summary(): string
     {
         $out = [];
         foreach (self::fields() as $key => $f) {
             $v = $this->{$key};
             $out[] = $f[0].': '.match ($f[2]) {
-                'bool' => $v ? __('devboard::t.yes') : __('devboard::t.no'),
+                'bool' => $v ? __('griglia::t.yes') : __('griglia::t.no'),
                 default => (string) $v,
             };
         }
@@ -74,7 +74,7 @@ class OptimizationSettings extends Settings
     /** Extra rules printed to the agent when terse mode is on. */
     public function terseRules(): string
     {
-        return 'TERSE MODE ON (token saving): no narration or recaps in the chat, one-line status at most; batch shell commands into a single call; do not re-run devboard:check after --take/--done/--ask (the result line is enough); read only the file parts you need (offset/limit, grep, head) and never re-read what you already saw; short commit messages; 🤖 comment ≤ 8 lines unless the setting says detailed; no screenshots unless «verify before closing» is on.';
+        return 'TERSE MODE ON (token saving): no narration or recaps in the chat, one-line status at most; batch shell commands into a single call; do not re-run griglia:check after --take/--done/--ask (the result line is enough); read only the file parts you need (offset/limit, grep, head) and never re-read what you already saw; short commit messages; 🤖 comment ≤ 8 lines unless the setting says detailed; no screenshots unless «verify before closing» is on.';
     }
 
     /** Cut a text to context_max_chars (0 = unlimited). */

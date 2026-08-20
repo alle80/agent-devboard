@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Models\Checklist;
+use Alle80\Griglia\Models\Checklist;
 use Livewire\Component;
 
 class ChecklistSwitcher extends Component
@@ -39,7 +39,7 @@ class ChecklistSwitcher extends Component
 
         $wasCurrent = $this->editingId === Checklist::currentId();
         $this->cancelRename();
-        $this->dispatch('toast', message: __('devboard::t.msg.list_renamed'));
+        $this->dispatch('toast', message: __('griglia::t.msg.list_renamed'));
 
         // Il nome della lista corrente è il titolo della pagina: ricarico per aggiornarlo ovunque
         if ($wasCurrent) {
@@ -70,15 +70,15 @@ class ChecklistSwitcher extends Component
             return;
         }
         if ($this->asPlan && trim($this->planPrompt) === '') {
-            $this->dispatch('toast', message: __('devboard::t.plan.prompt_required'), type: 'error');
+            $this->dispatch('toast', message: __('griglia::t.plan.prompt_required'), type: 'error');
 
             return;
         }
 
         $list = Checklist::create(['name' => $name, 'user_id' => auth()->id()]);
         if ($this->asPlan) {
-            $n = \Alle80\Devboard\Support\Plan::build($list, trim($this->planPrompt));
-            session()->flash('devboard_toast', $n > 0 ? ['message' => __('devboard::t.plan.built', ['count' => $n]), 'type' => 'success'] : ['message' => __('devboard::t.plan.not_built'), 'type' => 'info']);
+            $n = \Alle80\Griglia\Support\Plan::build($list, trim($this->planPrompt));
+            session()->flash('griglia_toast', $n > 0 ? ['message' => __('griglia::t.plan.built', ['count' => $n]), 'type' => 'success'] : ['message' => __('griglia::t.plan.not_built'), 'type' => 'info']);
         }
         session(['checklist_id' => $list->id]);
         $this->js('window.location.reload()');
@@ -93,7 +93,7 @@ class ChecklistSwitcher extends Component
 
         $list = Checklist::mine()->whereKey($checklistId)->first();
         $list?->delete();
-        $this->dispatch('toast', message: __('devboard::t.msg.list_deleted', ['name' => $list?->name]), type: 'info');
+        $this->dispatch('toast', message: __('griglia::t.msg.list_deleted', ['name' => $list?->name]), type: 'info');
 
         if ((int) session('checklist_id') === $checklistId) {
             session()->forget('checklist_id');
@@ -126,7 +126,7 @@ class ChecklistSwitcher extends Component
             'todos as running_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', false)->where(fn ($w) => $w->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true)),
         ])->orderBy('id')->get();
 
-        return view('devboard::livewire.checklist-switcher', [
+        return view('griglia::livewire.checklist-switcher', [
             'lists' => $lists,
             'currentId' => Checklist::currentId(),
         ]);

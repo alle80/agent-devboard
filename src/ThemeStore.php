@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard;
+namespace Alle80\Griglia;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -12,8 +12,8 @@ use ZipArchive;
  *   theme.json  — the theme definition (slug, label, icon, fonts, texts, deco, optional icon_img, version, author)
  *   theme.css   — CSS variables of the theme (.theme-<slug> { --tl-… }) and any rule scoped to .theme-<slug>
  *   images/…    — optional images (icon_img and anything referenced by the CSS with relative urls)
- * Packs live in storage/app/themes/<slug>/ and are served by the devboard.theme-asset route
- * (/devboard-themes/{slug}/{path}). Installed themes are merged into Themes::all() at runtime and
+ * Packs live in storage/app/themes/<slug>/ and are served by the griglia.theme-asset route
+ * (/griglia-themes/{slug}/{path}). Installed themes are merged into Themes::all() at runtime and
  * override themes registered in code with the same slug (never the built-in ones nor dedicated styles).
  */
 class ThemeStore
@@ -72,7 +72,7 @@ class ThemeStore
     /** Public URL of a file of an installed theme. */
     public static function url(string $slug, string $file): string
     {
-        return url('/devboard-themes/'.$slug.'/'.ltrim($file, '/'));
+        return url('/griglia-themes/'.$slug.'/'.ltrim($file, '/'));
     }
 
     public static function isValidSlug(string $slug): bool
@@ -131,7 +131,7 @@ class ThemeStore
     {
         $zip = new ZipArchive;
         if ($zip->open($zipPath) !== true) {
-            throw new RuntimeException(__('devboard::t.themes.err_zip'));
+            throw new RuntimeException(__('griglia::t.themes.err_zip'));
         }
 
         // Find theme.json (allow one top-level folder inside the zip)
@@ -145,18 +145,18 @@ class ThemeStore
         }
         if ($prefix === null) {
             $zip->close();
-            throw new RuntimeException(__('devboard::t.themes.err_missing_json'));
+            throw new RuntimeException(__('griglia::t.themes.err_missing_json'));
         }
 
         $def = json_decode((string) $zip->getFromName($prefix.'theme.json'), true);
         $slug = is_array($def) ? (string) ($def['slug'] ?? '') : '';
         if (! is_array($def) || ! static::isValidSlug($slug)) {
             $zip->close();
-            throw new RuntimeException(__('devboard::t.themes.err_invalid_json'));
+            throw new RuntimeException(__('griglia::t.themes.err_invalid_json'));
         }
         if (isset(Themes::builtin()[$slug]) || isset(Themes::styles()[$slug]) || in_array($slug, ['settings', 'login', 'logout', 'register'], true)) {
             $zip->close();
-            throw new RuntimeException(__('devboard::t.themes.err_reserved', ['slug' => $slug]));
+            throw new RuntimeException(__('griglia::t.themes.err_reserved', ['slug' => $slug]));
         }
 
         $target = static::path($slug);
@@ -165,7 +165,7 @@ class ThemeStore
 
         try {
             if ($zip->numFiles > self::MAX_ENTRIES) {
-                throw new RuntimeException(__('devboard::t.themes.err_too_many_files', ['max' => self::MAX_ENTRIES]));
+                throw new RuntimeException(__('griglia::t.themes.err_too_many_files', ['max' => self::MAX_ENTRIES]));
             }
             $total = 0;
             for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -188,7 +188,7 @@ class ThemeStore
                     continue;
                 }
                 if ($total + $declared > self::MAX_TOTAL_BYTES) {
-                    throw new RuntimeException(__('devboard::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
+                    throw new RuntimeException(__('griglia::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
                 }
                 $data = $zip->getFromIndex($i);
                 if ($data === false || strlen($data) > self::MAX_FILE_BYTES) {
@@ -196,7 +196,7 @@ class ThemeStore
                 }
                 $total += strlen($data);
                 if ($total > self::MAX_TOTAL_BYTES) {
-                    throw new RuntimeException(__('devboard::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
+                    throw new RuntimeException(__('griglia::t.themes.err_too_big_total', ['max' => (int) (self::MAX_TOTAL_BYTES / 1024 / 1024)]));
                 }
                 if ($ext === 'css') {
                     $data = self::sanitizeCss($data);
@@ -207,7 +207,7 @@ class ThemeStore
             $zip->close();
 
             if (! is_file($tmp.'/theme.json')) {
-                throw new RuntimeException(__('devboard::t.themes.err_missing_json'));
+                throw new RuntimeException(__('griglia::t.themes.err_missing_json'));
             }
 
             // Only the known keys are kept

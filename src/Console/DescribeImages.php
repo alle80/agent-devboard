@@ -1,14 +1,14 @@
 <?php
 
-namespace Alle80\Devboard\Console;
+namespace Alle80\Griglia\Console;
 
-use Alle80\Devboard\Models\Attachment;
-use Alle80\Devboard\Support\ImageDescription;
+use Alle80\Griglia\Models\Attachment;
+use Alle80\Griglia\Support\ImageDescription;
 use Illuminate\Console\Command;
 
 class DescribeImages extends Command
 {
-    protected $signature = 'devboard:describe-images {--all : Also regenerate existing descriptions} {--limit=100}';
+    protected $signature = 'griglia:describe-images {--all : Also regenerate existing descriptions} {--limit=100}';
 
     protected $aliases = ['images:describe'];
 

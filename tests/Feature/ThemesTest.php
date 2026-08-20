@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\SettingsPage;
-use Alle80\Devboard\Livewire\ThemedTodoList;
-use Alle80\Devboard\Themes;
-use Alle80\Devboard\ThemeStore;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\SettingsPage;
+use Alle80\Griglia\Livewire\ThemedTodoList;
+use Alle80\Griglia\Themes;
+use Alle80\Griglia\ThemeStore;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Livewire\Livewire;
@@ -49,7 +49,7 @@ class ThemesTest extends TestCase
         $this->assertArrayHasKey('slate', Themes::all());
         $this->assertSame('slate', Themes::default());
 
-        config(['devboard.themes' => ['candy' => ['label' => 'Candy', 'icon' => '🍬']]]);
+        config(['griglia.themes' => ['candy' => ['label' => 'Candy', 'icon' => '🍬']]]);
         Themes::registerTheme('night', ['label' => 'Night', 'icon' => '🌙']);
         Themes::registerStyle('manga', ['label' => 'Manga', 'icon' => '💥', 'route' => '/?stay=1']);
 
@@ -59,7 +59,7 @@ class ThemesTest extends TestCase
         $this->assertTrue(Themes::known('night'));
         $this->assertFalse(Themes::known('nope'));
 
-        $this->assertSame('devboard::layouts.themed', Themes::settingsSkin('night')['layout']);
+        $this->assertSame('griglia::layouts.themed', Themes::settingsSkin('night')['layout']);
         Themes::registerSkin('manga', ['layout' => 'x']);
         $this->assertSame('x', Themes::settingsSkin('manga')['layout']);
     }
@@ -72,15 +72,15 @@ class ThemesTest extends TestCase
         $this->assertFileExists(ThemeStore::path('ocean', 'images/wave.png'));
         $this->assertFileDoesNotExist(ThemeStore::path('ocean', 'images/bad.svg'), 'svg is not accepted (scriptable)');
         $this->assertFileDoesNotExist(ThemeStore::path('ocean', 'evil.php'), 'unknown extensions are dropped');
-        $this->assertStringContainsString('/devboard-themes/ocean/theme.css', Themes::get('ocean')['css_url']);
+        $this->assertStringContainsString('/griglia-themes/ocean/theme.css', Themes::get('ocean')['css_url']);
 
-        $this->get('/devboard-themes/ocean/theme.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8');
-        $this->get('/devboard-themes/ocean/theme.json')->assertNotFound();
-        $this->get('/devboard-themes/ocean/images/wave.png')->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff')->assertHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; sandbox");
-        $this->get('/devboard-themes/ocean/images/bad.svg')->assertNotFound();
+        $this->get('/griglia-themes/ocean/theme.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8');
+        $this->get('/griglia-themes/ocean/theme.json')->assertNotFound();
+        $this->get('/griglia-themes/ocean/images/wave.png')->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff')->assertHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; sandbox");
+        $this->get('/griglia-themes/ocean/images/bad.svg')->assertNotFound();
 
         // The themed page works with the pack (css link + texts)
-        $this->get('/ocean')->assertOk()->assertSee('deep blue')->assertSee('devboard-themes/ocean/theme.css', false);
+        $this->get('/ocean')->assertOk()->assertSee('deep blue')->assertSee('griglia-themes/ocean/theme.css', false);
         Livewire::test(ThemedTodoList::class, ['theme' => 'ocean'])->assertSee('deep blue');
 
         $this->assertTrue(ThemeStore::uninstall('ocean'));
@@ -115,7 +115,7 @@ class ThemesTest extends TestCase
         $out = storage_path('framework/testing/slate-export.zip');
         $css = storage_path('framework/testing/app.css');
         File::put($css, ".theme-slate { --tl-bg: #000; }\n.other { color: red; }\n.theme-slate .tl-card { border: 0; }\n");
-        $this->artisan('devboard:theme-export', ['slug' => 'slate', '--out' => $out, '--css-from' => $css])->assertSuccessful();
+        $this->artisan('griglia:theme-export', ['slug' => 'slate', '--out' => $out, '--css-from' => $css])->assertSuccessful();
 
         $zip = new ZipArchive;
         $zip->open($out);
@@ -126,13 +126,13 @@ class ThemesTest extends TestCase
         $this->assertSame('slate', $def['slug']);
 
         // slate is built-in → import must be refused; a renamed copy installs fine
-        $this->artisan('devboard:theme-import', ['zip' => $out])->assertFailed();
+        $this->artisan('griglia:theme-import', ['zip' => $out])->assertFailed();
         $def['slug'] = 'slate-copy';
         $zip = new ZipArchive;
         $zip->open($out, ZipArchive::OVERWRITE);
         $zip->addFromString('theme.json', json_encode($def));
         $zip->close();
-        $this->artisan('devboard:theme-import', ['zip' => $out])->assertSuccessful();
+        $this->artisan('griglia:theme-import', ['zip' => $out])->assertSuccessful();
         $this->assertTrue(Themes::has('slate-copy'));
     }
 

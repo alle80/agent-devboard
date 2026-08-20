@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\TodoList;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\TodoList;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
 class TodoListComponentTest extends TestCase
@@ -105,7 +105,7 @@ class TodoListComponentTest extends TestCase
     public function test_todos_of_other_users_are_invisible(): void
     {
         $this->add('Mine');
-        $other = \Alle80\Devboard\Tests\Support\User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
+        $other = \Alle80\Griglia\Tests\Support\User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
         $foreign = Checklist::create(['name' => 'X', 'user_id' => $other->id]);
         Todo::create(['title' => 'Not mine', 'order' => 1, 'checklist_id' => $foreign->id]);
 

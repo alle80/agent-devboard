@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Http\Controllers;
+namespace Alle80\Griglia\Http\Controllers;
 
 use Illuminate\Http\Response;
 
@@ -10,11 +10,11 @@ class ServiceWorkerController
     public function __invoke(): Response
     {
         $js = <<<'JS'
-// Agent Devboard — Web Push service worker
+// Griglia — Web Push service worker
 self.addEventListener('push', (event) => {
   let payload = {};
   try { payload = event.data ? event.data.json() : {}; } catch (e) { payload = { title: event.data ? event.data.text() : '' }; }
-  const title = payload.title || 'Agent Devboard';
+  const title = payload.title || 'Griglia';
   const options = payload.options || payload;
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {
@@ -27,7 +27,7 @@ self.addEventListener('push', (event) => {
     });
     // tell open pages (diagnostics in /settings) that a push reached this device
     const list = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-    list.forEach((c) => c.postMessage({ type: 'devboard-push', title, body: options.body || '' }));
+    list.forEach((c) => c.postMessage({ type: 'griglia-push', title, body: options.body || '' }));
   })());
 });
 self.addEventListener('notificationclick', (event) => {

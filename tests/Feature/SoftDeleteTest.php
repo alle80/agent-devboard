@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Support\Stats;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Support\Stats;
+use Alle80\Griglia\Tests\TestCase;
 
 /** Task 298: deleting a list/task is a soft delete — the statistics survive; the trash can be emptied. */
 class SoftDeleteTest extends TestCase
@@ -57,16 +57,16 @@ class SoftDeleteTest extends TestCase
         $this->todo->delete();
         Todo::withTrashed()->whereKey($this->todo->id)->update(['deleted_at' => now()->subDays(10)]);
 
-        $this->artisan('devboard:empty-trash', ['--days' => 7, '--dry-run' => true])
+        $this->artisan('griglia:empty-trash', ['--days' => 7, '--dry-run' => true])
             ->expectsOutputToContain('1 trashed tasks (dry run, nothing deleted)')->assertSuccessful();
         $this->assertSame(2, Todo::onlyTrashed()->count());
 
-        $this->artisan('devboard:empty-trash', ['--days' => 7])->assertSuccessful();
+        $this->artisan('griglia:empty-trash', ['--days' => 7])->assertSuccessful();
         $this->assertNull(Todo::withTrashed()->find($this->todo->id), 'old one purged');
         $this->assertNotNull(Todo::withTrashed()->find($keep->id), 'recent one kept');
 
         $this->list->delete();
-        $this->artisan('devboard:empty-trash')->assertSuccessful();
+        $this->artisan('griglia:empty-trash')->assertSuccessful();
         $this->assertSame(0, Checklist::withTrashed()->count());
         $this->assertSame(0, Todo::withTrashed()->count(), 'list purge carries its tasks');
     }

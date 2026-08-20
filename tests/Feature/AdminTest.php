@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Admin;
-use Alle80\Devboard\Livewire\ContextPage;
-use Alle80\Devboard\Livewire\SettingsPage;
-use Alle80\Devboard\Tests\Support\User;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Admin;
+use Alle80\Griglia\Livewire\ContextPage;
+use Alle80\Griglia\Livewire\SettingsPage;
+use Alle80\Griglia\Tests\Support\User;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Livewire;
 
@@ -38,14 +38,14 @@ class AdminTest extends TestCase
         $this->actingAsUser('first@example.com');
         $second = User::create(['name' => 'Two', 'email' => 'two@example.com', 'password' => bcrypt('x')]);
 
-        config(['devboard.admins' => 'two@example.com']);
+        config(['griglia.admins' => 'two@example.com']);
         $this->assertTrue(Admin::allows($second));
         $this->assertFalse(Admin::allows(User::first()), 'explicit list replaces the first-user default');
-        config(['devboard.admins' => (string) $second->id]);
+        config(['griglia.admins' => (string) $second->id]);
         $this->assertTrue(Admin::allows($second));
 
-        config(['devboard.admins' => null, 'devboard.admin_gate' => 'manage-devboard']);
-        Gate::define('manage-devboard', fn ($u) => $u->email === 'two@example.com');
+        config(['griglia.admins' => null, 'griglia.admin_gate' => 'manage-griglia']);
+        Gate::define('manage-griglia', fn ($u) => $u->email === 'two@example.com');
         $this->assertTrue(Admin::allows($second));
         $this->assertFalse(Admin::allows(User::first()));
 
@@ -59,13 +59,13 @@ class AdminTest extends TestCase
         $this->actingAsUser();
         $page = Livewire::test(SettingsPage::class);
         $page->set('values.app.mode', 'local');
-        $this->assertSame('', app(\Alle80\Devboard\Settings\AppSettings::class)->refresh()->mode);
-        $this->assertArrayNotHasKey('local', \Alle80\Devboard\Settings\AppSettings::fields()['mode'][3]);
+        $this->assertSame('', app(\Alle80\Griglia\Settings\AppSettings::class)->refresh()->mode);
+        $this->assertArrayNotHasKey('local', \Alle80\Griglia\Settings\AppSettings::fields()['mode'][3]);
 
-        config(['devboard.allow_local_from_ui' => true]);
-        $this->assertArrayHasKey('local', \Alle80\Devboard\Settings\AppSettings::fields()['mode'][3]);
+        config(['griglia.allow_local_from_ui' => true]);
+        $this->assertArrayHasKey('local', \Alle80\Griglia\Settings\AppSettings::fields()['mode'][3]);
         Livewire::test(SettingsPage::class)->set('values.app.mode', 'local');
-        $this->assertSame('local', app(\Alle80\Devboard\Settings\AppSettings::class)->refresh()->mode);
+        $this->assertSame('local', app(\Alle80\Griglia\Settings\AppSettings::class)->refresh()->mode);
     }
 
     public function test_context_page_is_admin_only(): void

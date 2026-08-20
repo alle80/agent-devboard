@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Settings;
+namespace Alle80\Griglia\Settings;
 
 use Spatie\LaravelSettings\Settings;
 
 /**
- * Settings that drive how the coding agent works on the agent list (config devboard.agent_list).
- * Edited from /settings; `devboard:check` prints them first so the agent follows them.
+ * Settings that drive how the coding agent works on the agent list (config griglia.agent_list).
+ * Edited from /settings; `griglia:check` prints them first so the agent follows them.
  * To add one: property here + default in a settings migration + entry in fields() and in the translations.
  */
 class AgentSettings extends Settings
@@ -57,9 +57,9 @@ class AgentSettings extends Settings
      * chiave => [label, help, type (bool|select|int|time), options (per select: valore => etichetta)]
      */
     /**
-     * Fields for the settings page and devboard:check.
+     * Fields for the settings page and griglia:check.
      * key => [label, help, type (bool|select|int|text|time), options (select: value => label)]
-     * Labels/help/options come from the translations (devboard::t.settings_fields / settings_options).
+     * Labels/help/options come from the translations (griglia::t.settings_fields / settings_options).
      */
     public static function fields(): array
     {
@@ -69,8 +69,8 @@ class AgentSettings extends Settings
             'daily_summary' => 'bool', 'daily_summary_time' => 'time', 'check_subtasks_on_done' => 'bool',
             'task_mode' => 'select',
         ];
-        $labels = (array) __('devboard::t.settings_fields');
-        $options = (array) __('devboard::t.settings_options');
+        $labels = (array) __('griglia::t.settings_fields');
+        $options = (array) __('griglia::t.settings_options');
         $out = [];
         foreach ($types as $key => $type) {
             [$label, $help] = $labels[$key] ?? [$key, ''];
@@ -80,14 +80,14 @@ class AgentSettings extends Settings
         return $out;
     }
 
-    /** Compact one-liner for devboard:check. */
+    /** Compact one-liner for griglia:check. */
     public function summary(): string
     {
         $out = [];
         foreach (self::fields() as $key => $f) {
             $v = $this->{$key};
             $out[] = $f[0].': '.match ($f[2]) {
-                'bool' => $v ? __('devboard::t.yes') : __('devboard::t.no'),
+                'bool' => $v ? __('griglia::t.yes') : __('griglia::t.no'),
                 'select' => $f[3][$v] ?? $v,
                 default => (string) $v,
             };

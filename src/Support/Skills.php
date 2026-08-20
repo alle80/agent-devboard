@@ -1,18 +1,18 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
 /**
  * Catalogue of the skills the coding agent has available (Claude Code skills/plugins), imported with
- * `devboard:skills-import` (JSON list of {name, description, source}) into a JSON file. The modal shows
+ * `griglia:skills-import` (JSON list of {name, description, source}) into a JSON file. The modal shows
  * them as an accordion of checkboxes under the Task note; the chosen ones are saved in `todos.skills`
- * and printed by `devboard:check` so the agent invokes them for that task.
+ * and printed by `griglia:check` so the agent invokes them for that task.
  */
 class Skills
 {
     public static function path(): string
     {
-        return (string) (config('devboard.skills_file') ?: storage_path('app/devboard/skills.json'));
+        return (string) (config('griglia.skills_file') ?: storage_path('app/griglia/skills.json'));
     }
 
     /** name => ['name' => …, 'description' => …, 'source' => …], sorted by name. */

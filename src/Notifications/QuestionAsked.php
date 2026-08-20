@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Notifications;
+namespace Alle80\Griglia\Notifications;
 
-use Alle80\Devboard\Models\Todo;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Support\Str;
 
-/** The agent asked questions on a task (devboard:check --ask). */
-class QuestionAsked extends DevboardNotification
+/** The agent asked questions on a task (griglia:check --ask). */
+class QuestionAsked extends GrigliaNotification
 {
     /** @param string[] $questions */
     public function __construct(Todo $todo, public array $questions = [])
@@ -26,13 +26,13 @@ class QuestionAsked extends DevboardNotification
 
     public function title(): string
     {
-        return __('devboard::t.notif.question_title', ['title' => $this->todo->title, 'count' => count($this->questions)]);
+        return __('griglia::t.notif.question_title', ['title' => $this->todo->title, 'count' => count($this->questions)]);
     }
 
     public function body(): string
     {
         $first = $this->questions[0] ?? '';
 
-        return $first !== '' ? Str::limit(preg_replace('/\s+/', ' ', $first), 180) : __('devboard::t.notif.question_body');
+        return $first !== '' ? Str::limit(preg_replace('/\s+/', ' ', $first), 180) : __('griglia::t.notif.question_body');
     }
 }

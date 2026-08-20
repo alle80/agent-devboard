@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Notifications;
+namespace Alle80\Griglia\Notifications;
 
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AppSettings;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\WebPush\WebPushChannel;
@@ -14,7 +14,7 @@ use NotificationChannels\WebPush\WebPushMessage;
  * not the agent): in-app bell (database), Web Push (browser/phone) and mail — each channel switchable
  * from /settings (AppSettings notify_in_app / notify_webpush / notify_mail).
  */
-abstract class DevboardNotification extends Notification
+abstract class GrigliaNotification extends Notification
 {
     public function __construct(public Todo $todo) {}
 
@@ -51,7 +51,7 @@ abstract class DevboardNotification extends Notification
     /** URL of the board page where the todo lives (list + modal opened by the query string). */
     public function url(): string
     {
-        $prefix = rtrim((string) config('devboard.route_prefix', ''), '/');
+        $prefix = rtrim((string) config('griglia.route_prefix', ''), '/');
 
         return url(($prefix ?: '').'/?list='.$this->todo->checklist_id.'&open='.$this->todo->id);
     }
@@ -75,7 +75,7 @@ abstract class DevboardNotification extends Notification
         return (new MailMessage)
             ->subject($this->icon().' '.$this->title())
             ->line($this->body())
-            ->action(__('devboard::t.notif.open_task'), $this->url());
+            ->action(__('griglia::t.notif.open_task'), $this->url());
     }
 
     public function toWebPush(object $notifiable, Notification $notification): WebPushMessage
@@ -83,8 +83,8 @@ abstract class DevboardNotification extends Notification
         return (new WebPushMessage)
             ->title($this->icon().' '.$this->title())
             ->body($this->body())
-            ->icon(asset('vendor/devboard/images/brand/mark-180.png'))
-            ->tag('devboard-todo-'.$this->todo->id)
+            ->icon(asset('vendor/griglia/images/brand/mark-180.png'))
+            ->tag('griglia-todo-'.$this->todo->id)
             ->data(['url' => $this->url(), 'todo_id' => $this->todo->id])
             ->options(['TTL' => 3600]);
     }

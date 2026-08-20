@@ -1,9 +1,9 @@
 <?php
 
-namespace Alle80\Devboard\Support;
+namespace Alle80\Griglia\Support;
 
-use Alle80\Devboard\Models\ContextBlock;
-use Alle80\Devboard\Models\ContextGroup;
+use Alle80\Griglia\Models\ContextBlock;
+use Alle80\Griglia\Models\ContextGroup;
 use Illuminate\Support\Facades\DB;
 
 /**

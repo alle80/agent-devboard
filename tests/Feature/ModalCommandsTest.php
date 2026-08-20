@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\IngredientModal;
-use Alle80\Devboard\Livewire\TodoList;
-use Alle80\Devboard\Models\Checklist;
-use Alle80\Devboard\Models\Todo;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\IngredientModal;
+use Alle80\Griglia\Livewire\TodoList;
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
 class ModalCommandsTest extends TestCase
@@ -82,7 +82,7 @@ class ModalCommandsTest extends TestCase
         $b = Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
         $other = Checklist::create(['name' => 'other', 'user_id' => $this->list->user_id]);
         Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $other->id]);
-        $foreign = Checklist::create(['name' => 'foreign', 'user_id' => \Alle80\Devboard\Tests\Support\User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')])->id]);
+        $foreign = Checklist::create(['name' => 'foreign', 'user_id' => \Alle80\Griglia\Tests\Support\User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')])->id]);
 
         $modal = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->assertSee('other')->assertDontSee('foreign');
         $modal->call('moveTo', $foreign->id);

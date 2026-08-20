@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Notifications;
+namespace Alle80\Griglia\Notifications;
 
 use Illuminate\Support\Str;
 
-/** The agent closed a task (devboard:check --done). */
-class TodoCompleted extends DevboardNotification
+/** The agent closed a task (griglia:check --done). */
+class TodoCompleted extends GrigliaNotification
 {
     public function kind(): string
     {
@@ -19,13 +19,13 @@ class TodoCompleted extends DevboardNotification
 
     public function title(): string
     {
-        return __('devboard::t.notif.done_title', ['title' => $this->todo->title]);
+        return __('griglia::t.notif.done_title', ['title' => $this->todo->title]);
     }
 
     public function body(): string
     {
         $c = trim((string) $this->todo->claude_comment);
 
-        return $c !== '' ? Str::limit(preg_replace('/\s+/', ' ', $c), 180) : __('devboard::t.notif.done_body');
+        return $c !== '' ? Str::limit(preg_replace('/\s+/', ' ', $c), 180) : __('griglia::t.notif.done_body');
     }
 }

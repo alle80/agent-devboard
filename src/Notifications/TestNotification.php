@@ -1,8 +1,8 @@
 <?php
 
-namespace Alle80\Devboard\Notifications;
+namespace Alle80\Griglia\Notifications;
 
-use Alle80\Devboard\Settings\AppSettings;
+use Alle80\Griglia\Settings\AppSettings;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\WebPush\WebPushChannel;
@@ -27,16 +27,16 @@ class TestNotification extends Notification
 
     public function toArray(object $notifiable): array
     {
-        return ['kind' => 'test', 'icon' => '🔔', 'title' => __('devboard::t.notif.test_title'), 'body' => __('devboard::t.notif.test_body'), 'todo_id' => 0, 'checklist_id' => 0, 'url' => url('/')];
+        return ['kind' => 'test', 'icon' => '🔔', 'title' => __('griglia::t.notif.test_title'), 'body' => __('griglia::t.notif.test_body'), 'todo_id' => 0, 'checklist_id' => 0, 'url' => url('/')];
     }
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)->subject('🔔 '.__('devboard::t.notif.test_title'))->line(__('devboard::t.notif.test_body'));
+        return (new MailMessage)->subject('🔔 '.__('griglia::t.notif.test_title'))->line(__('griglia::t.notif.test_body'));
     }
 
     public function toWebPush(object $notifiable, Notification $notification): WebPushMessage
     {
-        return (new WebPushMessage)->title('🔔 '.__('devboard::t.notif.test_title'))->body(__('devboard::t.notif.test_body'))->tag('devboard-test')->data(['url' => url('/')]);
+        return (new WebPushMessage)->title('🔔 '.__('griglia::t.notif.test_title'))->body(__('griglia::t.notif.test_body'))->tag('devboard-test')->data(['url' => url('/')]);
     }
 }

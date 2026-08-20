@@ -1,6 +1,6 @@
-<p align="center"><img src="public/images/brand/lockup-horizontal.svg" width="380" alt="Agent Devboard"></p>
+<p align="center"><img src="public/images/brand/lockup-horizontal.svg" width="380" alt="Griglia"></p>
 
-# alle80/agent-devboard
+# alle80/griglia
 
 A **dev board for coding agents** on Laravel 12/13 + Livewire 4. You queue requests as todos; a
 coding agent (Claude Code, …) takes them, asks questions, and closes them — driven from the app.
@@ -28,10 +28,10 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 ## Install
 
 ```bash
-composer require alle80/agent-devboard
+composer require alle80/griglia
 php artisan migrate                                  # tables + settings defaults (idempotent)
 php artisan storage:link                             # attachments live on the "public" disk
-php artisan vendor:publish --tag=devboard-assets     # precompiled build & theme assets
+php artisan vendor:publish --tag=griglia-assets     # precompiled build & theme assets
 ```
 
 Routes register automatically — `/` (default theme), `/{theme}`, `/settings`, `/context`, `/stats`,
@@ -46,7 +46,7 @@ Then wire up the front-end assets (below) and you're ready to [connect an agent]
 
 ## Connect a coding agent
 
-One list — `config('devboard.agent_list')`, default **`dev`** — is the request channel between you
+One list — `config('griglia.agent_list')`, default **`dev`** — is the request channel between you
 and the agent. You add todos; the agent works them. Setup is meant to be minimal:
 
 **1 — Launch the agent inside the project directory** (Claude Code, or any agent that reads a project
@@ -55,7 +55,7 @@ and the agent. You add todos; the agent works them. Setup is meant to be minimal
 **2 — Give it the workflow** (once):
 
 ```bash
-php artisan vendor:publish --tag=devboard-agents     # drops AGENTS.md in the project root
+php artisan vendor:publish --tag=griglia-agents     # drops AGENTS.md in the project root
 ```
 
 Agents read `AGENTS.md` automatically; it describes the whole protocol (states, order, questions, stop).
@@ -63,12 +63,12 @@ Agents read `AGENTS.md` automatically; it describes the whole protocol (states, 
 **3 — Start the monitor** (one command):
 
 ```bash
-php artisan devboard:watch      # prints ONLY the changes the agent must react to
+php artisan griglia:watch      # prints ONLY the changes the agent must react to
 ```
 
 `watch` polls the list and emits a line when something needs the agent — an item goes **open to
 work**, the **answers** to a paused question arrive, or a **stop** is requested. The agent then reads
-and acts with `devboard:check`.
+and acts with `griglia:check`.
 
 ### The state of each row
 
@@ -83,18 +83,18 @@ The badge on each row uses the package's SVG icon set (no emoji in the UI):
 | <img src="docs/images/state-stop.svg" width="18" alt="stop"> | stop | you stopped it (tap on the working badge); the agent drops it immediately |
 | <img src="docs/images/state-done.svg" width="18" alt="done"> | done | closed, with the agent's comment |
 
-### The agent's commands (`devboard:check`)
+### The agent's commands (`griglia:check`)
 
 ```bash
-php artisan devboard:check                # what to work on (open/working), in order; --all for everything
-php artisan devboard:check --take=ID      # take it in charge → working (starts at 0%)
-php artisan devboard:check --take=ID --progress=60 --phase="writing code"   # update % and phase as you go
-php artisan devboard:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
-php artisan devboard:check --done=ID --comment="…"                          # close it, with a note back → done
-php artisan devboard:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
+php artisan griglia:check                # what to work on (open/working), in order; --all for everything
+php artisan griglia:check --take=ID      # take it in charge → working (starts at 0%)
+php artisan griglia:check --take=ID --progress=60 --phase="writing code"   # update % and phase as you go
+php artisan griglia:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
+php artisan griglia:check --done=ID --comment="…"                          # close it, with a note back → done
+php artisan griglia:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
 ```
 
-`devboard:check` also prints, at the top, the **behaviour settings** from `/settings` that the agent must
+`griglia:check` also prints, at the top, the **behaviour settings** from `/settings` that the agent must
 follow (commit policy, autonomy, notifications, verification, git flow, task order, …) and the
 **Optimization** switches that cut the tokens a session spends (compact output, terse mode, context
 trimming). A closed item can be **resumed** into a new linked one, carrying its context.
@@ -104,20 +104,20 @@ trimming). A closed item can be **resumed** into a new linked one, carrying its 
 Any CLI coding agent works — Claude Code, OpenAI Codex CLI, Gemini CLI, Aider, Cursor, … The contract is
 deliberately small:
 
-- the two commands: `devboard:check` (read/act) and `devboard:watch` (react);
+- the two commands: `griglia:check` (read/act) and `griglia:watch` (react);
 - one instructions file with the same rules: `AGENTS.md` (Codex and most agents), `CLAUDE.md` (Claude Code)
   or `GEMINI.md` (Gemini);
-- `DEVBOARD_AGENT_NAME` sets how the UI calls the agent.
+- `GRIGLIA_AGENT_NAME` sets how the UI calls the agent.
 
 With more than one agent, declare them and pick one per list or per task:
 
 ```bash
 # .env
-DEVBOARD_AGENTS="claude:Claude Code,codex:Codex CLI"
+GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"
 ```
 
 ```bash
-php artisan devboard:check --agent=codex     # each agent sees only its own tasks
+php artisan griglia:check --agent=codex     # each agent sees only its own tasks
 ```
 
 ### Plan mode
@@ -144,8 +144,8 @@ Turn your instructions file into switchable blocks — groups (`##`) and blocks 
 multi-select, whole group), edit as Markdown and reorder:
 
 ```bash
-php artisan devboard:context import --file=CLAUDE.md   # file → groups/blocks
-php artisan devboard:context export                    # enabled blocks → stdout
+php artisan griglia:context import --file=CLAUDE.md   # file → groups/blocks
+php artisan griglia:context export                    # enabled blocks → stdout
 ```
 
 Write the export back to your instruction files from the host (see `scripts/sync-context.py` in the origin
@@ -153,14 +153,14 @@ repo, which also keeps the originals and restores them when the sync is switched
 
 ### Access, administrators and modes
 
-- **Modes**: `DEVBOARD_MODE=server` (default — login required, lists per user) or `DEVBOARD_MODE=local`
+- **Modes**: `GRIGLIA_MODE=server` (default — login required, lists per user) or `GRIGLIA_MODE=local`
   (no authentication, one global set of lists: **your own machine only** — bind to `127.0.0.1`; a banner
   reminds it on every page). Also switchable in `/settings`; enabling local from the UI needs
-  `APP_ENV=local` or `DEVBOARD_ALLOW_LOCAL_FROM_UI=true`.
+  `APP_ENV=local` or `GRIGLIA_ALLOW_LOCAL_FROM_UI=true`.
 - **Access** (server mode): restrict who uses the board with `canAccessDevboard(): bool` on your user model
-  or `DEVBOARD_ACCESS_GATE=<ability>`.
+  or `GRIGLIA_ACCESS_GATE=<ability>`.
 - **Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool`,
-  or `DEVBOARD_ADMIN_GATE=<ability>`, or `DEVBOARD_ADMINS="1,alice@example.com"`; by default only the first
+  or `GRIGLIA_ADMIN_GATE=<ability>`, or `GRIGLIA_ADMINS="1,alice@example.com"`; by default only the first
   registered user.
 - **Theme packs** are code-like content: admin-only install, SVG refused, CSS sanitised (no
   `@import`/external urls), size caps (5 MB/file, 20 MB, 200 files), assets served sandboxed.
@@ -185,17 +185,17 @@ Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; user
 ### Skills
 
 Load the catalogue of the agent's skills; the task modal shows them as an accordion under the note and
-`devboard:check` prints the chosen ones for the task the agent is working:
+`griglia:check` prints the chosen ones for the task the agent is working:
 
 ```bash
-php artisan devboard:skills-import --file=skills.json   # or JSON on stdin
+php artisan griglia:skills-import --file=skills.json   # or JSON on stdin
 ```
 
 ### Statistics and agents status
 
 - **`/stats`** — completed tasks per list (or all lists / all plans) with working time, tokens and **cost**
   (price per million tokens set in Settings), per-day bars, overview of every list. Deleting a list or a
-  task is a **soft delete**: statistics survive; purge for real with `php artisan devboard:empty-trash`.
+  task is a **soft delete**: statistics survive; purge for real with `php artisan griglia:empty-trash`.
 - **How it is measured** — every *working* interval is timed automatically (waiting for answers excluded);
   tokens are whatever the agent reports with `--tokens-in/--tokens-out`. The modal shows a **Stats** line
   per task.
@@ -203,7 +203,7 @@ php artisan devboard:skills-import --file=skills.json   # or JSON on stdin
   countdown, alert levels. Feed it with a JSON snapshot:
 
 ```bash
-php artisan devboard:agent-status-import --file=snapshot.json
+php artisan griglia:agent-status-import --file=snapshot.json
 ```
 
 (see `scripts/agent-status.py` in the origin repo for Claude Code — credentials never leave the host).
@@ -221,11 +221,11 @@ Pick one mode.
 **A — Precompiled (zero build).** Use the CSS/JS shipped by the package:
 
 ```bash
-# .env  →  DEVBOARD_ASSETS=precompiled   (or 'assets' => 'precompiled' in config/devboard.php)
-php artisan vendor:publish --tag=devboard-assets     # public/vendor/devboard/{build,images}
+# .env  →  GRIGLIA_ASSETS=precompiled   (or 'assets' => 'precompiled' in config/griglia.php)
+php artisan vendor:publish --tag=griglia-assets     # public/vendor/griglia/{build,images}
 ```
 
-`<x-devboard::assets />` then links `public/vendor/devboard/build/devboard.{css,js}` (Tailwind
+`<x-griglia::assets />` then links `public/vendor/griglia/build/griglia.{css,js}` (Tailwind
 utilities, the theme system, SortableJS, and Laravel Echo when a Reverb/Pusher key is set). No npm.
 
 **B — Bundled by your app (default, `assets = vite`).** Import the package sources in your Vite build.
@@ -234,64 +234,64 @@ Tailwind 4 doesn't scan `vendor/`, so add an `@source`:
 ```css
 /* resources/css/app.css */
 @import 'tailwindcss';
-@source '../../vendor/alle80/agent-devboard/resources/views/**/*.blade.php';
-@import '../../vendor/alle80/agent-devboard/resources/css/devboard.css';
+@source '../../vendor/alle80/griglia/resources/views/**/*.blade.php';
+@import '../../vendor/alle80/griglia/resources/css/griglia.css';
 ```
 
 ```js
 // resources/js/app.js
-import '../../vendor/alle80/agent-devboard/resources/js/devboard.js';   // SortableJS + Echo (optional)
+import '../../vendor/alle80/griglia/resources/js/griglia.js';   // SortableJS + Echo (optional)
 ```
 
 ```bash
 npm i sortablejs laravel-echo pusher-js && npm run build
 ```
 
-In both modes the Echo client is configured at runtime from `config('devboard.echo')` (`VITE_REVERB_*`
-/ `REVERB_*`); an empty key opens no WebSocket. Theme fonts load from `config('devboard.fonts_url')`
+In both modes the Echo client is configured at runtime from `config('griglia.echo')` (`VITE_REVERB_*`
+/ `REVERB_*`); an empty key opens no WebSocket. Theme fonts load from `config('griglia.fonts_url')`
 (bunny.net by default; set `''` to self-host). To rebuild the precompiled files after editing package
-sources: `cd vendor/alle80/agent-devboard && npm install && npm run build`.
+sources: `cd vendor/alle80/griglia && npm install && npm run build`.
 
 ## Configuration
 
 ```bash
-php artisan vendor:publish --tag=devboard-config     # config/devboard.php
-php artisan vendor:publish --tag=devboard-views      # override the Blade views
-php artisan vendor:publish --tag=devboard-lang       # translations (en, it)
-php artisan vendor:publish --tag=devboard-agents     # AGENTS.md (agent workflow)
+php artisan vendor:publish --tag=griglia-config     # config/griglia.php
+php artisan vendor:publish --tag=griglia-views      # override the Blade views
+php artisan vendor:publish --tag=griglia-lang       # translations (en, it)
+php artisan vendor:publish --tag=griglia-agents     # AGENTS.md (agent workflow)
 ```
 
-`config/devboard.php` covers the route prefix and middleware, the user model, the attachments disk,
+`config/griglia.php` covers the route prefix and middleware, the user model, the attachments disk,
 the default theme, and the **agent list** name (`agent_list`).
 
 ## Themes
 
 The package ships a generic theme system (shared views + CSS variables per `.theme-<slug>`) with the
-built-in **Slate** theme. Add more with `config('devboard.themes')` or
-`Alle80\Devboard\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
+built-in **Slate** theme. Add more with `config('griglia.themes')` or
+`Alle80\Griglia\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
 Fully custom styles (own components/views) plug in via `Themes::registerStyle()` /
 `Themes::registerSkin()`.
 
 **Installable packs (zip):** a `theme.json` + `theme.css` (+ optional `images/`). Install from
-**/settings → 🎨 Themes** or `php artisan devboard:theme-import pack.zip`; packs live in
+**/settings → 🎨 Themes** or `php artisan griglia:theme-import pack.zip`; packs live in
 `storage/app/themes/<slug>`. Export any theme as a starting point:
-`php artisan devboard:theme-export slate --css-from=resources/css/app.css`. A sample pack (`pollon`)
+`php artisan griglia:theme-export slate --css-from=resources/css/app.css`. A sample pack (`pollon`)
 is in `resources/themes/`.
 
 ## Live updates
 
 Every change to a todo / sub-task / question / attachment broadcasts
-`Alle80\Devboard\Events\TodoChanged` on the private channel `App.Models.User.{id}`. With no broadcaster
+`Alle80\Griglia\Events\TodoChanged` on the private channel `App.Models.User.{id}`. With no broadcaster
 configured nothing happens (failures are logged, never raised).
 
 ## Development
 
 ```bash
-cd packages/devboard && composer update && vendor/bin/phpunit
+cd packages/griglia && composer update && vendor/bin/phpunit
 ```
 
 The suite (orchestra/testbench, in-memory sqlite) covers migrations, per-user scoping, the Livewire
-components, `devboard:check` and `devboard:watch`, the theme registry and zip packs, translation parity
+components, `griglia:check` and `griglia:watch`, the theme registry and zip packs, translation parity
 and the live event. GitHub Actions runs it on PHP 8.3 / 8.4 on every push touching the package.
 
 ## License
@@ -301,7 +301,7 @@ MIT — see [LICENSE](LICENSE).
 ## Documentation
 
 Full docs live in [`docs/`](docs/index.md) (MkDocs, Material theme): build the static site with
-`php artisan devboard:docs-build` (needs `pip install mkdocs-material`, or `--docker`), preview with `--serve`.
+`php artisan griglia:docs-build` (needs `pip install mkdocs-material`, or `--docker`), preview with `--serve`.
 
 ## Security
 

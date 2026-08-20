@@ -1,11 +1,11 @@
 <?php
 
-namespace Alle80\Devboard\Livewire;
+namespace Alle80\Griglia\Livewire;
 
-use Alle80\Devboard\Themes;
+use Alle80\Griglia\Themes;
 use Livewire\Attributes\Layout;
 
-#[Layout('devboard::layouts.themed')]
+#[Layout('griglia::layouts.themed')]
 class ThemedTodoList extends TodoList
 {
     public string $theme;
@@ -20,14 +20,14 @@ class ThemedTodoList extends TodoList
     {
         $t = Themes::get($this->theme);
 
-        return view('devboard::livewire.todo-list', [
+        return view('griglia::livewire.todo-list', [
             'todos' => $this->todos(),
             't' => $t,
             'listName' => $this->listName(),
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
             'plan' => $this->planStatus(),
-            'listAgent' => (string) (\Alle80\Devboard\Models\Checklist::find(\Alle80\Devboard\Models\Checklist::currentId())?->agent ?? ''),
+            'listAgent' => (string) (\Alle80\Griglia\Models\Checklist::find(\Alle80\Griglia\Models\Checklist::currentId())?->agent ?? ''),
         ])->title($this->listName().' — '.$t['label']);
     }
 }

@@ -4,9 +4,9 @@ The instructions file your agent reads at every step (e.g. `CLAUDE.md`) can be *
 (`/context`, administrators only):
 
 ```bash
-php artisan devboard:context import --file=CLAUDE.md     # once: markdown → groups (##) and blocks
-php artisan devboard:context export                       # the enabled blocks as markdown
-php artisan devboard:context status
+php artisan griglia:context import --file=CLAUDE.md     # once: markdown → groups (##) and blocks
+php artisan griglia:context export                       # the enabled blocks as markdown
+php artisan griglia:context status
 ```
 
 Each group and block has a switch; blocks can be multi-selected and enabled/disabled together, edited (Markdown
@@ -19,4 +19,4 @@ cron every minute). Token-saving switches live in Settings → Optimization.
 The switch **Generate the instruction files from the board** (top of `/context`, setting `app.context_sync`)
 decides whether the host sync writes the generated files (on) or restores and leaves the **original** files alone
 (off) — useful when you stop using the board: the originals apply again. Host scripts read it with
-`php artisan devboard:context enabled` (prints `1`/`0`).
+`php artisan griglia:context enabled` (prints `1`/`0`).

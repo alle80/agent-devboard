@@ -1,10 +1,10 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Settings\AgentSettings;
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Settings\AgentSettings;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Schema;
 
 class MigrationTest extends TestCase

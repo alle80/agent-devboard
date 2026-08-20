@@ -1,12 +1,12 @@
 <?php
 
-namespace Alle80\Devboard\Tests\Feature;
+namespace Alle80\Griglia\Tests\Feature;
 
-use Alle80\Devboard\Livewire\SettingsPage;
-use Alle80\Devboard\Livewire\TodoList;
-use Alle80\Devboard\Settings\AgentSettings;
-use Alle80\Devboard\Settings\AppSettings;
-use Alle80\Devboard\Tests\TestCase;
+use Alle80\Griglia\Livewire\SettingsPage;
+use Alle80\Griglia\Livewire\TodoList;
+use Alle80\Griglia\Settings\AgentSettings;
+use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
 class SettingsPageTest extends TestCase

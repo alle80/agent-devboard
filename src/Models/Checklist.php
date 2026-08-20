@@ -1,6 +1,6 @@
 <?php
 
-namespace Alle80\Devboard\Models;
+namespace Alle80\Griglia\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -36,14 +36,14 @@ class Checklist extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('devboard.user_model', 'App\\Models\\User'));
+        return $this->belongsTo(config('griglia.user_model', 'App\\Models\\User'));
     }
 
     /** Solo le liste dell'utente autenticato. */
     public static function mine(): Builder
     {
         // Local mode: one global set of lists (no users); server mode: the logged-in user's lists
-        return \Alle80\Devboard\Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
+        return \Alle80\Griglia\Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
     }
 
     /** Id della lista corrente dell'utente (dalla sessione, con fallback alla prima sua lista). */
@@ -56,7 +56,7 @@ class Checklist extends Model
         }
 
         $first = static::mine()->orderBy('id')->first()
-            ?? static::create(['name' => __('devboard::t.default_list'), 'user_id' => auth()->id()]);
+            ?? static::create(['name' => __('griglia::t.default_list'), 'user_id' => auth()->id()]);
 
         session(['checklist_id' => $first->id]);
 

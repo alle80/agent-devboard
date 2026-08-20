@@ -10,9 +10,9 @@ Two layers:
 
 ## Modes
 
-- `DEVBOARD_MODE=server` (default): authenticated users, lists per user; access can be restricted with
-  `canAccessDevboard(): bool` on the user model or `DEVBOARD_ACCESS_GATE`.
-- `DEVBOARD_MODE=local`: no authentication, one global set of lists — only on your own machine (banner on every page).
+- `GRIGLIA_MODE=server` (default): authenticated users, lists per user; access can be restricted with
+  `canAccessDevboard(): bool` on the user model or `GRIGLIA_ACCESS_GATE`.
+- `GRIGLIA_MODE=local`: no authentication, one global set of lists — only on your own machine (banner on every page).
 
 The complete inventory (current and future keys, defaults, priorities) is in
 [config-and-settings.md](config-and-settings.md).
