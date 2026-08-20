@@ -3,7 +3,7 @@
 @php($theme = \Alle80\Griglia\Themes::has($theme) ? $theme : \Alle80\Griglia\Themes::default())
 @php($t = \Alle80\Griglia\Themes::get($theme))
 <!DOCTYPE html>
-<html lang="it">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     {{-- interactive-widget: la tastiera virtuale RIDIMENSIONA il viewport (100dvh si accorcia) invece di

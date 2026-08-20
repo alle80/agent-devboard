@@ -21,9 +21,18 @@ class TranscribeController
         ]);
         $file = $request->file('audio');
         $lang = substr((string) ($request->input('lang') ?: Speech::language()), 0, 2);
+        $mime = Speech::audioMime($file->getClientMimeType(), $file->getClientOriginalName());
+        $prompt = Speech::prompt();
 
         try {
-            $text = (string) \Laravel\Ai\Transcription::fromUpload($file)->language($lang)->timeout(90)->generate();
+            $audio = \Laravel\Ai\Files\Base64Audio::fromUpload($file, $mime);
+            $pending = \Laravel\Ai\Transcription::of($audio)->language($lang)->timeout(90);
+
+            if ($prompt !== '' && method_exists($pending, 'withProviderOptions')) {
+                $pending = $pending->withProviderOptions(['prompt' => $prompt]);
+            }
+
+            $text = (string) $pending->generate();
         } catch (\Throwable $e) {
             Log::warning('devboard: transcription failed: '.$e->getMessage());
 

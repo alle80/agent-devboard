@@ -98,8 +98,8 @@ window.grigliaMic = function (getTarget, lang) {
       const el = this.target();
       if (!el) return;
       const rec = new SR();
-      rec.lang = lang || document.documentElement.lang || navigator.language || 'it-IT';
-      if (rec.lang.length === 2) rec.lang = { it: 'it-IT', en: 'en-US', fr: 'fr-FR', de: 'de-DE', es: 'es-ES' }[rec.lang] || rec.lang;
+      rec.lang = lang || cfg().lang || document.documentElement.lang || navigator.language || 'en-US';
+      if (rec.lang.length === 2) rec.lang = { it: 'it-IT', en: 'en-US', fr: 'fr-FR', de: 'de-DE', es: 'es-ES', pt: 'pt-PT', nl: 'nl-NL' }[rec.lang] || rec.lang;
       rec.continuous = true;
       rec.interimResults = true;
       this.base = el.value;

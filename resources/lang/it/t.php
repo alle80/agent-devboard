@@ -53,6 +53,7 @@ return [
     'state_tap' => 'tocca → :state',
     'mic_busy' => 'Trascrizione in corso…',
     'mic_error' => 'Trascrizione fallita',
+    'speech_prompt' => 'Dettatura per una board di sviluppo software. Termini ricorrenti: agente, board, task, sotto-task, lista, nota, commit, branch, pull request, Laravel, Livewire, modale, screenshot, deploy.',
     'mic_start' => 'Detta (speech to text)',
     'mic_stop' => 'Ferma la dettatura',
     'md_hint' => 'Supporta il Markdown (grassetto, codice, elenchi, tabelle…).',

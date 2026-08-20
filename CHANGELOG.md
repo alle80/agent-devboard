@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.46.0] - 2026-08-20
+
+### Fixed
+- **Server-side dictation no longer fails (or garbles the text) depending on the browser.** Browsers send
+  the recording as `audio/webm;codecs=opus` (or `audio/ogg;codecs=opus`); the codec parameter made the
+  provider receive the file named `audio.mp3` and answer «Audio file might be corrupted or unsupported»,
+  so dictation was broken in Chrome and Firefox. The mime type is now normalised (and derived from the
+  extension when the browser sends none).
+- **The page language is the app locale**, not a hard-coded `it`. Beyond accessibility, browser-mode
+  dictation reads it to choose the recognition language.
+
+### Added
+- **Vocabulary hint for the transcription.** A short prompt travels with the audio so names and jargon are
+  transcribed properly — «con l'agente» instead of «con la gente». Translated with the locale, overridable
+  with `GRIGLIA_SPEECH_PROMPT` / `config('griglia.speech_prompt')`, disabled with an empty string.
+
 ### Docs
 - **Site structure.** The documentation is now organised in folders (getting started, board, agent,
   features, configuration, reference, operations, contributing) with new pages — quickstart, front-end

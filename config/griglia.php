@@ -88,6 +88,10 @@ return [
     // Catalogue of the agent's skills (JSON written by `griglia:skills-import`; shown in the task modal)
     'skills_file' => env('GRIGLIA_SKILLS_FILE', storage_path('app/griglia/skills.json')),
 
+    // Vocabulary hint sent with the audio of the speech to text (helps with names and jargon:
+    // «l'agente» instead of «la gente»). null = use the translated default, '' = no hint at all.
+    'speech_prompt' => env('GRIGLIA_SPEECH_PROMPT', null),
+
     // Front-end assets: 'vite' = the host app bundles resources/css/griglia.css + resources/js/griglia.js
     // in its own Vite build (entries below); 'precompiled' = use the files built by the package and
     // published with `vendor:publish --tag=griglia-assets` (public/vendor/griglia/build)

@@ -28,6 +28,11 @@ Every text field has a microphone:
 - otherwise the browser's **Web Speech API** is used;
 - `speech_mode` chooses: `auto`, `server`, `browser`.
 
+Server-side transcription sends a short **vocabulary hint** with the audio, so names and jargon come out
+right («l'agente», not «la gente»). It is translated with the app locale; override it with
+`GRIGLIA_SPEECH_PROMPT` (or `config('griglia.speech_prompt')`), and set it to an empty string to send no
+hint at all.
+
 ## Plan builder
 
 Creating a list **as a plan** sends your prompt to the AI, which splits the goal into chained tasks

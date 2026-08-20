@@ -56,6 +56,7 @@ return [
     'state_tap' => 'tap → :state',
     'mic_busy' => 'Transcribing…',
     'mic_error' => 'Transcription failed',
+    'speech_prompt' => 'Dictation for a software development board. Recurring words: agent, board, task, sub-task, list, note, commit, branch, pull request, Laravel, Livewire, modal, screenshot, deploy.',
     'mic_start' => 'Dictate (speech to text)',
     'mic_stop' => 'Stop dictation',
     'md_hint' => 'Markdown supported (bold, code, lists, tables…).',
