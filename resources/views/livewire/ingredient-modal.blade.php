@@ -19,7 +19,8 @@
                     @include('griglia::livewire.partials.modal-actions')
                     <button
                         wire:click="close"
-                        class="tl-check tl-display flex size-9 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px"
+                        class="modal-close tl-check tl-display flex size-9 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px"
+                        title="{{ __('griglia::t.close') }}" aria-label="{{ __('griglia::t.close') }}"
                     ><x-griglia::icon name="close" /></button>
                 </div>
 

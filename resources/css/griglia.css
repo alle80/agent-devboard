@@ -56,6 +56,17 @@ body { -webkit-tap-highlight-color: transparent; }
     .modal-body [class*="rotate-"] { transform: none !important; }
     .modal-head { position: sticky; top: 0; z-index: 2; flex: 0 0 auto; padding-left: 0.9rem !important; padding-right: 0.9rem !important; }
     .modal-head h2 { font-size: 1.15rem !important; line-height: 1.2; }
+    /* Testata del modale su telefono (task 399): in fila ci stavano solo i primi comandi, il resto
+       (agente, sposta, archivia, elimina, chiudi) finiva fuori schermo. Due righe: sopra lo stato con
+       ‹ 3/7 › e la X, sotto gli altri comandi, con bersagli da 36px. */
+    .modal-head { flex-wrap: wrap; row-gap: 0.4rem !important; column-gap: 0.5rem !important; }
+    .modal-cmds { display: contents; }
+    .modal-cmds > .db-sep { display: none; }
+    .modal-cmds-nav { order: 1; margin-right: auto; }
+    .modal-head > .modal-close { order: 2; }
+    .modal-cmds-tools { order: 3; flex-basis: 100%; justify-content: flex-end; gap: 0.15rem; }
+    .modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem; padding: 6px; }
+    .modal-cmds-tools .db-agent-select { max-width: 8.5rem; }
     /* decorazioni sporgenti (fiammelle, salami, sigilli) fuori dal pannello a schermo intero */
     .modal-panel > .pointer-events-none.absolute { display: none; }
 }
@@ -440,6 +451,9 @@ select.setting-input { appearance: auto; }
     opacity: .8; transition: opacity .15s ease, transform .15s ease, color .15s ease;
 }
 .db-cmd:hover { opacity: 1; transform: scale(1.15); }
+/* La tendina dell'agente ha etichette lunghe («Predefinito (Claude Code)»): tronca, non sfonda la testata */
+.db-agent-select { max-width: 12rem; text-overflow: ellipsis; }
+.db-agent-select:hover { transform: none; }
 .db-cmd:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
 .db-cmd-danger:hover { color: #ef4444; }
 @media (prefers-reduced-motion: reduce) { .db-cmd { transition: opacity .15s ease; } .db-cmd:hover { transform: none; } }

@@ -80,6 +80,11 @@ On a plan list the **Plan** bar shows progress and the start/pause buttons (see 
 
 Everything is designed for phones: rows on two levels, full-screen modal, full-width notification panel, Web Push.
 
+The modal header splits in two on a narrow screen: the state badge with ‹ `3/7` › stays on the first line
+next to the close button — always reachable, whatever the list holds — and the rest of the commands (agent,
+move, archive, delete) sit on a second line, with touch targets big enough for a thumb. Nothing is hidden
+behind a menu, and nothing runs off the edge of the screen.
+
 ## See also
 
 - [The agent side](../agent/index.md) — what the agent does with what you write here.

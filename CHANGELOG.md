@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.69.0] - 2026-08-20
+
+### Fixed
+- **The task modal header fits a phone.** On a narrow screen the whole command row was laid out on a single
+  line and clipped at the right edge: the agent selector, move, archive, delete and even the close button
+  ended up off screen, so the modal could only be dismissed with the browser's back gesture. The header is
+  now two groups — `nav` (state badge, ‹ position ›) and `tools` (agent, move, archive, delete) — and below
+  640px `nav` stays on the first line beside the close button while `tools` wraps to a second one, with
+  36px touch targets. The agent selector truncates instead of pushing the row out, and the close button
+  finally carries a `title`/`aria-label`.
+
 ## [0.68.0] - 2026-08-20
 
 ### Added

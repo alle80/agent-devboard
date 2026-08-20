@@ -175,4 +175,29 @@ class ModalCommandsTest extends TestCase
         $m2 = Livewire::test(IngredientModal::class)->call('openFor', $a->id);
         $this->assertSame($c->id, $m2->instance()->siblingId(1));
     }
+
+    public function test_the_modal_header_keeps_every_command_on_screen_on_a_phone(): void
+    {
+        // Task 399: at 360px the command row was clipped — the close button included. The header is now
+        // two groups: nav (state + ‹ 3/7 ›) stays beside the close button, the tools drop to a second line.
+        $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
+        Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
+
+        $html = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
+
+        $nav = strpos($html, 'modal-cmds-nav');
+        $tools = strpos($html, 'modal-cmds-tools');
+        $close = strpos($html, 'modal-close');
+        $this->assertNotFalse($nav, 'the state badge and the prev/next arrows are their own group');
+        $this->assertNotFalse($tools, 'agent, move, archive and delete are their own group');
+        $this->assertNotFalse($close, 'the close button carries the hook the mobile layout orders');
+        $this->assertTrue($nav < $tools && $tools < $close, 'DOM order: nav, tools, close');
+        $this->assertStringContainsString('aria-label="Close"', $html);
+
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $this->assertStringContainsString('.modal-cmds { display: contents; }', $css);
+        $this->assertStringContainsString('.modal-cmds-tools { order: 3; flex-basis: 100%;', $css);
+        $this->assertStringContainsString('.modal-head > .modal-close { order: 2; }', $css);
+        $this->assertStringContainsString('.modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem;', $css);
+    }
 }
