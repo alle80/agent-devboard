@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Blade;
 
 class AssetsTest extends TestCase
 {
+    public function test_the_default_mode_is_precompiled(): void
+    {
+        // Installing the package must not require a build step in the host app.
+        $this->assertSame('precompiled', config('griglia.assets'));
+    }
+
     public function test_precompiled_mode_links_the_published_build(): void
     {
         config(['griglia.assets' => 'precompiled', 'griglia.echo' => ['key' => 'abc', 'host' => 'example.test', 'port' => 443, 'scheme' => 'https']]);

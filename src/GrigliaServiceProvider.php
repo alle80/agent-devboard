@@ -63,7 +63,9 @@ class GrigliaServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../AGENTS.md' => base_path('AGENTS.md')], 'griglia-agents');
             $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/griglia')], 'griglia-views');
             $this->publishes([__DIR__.'/../resources/lang' => $this->app->langPath('vendor/griglia')], 'griglia-lang');
-            $this->publishes([__DIR__.'/../public' => public_path('vendor/griglia')], 'griglia-assets');
+            // Also under Laravel's own tag: a default app republishes `laravel-assets` after every
+            // composer update, so the precompiled build stays in sync without anyone remembering.
+            $this->publishes([__DIR__.'/../public' => public_path('vendor/griglia')], ['griglia-assets', 'laravel-assets']);
 
             $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
                 $schedule->command('griglia:auto-archive')->dailyAt('03:30');

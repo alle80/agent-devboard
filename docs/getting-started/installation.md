@@ -13,9 +13,20 @@ The package is on Packagist as [`alle80/griglia`](https://packagist.org/packages
 
 ```bash
 composer require alle80/griglia -W                  # -W: Web Push caps brick/math at ^0.17 (see the note below)
-php artisan vendor:publish --tag=griglia-config     # config/griglia.php (optional)
-php artisan migrate                                  # tables + settings defaults
-php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding agent (optional)
+php artisan migrate                                 # tables + settings defaults
+php artisan storage:link                            # attachments live on the "public" disk
+```
+
+That is the whole installation: the board ships its **precompiled** CSS and JS, published automatically by
+composer (Laravel republishes `laravel-assets` after every update), so there is nothing to build. Open `/`
+and the board is there.
+
+Optional, when you want them:
+
+```bash
+php artisan vendor:publish --tag=griglia-config     # config/griglia.php
+php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding agent
+php artisan vendor:publish --tag=griglia-assets     # re-publish the assets by hand
 ```
 
 !!! note "Why `-W`"
@@ -23,18 +34,8 @@ php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding 
     Laravel app ships `0.18`. `-W` lets composer downgrade that single transitive dependency; without
     it the install stops with a conflict. Existing apps usually need nothing.
 
-Add the package assets to your Vite build (default `assets = vite`):
-
-```css
-/* resources/css/app.css */
-@import '../../vendor/alle80/griglia/resources/css/griglia.css';
-```
-```js
-// resources/js/app.js
-import '../../vendor/alle80/griglia/resources/js/griglia.js';
-```
-
-or use the precompiled build: `GRIGLIA_ASSETS=precompiled` + `php artisan vendor:publish --tag=griglia-assets`.
+If instead you want the board to be part of your own Vite build (to share Tailwind with your app, or to
+restyle it), set `GRIGLIA_ASSETS=vite` and follow [Front-end assets](assets.md).
 
 Routes are registered under `griglia.route_prefix` (default: site root — `/`, `/settings`, `/stats`, …) and
 protected by the package itself according to the [mode](../configuration/access.md#modes).

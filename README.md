@@ -36,8 +36,11 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 composer require alle80/griglia -W                   # -W: see the note below
 php artisan migrate                                  # tables + settings defaults (idempotent)
 php artisan storage:link                             # attachments live on the "public" disk
-php artisan vendor:publish --tag=griglia-assets      # precompiled build & theme assets
 ```
+
+That's it: the board ships its own precompiled CSS/JS (published by composer with Laravel's
+`laravel-assets` tag), so there is nothing to build. Prefer to bundle it in your own Vite build? See
+[Front-end assets](#front-end-assets).
 
 > **Why `-W`**: Web Push pulls `web-token/jwt-library`, which caps `brick/math` at `^0.17`, while a brand
 > new Laravel app ships `0.18`. `-W` lets composer downgrade that one transitive dependency; without it the
@@ -227,17 +230,17 @@ Inventory, defaults and the backlog of future options: the generated [`docs/refe
 
 Pick one mode.
 
-**A — Precompiled (zero build).** Use the CSS/JS shipped by the package:
+**A — Precompiled (default, zero build).** The CSS/JS built by the package. They are published under
+Laravel's own `laravel-assets` tag, so `composer update` keeps them fresh; by hand:
 
 ```bash
-# .env  →  GRIGLIA_ASSETS=precompiled   (or 'assets' => 'precompiled' in config/griglia.php)
-php artisan vendor:publish --tag=griglia-assets     # public/vendor/griglia/{build,images}
+php artisan vendor:publish --tag=griglia-assets --force    # public/vendor/griglia/{build,images}
 ```
 
 `<x-griglia::assets />` then links `public/vendor/griglia/build/griglia.{css,js}` (Tailwind
 utilities, the theme system, SortableJS, and Laravel Echo when a Reverb/Pusher key is set). No npm.
 
-**B — Bundled by your app (default, `assets = vite`).** Import the package sources in your Vite build.
+**B — Bundled by your app (`GRIGLIA_ASSETS=vite`).** Import the package sources in your Vite build.
 Tailwind 4 doesn't scan `vendor/`, so add an `@source`:
 
 ```css

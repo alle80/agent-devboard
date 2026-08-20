@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.49.0] - 2026-08-20
+
+### Changed
+- **Installing takes three commands and no build step.** `assets` now defaults to **`precompiled`**: the
+  CSS and JS shipped with the package are used as they are, and they are published under Laravel's own
+  `laravel-assets` tag — which a default app republishes after every `composer update`, so an upgrade
+  cannot leave a stale build behind. `composer require` + `migrate` + `storage:link` and the board works.
+- The documentation now presents the two asset modes in that order: precompiled first (nothing to do),
+  Vite second (for apps that want the board inside their own bundle).
+
+### Upgrading
+- **If your app bundles the package sources in its own Vite build, set `GRIGLIA_ASSETS=vite` in `.env`**
+  (or `'assets' => 'vite'` in `config/griglia.php`) before updating: the default changed under you.
+  Everyone else gets the precompiled build and needs nothing.
+
 ## [0.48.1] - 2026-08-20
 
 ### Changed

@@ -1,28 +1,27 @@
 # Front-end assets
 
 The board needs its CSS and JS (Tailwind utilities, the theme system, SortableJS, and Laravel Echo when a
-broadcaster is configured). Pick **one** of the two modes — `config('griglia.assets')`, env
-`GRIGLIA_ASSETS`.
+broadcaster is configured). It ships them precompiled, so **by default there is nothing to do**. The mode is
+`config('griglia.assets')`, env `GRIGLIA_ASSETS`.
 
-=== "Precompiled — zero build"
+=== "Precompiled — the default, zero build"
 
-    Use the files shipped with the package: no npm, no Vite.
+    Use the files shipped with the package: no npm, no Vite, nothing to configure.
+
+    The assets are published under Laravel's own `laravel-assets` tag, which a default app republishes
+    after every `composer update` — so an upgrade brings the new build with it. To do it by hand:
 
     ```bash
-    # .env
-    GRIGLIA_ASSETS=precompiled
-    ```
-    ```bash
-    php artisan vendor:publish --tag=griglia-assets     # → public/vendor/griglia/{build,images}
+    php artisan vendor:publish --tag=griglia-assets --force   # → public/vendor/griglia/{build,images}
     ```
 
-    `<x-griglia::assets />` then links `public/vendor/griglia/build/griglia.{css,js}`. Republish after every
-    package update (`--force` to overwrite).
+    `<x-griglia::assets />` then links `public/vendor/griglia/build/griglia.{css,js}`.
 
-=== "Bundled by your app — default"
+=== "Bundled by your app — Vite"
 
-    Import the package sources into your own build. Tailwind 4 does not scan `vendor/`, so declare the views
-    as a source:
+    Set `GRIGLIA_ASSETS=vite` and import the package sources into your own build. Worth it when you already
+    use Tailwind and want one bundle, or when you restyle the board. Tailwind 4 does not scan `vendor/`, so
+    declare the views as a source:
 
     ```css
     /* resources/css/app.css */

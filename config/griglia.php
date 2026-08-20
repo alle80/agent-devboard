@@ -92,10 +92,10 @@ return [
     // «l'agente» instead of «la gente»). null = use the translated default, '' = no hint at all.
     'speech_prompt' => env('GRIGLIA_SPEECH_PROMPT', null),
 
-    // Front-end assets: 'vite' = the host app bundles resources/css/griglia.css + resources/js/griglia.js
-    // in its own Vite build (entries below); 'precompiled' = use the files built by the package and
-    // published with `vendor:publish --tag=griglia-assets` (public/vendor/griglia/build)
-    'assets' => env('GRIGLIA_ASSETS', 'vite'),
+    // Front-end assets: 'precompiled' (default) = the CSS/JS built by the package, published in
+    // public/vendor/griglia/build — nothing to build in the host app; 'vite' = the host app bundles
+    // resources/css/griglia.css + resources/js/griglia.js in its own Vite build (entries below)
+    'assets' => env('GRIGLIA_ASSETS', 'precompiled'),
     'vite_entries' => ['resources/css/app.css', 'resources/js/app.js'],
     'assets_url' => '/vendor/griglia/build',
 
