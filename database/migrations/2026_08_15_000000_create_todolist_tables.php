@@ -37,6 +37,7 @@ return new class extends Migration
                 $table->boolean('question')->default(false);       // agent has open questions
                 $table->text('notes')->nullable();
                 $table->text('claude_comment')->nullable();        // agent's answer (read-only in UI)
+                $table->string('result_summary', 120)->nullable(); // short result shown below the task title
                 $table->boolean('result_seen')->default(true);     // false = agent completed it, user hasn't opened the result yet
                 $table->string('outcome', 16)->nullable();         // agent's result: ok | alert | blocked (colour of the highlight)
                 $table->unsignedTinyInteger('progress')->nullable(); // 0-100 while working; set by griglia:check --progress

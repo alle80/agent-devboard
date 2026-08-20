@@ -104,7 +104,7 @@ php artisan griglia:check                # what to work on (open/working), in or
 php artisan griglia:check --take=ID      # take it in charge → working (starts at 0%)
 php artisan griglia:check --take=ID --progress=60 --phase="writing code"   # update % and phase as you go
 php artisan griglia:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
-php artisan griglia:check --done=ID --comment="…"                          # close it, with a note back → done
+php artisan griglia:check --done=ID --comment="…" --summary="Brief result"              # close it, with a note back → done
 php artisan griglia:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
 php artisan griglia:check --done=ID --comment="…" --outcome=alert|blocked   # …flagging a result that needs a look
 ```

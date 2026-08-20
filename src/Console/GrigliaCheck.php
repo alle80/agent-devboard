@@ -24,6 +24,7 @@ class GrigliaCheck extends Command
         {--take= : Id of the todo to mark as working (take in charge)}
         {--done= : Id of the todo to mark as completed}
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
+        {--summary= : Very short result summary shown below the task title (with --done)}
         {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
         {--phase= : Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the %}
         {--outcome= : With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it}
@@ -95,6 +96,12 @@ class GrigliaCheck extends Command
                 }
                 if ($c = $this->option('comment')) {
                     $attrs['claude_comment'] = $c;
+                    if ($opt === 'done' && $this->option('summary') === null) {
+                        $attrs['result_summary'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($c))), 0, 120) ?: null;
+                    }
+                }
+                if ($opt === 'done' && $this->option('summary') !== null) {
+                    $attrs['result_summary'] = mb_substr(trim((string) $this->option('summary')), 0, 120) ?: null;
                 }
                 if ($opt === 'take') {
                     // Always show a percentage on a working todo: explicit value, else keep the current one, else start at 0%

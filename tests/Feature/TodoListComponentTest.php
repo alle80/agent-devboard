@@ -39,6 +39,14 @@ class TodoListComponentTest extends TestCase
         $this->assertSame(0, Todo::count(), 'gone from the board scope');
     }
 
+    public function test_result_summary_is_shown_below_the_title(): void
+    {
+        $todo = $this->add('Repeated task');
+        $todo->update(['completed' => true, 'claude_comment' => 'Detailed result', 'result_summary' => 'Implemented compact labels']);
+
+        Livewire::test(TodoList::class)->assertSee('Implemented compact labels');
+    }
+
     public function test_title_length_is_enforced(): void
     {
         Livewire::test(TodoList::class)->call('startInsert', 1)->set('newTitle', str_repeat('x', 51))->call('saveInsert')

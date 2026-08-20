@@ -14,7 +14,7 @@ class MigrationTest extends TestCase
         foreach (['checklists', 'todos', 'ingredients', 'attachments', 'questions', 'settings'] as $table) {
             $this->assertTrue(Schema::hasTable($table), "table {$table}");
         }
-        $this->assertTrue(Schema::hasColumns('todos', ['open_to_work', 'working', 'stopped_at', 'question', 'claude_comment', 'archived_at', 'parent_id']));
+        $this->assertTrue(Schema::hasColumns('todos', ['open_to_work', 'working', 'stopped_at', 'question', 'claude_comment', 'result_summary', 'archived_at', 'parent_id']));
 
         $this->assertTrue(app(AgentSettings::class)->commit_after_task);
         $this->assertSame('ask', app(AgentSettings::class)->autonomy);

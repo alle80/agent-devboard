@@ -47,10 +47,14 @@ class GrigliaCheckCommandTest extends TestCase
         $this->artisan('griglia:check')->doesntExpectOutputToContain('Add dark mode')->assertSuccessful();
 
         $this->todo->update(['question' => false, 'open_to_work' => true]);
-        $this->artisan('griglia:check', ['--done' => $this->todo->id, '--comment' => 'Shipped'])->expectsOutputToContain('completed')->assertSuccessful();
+        $this->artisan('griglia:check', ['--done' => $this->todo->id, '--comment' => 'Shipped', '--summary' => 'Dark mode delivered'])->expectsOutputToContain('completed')->assertSuccessful();
         $this->todo->refresh();
         $this->assertTrue($this->todo->completed);
         $this->assertSame('Shipped', $this->todo->claude_comment);
+        $this->assertSame('Dark mode delivered', $this->todo->result_summary);
+        $another = Todo::create(['title' => 'Fallback', 'order' => 2, 'checklist_id' => $this->todo->checklist_id]);
+        $this->artisan('griglia:check', ['--done' => $another->id, '--comment' => 'Automatic concise result'])->assertSuccessful();
+        $this->assertSame('Automatic concise result', $another->fresh()->result_summary);
         $this->assertTrue($this->todo->ingredients()->first()->checked, 'sub-tasks ticked on done');
     }
 

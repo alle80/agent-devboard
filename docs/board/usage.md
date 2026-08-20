@@ -19,6 +19,8 @@ Every row has a state dot:
 | ![stopped](../images/state-stop.svg){ width="18" } | stopped | you tapped the working badge — the agent stops at once |
 | ![done](../images/state-done.svg){ width="18" } | done | the agent (`--done`) or you (checkbox) |
 
+When an agent result is available, a very short automatic summary appears below the title. Agents may provide a sharper one with `griglia:check --done --summary="…"`; otherwise Griglia derives it from the result comment. This distinguishes a sequence of resumed tasks that share the same title.
+
 Tap the dot to move between *waiting* and *open to work* (or to stop the agent).
 
 ### The colour of the row

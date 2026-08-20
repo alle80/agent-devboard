@@ -132,6 +132,9 @@
                                 @endif
                             @endif
                     </button>
+                    @if ($todo->claude_comment && $todo->result_summary)
+                        <p class="mt-0.5 truncate text-xs opacity-60" title="{{ $todo->result_summary }}">{{ $todo->result_summary }}</p>
+                    @endif
                     @endif
                 </div>
 

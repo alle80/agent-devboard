@@ -37,7 +37,7 @@ Lists the open requests of the agent list (see config griglia.agent_list)
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]]
+php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]]
 ```
 
 | Argument / option | What it does | Default |
@@ -47,6 +47,7 @@ php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--co
 | `--take` | Id of the todo to mark as working (take in charge) | — |
 | `--done` | Id of the todo to mark as completed | — |
 | `--comment` | Agent comment saved on the todo of --take/--done (claude_comment) | — |
+| `--summary` | Very short result summary shown below the task title (with --done) | — |
 | `--progress` | Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0% | — |
 | `--phase` | Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the % | — |
 | `--outcome` | With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it | — |
