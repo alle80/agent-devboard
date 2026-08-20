@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.1] - 2026-08-20
+
+### Fixed
+- The favicon links carry the file's date (`?v=…`): browsers keep a favicon for days, so after the logo
+  changed the old one stayed in the tab even after a forced reload. A `32×32` PNG is declared next to the
+  SVG for the browsers that ignore vector favicons.
+
 ## [0.52.0] - 2026-08-20
 
 ### Added

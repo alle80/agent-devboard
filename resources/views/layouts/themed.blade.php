@@ -13,10 +13,12 @@
     <meta name="theme-color" content="#111111">
     <title>{{ $title ?? 'Griglia — '.$t['label'] }}</title>
     {{-- La favicon è sempre il marchio Griglia, qualunque sia il tema: la linguetta identifica l'app, non
-         lo skin (l'icona del tema resta nel menu degli stili). --}}
-    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark.svg') }}" type="image/svg+xml">
-    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark-32.png') }}" sizes="32x32">
-    <link rel="apple-touch-icon" href="{{ asset('vendor/griglia/images/brand/mark-180.png') }}">
+         lo skin (l'icona del tema resta nel menu degli stili). Il ?v= è la data del file: senza, i browser
+         tengono la vecchia icona per giorni anche dopo un ricaricamento forzato. --}}
+    @php($iconV = @filemtime(public_path('vendor/griglia/images/brand/mark.svg')) ?: '1')
+    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark.svg') }}?v={{ $iconV }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark-32.png') }}?v={{ $iconV }}" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('vendor/griglia/images/brand/mark-180.png') }}?v={{ $iconV }}">
     @if (! empty($t['fonts']) && config('griglia.fonts_url'))
         <link rel="preconnect" href="{{ parse_url(config('griglia.fonts_url'), PHP_URL_SCHEME) }}://{{ parse_url(config('griglia.fonts_url'), PHP_URL_HOST) }}">
         <link href="{{ config('griglia.fonts_url') }}{{ $t['fonts'] }}" rel="stylesheet">
