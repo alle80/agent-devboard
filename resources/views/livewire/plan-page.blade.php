@@ -8,7 +8,7 @@
     </div>
 
     <form wire:submit="{{ $list ? 'saveGoal' : 'create' }}" class="{{ $skin['card'] }}">
-        <h2 class="{{ $skin['h2'] }}">{{ __('griglia::t.plan.goal_label') }}</h2>
+        <h2 class="{{ $skin['h2'] }}"><label for="plan-goal">{{ __('griglia::t.plan.goal_label') }}</label></h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ $aiAvailable ? __('griglia::t.plan.hint') : __('griglia::t.plan.hint_no_ai') }}</p>
 
         <div class="flex items-start gap-2">
@@ -24,7 +24,7 @@
             ></textarea>
             <x-griglia::mic class="tl-btn tl-btn-icon shrink-0" within="form" target=".db-plan-goal" />
         </div>
-        <p class="{{ $skin['help'] }} mt-1 text-right tabular-nums">{{ mb_strlen(trim($prompt)) }}</p>
+        <p class="{{ $skin['help'] }} mt-1 text-right tabular-nums" aria-live="polite">{{ __('griglia::t.plan.chars', ['n' => mb_strlen(trim($prompt))]) }}</p>
         @error('prompt')<p class="db-setting-warn mt-2">{{ $message }}</p>@enderror
 
         <div class="mt-6 border-t border-current/15 pt-4">
@@ -36,7 +36,7 @@
                 wire:model="name"
                 maxlength="60"
                 autocomplete="off"
-                class="{{ $skin['input'] }} w-full"
+                class="{{ $skin['input'] }} w-full sm:max-w-md"
             >
         </div>
 
@@ -80,7 +80,7 @@
                 type="button"
                 wire:click="cancel"
                 @if (! $list) x-on:click="if ($wire.prompt.trim() !== '' && ! confirm(@js(__('griglia::t.plan.leave_confirm')))) $event.stopImmediatePropagation()" @endif
-                class="{{ $skin['help'] }} cursor-pointer px-2 py-1.5 hover:underline"
+                class="tl-btn tl-btn-sm"
             >{{ __('griglia::t.cancel') }}</button>
         </div>
         @if ($list && $untouchedCount === 0)

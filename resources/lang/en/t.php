@@ -265,6 +265,7 @@ return [
         'rebuilt' => 'Plan rebuilt: :count tasks.',
         'build_failed' => 'The plan could not be built. Nothing was created — try again.',
         'leave_confirm' => 'Leave without building the plan? What you wrote is lost.',
+        'chars' => ':n characters (at least 10)',
         'as_plan' => 'Create as a plan (tasks from a prompt)',
         'prompt_placeholder' => 'Describe the goal: the plan is split into chained tasks…',
         'prompt_required' => 'Write the prompt of the plan first.',

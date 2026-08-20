@@ -259,6 +259,7 @@ return [
         'rebuilt' => 'Piano rigenerato: :count task.',
         'build_failed' => 'Non sono riuscito a costruire il piano. Non ho creato niente: puoi riprovare.',
         'leave_confirm' => 'Esci senza costruire il piano? Quello che hai scritto va perso.',
+        'chars' => ':n caratteri (almeno 10)',
         'as_plan' => 'Crea come piano (task da un prompt)',
         'prompt_placeholder' => 'Descrivi l\'obiettivo: il piano viene spezzato in task concatenati…',
         'prompt_required' => 'Scrivi prima il prompt del piano.',

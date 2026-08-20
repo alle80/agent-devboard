@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.53.0] - 2026-08-20
+
+### Changed
+- **Plan page, after a pass with a real browser at three widths.** The goal field now has a proper label
+  (it was only a heading, so screen readers announced an unnamed textarea), the character count says what
+  it counts and what the minimum is, «Cancel» is a real button instead of faint text, and the name field
+  stops at a sensible width so the goal stays the biggest thing on the page.
+
 ## [0.52.1] - 2026-08-20
 
 ### Fixed
