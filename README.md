@@ -309,7 +309,8 @@ MIT — see [LICENSE](LICENSE).
 
 ## Documentation
 
-Full docs live in [`docs/`](docs/index.md) (MkDocs, Material theme): build the static site with
+Full docs: **<https://alle80.github.io/griglia/>** — sources in [`docs/`](docs/index.md) (MkDocs, Material
+theme), published by GitHub Actions at every push. Build them yourself with
 `php artisan griglia:docs-build` (needs `pip install mkdocs-material`, or `--docker`), preview with `--serve`.
 
 ## Security

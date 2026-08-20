@@ -1,5 +1,5 @@
 ---
-title: Griglia — a dev board for coding agents
+title: A dev board for coding agents
 template: home.html
 hide:
   - navigation

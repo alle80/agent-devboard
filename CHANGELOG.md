@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.47.3] - 2026-08-20
+
+### Added
+- **The documentation site is published on GitHub Pages** — <https://alle80.github.io/griglia/> — by
+  `.github/workflows/docs.yml` at every push to `master` that touches the docs. The test workflow now also
+  fails when the generated reference pages are stale (and prints the diff), and it finally runs on `master`
+  instead of a `main` branch that does not exist.
+
+### Changed
+- `griglia:docs-generate` lists the options of a setting only when they come from the translations: the AI
+  providers and the installed themes depend on the installation, so they cannot live in a page that must be
+  identical everywhere.
+
 ### Docs
 - Site polish: the state icons of the board are shown as the real SVGs instead of emoji, every page ends
   with its «see also» links, and the thin pages (security, development, configuration, themes, skills,
