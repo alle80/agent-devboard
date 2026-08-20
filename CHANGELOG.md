@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.0] - 2026-08-20
+
+### Added
+- The persistent worker can poll Artisan through Docker or directly through local PHP. Select the transport
+  with `GRIGLIA_WORKER_TRANSPORT=docker|local`; local installations can override `GRIGLIA_WORKER_PHP`.
+  Codex, Claude and custom agent drivers remain available with either transport.
+
 ## [0.64.0] - 2026-08-20
 
 ### Added
@@ -1145,7 +1152,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.64.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.65.0...HEAD
+[0.65.0]: https://github.com/alle80/griglia/compare/v0.64.0...v0.65.0
 [0.64.0]: https://github.com/alle80/griglia/compare/v0.63.0...v0.64.0
 [0.63.0]: https://github.com/alle80/griglia/compare/v0.62.0...v0.63.0
 [0.62.0]: https://github.com/alle80/griglia/compare/v0.61.0...v0.62.0

@@ -17,7 +17,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--agent", required=True, help="Griglia agent key")
     parser.add_argument("--driver", choices=("codex", "claude", "custom"), default=os.getenv("GRIGLIA_WORKER_DRIVER"))
+    parser.add_argument(
+        "--transport",
+        choices=("docker", "local"),
+        default=os.getenv("GRIGLIA_WORKER_TRANSPORT", "docker"),
+        help="How to invoke Artisan (default: docker)",
+    )
     parser.add_argument("--container", default=os.getenv("GRIGLIA_WORKER_CONTAINER", "laravel-dev-app"))
+    parser.add_argument("--php", default=os.getenv("GRIGLIA_WORKER_PHP", "php"), help="PHP executable for local transport")
     parser.add_argument("--interval", type=int, default=int(os.getenv("GRIGLIA_WORKER_INTERVAL", "10")))
     parser.add_argument("--retry-delay", type=int, default=int(os.getenv("GRIGLIA_WORKER_RETRY_DELAY", "30")))
     parser.add_argument("--repo", type=Path, default=Path(os.getenv("GRIGLIA_WORKER_REPO", Path.cwd())))
@@ -26,10 +33,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def board(args: argparse.Namespace, all_items: bool = False) -> list[dict]:
-    command = ["docker", "exec", args.container, "php", "artisan", "griglia:check", f"--agent={args.agent}", "--json"]
+def board_command(args: argparse.Namespace, all_items: bool = False) -> list[str]:
+    artisan = ["artisan", "griglia:check", f"--agent={args.agent}", "--json"]
+    if args.transport == "docker":
+        command = ["docker", "exec", args.container, "php", *artisan]
+    else:
+        command = [args.php, *artisan]
     if all_items:
         command.append("--all")
+    return command
+
+
+def board(args: argparse.Namespace, all_items: bool = False) -> list[dict]:
+    command = board_command(args, all_items)
     result = subprocess.run(command, cwd=args.repo, text=True, capture_output=True, check=False)
     if result.returncode:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "griglia:check failed")
@@ -56,7 +72,7 @@ def driver_command(args: argparse.Namespace, message: str) -> list[str]:
     if driver == "codex":
         return ["codex", "exec", "--approve-for-me", "-C", str(args.repo), message]
     if driver == "claude":
-        return ["claude", "-p", "--permission-mode", "acceptEdits", message]
+        return ["claude", "-p", "--permission-mode", "bypassPermissions", message]
     if driver == "custom":
         raw = os.getenv("GRIGLIA_WORKER_COMMAND_JSON")
         if not raw:

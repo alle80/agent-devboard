@@ -30,6 +30,10 @@ class ScriptsTest extends TestCase
 
         $worker = (string) file_get_contents($dir.'/griglia-agent-worker.py');
         $this->assertStringContainsString('choices=("codex", "claude", "custom")', $worker);
+        $this->assertStringContainsString('GRIGLIA_WORKER_TRANSPORT', $worker);
+        $this->assertStringContainsString('GRIGLIA_WORKER_PHP', $worker);
+        $this->assertStringContainsString('["docker", "exec", args.container, "php", *artisan]', $worker);
+        $this->assertStringContainsString('[args.php, *artisan]', $worker);
         $unit = (string) file_get_contents($dir.'/systemd/griglia-agent-worker@.service.example');
         $this->assertStringContainsString('%h/.local/bin', $unit);
         $this->assertStringContainsString('/absolute/path/to/project', $unit);

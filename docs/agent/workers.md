@@ -61,7 +61,17 @@ Each instance optionally reads `~/.config/griglia-worker/<agent-key>.env`:
 GRIGLIA_WORKER_DRIVER=codex
 GRIGLIA_WORKER_INTERVAL=10
 GRIGLIA_WORKER_RETRY_DELAY=30
+GRIGLIA_WORKER_TRANSPORT=docker
 GRIGLIA_WORKER_CONTAINER=laravel-dev-app
+GRIGLIA_WORKER_REPO=/srv/my-project
+```
+
+The Docker transport is the default and runs `docker exec <container> php artisan`. If Laravel runs directly
+on the worker host, use the local transport instead; Artisan runs with the repository as working directory:
+
+```dotenv
+GRIGLIA_WORKER_TRANSPORT=local
+GRIGLIA_WORKER_PHP=/usr/bin/php8.4
 GRIGLIA_WORKER_REPO=/srv/my-project
 ```
 
@@ -76,7 +86,8 @@ GRIGLIA_WORKER_DRIVER=custom
 GRIGLIA_WORKER_COMMAND_JSON=["agent-cli","--cwd","{repo}","--prompt","{prompt}"]
 ```
 
-The service account must be able to run Docker (when the Laravel app is containerized) and the selected agent
+Transport and driver are independent, so Codex, Claude and custom drivers work in both modes. The service
+account must be able to run Docker or the configured local PHP executable, and the selected agent
 CLI non-interactively. Do not use unrestricted sandbox/approval bypass flags: grant only the project permissions
 the workflow needs.
 

@@ -135,7 +135,8 @@ php artisan griglia:check --agent=codex     # each agent sees only its own tasks
 php artisan griglia:watch --agent=codex     # and only its own events
 ```
 For unattended operation, publish the host scripts and install the systemd template; see
-[Persistent workers](docs/agent/workers.md). The worker includes Codex and Claude drivers plus a safe custom
+[Persistent workers](docs/agent/workers.md). The worker supports Docker and local-PHP Artisan transports,
+and includes Codex and Claude drivers plus a safe custom
 argv driver for any other CLI.
 
 ### Plan mode
