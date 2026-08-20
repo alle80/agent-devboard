@@ -1,26 +1,93 @@
-# Griglia
+---
+title: Griglia — a dev board for coding agents
+template: home.html
+hide:
+  - navigation
+  - toc
+---
 
-**Griglia** is a Laravel + Livewire board that lets you queue work for a coding agent (Claude Code, Codex CLI,
-Gemini CLI, …) and follow it in real time: lists of tasks with notes, sub-tasks, images and questions; a small CLI
-contract (`griglia:check` / `griglia:watch`) the agent drives; live updates, notifications, plans built from a
-prompt, statistics, an agent-context manager and a theme system.
+## What it is
+
+**Griglia** is a Laravel + Livewire board you install in your own app. One list is the channel with your
+coding agent: you write requests as tasks, mark them **open to work**, and the agent — Claude Code, Codex
+CLI, Gemini CLI, any CLI agent — takes them, asks when something is unclear, keeps the progress bar moving
+and closes them with an answer you can read.
+
+It is not a chat wrapper and it does not talk to any vendor API: the contract is two artisan commands and
+one instructions file. Anything that speaks a shell can drive it.
+
+<div class="grid cards" markdown>
+
+-   **A flow you can see**
+
+    ---
+
+    Waiting → open to work → working → done, with questions, stop and resume. Every state is a dot on the
+    row: you always know what the agent is allowed to touch, and what it is doing right now.
+
+    [Using the board](board/usage.md)
+
+-   **A CLI contract, not an integration**
+
+    ---
+
+    `griglia:check` to read and act, `griglia:watch` to react. Progress %, phase, questions, tokens and
+    the closing comment all travel through those two commands.
+
+    [The agent side](agent/index.md)
+
+-   **Plans from a prompt**
+
+    ---
+
+    Turn a goal into a chain of tasks: closing one opens the next, so a long job runs on its own while
+    you watch it advance.
+
+    [Plans](features/plans.md)
+
+-   **It reaches you**
+
+    ---
+
+    Live updates between devices, an in-app bell, Web Push on your phone and mail — so a question does not
+    sit there for an hour.
+
+    [Notifications](features/notifications.md)
+
+-   **Yours to look at**
+
+    ---
+
+    A theme system with installable packs, a settings page that tells the agent how to behave, statistics
+    with working time, tokens and cost.
+
+    [Themes](features/themes.md) · [Statistics](agent/stats.md)
+
+-   **Small to install**
+
+    ---
+
+    One composer package, one migration, precompiled assets if you do not want a build step. English and
+    Italian included.
+
+    [Installation](getting-started/installation.md)
+
+</div>
 
 ## How it works in one minute
 
-1. You write requests as tasks in the **agent list** (default name `dev`) and mark them **open to work** 🟢.
-2. The agent runs `php artisan griglia:watch` (events) and `griglia:check` (what to do), takes a task (🔧),
-   asks questions (❓) when needed, updates progress/phase, and closes it with a comment (✔).
-3. The board shows everything live (Reverb/Echo), notifies you (bell, Web Push, mail) and keeps statistics.
+1. You write a request in the **agent list** (default name `dev`), with notes, sub-tasks and screenshots,
+   and turn the dot 🟢 **open to work**.
+2. The agent runs `griglia:watch` (events) and `griglia:check` (what to do), takes the task (🔧), asks
+   questions (❓) when the request is ambiguous, updates progress and phase, and closes it (✔) with a
+   comment.
+3. The board shows all of it live, notifies you, and keeps the statistics of what it cost.
 
-## Where to go next
+```bash
+composer require alle80/griglia -W
+php artisan migrate
+php artisan vendor:publish --tag=griglia-agents    # the rules for your agent
+```
 
-- [Installation](getting-started/installation.md) — requirements, composer, migrations, assets.
-- [Quickstart](getting-started/quickstart.md) — from an empty board to the first task worked by an agent.
-- [Using the board](board/usage.md) — lists, states, modal, filters, mobile.
-- [The agent side](agent/index.md) — the CLI contract and the rules the agent follows.
-- [Plans](features/plans.md), [Notifications](features/notifications.md), [Themes](features/themes.md),
-  [AI features](features/ai.md).
-- [Configuration](configuration/index.md), [Access & modes](configuration/access.md),
-  [Command reference](reference/commands.md).
-- [Security](operations/security.md), [Troubleshooting](operations/troubleshooting.md),
-  [Contributing](contributing/contributing.md).
+[Get started in five minutes](getting-started/quickstart.md){ .md-button .md-button--primary }
+[See every feature](features/index.md){ .md-button }

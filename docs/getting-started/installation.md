@@ -54,3 +54,9 @@ Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; user
 
 Registration is up to your app. By default the **first registered user** is the board administrator (settings,
 agent context, theme packs); see [Security](../operations/security.md) for `GRIGLIA_ADMINS`, `canManageDevboard()` or a Gate.
+
+## Next
+
+- [Quickstart](quickstart.md) — write the first request and let an agent work it.
+- [Front-end assets](assets.md) — the two modes in detail (precompiled or bundled by your app).
+- [Access, administrators and modes](../configuration/access.md) — who gets in, and the local mode.

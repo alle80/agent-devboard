@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+
+{#
+  Landing page for the Griglia site: a hero band above the normal content.
+  Used by docs/index.md through its `template:` front matter.
+#}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="gr-hero">
+    <div class="md-grid gr-hero__grid">
+      <img class="gr-hero__logo" src="{{ 'images/lockup-dark.svg' | url }}" alt="Griglia">
+      <h1 class="gr-hero__title">A dev board for coding agents</h1>
+      <p class="gr-hero__text">
+        Queue your requests as tasks; your coding agent takes them, asks questions, reports progress and
+        closes them — and you follow the whole thing live, from the sofa or from your phone.
+      </p>
+      <div class="gr-hero__actions">
+        <a href="{{ 'getting-started/quickstart/' | url }}" class="md-button md-button--primary">Quickstart</a>
+        <a href="{{ 'getting-started/installation/' | url }}" class="md-button">Install</a>
+        <a href="https://github.com/alle80/griglia" class="md-button gr-hero__ghost">GitHub</a>
+      </div>
+      <p class="gr-hero__meta">Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …</p>
+    </div>
+  </section>
+{% endblock %}

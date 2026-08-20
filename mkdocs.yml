@@ -92,6 +92,7 @@ nav:
       - Agent context: agent/context.md
       - Statistics & agents status: agent/stats.md
   - Features:
+      - features/index.md
       - Plans: features/plans.md
       - Notifications: features/notifications.md
       - Themes: features/themes.md

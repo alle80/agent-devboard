@@ -63,3 +63,4 @@ php artisan griglia:watch      # long-running: prints only the events the agent 
 - [Using the board](../board/usage.md) — states, filters, archive, mobile.
 - [Plans](../features/plans.md) — split a goal into chained tasks.
 - [Configuration & settings](../configuration/index.md) — how the agent is asked to behave.
+- [Feature overview](../features/index.md) — everything the board does, in one page.
