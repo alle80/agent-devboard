@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.45.0] - 2026-08-20
+
+### Changed
+- **Settings show one group at a time on phones too, in a single column everywhere.** The section index
+  born for the desktop now has a mobile counterpart: a scrollable strip of tabs above the panel, so the
+  page opens on «How the agent works» instead of stacking every group into one long scroll. The
+  newspaper columns introduced at xl are gone — settings are a single column at every width, with the
+  control beside its label — and the container narrows accordingly (4xl from lg, 5xl from xl).
+
 ## [0.44.0] - 2026-08-20
 
 ### Changed

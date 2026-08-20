@@ -1,6 +1,6 @@
-{{-- Desktop: il contenitore si allarga e le voci si dispongono su più colonne (task 321).
-     Sotto lg resta tutto com'era: una colonna leggibile. --}}
-<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8 2xl:max-w-[90rem]" style="{{ $skin['vars'] }}" x-data="{ tab: 'agent' }">
+{{-- Una sola colonna a ogni larghezza (task 329): il contenitore resta stretto quanto basta
+     a leggere le voci; su desktop si allarga solo per fare posto all'indice laterale. --}}
+<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-4xl xl:max-w-5xl xl:px-8" style="{{ $skin['vars'] }}" x-data="{ tab: 'agent' }">
     <div class="mb-6 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-griglia::icon name="settings" size="1em" /> {{ __('griglia::t.settings_title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
@@ -16,8 +16,28 @@
     @endunless
     @php($tabs[] = ['key' => 'themes', 'label' => __('griglia::t.themes.title'), 'icon' => 'palette', 'count' => null])
 
-    {{-- Desktop: indice a sinistra, un gruppo alla volta a destra (task 323).
-         Sotto lg l'indice sparisce e i gruppi restano impilati come prima. --}}
+    {{-- Un gruppo alla volta a ogni larghezza (task 329): su desktop l'indice sta a sinistra,
+         sotto lg diventa una striscia di schede scorrevole sopra il pannello. --}}
+    <nav class="-mx-4 mb-4 overflow-x-auto px-4 pb-1 lg:hidden" aria-label="{{ __('griglia::t.settings_title') }}">
+        <ul class="flex w-max gap-2">
+            @foreach ($tabs as $t)
+                <li>
+                    <button
+                        type="button"
+                        x-on:click="tab = '{{ $t['key'] }}'"
+                        x-bind:class="tab === '{{ $t['key'] }}' ? 'tl-btn-on' : ''"
+                        x-bind:aria-current="tab === '{{ $t['key'] }}' ? 'true' : 'false'"
+                        aria-controls="panel-{{ $t['key'] }}"
+                        class="tl-btn tl-btn-sm shrink-0 whitespace-nowrap"
+                    >
+                        <x-griglia::icon :name="$t['icon']" size="1em" />
+                        <span>{{ $t['label'] }}</span>
+                    </button>
+                </li>
+            @endforeach
+        </ul>
+    </nav>
+
     <div class="lg:grid lg:grid-cols-[13rem_1fr] lg:items-start lg:gap-6">
 
         <nav class="hidden lg:sticky lg:top-24 lg:block" aria-label="{{ __('griglia::t.settings_title') }}">
@@ -44,16 +64,16 @@
         <div class="min-w-0">
 
     @foreach ($sections as $group => [$title, $intro, $fields])
-        <section id="panel-{{ $group }}" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}" x-bind:class="tab === '{{ $group }}' ? '' : 'lg:hidden'">
+        <section id="panel-{{ $group }}" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}" x-bind:class="tab === '{{ $group }}' ? '' : 'hidden'">
             <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('griglia::t.settings_saves') }}</p>
 
-            <ul class="{{ $skin['divide'] }} xl:columns-2 xl:gap-x-10 xl:divide-y-0">
+            <ul class="{{ $skin['divide'] }}">
                 @foreach ($fields as $key => $f)
                     @php([$label, $help, $type] = $f)
                     @php($opts = $f[3] ?? [])
                     @php($id = "s-{$group}-{$key}")
-                    <li class="flex gap-3 py-3 xl:break-inside-avoid xl:border-b xl:border-current/15 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4 xl:flex-col xl:gap-2' }}" wire:key="setting-{{ $group }}-{{ $key }}">
+                    <li class="flex gap-3 py-3 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $group }}-{{ $key }}">
                         <div class="min-w-0 flex-1">
                             <label for="{{ $id }}" class="{{ $skin['label'] }}">{{ $label }}</label>
                             <p class="{{ $skin['help'] }}">{{ $help }}</p>
@@ -76,7 +96,7 @@
                             <select
                                 id="{{ $id }}"
                                 wire:model.change="values.{{ $group }}.{{ $key }}"
-                                class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[65%] xl:mt-0 xl:w-full xl:max-w-none"
+                                class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[60%]"
                             >
                                 @foreach ($opts as $v => $lbl)
                                     <option value="{{ $v }}">{{ $lbl }}</option>
@@ -131,7 +151,7 @@
         id="panel-notif"
         class="{{ $skin['card'] }} mb-6"
         aria-labelledby="sec-notif"
-        x-bind:class="tab === 'notif' ? '' : 'lg:hidden'"
+        x-bind:class="tab === 'notif' ? '' : 'hidden'"
         x-data="{
             st: 'checking', busy: false, sent: false, diag: null, log: [],
             async refresh() { this.st = window.grigliaPush ? await window.grigliaPush.status() : 'unsupported'; this.diag = window.grigliaPush ? await window.grigliaPush.diagnose() : null; window.grigliaPush && window.grigliaPush.onPush((d) => { this.log.unshift(@js(__('griglia::t.notif.diag_received')) + ' «' + d.title + '»'); }); },
@@ -175,7 +195,7 @@
     @endunless
 
     {{-- Theme packs --}}
-    <section id="panel-themes" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }" x-bind:class="tab === 'themes' ? '' : 'lg:hidden'">
+    <section id="panel-themes" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }" x-bind:class="tab === 'themes' ? '' : 'hidden'">
         <h2 id="sec-themes" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon name="palette" size="1em" /> {{ __('griglia::t.themes.title') }}</h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ __('griglia::t.themes.intro') }}</p>
 
