@@ -77,7 +77,16 @@ class Agent
     public static function effective(Todo $todo, ?Checklist $list = null): string
     {
         $list ??= $todo->checklist;
+        $known = self::all();
 
-        return $todo->agent ?: ($list?->agent ?: self::defaultKey());
+        // A key that is not configured any more (agent removed from GRIGLIA_AGENTS) would belong to nobody:
+        // the task would be invisible to every agent, waiting forever. It falls back instead (task 347).
+        foreach ([$todo->agent, $list?->agent] as $key) {
+            if ($key && isset($known[$key])) {
+                return (string) $key;
+            }
+        }
+
+        return self::defaultKey();
     }
 }

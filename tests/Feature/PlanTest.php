@@ -292,4 +292,61 @@ class PlanTest extends TestCase
         $titles = $list->todos()->orderBy('order')->pluck('title')->all();
         $this->assertSame(['One', 'Two', 'New one', 'New two'], $titles);
     }
+
+    public function test_reopening_a_task_pulls_back_the_one_it_had_opened(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The goal');
+        [$first, $second] = $list->todos()->orderBy('order')->get()->all();
+
+        $first->update(['completed' => true]);
+        $this->assertTrue($second->fresh()->open_to_work, 'closing the first opens the second');
+
+        $first->update(['completed' => false]);
+        $this->assertFalse($second->fresh()->open_to_work, 'reopening the first puts the second back to waiting');
+    }
+
+    public function test_reopening_does_not_pull_back_a_task_already_worked(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The goal');
+        [$first, $second] = $list->todos()->orderBy('order')->get()->all();
+
+        $first->update(['completed' => true]);
+        $second->update(['work_seconds' => 120]);   // the agent already spent time on it
+
+        $first->update(['completed' => false]);
+        $this->assertTrue($second->fresh()->open_to_work, 'work already done is not undone');
+    }
+
+    public function test_archiving_a_task_hands_its_chain_over(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two'], ['title' => 'Three']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The goal');
+        [$one, $two, $three] = $list->todos()->orderBy('order')->get()->all();
+
+        $one->update(['completed' => true]);
+        $two->update(['archived_at' => now()]);
+
+        $three = $three->fresh();
+        $this->assertSame($one->id, $three->depends_on_id, 'the third now waits for the first');
+        $this->assertTrue($three->open_to_work, 'and since the first is done, it is open to work');
+    }
+
+    public function test_deleting_a_task_hands_its_chain_over(): void
+    {
+        Plan::$resolver = fn () => [['title' => 'One'], ['title' => 'Two'], ['title' => 'Three']];
+        $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::build($list, 'The goal');
+        [$one, $two, $three] = $list->todos()->orderBy('order')->get()->all();
+
+        $two->delete();
+
+        $three = $three->fresh();
+        $this->assertSame($one->id, $three->depends_on_id);
+        $this->assertFalse($three->open_to_work, 'the first is not done yet: nothing opens');
+    }
 }

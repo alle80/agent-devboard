@@ -22,6 +22,19 @@ Every row has a state dot:
 Tap the dot to move between *waiting* and *open to work* (or to stop the agent). Tasks the agent completed and you have not opened yet are
 highlighted until you open them.
 
+### Getting a finished task back
+
+Two different things, on purpose:
+
+- **Untick it** — the same task goes back to open, keeping its note, its answer and its statistics. Use it
+  when the work was not really finished. In a plan, the task it had opened goes back to waiting too, so the
+  agent does not run ahead of what you just reopened (unless it had already started working on it).
+- **Resume it** (the ↻ button) — a *new* task is created right after it, with the same title and the old one
+  attached as context. Use it when the work was fine and you want a follow-up.
+
+Nothing is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to the
+task before it, so a plan never waits for something that will never arrive.
+
 ## The task modal
 
 Title, **Task** note (Markdown editor, with a microphone for [speech to text](../features/ai.md#speech-to-text)), the agent's answer box, statistics (working time,

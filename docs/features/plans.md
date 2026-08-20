@@ -9,6 +9,8 @@ works here too) and press the add button: the AI SDK agent `PlanBuilder` splits 
 - **Pause**: open tasks go back to *waiting* and the chain stops; **Resume** clears the pause and opens the next one.
 - New tasks added to a plan list join the chain automatically; after completion you can add tasks and resume.
 - `griglia:check` / `griglia:watch` cover the started plans too (after the agent list).
+- If a plan still has work but nothing is open to work, `griglia:check` says so: it is the one state where
+  you could be waiting for an agent that is waiting for you.
 
 ## See also
 

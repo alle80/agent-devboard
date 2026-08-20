@@ -205,6 +205,19 @@ class GrigliaCheck extends Command
             }
         }
 
+        // Dead ends: a plan with work left but nothing the agent may take. The user would wait for an agent
+        // that is waiting for the board — say it out loud, with the way out (task 347).
+        foreach ($planLists as $pl) {
+            $pending = $pl->todos()->whereNull('archived_at')->where('completed', false)->count();
+            $openable = $pl->todos()->whereNull('archived_at')->where('completed', false)
+                ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true))->count();
+
+            if ($pending > 0 && $openable === 0) {
+                $this->warn(sprintf('⚠ Plan «%s» (list id:%d): %d task(s) left but none is open to work%s — start it with ▶ on the board, or open one by hand.',
+                    $pl->name, $pl->id, $pending, $pl->plan_paused ? ' (the plan is paused)' : ''));
+            }
+        }
+
         file_put_contents($marker, (string) now()->timestamp);
 
         return self::SUCCESS;

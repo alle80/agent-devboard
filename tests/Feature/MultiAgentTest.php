@@ -55,4 +55,19 @@ class MultiAgentTest extends TestCase
         Livewire::test(TodoList::class)->call('setListAgent', '');
         $this->assertNull($dev->fresh()->agent);
     }
+
+    public function test_a_task_assigned_to_an_unknown_agent_is_not_invisible(): void
+    {
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
+        $list = Checklist::create(['name' => config('griglia.agent_list', 'dev'), 'user_id' => auth()->id()]);
+        $todo = $list->todos()->create(['title' => 'Left behind', 'order' => 1, 'open_to_work' => true, 'agent' => 'gone']);
+
+        // «gone» is not configured any more: the task must fall back to the default agent instead of
+        // belonging to nobody and waiting forever (task 347).
+        $this->assertSame(\Alle80\Griglia\Agent::defaultKey(), \Alle80\Griglia\Agent::effective($todo->fresh()));
+
+        $this->artisan('griglia:check', ['--agent' => \Alle80\Griglia\Agent::defaultKey()])
+            ->expectsOutputToContain('Left behind')
+            ->assertSuccessful();
+    }
 }

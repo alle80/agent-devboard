@@ -127,6 +127,35 @@ class Todo extends Model
         return implode(' · ', $parts);
     }
 
+    /**
+     * Give this task's dependents to its own predecessor. Without it, archiving or deleting a task of a
+     * plan leaves the next one waiting for something that will never be completed: the agent has nothing
+     * to do and the board shows no way out (task 347).
+     */
+    public function handOverChain(): void
+    {
+        $previous = $this->depends_on_id;
+        $dependents = static::where('depends_on_id', $this->id)->whereNull('archived_at')->get();
+
+        if ($dependents->isEmpty()) {
+            return;
+        }
+
+        $predecessorDone = $previous === null || (bool) static::whereKey($previous)->value('completed');
+        $paused = (bool) $this->checklist?->plan_paused;
+
+        foreach ($dependents as $next) {
+            $next->depends_on_id = $previous;
+
+            if ($predecessorDone && ! $paused && ! $next->completed && ! $next->working && ! $next->question) {
+                $next->open_to_work = true;
+                $next->stopped_at = null;
+            }
+
+            $next->save();
+        }
+    }
+
     protected static function booted(): void
     {
         // Plan lists: a new task joins the chain (depends on the previous task by order) unless told otherwise
@@ -179,7 +208,25 @@ class Todo extends Model
                 $todo->dependents()->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->whereNull('archived_at')
                     ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => true, 'stopped_at' => null]));
             }
+
+            // …and when a completed task is reopened, the tasks it had opened go back to waiting, unless
+            // somebody already worked on them: otherwise the agent would run ahead of the task you reopened.
+            if (! $todo->completed && $todo->wasChanged('completed')) {
+                $todo->dependents()->where('completed', false)->where('open_to_work', true)->where('working', false)->where('question', false)
+                    ->where('work_seconds', 0)->whereNull('archived_at')
+                    ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => false]));
+            }
         });
+
+        // A task that leaves the board (archived or deleted) must not leave the chain hanging behind it:
+        // whoever depended on it inherits its own predecessor — and opens right away if that one is done.
+        static::updated(function (Todo $todo) {
+            if ($todo->wasChanged('archived_at') && $todo->archived_at) {
+                $todo->handOverChain();
+            }
+        });
+
+        static::deleting(fn (Todo $todo) => $todo->handOverChain());
 
         // Aggiornamento live delle pagine aperte (Reverb)
         static::saved(fn (Todo $todo) => Live::todoChanged($todo, stateChanged: $todo->wasChanged(['completed', 'open_to_work', 'working', 'question'])));

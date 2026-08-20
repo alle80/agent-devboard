@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.54.0] - 2026-08-20
+
+### Fixed
+- **No more dead ends where the agent waits and the board cannot let it through.**
+  - Archiving or deleting a task of a plan used to leave the next one waiting for something that would
+    never be completed. It now inherits the predecessor of the task that left — and opens right away when
+    that one is already done.
+  - A task assigned to an agent key that is not configured any more belonged to nobody: every agent
+    filtered it out and it waited forever. Unknown keys now fall back to the default agent.
+  - `griglia:check` warns when a plan still has work but nothing is open to work, and says how to get out.
+
+### Changed
+- **Reopening a completed task rolls the chain back.** Unticking a task of a plan puts the task it had
+  opened back to waiting, unless the agent had already spent time on it — before, the agent could run ahead
+  of the task you had just reopened.
+
 ## [0.53.0] - 2026-08-20
 
 ### Changed
