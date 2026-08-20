@@ -48,12 +48,12 @@
             <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('griglia::t.settings_saves') }}</p>
 
-            <ul class="{{ $skin['divide'] }} xl:grid xl:grid-cols-2 xl:gap-x-8 xl:divide-y-0">
+            <ul class="{{ $skin['divide'] }} xl:columns-2 xl:gap-x-10 xl:divide-y-0">
                 @foreach ($fields as $key => $f)
                     @php([$label, $help, $type] = $f)
                     @php($opts = $f[3] ?? [])
                     @php($id = "s-{$group}-{$key}")
-                    <li class="flex gap-3 py-3 xl:border-b xl:border-current/15 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $group }}-{{ $key }}">
+                    <li class="flex gap-3 py-3 xl:break-inside-avoid xl:border-b xl:border-current/15 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4 xl:flex-col xl:gap-2' }}" wire:key="setting-{{ $group }}-{{ $key }}">
                         <div class="min-w-0 flex-1">
                             <label for="{{ $id }}" class="{{ $skin['label'] }}">{{ $label }}</label>
                             <p class="{{ $skin['help'] }}">{{ $help }}</p>
@@ -76,7 +76,7 @@
                             <select
                                 id="{{ $id }}"
                                 wire:model.change="values.{{ $group }}.{{ $key }}"
-                                class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[65%]"
+                                class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[65%] xl:mt-0 xl:w-full xl:max-w-none"
                             >
                                 @foreach ($opts as $v => $lbl)
                                     <option value="{{ $v }}">{{ $lbl }}</option>

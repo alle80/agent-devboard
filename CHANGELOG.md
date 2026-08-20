@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.43.0] - 2026-08-20
+
+### Changed
+- **/settings reads better on desktop.** The two desktop columns are now newspaper columns
+  (`xl:columns-2`): each column is read top to bottom, so related settings stay together — «Riepilogo
+  serale» and «Ora del riepilogo» no longer end up in different columns as they did with the grid. And
+  from `xl` every non-toggle control (selects, time and text inputs) sits under its label at the full
+  column width, instead of squeezing beside it: long options such as «Branch per task + Pull Request» or
+  «Task ordinati — uno alla volta, in ordine» are readable in full.
+
 ## [0.42.0] - 2026-08-20
 
 ### Fixed
