@@ -73,7 +73,7 @@ class Watch extends Command
         }
 
         // Agent list + the owner's plan lists (same scope as griglia:check)
-        $ids = Checklist::where('user_id', $list->user_id)->whereKeyNot($list->id)
+        $ids = Checklist::where('user_id', $list->user_id)->whereKeyNot($list->id)->whereNull('archived_at')
             ->where(fn ($q) => $q->whereNotNull('plan_prompt')->orWhereHas('todos', fn ($t) => $t->whereNotNull('depends_on_id')))
             ->pluck('id')->push($list->id)->all();
         $out = [];

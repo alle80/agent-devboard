@@ -12,7 +12,7 @@ class Checklist extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused', 'agent'];
+    protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused', 'agent', 'archived_at'];
 
     protected static function booted(): void
     {
@@ -26,7 +26,7 @@ class Checklist extends Model
 
     protected function casts(): array
     {
-        return ['plan_paused' => 'boolean'];
+        return ['plan_paused' => 'boolean', 'archived_at' => 'datetime'];
     }
 
     public function todos(): HasMany
@@ -39,11 +39,28 @@ class Checklist extends Model
         return $this->belongsTo(config('griglia.user_model', 'App\\Models\\User'));
     }
 
-    /** Solo le liste dell'utente autenticato. */
+    /** Solo le liste dell'utente autenticato, archivio escluso. */
     public static function mine(): Builder
+    {
+        return static::mineWithArchived()->whereNull('archived_at');
+    }
+
+    /** Le liste dell'utente, archivio compreso (per la vista archivio e i ripristini). */
+    public static function mineWithArchived(): Builder
     {
         // Local mode: one global set of lists (no users); server mode: the logged-in user's lists
         return \Alle80\Griglia\Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
+    }
+
+    /** Solo l'archivio dell'utente. */
+    public static function mineArchived(): Builder
+    {
+        return static::mineWithArchived()->whereNotNull('archived_at');
+    }
+
+    public function archived(): bool
+    {
+        return $this->archived_at !== null;
     }
 
     /** Id della lista corrente dell'utente (dalla sessione, con fallback alla prima sua lista). */

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.37.0] - 2026-08-20
+
+### Added
+- **Archive a list.** Lists can be archived from the switcher (archive button on each row): an archived
+  list leaves the menu and keeps every task. The menu has an **Archived lists** view with the count, where
+  each list can be restored or deleted for good; the last active list cannot be archived, and archiving the
+  current one moves the session to another list. New column `checklists.archived_at` (migration included).
+- `Checklist::mineWithArchived()` and `Checklist::mineArchived()` alongside `mine()`, which now returns
+  active lists only. Archived lists are skipped by `griglia:check` and `griglia:watch` when they look for
+  plan lists.
+
 ## [0.36.0] - 2026-08-20
 
 ### Added

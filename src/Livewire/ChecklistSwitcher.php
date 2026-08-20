@@ -14,6 +14,9 @@ class ChecklistSwitcher extends Component
 
     public string $nameDraft = '';
 
+    /** Vista archivio: il menu elenca le liste archiviate invece di quelle attive. */
+    public bool $showArchived = false;
+
     public function startRename(int $checklistId): void
     {
         $list = Checklist::mine()->findOrFail($checklistId);
@@ -84,14 +87,57 @@ class ChecklistSwitcher extends Component
         $this->js('window.location.reload()');
     }
 
-    public function deleteList(int $checklistId): void
+    public function toggleArchived(): void
     {
-        // L'ultima lista rimasta non si tocca
+        $this->showArchived = ! $this->showArchived;
+        $this->cancelRename();
+    }
+
+    /** Archivia una lista: sparisce dal menu, i suoi task restano. */
+    public function archiveList(int $checklistId): void
+    {
+        // Come per l'eliminazione: l'ultima lista attiva non si archivia
         if (Checklist::mine()->count() <= 1) {
+            $this->dispatch('toast', message: __('griglia::t.msg.list_archive_last'), type: 'error');
+
             return;
         }
 
         $list = Checklist::mine()->whereKey($checklistId)->first();
+        if (! $list) {
+            return;
+        }
+
+        $list->update(['archived_at' => now()]);
+        $this->dispatch('toast', message: __('griglia::t.msg.list_archived', ['name' => $list->name]), type: 'info');
+
+        if ((int) session('checklist_id') === $checklistId) {
+            session()->forget('checklist_id');
+            $this->js('window.location.reload()');
+        }
+    }
+
+    /** Riporta una lista archiviata tra quelle attive. */
+    public function restoreList(int $checklistId): void
+    {
+        $list = Checklist::mineArchived()->whereKey($checklistId)->first();
+        if (! $list) {
+            return;
+        }
+
+        $list->update(['archived_at' => null]);
+        $this->dispatch('toast', message: __('griglia::t.msg.list_restored', ['name' => $list->name]));
+    }
+
+    public function deleteList(int $checklistId): void
+    {
+        // L'ultima lista attiva non si tocca (le archiviate si possono sempre eliminare)
+        $archived = Checklist::mineArchived()->whereKey($checklistId)->exists();
+        if (! $archived && Checklist::mine()->count() <= 1) {
+            return;
+        }
+
+        $list = Checklist::mineWithArchived()->whereKey($checklistId)->first();
         $list?->delete();
         $this->dispatch('toast', message: __('griglia::t.msg.list_deleted', ['name' => $list?->name]), type: 'info');
 
@@ -119,7 +165,7 @@ class ChecklistSwitcher extends Component
 
     public function render()
     {
-        $lists = Checklist::mine()->withCount([
+        $lists = ($this->showArchived ? Checklist::mineArchived() : Checklist::mine())->withCount([
             'todos' => fn ($q) => $q->whereNull('archived_at'),
             'todos as done_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', true),
             'todos as chained_count' => fn ($q) => $q->whereNull('archived_at')->whereNotNull('depends_on_id'),
@@ -129,6 +175,7 @@ class ChecklistSwitcher extends Component
         return view('griglia::livewire.checklist-switcher', [
             'lists' => $lists,
             'currentId' => Checklist::currentId(),
+            'archivedCount' => Checklist::mineArchived()->count(),
         ]);
     }
 }

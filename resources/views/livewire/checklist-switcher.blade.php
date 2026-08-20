@@ -19,9 +19,13 @@
     </summary>
     <div class="tl-menu absolute left-0 mt-1.5 max-h-[70vh] w-72 overflow-y-auto p-1.5">
 
-        <p class="tl-menu-label px-2 pt-1 pb-1.5">{{ __('griglia::t.lists') }}</p>
+        <p class="tl-menu-label px-2 pt-1 pb-1.5">{{ $showArchived ? __('griglia::t.lists_archive') : __('griglia::t.lists') }}</p>
 
-        @foreach ($lists as $list)
+        @if ($showArchived)
+            <p class="mb-1 px-2 text-[11px] opacity-60">{{ __('griglia::t.lists_archive_help') }}</p>
+        @endif
+
+        @forelse ($lists as $list)
             <div wire:key="list-{{ $list->id }}" class="tl-menu-item flex items-center gap-1 {{ $list->id === $currentId ? 'is-current' : '' }}">
                 @if ($editingId === $list->id)
                     <form wire:submit="saveRename" class="flex min-w-0 flex-1 items-center gap-1 p-1">
@@ -37,7 +41,8 @@
                     </form>
                 @else
                     <button
-                        wire:click="switchTo({{ $list->id }})"
+                        wire:click="{{ $showArchived ? 'restoreList('.$list->id.')' : 'switchTo('.$list->id.')' }}"
+                        title="{{ $showArchived ? __('griglia::t.restore_list') : '' }}"
                         class="min-w-0 flex-1 cursor-pointer px-2 py-1.5 text-left text-sm font-bold"
                     >
                         <span class="flex items-center gap-1.5">
@@ -49,11 +54,19 @@
                             <span class="tl-meter mt-1 block" aria-hidden="true"><span style="width: {{ (int) round($list->done_count / max($list->todos_count, 1) * 100) }}%"></span></span>
                         @endif
                     </button>
-                    @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count > 0)
+                    @if ($showArchived)
+                        <button
+                            wire:click="restoreList({{ $list->id }})"
+                            title="{{ __('griglia::t.restore_list') }}"
+                            aria-label="{{ __('griglia::t.restore_list') }}"
+                            class="tl-btn tl-btn-icon shrink-0"
+                        ><x-griglia::icon name="restore" /></button>
+                    @endif
+                    @if (! $showArchived && ($list->chained_count > 0 || $list->plan_prompt) && $list->running_count > 0)
                         {{-- Plan running: the agent follows the chain --}}
                         <span class="db-badge db-badge-working shrink-0 px-1" title="{{ __('griglia::t.plan.running_short') }}" aria-label="{{ __('griglia::t.plan.running_short') }}"><x-griglia::icon name="working" :stroke="2" /></span>
                     @endif
-                    @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count === 0 && $list->done_count < $list->todos_count)
+                    @if (! $showArchived && ($list->chained_count > 0 || $list->plan_prompt) && $list->running_count === 0 && $list->done_count < $list->todos_count)
                         {{-- Plan list not running: start it from here --}}
                         <button
                             wire:click="startPlan({{ $list->id }})"
@@ -62,13 +75,23 @@
                             class="tl-btn tl-btn-icon shrink-0"
                         ><x-griglia::icon name="play" /></button>
                     @endif
-                    <button
-                        wire:click="startRename({{ $list->id }})"
-                        title="{{ __('griglia::t.rename_list') }}"
-                        aria-label="{{ __('griglia::t.rename_list') }}"
-                        class="tl-btn tl-btn-icon tl-btn-ghost shrink-0"
-                    ><x-griglia::icon name="edit" /></button>
-                    @if ($lists->count() > 1)
+                    @unless ($showArchived)
+                        <button
+                            wire:click="startRename({{ $list->id }})"
+                            title="{{ __('griglia::t.rename_list') }}"
+                            aria-label="{{ __('griglia::t.rename_list') }}"
+                            class="tl-btn tl-btn-icon tl-btn-ghost shrink-0"
+                        ><x-griglia::icon name="edit" /></button>
+                        @if ($lists->count() > 1)
+                            <button
+                                wire:click="archiveList({{ $list->id }})"
+                                title="{{ __('griglia::t.archive_list') }}"
+                                aria-label="{{ __('griglia::t.archive_list') }}"
+                                class="tl-btn tl-btn-icon tl-btn-ghost shrink-0"
+                            ><x-griglia::icon name="archive" /></button>
+                        @endif
+                    @endunless
+                    @if ($showArchived || $lists->count() > 1)
                         <button
                             wire:click="deleteList({{ $list->id }})"
                             wire:confirm="{{ __('griglia::t.delete_list_confirm', ['name' => $list->name, 'count' => $list->todos_count]) }}"
@@ -79,10 +102,20 @@
                     @endif
                 @endif
             </div>
-        @endforeach
+        @empty
+            <p class="px-2 py-3 text-center text-xs opacity-60">{{ __('griglia::t.lists_archive_empty') }}</p>
+        @endforelse
+
+        {{-- Archivio delle liste: si entra e si esce da qui --}}
+        <div class="tl-menu-sep mt-1.5 p-1 pt-2">
+            <button type="button" wire:click="toggleArchived" class="tl-btn tl-btn-sm w-full justify-center" aria-pressed="{{ $showArchived ? 'true' : 'false' }}">
+                <x-griglia::icon :name="$showArchived ? 'restore' : 'archive'" />
+                {{ $showArchived ? __('griglia::t.back_to_active') : __('griglia::t.lists_archive') }} ({{ $archivedCount }})
+            </button>
+        </div>
 
         {{-- Nuova lista --}}
-        <form wire:submit="create" class="tl-menu-sep mt-1.5 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }">
+        <form wire:submit="create" class="tl-menu-sep mt-1.5 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }" @if ($showArchived) hidden @endif>
             <div class="flex items-center gap-1">
                 <input
                     type="text"
