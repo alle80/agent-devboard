@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.38.0] - 2026-08-20
+
+### Changed
+- **Desktop layout for /settings and /stats.** Both pages were a single centred column (`max-w-xl` and
+  `max-w-3xl`) with no breakpoint above `sm`, so a fullscreen desktop showed a tall strip between two
+  empty margins. Now the shell widens (`lg:max-w-5xl`, `xl:max-w-7xl`) and the content spreads out:
+  settings rows flow in two columns from `lg` (three from `2xl`), and from `xl` the stats page puts the
+  history table on the left (two grid columns) with the daily chart and the per-list overview stacked on
+  the right. Below `lg`/`xl` nothing changes — phones and tablets keep the layout they had.
+
 ## [0.37.0] - 2026-08-20
 
 ### Added

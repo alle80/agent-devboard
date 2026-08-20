@@ -1,4 +1,6 @@
-<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
+{{-- Desktop: contenitore più largo e, da xl, storico affiancato a grafico e panoramica (task 321).
+     Sotto xl resta la colonna unica di prima. --}}
+<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8" style="{{ $skin['vars'] }}">
     <div class="mb-4 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} db-ctx-h1">{{ __('griglia::t.stats_page.title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
@@ -41,9 +43,12 @@
             @endforeach
         </div>
 
+        {{-- Da xl i tre blocchi si affiancano: storico a sinistra (2 colonne), grafico e panoramica a destra --}}
+        <div class="xl:grid xl:grid-cols-3 xl:items-start xl:gap-4">
+
         {{-- Per-day series: completed tasks (bars) + cost/time on hover --}}
         @php($max = max(1, max(array_column($series, 'count'))))
-        <div class="{{ $skin['card'] }} mb-4">
+        <div class="{{ $skin['card'] }} mb-4 xl:order-2 xl:mb-0">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}</h2>
             <div class="db-series flex h-28 items-end gap-px" role="img" aria-label="{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}">
                 @foreach ($series as $date => $p)
@@ -54,7 +59,7 @@
         </div>
 
         {{-- History --}}
-        <div class="{{ $skin['card'] }} mb-4">
+        <div class="{{ $skin['card'] }} mb-4 xl:order-1 xl:col-span-2 xl:row-span-2 xl:mb-0">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.history_title', ['n' => $rows->count()]) }}</h2>
             @if ($rows->isEmpty())
                 <p class="{{ $skin['help'] }} py-3 text-center text-sm">{{ __('griglia::t.stats_page.empty') }}</p>
@@ -114,7 +119,7 @@
         </div>
 
         {{-- Overview of every list --}}
-        <div class="{{ $skin['card'] }}">
+        <div class="{{ $skin['card'] }} xl:order-3">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.overview_title') }}</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -132,5 +137,7 @@
                 </table>
             </div>
         </div>
+
+        </div>{{-- /griglia desktop --}}
     @endif
 </div>

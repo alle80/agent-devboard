@@ -1,4 +1,6 @@
-<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
+{{-- Desktop: il contenitore si allarga e le voci si dispongono su più colonne (task 321).
+     Sotto lg resta tutto com'era: una colonna leggibile. --}}
+<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8" style="{{ $skin['vars'] }}">
     <div class="mb-6 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-griglia::icon name="settings" size="1em" /> {{ __('griglia::t.settings_title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
@@ -9,12 +11,12 @@
             <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('griglia::t.settings_saves') }}</p>
 
-            <ul class="{{ $skin['divide'] }}">
+            <ul class="{{ $skin['divide'] }} lg:grid lg:grid-cols-2 lg:gap-x-8 lg:divide-y-0 2xl:grid-cols-3">
                 @foreach ($fields as $key => $f)
                     @php([$label, $help, $type] = $f)
                     @php($opts = $f[3] ?? [])
                     @php($id = "s-{$group}-{$key}")
-                    <li class="flex gap-3 py-3 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $group }}-{{ $key }}">
+                    <li class="flex gap-3 py-3 lg:border-b lg:border-current/15 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $group }}-{{ $key }}">
                         <div class="min-w-0 flex-1">
                             <label for="{{ $id }}" class="{{ $skin['label'] }}">{{ $label }}</label>
                             <p class="{{ $skin['help'] }}">{{ $help }}</p>
