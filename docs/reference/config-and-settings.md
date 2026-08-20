@@ -1,53 +1,20 @@
-# Configurations & settings — inventory and backlog
+# Settings backlog and design notes
 
 Two different things, kept apart on purpose:
 
-- **Configuration** (`config/devboard.php`, env) — decided by the *developer* who installs the package: paths, routes,
+- **Configuration** (`config/griglia.php`, env) — decided by the *developer* who installs the package: paths, routes,
   models, integrations. Read once per request, needs a deploy/`config:cache` to change, never edited from the UI.
 - **Settings** (spatie/laravel-settings, `/settings`) — decided by the *user* at run time, stored in the DB, changed
   from the UI with immediate effect. Three groups: `agent` (how the agent works), `optimization` (token saving),
   `app` (behaviour of the board).
 
-Template for every entry: **name** · type · default · what it does · status (**current** / **future**) · priority (P1 high,
-P2 medium, P3 low) · implementation notes (for future ones).
+What exists today is generated from the code: see [Configuration file](config.md) and [Settings](settings.md).
+This page is what is *not* there yet — the backlog, with the implementation path for each entry.
 
-## 1. Configurations — current
+Template for every entry: **name** · type · default · what it does · priority (P1 high, P2 medium, P3 low) ·
+implementation notes.
 
-| Key (`devboard.*`) | Type / default | Purpose |
-|---|---|---|
-| `route_prefix` | string, `''` (`GRIGLIA_ROUTE_PREFIX`) | URL prefix of the package pages |
-| `agent_name` | string, `Agent` (`GRIGLIA_AGENT_NAME`) | how the UI calls the agent (Claude, Codex, …) |
-| `mode` | `server`\|`local` (`GRIGLIA_MODE`) | auth + per-user lists vs no auth + global lists (overridable from settings) |
-| `access_gate` | string\|null (`GRIGLIA_ACCESS_GATE`) | Gate ability checked in server mode (after `canAccessDevboard()`) |
-| `middleware` | array, `['web']` | middleware of the package routes (`GrigliaAccess` is always appended) |
-| `local_channel` | string, `griglia.local` | public broadcast channel used in local mode |
-| `register_routes` | bool, `true` | register the package routes at all |
-| `home_route` | bool, `true` | register `/` showing the default theme |
-| `dashboard_route` | string\|false, `/dashboard` | wide desktop view + slide-out tab |
-| `default_theme` | string, `slate` | fallback generic theme |
-| `themes` | array | extra generic themes defined in code |
-| `user_model` | class, `App\Models\User` | owner of the lists / notifiable |
-| `attachments_disk` | string, `public` | filesystem disk of the images |
-| `agent_list` | string, `dev` (`GRIGLIA_AGENT_LIST`) | the list used as request channel with the agent |
-| `default_list_name` | string | name of the first list created for a user |
-| `broadcast_channel` | string, `App.Models.User.{id}` | private channel for live updates |
-| `agent_status_file` | path | snapshot of the agents' plan/usage (`/agents`) |
-| `skills_file` | path | catalogue of the agent's skills |
-| `assets` / `vite_entries` / `assets_url` | `vite`\|`precompiled` | how CSS/JS are served |
-| `echo.*` | key/host/port/scheme | runtime Echo (Reverb) client config |
-| `fonts_url` | string | web-fonts provider prefix (`''` = none) |
-
-## 2. Settings — current
-
-**agent**: `commit_after_task`, `push_after_commit`, `autonomy` (ask\|decide), `notify_on_done`, `notify_on_question`,
-`verify_before_close`, `comment_detail` (short\|detailed), `git_flow` (main\|branch_pr), `daily_summary` + `daily_summary_time`,
-`check_subtasks_on_done`, `task_mode` (ordered\|multitasking).
-**optimization**: `compact_check`, `terse_agent`, `context_max_chars`, `progress_piggyback`, `token_report`.
-**app**: `default_style`, `title_max_length`, `auto_archive_days`, `ai_describe_images`, `ai_image_provider`, `ai_image_model`,
-`toast_console_changes`, `tab_side`, `mode` (override), `show_dashboard_tab`, `speech_mode`, `cost_per_m_in`, `cost_per_m_out`,
-`cost_currency`, `notify_in_app`, `notify_webpush`, `notify_mail`.
-
-## 3. Configurations — future (with implementation path)
+## Configurations — future (with implementation path)
 
 | # | Key | Type / default | Purpose & why it fits | Prio | Implementation |
 |---|---|---|---|---|---|
@@ -64,7 +31,7 @@ P2 medium, P3 low) · implementation notes (for future ones).
 | C11 | `context.targets` | array, `['CLAUDE.md','AGENTS.md']` | which instruction files the sync writes (today only in the host script) | P3 | expose via `griglia:context export --target`; doc |
 | C12 | `agent_status.stale_minutes` | int, 15 | staleness threshold of `/agents` | P3 | constant → config |
 
-## 4. Settings — future (with implementation path)
+## Settings — future (with implementation path)
 
 | # | Group.key | Type / default | Purpose & why it fits | Prio | Implementation |
 |---|---|---|---|---|---|

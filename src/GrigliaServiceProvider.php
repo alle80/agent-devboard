@@ -10,6 +10,7 @@ use Alle80\Griglia\Console\AgentStatusImport;
 use Alle80\Griglia\Console\ContextCommand;
 use Alle80\Griglia\Console\GrigliaCheck;
 use Alle80\Griglia\Console\DocsBuild;
+use Alle80\Griglia\Console\DocsGenerate;
 use Alle80\Griglia\Console\EmptyTrash;
 use Alle80\Griglia\Console\SkillsImport;
 use Alle80\Griglia\Console\Watch;
@@ -56,7 +57,7 @@ class GrigliaServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->commands([GrigliaCheck::class, AgentStatusImport::class, ContextCommand::class, DocsBuild::class, EmptyTrash::class, SkillsImport::class, Watch::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
+            $this->commands([GrigliaCheck::class, AgentStatusImport::class, ContextCommand::class, DocsBuild::class, DocsGenerate::class, EmptyTrash::class, SkillsImport::class, Watch::class, DescribeImages::class, AutoArchive::class, ThemeExport::class, ThemeImport::class]);
 
             $this->publishes([__DIR__.'/../config/griglia.php' => config_path('griglia.php')], 'griglia-config');
             $this->publishes([__DIR__.'/../AGENTS.md' => base_path('AGENTS.md')], 'griglia-agents');

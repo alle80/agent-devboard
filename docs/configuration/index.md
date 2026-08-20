@@ -15,4 +15,4 @@ Two layers:
 - `GRIGLIA_MODE=local`: no authentication, one global set of lists — only on your own machine (banner on every page).
 
 The complete inventory (current and future keys, defaults, priorities) is in
-[config-and-settings.md](../reference/config-and-settings.md).
+[Configuration file](../reference/config.md) and [Settings](../reference/settings.md); what is still missing is tracked in the [settings backlog](../reference/config-and-settings.md).

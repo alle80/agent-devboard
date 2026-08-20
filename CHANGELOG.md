@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.47.0] - 2026-08-20
+
+### Added
+- **`griglia:docs-generate`.** The reference pages of the documentation site are written from the code:
+  every `griglia:*` command with its options, every key of `config/griglia.php` with its env variable and
+  default, every setting of the three groups with label, type and help. `griglia:docs-build` runs it before
+  building (`--no-generate` skips it) and `--check` fails when the committed pages are out of date, so the
+  docs cannot drift from the package.
+- The site's Reference section now carries those three generated pages plus the **changelog**, included
+  straight from `CHANGELOG.md`. The hand-written inventory keeps only what does not exist yet (backlog).
+
 ## [0.46.0] - 2026-08-20
 
 ### Fixed

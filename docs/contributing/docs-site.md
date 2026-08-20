@@ -9,6 +9,18 @@ pip install mkdocs-material          # Python 3.8+; brings mkdocs + the Material
 ```
 or, without Python, the official Docker image `squidfunk/mkdocs-material`.
 
+## Generated pages
+
+Three pages of the Reference section are written by the package itself:
+
+```bash
+php artisan griglia:docs-generate            # → docs/reference/{commands,config,settings}.md
+php artisan griglia:docs-generate --check    # fails when the committed pages are out of date (CI)
+```
+
+`griglia:docs-build` runs it before every build (`--no-generate` to skip), so the site always matches the
+code. Do not edit those three files by hand.
+
 ## Build
 
 ```bash

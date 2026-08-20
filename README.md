@@ -219,7 +219,7 @@ php artisan griglia:agent-status-import --file=snapshot.json
 
 ### Configuration vs settings
 
-Inventory, defaults and the backlog of future options: [`docs/reference/config-and-settings.md`](docs/reference/config-and-settings.md).
+Inventory, defaults and the backlog of future options: the generated [`docs/reference/config.md`](docs/reference/config.md) and [`docs/reference/settings.md`](docs/reference/settings.md).
 
 ---
 

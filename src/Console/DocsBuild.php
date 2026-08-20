@@ -16,7 +16,8 @@ class DocsBuild extends Command
         {--out= : Output directory (default: <package>/site)}
         {--serve : Run `mkdocs serve` (live preview) instead of building}
         {--docker : Use the squidfunk/mkdocs-material Docker image instead of a local mkdocs}
-        {--strict : Pass --strict to mkdocs (warnings fail the build)}';
+        {--strict : Pass --strict to mkdocs (warnings fail the build)}
+        {--no-generate : Do not refresh the generated reference pages before building}';
 
     protected $description = 'Builds the package documentation as a static HTML site with MkDocs (Material theme)';
 
@@ -30,6 +31,11 @@ class DocsBuild extends Command
         }
         $out = $this->option('out') ?: $root.'/site';
         $serve = (bool) $this->option('serve');
+
+        // The reference pages come from the code: refresh them so the site can never lag behind.
+        if (! $this->option('no-generate')) {
+            $this->call(DocsGenerate::class);
+        }
 
         if ($this->option('docker')) {
             $docker = (new ExecutableFinder)->find('docker');
