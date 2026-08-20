@@ -205,15 +205,30 @@ class TodoList extends Component
     public function toggle(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
-        $todo->completed = ! $todo->completed;
-        $todo->save();
 
-        $this->dispatch('toast', message: __($todo->completed ? 'griglia::t.msg.completed' : 'griglia::t.msg.reopened', ['title' => $todo->title]), type: $todo->completed ? 'success' : 'info');
+        // A closed task stays closed: reopening it would put back in front of the agent something it had
+        // already answered. To carry on, «resume» makes a new task linked to this one (task 348).
+        if ($todo->completed) {
+            $this->dispatch('toast', message: __('griglia::t.msg.done_is_done'), type: 'info');
+
+            return;
+        }
+
+        $todo->update(['completed' => true]);
+
+        $this->dispatch('toast', message: __('griglia::t.msg.completed', ['title' => $todo->title]), type: 'success');
     }
 
     public function toggleOpenToWork(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
+
+        // Done is done: the dot of a closed task does not put it back to work (task 348).
+        if ($todo->completed) {
+            $this->dispatch('toast', message: __('griglia::t.msg.done_is_done'), type: 'info');
+
+            return;
+        }
 
         // Con domande aperte il pallino porta al modale per rispondere
         if ($todo->question) {

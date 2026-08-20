@@ -340,6 +340,13 @@ class IngredientModal extends Component
         if (! $todo || ! in_array($state, ['waiting', 'open', 'done'], true)) {
             return;
         }
+
+        // A closed task stays closed: carry on with «resume», which makes a new task linked to it (task 348).
+        if ($todo->completed && $state !== 'done') {
+            $this->dispatch('toast', message: __('griglia::t.msg.done_is_done'), type: 'info');
+
+            return;
+        }
         $wasWorking = $todo->working;
         $attrs = match ($state) {
             'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'question' => false],

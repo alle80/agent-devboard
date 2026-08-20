@@ -127,6 +127,7 @@ return [
         'deleted' => 'Eliminato: :title',
         'renamed' => 'Rinominato',
         'completed' => 'Fatto: :title',
+        'done_is_done' => 'Un task chiuso resta chiuso. Per continuarlo premi ↻ riprendi: crea un task nuovo collegato a questo.',
         'reopened' => 'Riaperto: :title',
         'archived' => 'Archiviato: :title',
         'restored' => 'Ripristinato: :title',

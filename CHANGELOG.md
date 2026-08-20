@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.56.0] - 2026-08-20
+
+### Changed
+- **A closed task stays closed.** Unticking a completed task used to reopen it, and the agent could find in
+  front of it something it had already answered. The checkbox and the state dot now refuse, and say what to
+  do instead: **resume** (↻) creates a new task linked to the old one, which is the one way to carry on.
+  `griglia:check --take` refuses a completed task for the same reason (it reopened it in 0.55.0).
+
 ## [0.55.0] - 2026-08-20
 
 ### Changed

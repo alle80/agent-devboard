@@ -132,6 +132,7 @@ return [
         'deleted' => 'Deleted: :title',
         'renamed' => 'Renamed',
         'completed' => 'Done: :title',
+        'done_is_done' => 'A closed task stays closed. To carry on, press ↻ resume: it creates a new task linked to this one.',
         'reopened' => 'Reopened: :title',
         'archived' => 'Archived: :title',
         'restored' => 'Restored: :title',

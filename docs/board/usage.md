@@ -22,20 +22,19 @@ Every row has a state dot:
 Tap the dot to move between *waiting* and *open to work* (or to stop the agent). Tasks the agent completed and you have not opened yet are
 highlighted until you open them.
 
-### Getting a finished task back
+### Carrying on after a task is done
 
-Two different things, on purpose:
+**A closed task stays closed.** The checkbox and the state dot do not reopen it: what the agent answered
+stays as it was answered, and nothing it already finished goes back in front of it.
 
-- **Untick it** — the same task goes back to open, keeping its note, its answer and its statistics. Use it
-  when the work was not really finished. In a plan, the task it had opened goes back to waiting too, so the
-  agent does not run ahead of what you just reopened (unless it had already started working on it).
-- **Resume it** (the ↻ button) — a *new* task is created right after it, with the same title and the old one
-  attached as context. Use it when the work was fine and you want a follow-up.
+To carry on there is one way: **resume** (the ↻ button on the row or in the modal). It creates a *new* task
+right after the old one, with the same title and the old one attached as context — note, answer, sub-tasks
+and images stay one click away, and `griglia:check` shows them to the agent.
 
-Nothing is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to the
-task before it, so a plan never waits for something that will never arrive. A task with open questions can
-also be taken back without answering — tap its badge in the modal: the questions stay recorded and the task
-goes back to waiting.
+Nothing else is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to
+the task before it, so a plan never waits for something that will never arrive, and a task with open
+questions can be taken back without answering — tap its badge in the modal: the questions stay recorded and
+the task goes back to waiting.
 
 ## The task modal
 

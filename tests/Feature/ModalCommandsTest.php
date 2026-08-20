@@ -61,16 +61,25 @@ class ModalCommandsTest extends TestCase
         $this->assertNull($todo->progress);
         $this->assertSame('done', $modal->instance()->stateKey());
 
+        // Done is done: the badge cannot take a closed task back to work (task 348).
         $modal->call('setState', 'open');
         $todo->refresh();
-        $this->assertFalse($todo->completed);
-        $this->assertTrue($todo->open_to_work);
-        $this->assertNull($todo->stopped_at);
-
-        $modal->call('setState', 'waiting');
-        $todo->refresh();
+        $this->assertTrue($todo->completed);
         $this->assertFalse($todo->open_to_work);
-        $this->assertFalse($todo->completed);
+
+        // On a task that is not closed, the badge still moves between waiting and open to work.
+        $other = Todo::create(['title' => 'T', 'order' => 2, 'checklist_id' => $this->list->id]);
+        $m2 = Livewire::test(IngredientModal::class)->call('openFor', $other->id);
+
+        $m2->call('setState', 'open');
+        $other->refresh();
+        $this->assertTrue($other->open_to_work);
+        $this->assertNull($other->stopped_at);
+
+        $m2->call('setState', 'waiting');
+        $other->refresh();
+        $this->assertFalse($other->open_to_work);
+        $this->assertFalse($other->completed);
 
         $modal->call('setState', 'working'); // not settable by the user
         $this->assertFalse($todo->fresh()->working);

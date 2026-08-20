@@ -112,4 +112,26 @@ class TodoListComponentTest extends TestCase
         $t = Livewire::test(TodoList::class);
         $this->assertSame(['Mine'], $t->viewData('todos')->pluck('title')->all());
     }
+
+    public function test_a_closed_task_cannot_be_reopened_from_the_board(): void
+    {
+        // Done is done: continuing means a new task made with «resume» (task 348).
+        $todo = $this->add('Already answered');
+        Livewire::test(TodoList::class)->call('toggle', $todo->id);
+        $this->assertTrue($todo->fresh()->completed);
+
+        Livewire::test(TodoList::class)->call('toggle', $todo->id)->assertDispatched('toast');
+        $this->assertTrue($todo->fresh()->completed, 'the checkbox does not reopen it');
+
+        Livewire::test(TodoList::class)->call('toggleOpenToWork', $todo->id);
+        $todo->refresh();
+        $this->assertTrue($todo->completed);
+        $this->assertFalse($todo->open_to_work, 'and the dot does not put it back to work');
+
+        // The way to carry on: resume creates a new task linked to it.
+        Livewire::test(TodoList::class)->call('resume', $todo->id);
+        $new = Todo::where('parent_id', $todo->id)->first();
+        $this->assertNotNull($new);
+        $this->assertFalse($new->completed);
+    }
 }

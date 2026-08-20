@@ -94,18 +94,17 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertJson($out);
     }
 
-    public function test_taking_a_completed_task_reopens_it(): void
+    public function test_taking_a_completed_task_is_refused(): void
     {
-        // Otherwise the row said «done» while the agent was working on it (task 347).
+        // A closed task stays closed: to carry on there is «resume», which makes a new linked task (task 348).
         $list = Checklist::where('name', config('griglia.agent_list', 'dev'))->first()
             ?? Checklist::create(['name' => config('griglia.agent_list', 'dev'), 'user_id' => auth()->id()]);
         $todo = $list->todos()->create(['title' => 'Closed too early', 'order' => 99, 'completed' => true, 'completed_at' => now()]);
 
-        $this->artisan('griglia:check', ['--take' => $todo->id])->assertSuccessful();
+        $this->artisan('griglia:check', ['--take' => $todo->id])->assertFailed();
 
         $todo->refresh();
-        $this->assertFalse($todo->completed);
-        $this->assertNull($todo->completed_at);
-        $this->assertTrue($todo->working);
+        $this->assertTrue($todo->completed, 'still closed');
+        $this->assertFalse($todo->working, 'and the agent did not take it');
     }
 }
