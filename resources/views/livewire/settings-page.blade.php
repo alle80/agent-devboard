@@ -1,13 +1,50 @@
 {{-- Desktop: il contenitore si allarga e le voci si dispongono su più colonne (task 321).
      Sotto lg resta tutto com'era: una colonna leggibile. --}}
-<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8" style="{{ $skin['vars'] }}">
+<div class="mx-auto w-full max-w-xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8" style="{{ $skin['vars'] }}" x-data="{ tab: 'agent' }">
     <div class="mb-6 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} inline-flex items-center gap-2"><x-griglia::icon name="settings" size="1em" /> {{ __('griglia::t.settings_title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
     </div>
 
+    @php($icons = ['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'])
+    @php($tabs = [])
     @foreach ($sections as $group => [$title, $intro, $fields])
-        <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}">
+        @php($tabs[] = ['key' => $group, 'label' => $title, 'icon' => $icons[$group] ?? 'board', 'count' => count($fields)])
+    @endforeach
+    @unless (\Alle80\Griglia\Mode::isLocal())
+        @php($tabs[] = ['key' => 'notif', 'label' => __('griglia::t.notif.title'), 'icon' => 'bell', 'count' => null])
+    @endunless
+    @php($tabs[] = ['key' => 'themes', 'label' => __('griglia::t.themes.title'), 'icon' => 'palette', 'count' => null])
+
+    {{-- Desktop: indice a sinistra, un gruppo alla volta a destra (task 323).
+         Sotto lg l'indice sparisce e i gruppi restano impilati come prima. --}}
+    <div class="lg:grid lg:grid-cols-[13rem_1fr] lg:items-start lg:gap-6">
+
+        <nav class="hidden lg:sticky lg:top-24 lg:block" aria-label="{{ __('griglia::t.settings_title') }}">
+            <ul class="space-y-1">
+                @foreach ($tabs as $t)
+                    <li>
+                        <button
+                            type="button"
+                            x-on:click="tab = '{{ $t['key'] }}'"
+                            x-bind:class="tab === '{{ $t['key'] }}' ? 'tl-btn-on' : ''"
+                            x-bind:aria-current="tab === '{{ $t['key'] }}' ? 'true' : 'false'"
+                            aria-controls="panel-{{ $t['key'] }}"
+                            class="tl-btn tl-btn-sm w-full justify-start text-left"
+                        >
+                            <x-griglia::icon :name="$t['icon']" size="1em" />
+                            <span class="min-w-0 flex-1 truncate">{{ $t['label'] }}</span>
+                            @if ($t['count'])<span class="text-[11px] tabular-nums opacity-60">{{ $t['count'] }}</span>@endif
+                        </button>
+                    </li>
+                @endforeach
+            </ul>
+        </nav>
+
+        <div class="min-w-0">
+
+    @foreach ($sections as $group => [$title, $intro, $fields])
+        <section id="panel-{{ $group }}" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}" x-bind:class="tab === '{{ $group }}' ? '' : 'lg:hidden'">
             <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('griglia::t.settings_saves') }}</p>
 
@@ -91,8 +128,10 @@
     {{-- Web Push on this device (the channel toggles live in the App group above) --}}
     @unless (\Alle80\Griglia\Mode::isLocal())
     <section
+        id="panel-notif"
         class="{{ $skin['card'] }} mb-6"
         aria-labelledby="sec-notif"
+        x-bind:class="tab === 'notif' ? '' : 'lg:hidden'"
         x-data="{
             st: 'checking', busy: false, sent: false, diag: null, log: [],
             async refresh() { this.st = window.grigliaPush ? await window.grigliaPush.status() : 'unsupported'; this.diag = window.grigliaPush ? await window.grigliaPush.diagnose() : null; window.grigliaPush && window.grigliaPush.onPush((d) => { this.log.unshift(@js(__('griglia::t.notif.diag_received')) + ' «' + d.title + '»'); }); },
@@ -136,7 +175,7 @@
     @endunless
 
     {{-- Theme packs --}}
-    <section class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }">
+    <section id="panel-themes" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-themes" x-data="{ uploading: false }" x-bind:class="tab === 'themes' ? '' : 'lg:hidden'">
         <h2 id="sec-themes" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon name="palette" size="1em" /> {{ __('griglia::t.themes.title') }}</h2>
         <p class="{{ $skin['sub'] }} mb-3">{{ __('griglia::t.themes.intro') }}</p>
 
@@ -174,6 +213,9 @@
         </label>
         <p class="{{ $skin['help'] }} mt-2 text-xs">{{ __('griglia::t.themes.how') }}</p>
     </section>
+
+        </div>{{-- /pannelli --}}
+    </div>{{-- /indice + pannelli --}}
 
     <p class="{{ $skin['help'] }} text-center">{{ __('griglia::t.settings_footer') }}</p>
 </div>

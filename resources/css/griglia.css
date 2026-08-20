@@ -276,6 +276,8 @@ details[open] > .tl-btn .tl-caret { transform: rotate(180deg); }
 @media (min-width: 640px) { .tl-btn-icon { padding: 0.35rem; } }
 .tl-btn-ghost { background: transparent; border-color: transparent; box-shadow: none; opacity: 0.45; }
 .tl-btn-ghost:hover { opacity: 1; background: color-mix(in srgb, var(--tl-accent, #16a34a) 14%, transparent); }
+.tl-btn-on { background: var(--tl-accent, #16a34a); color: var(--tl-accent-fg, #fff); border-color: var(--tl-accent, #16a34a); }
+.tl-btn-on:hover { background: var(--tl-accent, #16a34a); }
 .tl-btn-danger:hover { background: color-mix(in srgb, #dc2626 22%, transparent); color: #fecaca; }
 
 .tl-menu {

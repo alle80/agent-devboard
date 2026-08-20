@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.40.0] - 2026-08-20
+
+### Changed
+- **/settings is one screen on desktop.** From `lg` the page splits into a sticky index on the left
+  (one entry per group — agent, optimization, app, notifications, themes — with the number of settings)
+  and a single panel on the right, so the 35 settings no longer stack into one very long column. Below
+  `lg` the index is hidden and every group stays stacked exactly as before. New `.tl-btn-on` marks the
+  selected entry.
+
 ## [0.39.0] - 2026-08-20
 
 ### Changed
