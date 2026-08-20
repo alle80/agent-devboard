@@ -30,6 +30,8 @@ return [
     'dot_otw_on' => 'Open to work: clicca per disattivare',
     'dot_otw_off' => 'Segna come open to work',
     'save' => 'Salva',
+    'task_prev' => 'Task precedente (←)',
+    'task_next' => 'Task successivo (→)',
     'cancel' => 'Annulla',
     'new_title' => 'Nuovo titolo',
     'ok' => 'OK',

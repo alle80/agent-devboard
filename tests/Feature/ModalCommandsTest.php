@@ -150,4 +150,29 @@ class ModalCommandsTest extends TestCase
         $this->assertFalse($todo->open_to_work);
         $this->assertSame(1, $todo->questions()->count(), 'the questions stay recorded');
     }
+
+    public function test_the_modal_walks_to_the_previous_and_next_task(): void
+    {
+        // Following a plan from one task to the next without closing the modal (task 365).
+        $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
+        $b = Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
+        $c = Todo::create(['title' => 'C', 'order' => 3, 'checklist_id' => $this->list->id]);
+
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $b->id);
+        $this->assertSame(2, $m->instance()->position());
+        $this->assertSame($a->id, $m->instance()->siblingId(-1));
+        $this->assertSame($c->id, $m->instance()->siblingId(1));
+
+        $m->call('goSibling', 1);
+        $this->assertSame($c->id, $m->instance()->todoId);
+        $this->assertNull($m->instance()->siblingId(1), 'the last task has no next');
+
+        $m->call('goSibling', -1);
+        $this->assertSame($b->id, $m->instance()->todoId);
+
+        // An archived task is not walked through.
+        $b->update(['archived_at' => now()]);
+        $m2 = Livewire::test(IngredientModal::class)->call('openFor', $a->id);
+        $this->assertSame($c->id, $m2->instance()->siblingId(1));
+    }
 }

@@ -20,6 +20,23 @@
         <x-griglia::icon :name="$state" size="1.25em" :stroke="2" />
     </button>
 
+    {{-- Prev / next task of the list: seguire una catena senza chiudere il modale (task 365) --}}
+    @php($prevId = $this->siblingId(-1))
+    @php($nextId = $this->siblingId(1))
+    @php($position = $this->position())
+    @if ($prevId || $nextId)
+        <span class="mx-0.5 opacity-20" aria-hidden="true">|</span>
+        <button type="button" class="db-cmd @unless ($prevId) opacity-30 @endunless" @if ($prevId) wire:click="goSibling(-1)" @else disabled aria-disabled="true" @endif
+                title="{{ __('griglia::t.task_prev') }}" aria-label="{{ __('griglia::t.task_prev') }}">
+            <x-griglia::icon name="arrow-left" />
+        </button>
+        <span class="text-xs tabular-nums opacity-60">{{ $position }}/{{ count($this->siblingIds()) }}</span>
+        <button type="button" class="db-cmd @unless ($nextId) opacity-30 @endunless" @if ($nextId) wire:click="goSibling(1)" @else disabled aria-disabled="true" @endif
+                title="{{ __('griglia::t.task_next') }}" aria-label="{{ __('griglia::t.task_next') }}">
+            <x-griglia::icon name="arrow-right" />
+        </button>
+    @endif
+
     <span class="mx-0.5 opacity-20" aria-hidden="true">|</span>
 
     @if ($readonly)

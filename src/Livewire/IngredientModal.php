@@ -292,6 +292,52 @@ class IngredientModal extends Component
 
     // ----- Comandi nella testata -----
 
+    /**
+     * Ids of the active tasks of the list, in the order they are shown: the modal walks them with the
+     * arrows, which is how you follow a plan from one task to the next (task 365).
+     *
+     * @return array<int, int>
+     */
+    public function siblingIds(): array
+    {
+        $todo = $this->todo();
+
+        if (! $todo) {
+            return [];
+        }
+
+        return Todo::where('checklist_id', $todo->checklist_id)
+            ->whereNull('archived_at')
+            ->orderBy('order')->orderBy('id')
+            ->pluck('id')->map(fn ($id) => (int) $id)->all();
+    }
+
+    /** Position of the open task among its siblings, 1-based (0 when it is not in the list). */
+    public function position(): int
+    {
+        $todo = $this->todo();
+        $i = $todo ? array_search((int) $todo->id, $this->siblingIds(), true) : false;
+
+        return $i === false ? 0 : $i + 1;
+    }
+
+    /** Id of the previous (-1) or next (+1) task, or null at the ends. */
+    public function siblingId(int $delta): ?int
+    {
+        $ids = $this->siblingIds();
+        $position = $this->position();
+
+        return $position === 0 ? null : ($ids[$position - 1 + $delta] ?? null);
+    }
+
+    /** Open the previous (-1) or next (+1) task without leaving the modal. */
+    public function goSibling(int $delta): void
+    {
+        if ($id = $this->siblingId($delta === -1 ? -1 : 1)) {
+            $this->openFor($id);
+        }
+    }
+
     /** State of the current todo, for the coloured badge: waiting|open|working|question|done. */
     public function stateKey(): string
     {

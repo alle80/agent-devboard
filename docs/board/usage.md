@@ -44,6 +44,12 @@ tokens, cost), the agent's **skills** accordion, images (upload, camera, paste; 
 sub-tasks (Markdown, sortable), questions/answers, resume-from context. Header: state badge (tap to toggle),
 **move to another list**, archive, delete; on a completed task: **resume with changes** (a new linked task).
 
+### Moving between tasks
+
+The modal has ‹ and › next to the state badge, with the position of the task in the list (`3/7`): they open
+the previous and the next task without closing the modal — the way to follow a plan from one step to the
+next. The **left and right arrow keys** do the same, unless you are typing in a field.
+
 ## Toolbar
 
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state filters, archive.

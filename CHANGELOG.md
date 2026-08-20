@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.58.0] - 2026-08-20
+
+### Added
+- **Walking through the tasks from inside the modal.** Two arrows next to the state badge (with the position
+  in the list, `3/7`) open the previous and the next task, and the ← → keys do the same when you are not
+  typing. Following a plan step by step no longer means closing the modal after every task.
+
 ## [0.57.0] - 2026-08-20
 
 ### Changed

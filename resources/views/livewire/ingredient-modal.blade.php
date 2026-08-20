@@ -4,6 +4,9 @@
             class="modal-shell fixed inset-0 z-50 flex items-center justify-center p-4"
             x-data
             x-on:keydown.escape.window="$wire.close()"
+            {{-- Frecce ← → : task precedente/successivo, ma non mentre si scrive (task 365) --}}
+            x-on:keydown.window.arrow-left="if (! $event.target.closest('input, textarea, select, [contenteditable]') && ! $event.metaKey && ! $event.ctrlKey && ! $event.altKey) { $event.preventDefault(); $wire.goSibling(-1) }"
+            x-on:keydown.window.arrow-right="if (! $event.target.closest('input, textarea, select, [contenteditable]') && ! $event.metaKey && ! $event.ctrlKey && ! $event.altKey) { $event.preventDefault(); $wire.goSibling(1) }"
         >
             {{-- Sfondo scuro --}}
             <div class="absolute inset-0 bg-black/70" wire:click="close"></div>

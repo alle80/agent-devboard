@@ -35,6 +35,7 @@
         'send'     => '<path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4z"/>',
         'package'  => '<path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/>',
         'arrow-left' => '<path d="M19 12H5M11 18l-6-6 6-6"/>',
+        'arrow-right' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
         'user'     => '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
         'logout'   => '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h7a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-7"/>',
         'ruler'    => '<path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',
