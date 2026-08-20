@@ -43,4 +43,4 @@ were already waiting when it started, which makes it suitable for cron jobs and 
 
 - [Quickstart](../getting-started/quickstart.md) — the same flow, step by step.
 - [Artisan commands](../reference/commands.md) — every command and option, generated from the code.
-- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md) · [Host scripts](scripts.md)
+- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md) · [Host scripts](scripts.md) · [Persistent workers](workers.md)

@@ -1,0 +1,14 @@
+[Unit]
+Description=Griglia coding-agent worker (%i)
+
+[Service]
+Type=simple
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+WorkingDirectory=/absolute/path/to/project
+EnvironmentFile=-%h/.config/griglia-worker/%i.env
+ExecStart=/absolute/path/to/project/scripts/griglia-agent-worker.py --agent=%i
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

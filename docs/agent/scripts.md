@@ -1,7 +1,7 @@
 # Host scripts
 
 Part of the board lives outside the container: the skills the agent has installed, its credentials, the
-transcript of the session. Four small Python helpers read all that **on the machine where the agent runs** and
+transcript of the session. The host helpers and persistent worker handle that **on the machine where the agent runs** and
 push the result into the board through the artisan commands. They ship with the package:
 
 ```bash
@@ -14,15 +14,16 @@ php artisan vendor:publish --tag=griglia-scripts   # → scripts/ in your projec
 | `sync-context.py` | writes the enabled context blocks back to `CLAUDE.md` / `AGENTS.md`, keeps the originals, `--check` tells you if they are in sync, `--import` loads a hand-written file | `griglia:context` |
 | `claude-tokens.py` | sums the tokens of the session spent on a task (`--todo=ID --args` prints them ready for `griglia:check --done`) | `griglia:check` |
 | `agent-status.py` | reads the agent's OAuth credentials and sends **only percentages** of the plan windows | `griglia:agent-status-import` |
+| `griglia-agent-worker.py` | polls assigned work and launches Codex, Claude Code or a custom CLI; the systemd template keeps it alive | `griglia:check` |
 
-They need `python3` and the `docker` CLI when the app runs in a container (`GRIGLIA_CONTAINER`, default
-`laravel-dev-app`; `GRIGLIA_USER`, default `www-data`). Without Docker, call the artisan commands directly:
-every script also has a `--print` / `--check` mode that just shows what it would send.
+All host scripts need `python3`; containerized applications also need the `docker` CLI (`GRIGLIA_CONTAINER`,
+default `laravel-dev-app`). The synchronization helpers provide print/check modes; the worker instead needs
+access to both the configured container and the selected agent CLI.
 
 ## Where they think they are
 
-Each script needs the root of your project (the instruction files, the transcripts folder). It takes it from
-`GRIGLIA_PROJECT_ROOT` if set; otherwise from its own position — the parent of the `scripts/` folder it sits in,
+The synchronization scripts need the project root (instruction files and transcript folders). They read it from
+`GRIGLIA_PROJECT_ROOT` when set; otherwise they derive it from their own position — the parent of the `scripts/` folder,
 or the folder containing `vendor/` when you run it straight from `vendor/alle80/griglia/scripts/`. So both of
 these work:
 

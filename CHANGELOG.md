@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.0] - 2026-08-20
+
+### Added
+- **Persistent agent workers are now shipped and documented.** `griglia-scripts` publishes a host worker with
+  built-in Codex CLI and Claude Code drivers, a shell-free custom argv driver for other agents, per-agent locks,
+  retry and Stop handling, plus a portable systemd user-service template. The new guide covers installation,
+  PATH configuration, lingering across logout/reboot, smoke testing and multi-agent instances.
+
 ## [0.63.0] - 2026-08-20
 
 ### Added
@@ -1137,7 +1145,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.63.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.64.0...HEAD
+[0.64.0]: https://github.com/alle80/griglia/compare/v0.63.0...v0.64.0
 [0.63.0]: https://github.com/alle80/griglia/compare/v0.62.0...v0.63.0
 [0.62.0]: https://github.com/alle80/griglia/compare/v0.61.0...v0.62.0
 [0.61.0]: https://github.com/alle80/griglia/compare/v0.60.0...v0.61.0

@@ -134,6 +134,9 @@ GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"
 php artisan griglia:check --agent=codex     # each agent sees only its own tasks
 php artisan griglia:watch --agent=codex     # and only its own events
 ```
+For unattended operation, publish the host scripts and install the systemd template; see
+[Persistent workers](docs/agent/workers.md). The worker includes Codex and Claude drivers plus a safe custom
+argv driver for any other CLI.
 
 ### Plan mode
 
@@ -277,7 +280,7 @@ sources: `cd vendor/alle80/griglia && npm install && npm run build`.
 php artisan vendor:publish --tag=griglia-config     # config/griglia.php
 php artisan vendor:publish --tag=griglia-views      # override the Blade views
 php artisan vendor:publish --tag=griglia-lang       # translations (en, it)
-php artisan vendor:publish --tag=griglia-scripts    # host helpers → scripts/ (skills, context, tokens, status)
+php artisan vendor:publish --tag=griglia-scripts    # host helpers and persistent worker → scripts/
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md (agent workflow)
 ```
 

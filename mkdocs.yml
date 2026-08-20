@@ -95,6 +95,7 @@ nav:
       - Agent context: agent/context.md
       - Statistics & agents status: agent/stats.md
       - Host scripts: agent/scripts.md
+      - Persistent workers: agent/workers.md
   - Features:
       - features/index.md
       - Plans: features/plans.md
