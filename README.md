@@ -28,11 +28,15 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 ## Install
 
 ```bash
-composer require alle80/griglia
+composer require alle80/griglia -W                   # -W: see the note below
 php artisan migrate                                  # tables + settings defaults (idempotent)
 php artisan storage:link                             # attachments live on the "public" disk
-php artisan vendor:publish --tag=griglia-assets     # precompiled build & theme assets
+php artisan vendor:publish --tag=griglia-assets      # precompiled build & theme assets
 ```
+
+> **Why `-W`**: Web Push pulls `web-token/jwt-library`, which caps `brick/math` at `^0.17`, while a brand
+> new Laravel app ships `0.18`. `-W` lets composer downgrade that one transitive dependency; without it the
+> install stops with a conflict. Existing apps usually need nothing.
 
 Routes register automatically — `/` (default theme), `/{theme}`, `/settings`, `/context`, `/stats`,
 `/agents` — behind `web` plus the package's access middleware (login in server mode, none in local mode;

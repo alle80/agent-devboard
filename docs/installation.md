@@ -10,11 +10,16 @@
 ## Steps
 
 ```bash
-composer require alle80/griglia
-php artisan vendor:publish --tag=griglia-config     # config/devboard.php (optional)
+composer require alle80/griglia -W                  # -W: Web Push caps brick/math at ^0.17 (see the note below)
+php artisan vendor:publish --tag=griglia-config     # config/griglia.php (optional)
 php artisan migrate                                  # tables + settings defaults
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md for your coding agent (optional)
 ```
+
+!!! note "Why `-W`"
+    Web Push pulls `web-token/jwt-library`, which caps `brick/math` at `^0.17`, while a brand new
+    Laravel app ships `0.18`. `-W` lets composer downgrade that single transitive dependency; without
+    it the install stops with a conflict. Existing apps usually need nothing.
 
 Add the package assets to your Vite build (default `assets = vite`):
 

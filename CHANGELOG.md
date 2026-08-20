@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.34.1] - 2026-08-20
+
+### Changed
+- Install docs: `composer require alle80/griglia -W` (Web Push pulls `web-token/jwt-library`, which caps
+  `brick/math` at `^0.17` while a fresh Laravel app ships `0.18`), plus a note explaining why.
+
 ## [0.34.0] - 2026-08-20
 
 ### Changed — BREAKING: the package is now **Griglia**
