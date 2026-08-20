@@ -6,7 +6,7 @@ Everything the board does, in one page. Follow a link when you want the detail.
 
 | | |
 |---|---|
-| **States and flow** | Waiting ⚪, open to work 🟢, working 🔧, question ❓, done ✔, plus a stop that pulls a task back from the agent. [Using the board](../board/usage.md) |
+| **States and flow** | Waiting, open to work, working, question, done — plus a stop that pulls a task back from the agent. [Using the board](../board/usage.md) |
 | **Tasks with substance** | Notes in Markdown, sub-tasks, image attachments (upload, camera, paste), the agent's closing comment kept apart from your own notes. [Using the board](../board/usage.md) |
 | **Progress and phase** | A percentage and a short «what I am doing now» on every working task, updated by the agent as it goes. [The agent side](../agent/index.md) |
 | **Questions** | The agent can pause a task with questions; you answer in the modal and send it back to work. [The agent side](../agent/index.md) |

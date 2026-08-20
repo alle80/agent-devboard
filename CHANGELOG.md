@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.48.1] - 2026-08-20
+
+### Changed
+- **No stray icons in the documentation.** The site used emoji for the states, the microphone and the plan
+  controls: they are not part of the visual language of the board (which has its own SVG icon set) and they
+  render differently on every system. The states table shows the real icons, everything else says it in
+  words. The `--ask` help text and the `agent_name` config comment lost their emoji too, so the generated
+  reference pages stay clean.
+
 ## [0.48.0] - 2026-08-20
 
 ### Changed

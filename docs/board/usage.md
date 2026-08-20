@@ -24,7 +24,7 @@ highlighted until you open them.
 
 ## The task modal
 
-Title, **Task** note (Markdown editor with 🎤 speech to text), the agent's answer box, statistics (working time,
+Title, **Task** note (Markdown editor, with a microphone for [speech to text](../features/ai.md#speech-to-text)), the agent's answer box, statistics (working time,
 tokens, cost), the agent's **skills** accordion, images (upload, camera, paste; AI description when enabled),
 sub-tasks (Markdown, sortable), questions/answers, resume-from context. Header: state badge (tap to toggle),
 **move to another list**, archive, delete; on a completed task: **resume with changes** (a new linked task).
@@ -32,7 +32,7 @@ sub-tasks (Markdown, sortable), questions/answers, resume-from context. Header: 
 ## Toolbar
 
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state filters, archive.
-On a plan list the **Plan** bar shows progress and ▶ / ⏸ (see [Plans](../features/plans.md)).
+On a plan list the **Plan** bar shows progress and the start/pause buttons (see [Plans](../features/plans.md)).
 
 ## Mobile
 

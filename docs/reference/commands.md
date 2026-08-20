@@ -49,7 +49,7 @@ php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--co
 | `--comment` | Agent comment saved on the todo of --take/--done (claude_comment) | — |
 | `--progress` | Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0% | — |
 | `--phase` | Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the % | — |
-| `--ask` | Id of the todo to ask questions about (state ❓) | — |
+| `--ask` | Id of the todo to ask questions about (the task pauses in the question state) | — |
 | `--q` | Text of each question, repeatable | _array_ |
 | `--tokens-in` | Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--tokens-out` | Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |

@@ -1,5 +1,7 @@
 # Installation
 
+The package is on Packagist as [`alle80/griglia`](https://packagist.org/packages/alle80/griglia).
+
 ## Requirements
 
 - PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 (for the `vite` asset mode), `ext-gd`.

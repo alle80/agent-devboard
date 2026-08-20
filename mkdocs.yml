@@ -54,9 +54,6 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/alle80/griglia
       name: Griglia on GitHub
-    - icon: fontawesome/brands/php
-      link: https://packagist.org/packages/alle80/griglia
-      name: Griglia on Packagist
 
 plugins:
   - search

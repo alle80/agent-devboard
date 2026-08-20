@@ -8,7 +8,7 @@ Decided by whoever installs the package; the run-time options live in [Settings]
 | Key | Environment variable | Default | What it is |
 |---|---|---|---|
 | `route_prefix` | `GRIGLIA_ROUTE_PREFIX` | `''` | URL prefix of the package pages ('' = site root: /, /<theme>, /settings) |
-| `agent_name` | `GRIGLIA_AGENT_NAME` | `'Agent'` | How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «🤖 Claude», «Claude's skills» |
+| `agent_name` | `GRIGLIA_AGENT_NAME` | `'Agent'` | How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «Claude's answer», «Claude's skills» |
 | `agents` | `GRIGLIA_AGENTS` | — | Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list (project) chooses its default agent, a task may override it; each agent runs `griglia:check --agent=<key>` (or sets GRIGLIA_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`. |
 | `agent_key` | `GRIGLIA_AGENT_KEY` | — | Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list (project) chooses its default agent, a task may override it; each agent runs `griglia:check --agent=<key>` (or sets GRIGLIA_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`. |
 | `mode` | `GRIGLIA_MODE` | `'server'` | Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication, one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode). |

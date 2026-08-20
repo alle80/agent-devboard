@@ -5,22 +5,23 @@ The board never talks to a specific vendor: the contract is a CLI. Give your age
 
 ```bash
 php artisan griglia:watch                       # prints only the changes it must react to (events)
-php artisan griglia:check                       # what to work on (🟢/🔧), settings to follow, plans
-php artisan griglia:check --take=ID             # take in charge → 🔧 (starts at 0%)
+php artisan griglia:check                       # what is open to work or already taken, settings, plans
+php artisan griglia:check --take=ID             # take in charge: the task turns to working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testing"
-php artisan griglia:check --ask=ID --q="…" --q="…"     # pause with questions → ❓
+php artisan griglia:check --ask=ID --q="…" --q="…"     # pause the task with questions
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
 ```
 
 `check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, autonomy,
 notifications, task mode, terse mode, …) that the agent is expected to follow, then the open tasks of the agent
-list and, after them, the open tasks of the started **plans** (`📐 Plan «name»`).
+list and, after them, the open tasks of the started **plans** (under a `Plan «name»` heading).
 
 Rules worth knowing: take the task **first** (before reading/analysing), one task at a time in list order
-(`task_mode=ordered`) or several independent ones (`multitasking`), never touch ⚪ items, stop immediately on ⏹,
+(`task_mode=ordered`) or several independent ones (`multitasking`), never touch *waiting* items, drop a
+task the moment it is stopped,
 keep the progress % and phase updated, report tokens on close when the setting asks for it.
 
-Statistics: every 🔧 interval is timed automatically; tokens are whatever the agent reports.
+Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
 
 ## Several agents
 

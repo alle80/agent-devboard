@@ -282,7 +282,7 @@ Fully custom styles (own components/views) plug in via `Themes::registerStyle()`
 `Themes::registerSkin()`.
 
 **Installable packs (zip):** a `theme.json` + `theme.css` (+ optional `images/`). Install from
-**/settings → 🎨 Themes** or `php artisan griglia:theme-import pack.zip`; packs live in
+**/settings → Themes** or `php artisan griglia:theme-import pack.zip`; packs live in
 `storage/app/themes/<slug>`. Export any theme as a starting point:
 `php artisan griglia:theme-export slate --css-from=resources/css/app.css`. A sample pack (`pollon`)
 is in `resources/themes/`.

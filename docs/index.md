@@ -77,10 +77,10 @@ one instructions file. Anything that speaks a shell can drive it.
 ## How it works in one minute
 
 1. You write a request in the **agent list** (default name `dev`), with notes, sub-tasks and screenshots,
-   and turn the dot 🟢 **open to work**.
-2. The agent runs `griglia:watch` (events) and `griglia:check` (what to do), takes the task (🔧), asks
-   questions (❓) when the request is ambiguous, updates progress and phase, and closes it (✔) with a
-   comment.
+   and set the dot to **open to work**.
+2. The agent runs `griglia:watch` (events) and `griglia:check` (what to do), takes the task — the dot turns
+   to **working** — asks **questions** when the request is ambiguous, updates progress and phase, and
+   **closes** it with a comment.
 3. The board shows all of it live, notifies you, and keeps the statistics of what it cost.
 
 ```bash

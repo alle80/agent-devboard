@@ -17,8 +17,8 @@ Add a task with the input at the top, then open it (click the title) to add what
 - **sub-tasks** — the checklist you expect;
 - **images** — screenshots, pasted or taken with the camera.
 
-The row starts as ⚪ *waiting*: the agent must not touch it. When the request is ready, click the dot to
-turn it 🟢 **open to work**.
+The row starts as *waiting*: the agent must not touch it. When the request is ready, click the dot to set
+it to **open to work**.
 
 ## 3. Tell your agent the rules
 
@@ -37,12 +37,12 @@ In the project directory the agent runs:
 
 ```bash
 php artisan griglia:check                      # what is open to work, plus the settings to follow
-php artisan griglia:check --take=12            # take it in charge  → 🔧, progress starts at 0%
+php artisan griglia:check --take=12            # take it in charge: working, progress starts at 0%
 php artisan griglia:check --take=12 --progress=60 --phase="writing code"
 php artisan griglia:check --done=12 --comment="What I did and how to try it"
 ```
 
-The board updates live while this happens: the dot turns 🔧, the progress bar and phase move, and the
+The board updates live while this happens: the dot turns to *working*, the progress bar and phase move, and the
 closing comment shows up under the note as the agent's answer. If the request is ambiguous the agent
 pauses it with questions:
 
@@ -50,7 +50,7 @@ pauses it with questions:
 php artisan griglia:check --ask=12 --q="Which of the two layouts?" --q="Italian or English?"
 ```
 
-Answer them in the task modal and press **restart**: the task goes back to 🟢.
+Answer them in the task modal and press **restart**: the task goes back to *open to work*.
 
 ## 5. Keep it running
 

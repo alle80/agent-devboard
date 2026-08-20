@@ -5,7 +5,7 @@ return [
     // URL prefix of the package pages ('' = site root: /, /<theme>, /settings)
     'route_prefix' => env('GRIGLIA_ROUTE_PREFIX', ''),
 
-    // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «🤖 Claude», «Claude's skills»
+    // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «Claude's answer», «Claude's skills»
     'agent_name' => env('GRIGLIA_AGENT_NAME', 'Agent'),
 
     // Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list

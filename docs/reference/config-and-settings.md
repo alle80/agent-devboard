@@ -37,7 +37,7 @@ implementation notes.
 |---|---|---|---|---|---|
 | S1 | `app.ai_plan_provider` / `app.ai_plan_model` | select/text | choose the model that builds plans (cost/quality) | P2 | fields + migration + `Plan::tasks()` passes them |
 | S2 | `app.speech_provider` / `app.speech_model` | select/text | provider/model for transcription | P2 | fields + `TranscribeController` |
-| S3 | `agent.max_parallel` | int, 2 | cap for multitasking mode (how many 🟢 at once) | P2 | printed in the settings line; agent rule |
+| S3 | `agent.max_parallel` | int, 2 | cap for multitasking mode (how many open tasks at once) | P2 | printed in the settings line; agent rule |
 | S4 | `agent.working_hours` | time range | the agent should not start new tasks outside the window | P3 | printed by `check`; agent rule |
 | S5 | `agent.auto_pause_on_usage` | int %, 0 | pause plans when the agent's weekly usage (`/agents`) exceeds N% | P2 | `AgentStatus` hook → `plan_paused`; toast/notification |
 | S6 | `app.notify_on_take` | bool, false | notification when the agent takes a task (user asked for done/question only so far) | P3 | `Notify::taken()` + `TodoTaken` notification |
