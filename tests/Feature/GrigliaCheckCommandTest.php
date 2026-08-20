@@ -93,4 +93,19 @@ class GrigliaCheckCommandTest extends TestCase
         $out = trim(\Illuminate\Support\Facades\Artisan::output());
         $this->assertJson($out);
     }
+
+    public function test_taking_a_completed_task_reopens_it(): void
+    {
+        // Otherwise the row said «done» while the agent was working on it (task 347).
+        $list = Checklist::where('name', config('griglia.agent_list', 'dev'))->first()
+            ?? Checklist::create(['name' => config('griglia.agent_list', 'dev'), 'user_id' => auth()->id()]);
+        $todo = $list->todos()->create(['title' => 'Closed too early', 'order' => 99, 'completed' => true, 'completed_at' => now()]);
+
+        $this->artisan('griglia:check', ['--take' => $todo->id])->assertSuccessful();
+
+        $todo->refresh();
+        $this->assertFalse($todo->completed);
+        $this->assertNull($todo->completed_at);
+        $this->assertTrue($todo->working);
+    }
 }

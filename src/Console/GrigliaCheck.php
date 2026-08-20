@@ -74,9 +74,12 @@ class GrigliaCheck extends Command
         }
 
         // Quick actions: take in charge / complete with comment
-        foreach (['take' => ['working' => true, 'stopped_at' => null], 'done' => ['working' => false, 'completed' => true, 'result_seen' => false]] as $opt => $attrs) {
+        // Taking a task in charge also puts it back in a coherent state: a completed (or ❓) task that the
+        // agent picks up again is being worked on, and the board must say so (task 347).
+        foreach (['take' => ['working' => true, 'stopped_at' => null, 'completed' => false, 'question' => false], 'done' => ['working' => false, 'completed' => true, 'result_seen' => false]] as $opt => $attrs) {
             if ($id = $this->option($opt)) {
                 $t = $find((int) $id);
+                $wasCompleted = (bool) $t->completed;
                 if ($c = $this->option('comment')) {
                     $attrs['claude_comment'] = $c;
                 }
@@ -100,7 +103,8 @@ class GrigliaCheck extends Command
                 if ($opt === 'done') {
                     Notify::todoCompleted($t); // the app notifies the user (bell / web push / mail)
                 }
-                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '') : ''));
+                $reopened = $opt === 'take' && $wasCompleted ? ' (reopened: it was completed)' : '';
+                $this->info(sprintf('%s: «%s» (id:%d)%s%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '') : '', $reopened));
                 if ($opt === 'done' && $t->hasStats()) {
                     $this->line('   📊 '.$t->statsLine());
                 }

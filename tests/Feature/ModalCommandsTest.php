@@ -126,4 +126,19 @@ class ModalCommandsTest extends TestCase
 
         $this->assertNull($todo->fresh());
     }
+
+    public function test_a_task_with_questions_can_be_taken_back_without_answering(): void
+    {
+        $todo = Todo::create(['title' => 'Ambiguous', 'order' => 1, 'checklist_id' => $this->list->id, 'question' => true]);
+        $todo->questions()->create(['question' => 'Which of the two?']);
+
+        Livewire::test(IngredientModal::class)
+            ->call('openFor', $todo->id)
+            ->call('setState', 'waiting');
+
+        $todo->refresh();
+        $this->assertFalse($todo->question, 'the task is free again');
+        $this->assertFalse($todo->open_to_work);
+        $this->assertSame(1, $todo->questions()->count(), 'the questions stay recorded');
+    }
 }

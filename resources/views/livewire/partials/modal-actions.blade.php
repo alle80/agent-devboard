@@ -6,12 +6,14 @@
 @php($state = $this->stateKey())
 <div class="ml-auto flex shrink-0 items-center gap-1.5" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
     {{-- State badge = the same toggle as the dot in the row: tap → waiting ⚪ ⇄ open to work 🟢
-         (working 🔧 → tap = stop; question ❓ → answer below; done ✔ → reopen from the list) --}}
-    @php($next = match ($state) { 'waiting' => 'open', 'open' => 'waiting', 'working' => 'waiting', default => null })
+         (working 🔧 → tap = stop; question ❓ → tap = take the task back without answering, the questions
+         stay recorded; done ✔ → reopen from the list) --}}
+    @php($next = match ($state) { 'waiting' => 'open', 'open' => 'waiting', 'working' => 'waiting', 'question' => 'waiting', default => null })
     <button type="button"
             class="db-badge db-badge-{{ $state }} db-state-trigger {{ $next ? 'cursor-pointer transition hover:scale-110 active:translate-y-px' : 'cursor-default' }}"
             @if ($next) wire:click="setState('{{ $next }}')" @endif
             @if ($state === 'working') wire:confirm="{{ __('griglia::t.stop_confirm', ['title' => $todo->title]) }}" @endif
+            @if ($state === 'question') wire:confirm="{{ __('griglia::t.question_drop_confirm') }}" @endif
             title="{{ __('griglia::t.state.'.$state) }}{{ $next ? ' — '.__('griglia::t.state_tap', ['state' => __('griglia::t.state.'.$next)]) : '' }}"
             aria-label="{{ __('griglia::t.state.'.$state) }}{{ $next ? ' — '.__('griglia::t.state_tap', ['state' => __('griglia::t.state.'.$next)]) : '' }}"
             @unless ($next) aria-disabled="true" @endunless>

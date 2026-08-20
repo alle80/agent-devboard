@@ -33,7 +33,9 @@ Two different things, on purpose:
   attached as context. Use it when the work was fine and you want a follow-up.
 
 Nothing is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to the
-task before it, so a plan never waits for something that will never arrive.
+task before it, so a plan never waits for something that will never arrive. A task with open questions can
+also be taken back without answering — tap its badge in the modal: the questions stay recorded and the task
+goes back to waiting.
 
 ## The task modal
 

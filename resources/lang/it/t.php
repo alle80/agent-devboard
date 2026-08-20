@@ -23,6 +23,7 @@ return [
     'resume_hint' => 'Riprendi: apre un nuovo elemento collegato a questo, con il suo contesto',
     'agent_replied' => 'L\'agente ha risposto',
     'images_count' => ':count immagini',
+    'question_drop_confirm' => 'Riprendi il task senza rispondere? Le domande restano scritte e il task torna in attesa.',
     'stop_confirm' => 'Fermare il lavoro dell\'agente su «:title»?',
     'dot_question' => 'L\'agente ha delle domande: apri per rispondere',
     'dot_working' => 'In lavorazione: clicca per fermare',

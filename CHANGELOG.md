@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.0] - 2026-08-20
+
+### Changed
+- **A task with open questions is no longer a one-way street.** Its badge in the modal takes it back to
+  waiting without answering (the questions stay recorded): until now the only way out of the question state
+  was answering every question, even when they no longer made sense.
+- **`--take` on a completed task reopens it.** The agent taking a task back left the row saying «done» while
+  it was being worked on; the command now clears the completed state (and any stale question) and says so.
+
 ## [0.54.0] - 2026-08-20
 
 ### Fixed

@@ -24,6 +24,7 @@ return [
     'resume_hint' => 'Resume: opens a new item linked to this one, with its context',
     'agent_replied' => 'Agent replied',
     'images_count' => ':count images',
+    'question_drop_confirm' => 'Take the task back without answering? The questions stay recorded and the task goes back to waiting.',
     'stop_confirm' => 'Stop the agent\'s work on «:title»?',
     'dot_question' => 'The agent has questions: open to answer',
     'dot_working' => 'In progress: click to stop',
