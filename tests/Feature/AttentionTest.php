@@ -25,10 +25,12 @@ class AttentionTest extends TestCase
         session(['checklist_id' => $this->list->id]);
     }
 
+
     protected function todo(array $attrs = []): Todo
     {
         return Todo::create($attrs + ['title' => 'X', 'order' => 1, 'checklist_id' => $this->list->id]);
     }
+
 
     public function test_done_without_outcome_is_a_plain_ok_result(): void
     {
@@ -40,6 +42,7 @@ class AttentionTest extends TestCase
         $this->assertSame('ok', $todo->outcome);
         $this->assertSame('ok', $todo->attention());
     }
+
 
     public function test_done_with_alert_or_blocked_is_kept(): void
     {
@@ -53,6 +56,7 @@ class AttentionTest extends TestCase
         }
     }
 
+
     public function test_an_unknown_outcome_is_refused_and_changes_nothing(): void
     {
         $todo = $this->todo(['open_to_work' => true]);
@@ -61,6 +65,7 @@ class AttentionTest extends TestCase
 
         $this->assertFalse($todo->fresh()->completed);
     }
+
 
     public function test_taking_the_task_again_clears_the_previous_outcome(): void
     {
@@ -73,6 +78,7 @@ class AttentionTest extends TestCase
         $this->assertNull($todo->fresh()->attention());
     }
 
+
     public function test_open_questions_win_and_are_violet(): void
     {
         $todo = $this->todo(['open_to_work' => true, 'outcome' => 'ok']);
@@ -81,6 +87,7 @@ class AttentionTest extends TestCase
 
         $this->assertSame('question', $todo->fresh()->attention());
     }
+
 
     public function test_opening_the_result_clears_the_highlight(): void
     {
@@ -92,6 +99,7 @@ class AttentionTest extends TestCase
         $this->assertNull($todo->fresh()->attention());
     }
 
+
     public function test_a_task_closed_by_the_user_has_no_outcome(): void
     {
         $todo = $this->todo(['outcome' => 'blocked']);
@@ -102,6 +110,7 @@ class AttentionTest extends TestCase
         $this->assertNull($todo->fresh()->attention());
     }
 
+
     public function test_the_row_carries_the_outcome_class(): void
     {
         $todo = $this->todo(['completed' => true, 'result_seen' => false, 'outcome' => 'blocked']);
@@ -111,4 +120,14 @@ class AttentionTest extends TestCase
         $todo->update(['result_seen' => true]);
         Livewire::test(TodoList::class)->assertDontSee('db-att-blocked');
     }
+
+    public function test_plain_ok_uses_green_instead_of_the_theme_accent(): void
+    {
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+
+        $this->assertStringContainsString('.todo-row.db-att-ok', $css);
+        $this->assertMatchesRegularExpression('/\.todo-row\.db-att-ok\s*\{[^}]*--db-att:\s*#22c55e/s', $css);
+    }
+
+
 }

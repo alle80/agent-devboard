@@ -35,6 +35,7 @@ A row you have not read yet is outlined, and the colour says how much it wants f
 | violet | the agent is waiting for your answers | `--ask` (open questions) |
 
 Yellow and red also put a badge next to the title and a chip in the modal, above the agent's answer, which
+The green outline is fixed rather than derived from the current theme accent, so it remains distinct in every style.
 says why. Open the task and the outline goes away: the row goes back to its usual grey. A task you close
 yourself has no outline — there is no result to read.
 

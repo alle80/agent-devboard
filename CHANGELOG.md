@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.70.0] - 2026-08-20
+
+### Fixed
+
+- Plain successful results now always use a green task outline. Previously `ok` inherited the active theme’s
+  accent colour, which could make the outline yellow, cyan, or indistinguishable from the ordinary card border.
+
 ## [0.69.0] - 2026-08-20
 
 ### Fixed
+
 - **The task modal header fits a phone.** On a narrow screen the whole command row was laid out on a single
   line and clipped at the right edge: the agent selector, move, archive, delete and even the close button
   ended up off screen, so the modal could only be dismissed with the browser's back gesture. The header is
@@ -54,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   machine-wide setting configures everything.
 
 ### Fixed
+
 - `claude-tokens.py` ignored `GRIGLIA_CONTAINER` and always queried the container named `laravel-dev-app`.
 
 ## [0.65.0] - 2026-08-20
@@ -111,6 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.59.1] - 2026-08-20
 
 ### Fixed
+
 - The dead-end warning of `griglia:check` shouted at plans nobody had started yet, which are not stuck —
   they are waiting for ▶. It now talks only about plans that were started (or paused) and have nothing the
   agent may take.
@@ -163,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.54.0] - 2026-08-20
 
 ### Fixed
+
 - **No more dead ends where the agent waits and the board cannot let it through.**
   - Archiving or deleting a task of a plan used to leave the next one waiting for something that would
     never be completed. It now inherits the predecessor of the task that left — and opens right away when
@@ -188,6 +199,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.52.1] - 2026-08-20
 
 ### Fixed
+
 - The favicon links carry the file's date (`?v=…`): browsers keep a favicon for days, so after the logo
   changed the old one stayed in the tab even after a forced reload. A `32×32` PNG is declared next to the
   SVG for the browsers that ignore vector favicons.
@@ -287,6 +299,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.47.1] - 2026-08-20
 
 ### Fixed
+
 - `griglia:docs-generate` now always writes the settings page in the English base language with a neutral
   agent name, so `--check` does not depend on the locale (or the agent) of whoever runs it.
 
@@ -304,6 +317,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.46.0] - 2026-08-20
 
 ### Fixed
+
 - **Server-side dictation no longer fails (or garbles the text) depending on the browser.** Browsers send
   the recording as `audio/webm;codecs=opus` (or `audio/ogg;codecs=opus`); the codec parameter made the
   provider receive the file named `audio.mp3` and answer «Audio file might be corrupted or unsupported»,
@@ -355,6 +369,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.42.0] - 2026-08-20
 
 ### Fixed
+
 - Responsive pass over the desktop work, measured at 1920, 1440, 1280, 1024 and 820 px (no horizontal
   overflow at any width — document width always equals the viewport):
   - **/settings**: the two-column layout now starts at `xl` instead of `lg`. At 1024 px the columns were
@@ -401,6 +416,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.38.1] - 2026-08-20
 
 ### Fixed
+
 - **Invisible README header on GitHub in dark mode.** The lockup is dark ink (`#0F1720`) on transparent,
   and GitHub serves SVGs as `<img>`, so `currentColor` cannot help. Added `lockup-horizontal-dark.svg` /
   `lockup-stacked-dark.svg` (wordmark in `#E6EDF3`) and the README header now picks one with a `<picture>`
@@ -442,6 +458,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Task modal: the theme icon is gone from the header — the title in the body carries the modal.
 
 ### Fixed
+
 - **Black screen after uploading a picture.** The lightbox lived inside the thumbnails block, which
   Livewire re-renders on every upload; the teleported overlay stayed behind in `<body>` covering the page.
   State and overlay now live on the section itself, outside the re-rendered block.
@@ -524,6 +541,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.33.2] - 2026-08-20
 
 ### Fixed
+
 - Markdown is now rendered **everywhere it is read** in the task modal: the note of a completed task,
   the questions and their answers, and the previous note/comment shown by "resume" (they were still raw
   text; the editable note and the agent comment already rendered).
@@ -531,6 +549,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.33.1] - 2026-08-20
 
 ### Fixed
+
 - **Mobile: the virtual keyboard no longer covers the sub-task editor** (and the other modal fields):
   the viewport meta now uses `interactive-widget=resizes-content` (the keyboard shrinks `100dvh` instead of
   overlaying the modal) and, as a safety net, a focused field inside the modal body is scrolled into view
@@ -680,6 +699,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.26.3] - 2026-08-19
 
 ### Fixed
+
 - Lists menu navigation as a 2×2 grid («Settings» was cut on phones).
 
 ## [0.26.2] - 2026-08-19
@@ -751,6 +771,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.22.2] - 2026-08-19
 
 ### Fixed
+
 - Notification bell dropdown no longer overflows the screen on phones (full-width panel under the top bar).
 
 ## [0.22.1] - 2026-08-19
@@ -856,6 +877,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.16.1] - 2026-08-19
 
 ### Fixed
+
 - Speech to text on phones: the recognition session ends after every pause (Android/iOS); it now restarts
   keeping what was already dictated (the text was being overwritten), ignores transient errors (`no-speech`)
   and stops when the page goes to the background.
@@ -871,6 +893,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.15.5] - 2026-08-19
 
 ### Fixed
+
 - `/context`: the block editor spans the full width of the row (was squeezed on phones).
 
 ## [0.15.4] - 2026-08-19
@@ -895,6 +918,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.15.1] - 2026-08-19
 
 ### Fixed
+
 - Context import: a «**Bold lead**» line after plain text starts a new block (paragraphs written on
   consecutive lines are split).
 
@@ -1003,6 +1027,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.9.3] - 2026-08-19
 
 ### Fixed
+
 - The **progress percentage** was never visible in practice: `griglia:check --take=ID` left `progress`
   at `null` unless `--progress` was passed, so a working todo showed the spinning icon but no `N%`.
   Now `--take` always shows a percentage: the given `--progress`, else the current value, else **0%**.
@@ -1015,6 +1040,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.9.2] - 2026-08-19
 
 ### Fixed
+
 - The multitasking **warning** in `/settings` now shows/hides instantly when the mode changes
   (Alpine `x-show`), instead of waiting for a server re-render.
 
@@ -1049,6 +1075,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.7.3] - 2026-08-19
 
 ### Fixed
+
 - The **New task** button still failed to open the modal when the list already had items: the modal
   lacked a stable `wire:key`, so it was re-created (losing its open state) when the list re-rendered
   after adding the new row. Added the key.
@@ -1062,6 +1089,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.7.1] - 2026-08-19
 
 ### Fixed
+
 - The **New task** button created the task but the modal stayed closed: the list created the todo and
   then dispatched `open-ingredients` to the child modal, and that server-side dispatch was lost when
   the list re-rendered. The modal now creates-and-opens the task itself via a client dispatch
@@ -1090,12 +1118,14 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.6.2] - 2026-08-19
 
 ### Fixed
+
 - The modal title bar printed the raw `('griglia::livewire.partials.modal-actions')` string instead of
   rendering the state badge + commands (a malformed `@include` insertion in 0.6.0).
 
 ## [0.6.1] - 2026-08-19
 
 ### Fixed
+
 - **Live updates could silently never start.** Echo was loaded with a dynamic `import()`, which resolves
   *after* Livewire wires its `echo-private` listeners (a race that reliably lost on slower / mobile
   connections): `window.Echo` wasn't set yet, so the private channel was never subscribed and no state
@@ -1117,6 +1147,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 ## [0.5.1] - 2026-08-19
 
 ### Fixed
+
 - `app.tab_side` (added in 0.5.0) is now seeded by its own settings migration, so installs that had
   already run the initial settings migration get it on `php artisan migrate` (fresh installs were fine).
 
@@ -1145,6 +1176,7 @@ env keys to `GRIGLIA_*`; re-publish the assets (`--tag=griglia-assets`) and upda
 - README rewritten in a scannable structure, with a **Connect a coding agent** section up front.
 
 ### Fixed
+
 - Docs referenced the pre-rename config keys (`config('todolist.agent_list')`,
   `todolist.broadcast_channel`); corrected to `devboard.*`.
 

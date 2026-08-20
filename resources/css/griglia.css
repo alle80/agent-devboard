@@ -518,11 +518,12 @@ select.setting-input { appearance: auto; }
    green = done, nothing to check · yellow = done, look at it · red = something is blocking · violet = open
    questions. Opening the task clears the highlight and the row goes back to its usual look. */
 .todo-row.db-attention, .todo-row.db-unseen {
-    --db-att: var(--tl-accent, #22c55e); --db-att-fg: var(--tl-accent-fg, #04180c);
+    --db-att: #22c55e; --db-att-fg: #04180c;
     outline: 2px solid var(--db-att); outline-offset: 1px;
     opacity: 1 !important;                 /* override the completed dimming so it stands out */
     animation: db-attention-pulse 2.2s ease-in-out infinite;
 }
+.todo-row.db-att-ok       { --db-att: #22c55e; --db-att-fg: #04180c; }
 .todo-row.db-att-alert    { --db-att: #eab308; --db-att-fg: #241c00; }
 .todo-row.db-att-blocked  { --db-att: #ef4444; --db-att-fg: #2a0505; }
 .todo-row.db-att-question { --db-att: #a78bfa; --db-att-fg: #16092b; }
