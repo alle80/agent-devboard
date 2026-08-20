@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.47.2] - 2026-08-20
+
+### Changed
+- `griglia:docs-generate --check` explains that it is meant for the package repository: inside a host app
+  the settings page legitimately differs (it lists the AI providers installed there).
+
 ## [0.47.1] - 2026-08-20
 
 ### Fixed

@@ -21,6 +21,9 @@ php artisan griglia:docs-generate --check    # fails when the committed pages ar
 `griglia:docs-build` runs it before every build (`--no-generate` to skip), so the site always matches the
 code. Do not edit those three files by hand.
 
+`--check` is meant for the package repository (and its CI): run inside a host app the settings page
+legitimately differs, because it lists the AI providers installed there.
+
 ## Build
 
 ```bash

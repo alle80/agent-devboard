@@ -53,6 +53,8 @@ class DocsGenerate extends Command
         if ($this->option('check')) {
             if ($stale) {
                 $this->error('out of date: '.implode(', ', $stale).' — run `php artisan griglia:docs-generate`');
+                $this->line('  (--check is meant for the package repository: inside a host app the pages'
+                    .' legitimately differ — the settings list the providers installed there.)');
 
                 return self::FAILURE;
             }
