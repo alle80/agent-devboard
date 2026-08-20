@@ -10,6 +10,9 @@
     x-data="{
         uploading: false,
         progress: 0,
+        zoom: null,
+        caption: '',
+        name: '',
         // Da appunti: screenshot o immagine copiata → Livewire upload
         onPaste(e) {
             const items = Array.from(e.clipboardData?.items || []).filter(i => i.type.startsWith('image/'))
@@ -60,7 +63,7 @@
     @endif
 
     @if ($todo->attachments->isNotEmpty())
-        <div class="grid grid-cols-3 gap-2 sm:grid-cols-4" x-data="{ zoom: null, caption: '', name: '' }">
+        <div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
             @foreach ($todo->attachments as $img)
                 <div wire:key="att-{{ $img->id }}" class="group relative">
                     <button type="button" x-on:click="zoom = @js($img->url()); caption = @js((string) $img->description); name = @js($img->original_name)" class="{{ $thumbClass }} block aspect-square w-full cursor-zoom-in overflow-hidden" title="{{ $img->description ? \Illuminate\Support\Str::limit($img->description, 140) : $img->original_name }}">
@@ -77,17 +80,19 @@
                 </div>
             @endforeach
 
-            {{-- Lightbox --}}
-            <template x-teleport="body">
-                <div x-show="zoom" x-cloak x-on:click="zoom = null" x-on:keydown.escape.window="zoom = null" class="db-lightbox fixed inset-0 z-[80] flex cursor-zoom-out flex-col items-center justify-center gap-3 bg-black/90 p-4">
-                    <img :src="zoom" :alt="caption || name" class="min-h-0 max-w-full flex-1 object-contain">
-                    {{-- AI description of the picture (what the search sees), under the image --}}
-                    <figcaption x-show="caption || name" class="db-lightbox-caption max-h-[30vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-black/60 px-4 py-3 text-center text-sm leading-relaxed text-white" x-on:click.stop>
-                        <span class="block text-xs uppercase tracking-wide opacity-60">{{ __('griglia::t.image_description') }}</span>
-                        <span x-text="caption || @js(__('griglia::t.image_no_description'))" x-bind:class="caption ? '' : 'italic opacity-60'"></span>
-                    </figcaption>
-                </div>
-            </template>
         </div>
     @endif
+
+    {{-- Lightbox: fuori dal blocco delle anteprime (che Livewire ri-renderizza a ogni upload,
+         lasciando altrimenti in <body> una copia orfana dell'overlay = schermo nero). --}}
+    <template x-teleport="body">
+        <div x-show="zoom" x-cloak x-on:click="zoom = null" x-on:keydown.escape.window="zoom = null" class="db-lightbox fixed inset-0 z-[80] flex cursor-zoom-out flex-col items-center justify-center gap-3 bg-black/90 p-4">
+            <img :src="zoom" :alt="caption || name" class="min-h-0 max-w-full flex-1 object-contain">
+            {{-- AI description of the picture (what the search sees), under the image --}}
+            <figcaption x-show="caption || name" class="db-lightbox-caption max-h-[30vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-black/60 px-4 py-3 text-center text-sm leading-relaxed text-white" x-on:click.stop>
+                <span class="block text-xs uppercase tracking-wide opacity-60">{{ __('griglia::t.image_description') }}</span>
+                <span x-text="caption || @js(__('griglia::t.image_no_description'))" x-bind:class="caption ? '' : 'italic opacity-60'"></span>
+            </figcaption>
+        </div>
+    </template>
 </div>

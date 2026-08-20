@@ -11,9 +11,8 @@
             {{-- Pannello --}}
             <div class="tl-card tl-modal modal-panel relative w-full max-w-md md:max-w-2xl lg:max-w-3xl">
 
-                {{-- Testata: icona del tema + comandi/badge + chiudi (il titolo sta nel corpo, prima di «Task») --}}
+                {{-- Testata: comandi/badge + chiudi (il titolo sta nel corpo, prima di «Task») --}}
                 <div class="modal-head tl-modal-head flex items-center gap-3 px-5 py-3">
-                    <x-theme-icon :theme="$t" class="tl-display tl-title shrink-0 text-2xl" />
                     @include('griglia::livewire.partials.modal-actions')
                     <button
                         wire:click="close"

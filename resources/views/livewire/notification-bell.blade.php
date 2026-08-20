@@ -16,7 +16,7 @@
             <span class="db-bell-badge absolute -top-2 -right-2 min-w-5 rounded-full border border-current bg-red-500 px-1 text-center text-[10px] leading-4 text-white">{{ $unread > 99 ? '99+' : $unread }}</span>
         @endif
     </summary>
-    <div class="db-bell-list tl-menu fixed right-3 left-3 mt-1.5 max-h-[70vh] overflow-y-auto p-1.5 sm:absolute sm:right-auto sm:left-0 sm:w-80">
+    <div class="db-bell-list tl-menu fixed right-3 left-3 mt-1.5 max-h-[70vh] overflow-y-auto p-1.5 sm:absolute sm:right-0 sm:left-auto sm:w-80">
         <div class="flex items-center justify-between gap-2 px-2 py-1">
             <span class="tl-menu-label">{{ __('griglia::t.notif.title') }}</span>
             @if ($unread)

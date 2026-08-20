@@ -57,4 +57,19 @@ class WatchCommandTest extends TestCase
         $snap = [7 => ['title' => 'X', 'otw' => true, 'working' => false, 'question' => false, 'stopped' => null, 'answered' => 0]];
         $this->assertSame([], Watch::changes($snap, $snap, '12:00:00'));
     }
+
+    public function test_lists_items_already_open_to_work_on_start(): void
+    {
+        $snap = [
+            7 => ['title' => 'Waiting', 'otw' => true, 'working' => false, 'question' => false, 'stopped' => null, 'answered' => 0],
+            8 => ['title' => 'In progress', 'otw' => true, 'working' => true, 'question' => false, 'stopped' => null, 'answered' => 0],
+            9 => ['title' => 'Idle', 'otw' => false, 'working' => false, 'question' => false, 'stopped' => null, 'answered' => 0],
+        ];
+
+        $lines = Watch::pending($snap, '12:00:00');
+
+        $this->assertCount(1, $lines);
+        $this->assertStringContainsString('already waiting', $lines[0]);
+        $this->assertStringContainsString('Waiting', $lines[0]);
+    }
 }

@@ -1,12 +1,14 @@
-<div class="tl-page relative mx-auto {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }} px-4 py-10">
+<div class="tl-page relative mx-auto {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }} px-4 pt-20 pb-10 sm:pt-24">
 
     {{-- ===== HEADER ===== --}}
     @php($done = $todos->where('completed', true)->count())
     @php($total = $todos->count())
     <header class="relative mb-8 text-center">
-        <div class="tl-card inline-block px-7 py-4">
+        <div class="tl-card inline-block px-5 py-2.5">
             <h1 class="tl-display tl-title">{{ $listName }}</h1>
-            <p class="tl-claim mt-1.5">{{ $t['claim'] }}</p>
+            @if (! empty($t['claim']))
+                <p class="tl-claim mt-1">{{ $t['claim'] }}</p>
+            @endif
         </div>
 
         {{-- Avanzamento della lista: stessa hairline del menu delle liste --}}

@@ -34,7 +34,7 @@ class Themes
                 'icon' => '🪨',
                 'icon_img' => '/vendor/griglia/images/slate/slate.svg',
                 'fonts' => 'jetbrains-mono:400,700',
-                'claim' => 'todo',
+                'claim' => '',
                 'counter' => 'done',
                 'done_all' => 'all done',
                 'add' => 'add a task',

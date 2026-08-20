@@ -1,7 +1,7 @@
 {{-- Selettore della lista corrente, identico su tutte le pagine. Prende look e font dal tema
      corrente (.tl-btn / .tl-menu): niente stile proprio hard-coded. --}}
 @php($current = $lists->firstWhere('id', $currentId))
-<div class="tl-chrome fixed top-3 left-3 z-[60] flex items-start gap-2">
+<div class="tl-chrome fixed top-3 left-3 z-[60]">
 <details
     class="relative"
     x-data="{ open: false }"
@@ -128,7 +128,4 @@
         </form>
     </div>
 </details>
-@unless (\Alle80\Griglia\Mode::isLocal())
-    <livewire:griglia::notification-bell />
-@endunless
 </div>

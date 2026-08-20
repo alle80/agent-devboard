@@ -47,10 +47,13 @@ body { -webkit-tap-highlight-color: transparent; }
 
     /* Modale a tutto schermo (sopra i menu fissi) con contenuto scrollabile */
     .modal-shell { align-items: stretch !important; padding: 0 !important; z-index: 70 !important; }
-    .modal-panel { max-width: none !important; width: 100% !important; height: 100dvh; display: flex; flex-direction: column; border-radius: 0 !important; transform: none !important; border-width: 0 !important; overflow: hidden; }
+    /* height: 100% (non 100dvh): con la tastiera aperta il pannello segue .modal-shell, che è
+       fixed inset-0 sul layout viewport già ridimensionato (viewport interactive-widget=resizes-content).
+       Con 100dvh alcuni browser non ricalcolano in tempo e la testata finisce fuori schermo. */
+    .modal-panel { max-width: none !important; width: 100% !important; height: 100%; max-height: 100%; display: flex; flex-direction: column; border-radius: 0 !important; transform: none !important; border-width: 0 !important; overflow: hidden; }
     .modal-body { max-height: none !important; flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding-left: 0.9rem !important; padding-right: 0.9rem !important; }
     .modal-body [class*="rotate-"] { transform: none !important; }
-    .modal-head { padding-left: 0.9rem !important; padding-right: 0.9rem !important; }
+    .modal-head { position: sticky; top: 0; z-index: 2; flex: 0 0 auto; padding-left: 0.9rem !important; padding-right: 0.9rem !important; }
     .modal-head h2 { font-size: 1.15rem !important; line-height: 1.2; }
     /* decorazioni sporgenti (fiammelle, salami, sigilli) fuori dal pannello a schermo intero */
     .modal-panel > .pointer-events-none.absolute { display: none; }
@@ -234,7 +237,7 @@ body { -webkit-tap-highlight-color: transparent; }
    dal tema corrente invece di avere un look proprio. I temi possono ritoccarli con
    --tl-chrome-bg / --tl-chrome-hover / --tl-menu-bg. */
 
-.tl-chrome { font-family: var(--tl-font, ui-sans-serif, system-ui, sans-serif); }
+.tl-chrome { font-family: var(--tl-font, ui-sans-serif, system-ui, sans-serif); top: max(0.75rem, env(safe-area-inset-top)); }
 
 .tl-btn {
     display: inline-flex; align-items: center; gap: 0.4rem;

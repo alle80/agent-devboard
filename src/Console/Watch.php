@@ -18,7 +18,8 @@ class Watch extends Command
     protected $signature = 'griglia:watch
         {--interval=10 : Seconds between polls}
         {--list= : List name to watch (default: config griglia.agent_list)}
-        {--once : Poll once and exit (for testing/cron)}';
+        {--once : Poll once and exit (for testing/cron)}
+        {--no-initial : Do not list the items already open to work when starting}';
 
     protected $description = 'Watch the agent list and print only changes (open-to-work, answers, stops)';
 
@@ -40,6 +41,13 @@ class Watch extends Command
         $prev = null;
         do {
             $snap = $this->snapshot($name);
+            if ($prev === null && ! $this->option('once') && ! $this->option('no-initial')) {
+                // Items already open to work when the monitor starts would otherwise never be
+                // announced: the first snapshot is only a baseline. List them once, up front.
+                foreach (self::pending($snap, now()->format('H:i:s')) as $line) {
+                    $this->line($line);
+                }
+            }
             if ($prev !== null) {
                 foreach (self::changes($prev, $snap, now()->format('H:i:s')) as $line) {
                     $this->line($line);
@@ -81,6 +89,26 @@ class Watch extends Command
         }
 
         return $out;
+    }
+
+    /**
+     * Items already waiting for the agent in the very first snapshot (open to work, or
+     * answered questions), so a monitor started after the fact does not miss them.
+     *
+     * @param  array<int,array<string,mixed>>  $now
+     * @return list<string>
+     */
+    public static function pending(array $now, string $stamp): array
+    {
+        $lines = [];
+
+        foreach ($now as $id => $c) {
+            if ($c['otw'] && ! $c['working']) {
+                $lines[] = sprintf('[%s] 🟢 OPEN TO WORK (already waiting): «%s» (id:%d)', $stamp, $c['title'], $id);
+            }
+        }
+
+        return $lines;
     }
 
     /**

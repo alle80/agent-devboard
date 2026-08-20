@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.36.0] - 2026-08-20
+
+### Added
+- `griglia:watch` now lists the items **already open to work** when it starts (`🟢 OPEN TO WORK (already
+  waiting)`). Before, the first snapshot was only a baseline: a monitor started after the user flagged a
+  task never announced it, and the agent sat idle. `--no-initial` restores the old behaviour.
+
+### Changed
+- Notification bell moved to the top right, on its own; the list switcher keeps the top left. Its dropdown
+  now opens towards the left edge.
+- List header: less padded card, more room under the fixed bar, and the theme claim line is only rendered
+  when the theme sets one (`slate` no longer says "todo").
+- Task modal: the theme icon is gone from the header — the title in the body carries the modal.
+
+### Fixed
+- **Black screen after uploading a picture.** The lightbox lived inside the thumbnails block, which
+  Livewire re-renders on every upload; the teleported overlay stayed behind in `<body>` covering the page.
+  State and overlay now live on the section itself, outside the re-rendered block.
+- **Cut-off modal header on mobile with the keyboard open.** The full-screen panel used `height: 100dvh`,
+  which some browsers do not recalculate when the virtual keyboard resizes the viewport; it now fills
+  `.modal-shell` (`height: 100%`) and the header is sticky.
+- The fixed top bar respects `env(safe-area-inset-top)` on notched phones.
+
 ## [0.35.0] - 2026-08-20
 
 ### Changed

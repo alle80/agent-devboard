@@ -46,6 +46,12 @@
 
     <livewire:griglia::checklist-switcher />
 
+    @unless (\Alle80\Griglia\Mode::isLocal())
+        <div class="tl-chrome fixed top-3 right-3 z-[60]">
+            <livewire:griglia::notification-bell />
+        </div>
+    @endunless
+
     <x-griglia::toasts />
 
     @if (\Alle80\Griglia\Mode::isLocal())
