@@ -46,7 +46,7 @@ That's it: the board ships its own precompiled CSS/JS (published by composer wit
 > new Laravel app ships `0.18`. `-W` lets composer downgrade that one transitive dependency; without it the
 > install stops with a conflict. Existing apps usually need nothing.
 
-Routes register automatically — `/` (default theme), `/{theme}`, `/settings`, `/context`, `/stats`,
+Routes register automatically — `/` (default theme), `/{theme}`, `/plans/new`, `/settings`, `/context`, `/stats`,
 `/agents` — behind `web` plus the package's access middleware (login in server mode, none in local mode;
 see [Access, administrators and modes](#access-administrators-and-modes)).
 **In server mode the package needs an authenticated user** (lists belong to users), so plug it into your
@@ -134,8 +134,11 @@ php artisan griglia:check --agent=codex     # each agent sees only its own tasks
 
 ### Plan mode
 
-Create a list **«as a plan»** from a prompt: the AI SDK splits the goal into chained tasks
-(`depends_on_id`) and completing one opens the next. The chain follows the visible order (drag & drop).
+**New plan…** in the lists menu opens `/plans/new`, a page with room to write: the goal (with dictation),
+an optional name and, with several agents, the one for this plan. The AI SDK splits the goal into chained
+tasks (`depends_on_id`) and completing one opens the next; the chain follows the visible order (drag &
+drop). The Plan bar links `/plans/{list}/edit`, where the goal can be changed and the tasks nobody has
+started can be rebuilt.
 Plans can be started, paused and resumed from the list bar.
 
 - Needs `laravel/ai` + a provider key.

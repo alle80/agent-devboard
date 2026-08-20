@@ -2,8 +2,8 @@
 
 ## Lists
 
-The lists menu (top left) switches between your lists, creates new ones (optionally **as a plan**, see
-[Plans](../features/plans.md)), renames or deletes them. The **agent list** (config `agent_list`) is the channel with the
+The lists menu (top left) switches between your lists, creates new ones, renames or deletes them. A plan is
+written on its own page — **New plan…** in the same menu, see [Plans](../features/plans.md). The **agent list** (config `agent_list`) is the channel with the
 coding agent; any other list is yours (or a plan).
 
 ## Tasks and states

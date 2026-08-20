@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs
+- The pages about plans were still describing the checkbox in the lists dropdown, which moved to its own
+  page three releases ago: Plans now documents `/plans/new` (goal, dictation, optional name, agent, draft)
+  and `/plans/{list}/edit` (save the goal, or rebuild only the tasks nobody has started). The route list in
+  the README gained `/plans/new`.
+
 ## [0.56.0] - 2026-08-20
 
 ### Changed

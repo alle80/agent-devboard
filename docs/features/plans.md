@@ -1,8 +1,29 @@
 # Plans
 
-A **plan** is a list built from a prompt. In the lists menu tick **Create as a plan**, describe the goal (the microphone
-works here too) and press the add button: the AI SDK agent `PlanBuilder` splits it into ordered tasks with notes and sub-tasks,
-**chained** (`depends_on_id`). Without an AI provider the list gets a single «Build the plan» task for the agent.
+A **plan** is a list built from a prompt. From the lists menu, **New plan…** opens its own page — `/plans/new` —
+because describing a goal takes a paragraph, not a line:
+
+- **the goal** is the field that matters: a large box, with the microphone for dictation and a character
+  count. Ctrl/⌘+Enter builds the plan without leaving the keyboard;
+- **the name of the list** is optional: leave it empty and the first words of the goal become the name;
+- **the agent** of the plan can be chosen here when the install declares more than one.
+
+What you type is kept as a draft, so leaving the page and coming back finds it where you left it, and
+cancelling asks before throwing it away. Pressing *Build the plan* hands the goal to the AI SDK agent
+`PlanBuilder`, which splits it into ordered tasks with notes and sub-tasks, **chained** (`depends_on_id`),
+and takes you back to the board. Without an AI provider the list gets a single «Build the plan» task for the
+agent; if the AI fails, no half-created list is left behind.
+
+## Changing a plan
+
+The **Plan** bar has an *Edit the plan* link — `/plans/{list}/edit` — with the original goal in it. From
+there you can:
+
+- **save the goal** (and the name or agent of the list): the tasks stay exactly as they are;
+- **rebuild the tasks**: only the ones nobody has started are replaced. Tasks already done, taken by the
+  agent or waiting for an answer are never touched, and the confirmation says how many will be replaced.
+
+## Running a plan
 
 - **Start the plan** (the start button in the Plan bar or in the lists menu): the first not-started task becomes *open to work*; when it is
   completed the next one opens automatically.
