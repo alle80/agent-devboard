@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.50.0] - 2026-08-20
+
+### Added
+- **A page for building a plan** — `/plans/new`, reachable from the lists menu («New plan…»). Describing a
+  goal used to mean typing a paragraph into a four-row textarea inside a dropdown that closed on any click
+  outside, taking the text with it. Now there is room to write, the name of the list is optional (the first
+  words of the goal become the name), Ctrl/⌘+Enter builds, and the wait for the AI has a page to live in.
+  The page wears the theme skin like `/settings` and `/context`.
+
 ## [0.49.0] - 2026-08-20
 
 ### Changed

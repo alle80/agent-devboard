@@ -248,6 +248,13 @@ return [
         'overview_title' => 'All lists (same period)',
     ],
     'plan' => [
+        'page_title' => 'New plan',
+        'goal_label' => 'The goal',
+        'goal_too_short' => 'Describe the goal in a little more detail (at least ten characters).',
+        'name_label' => 'Name of the list (optional)',
+        'name_help' => 'Leave it empty and the first words of the goal become the name.',
+        'build' => 'Build the plan',
+        'new_menu' => 'New plan…',
         'as_plan' => 'Create as a plan (tasks from a prompt)',
         'prompt_placeholder' => 'Describe the goal: the plan is split into chained tasks…',
         'prompt_required' => 'Write the prompt of the plan first.',

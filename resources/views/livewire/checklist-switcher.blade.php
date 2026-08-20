@@ -127,6 +127,11 @@
                     <span wire:loading.remove wire:target="create"><x-griglia::icon name="plus" :stroke="2.5" /></span><span wire:loading wire:target="create">…</span>
                 </button>
             </div>
+            {{-- Un piano si scrive in una pagina sua: qui non c'è spazio (task 342) --}}
+            <a href="{{ route('griglia.plans.create') }}" class="tl-btn tl-btn-sm mt-1.5 w-full justify-start">
+                <x-griglia::icon name="ruler" /> {{ __('griglia::t.plan.new_menu') }}
+            </a>
+
             {{-- Plan mode: build the list from a prompt (chained tasks) --}}
             <label class="mt-1.5 flex cursor-pointer items-center gap-1.5 px-1 text-xs select-none">
                 <input type="checkbox" x-model="plan" class="db-skill-check">

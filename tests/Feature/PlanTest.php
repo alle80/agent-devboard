@@ -209,4 +209,34 @@ class PlanTest extends TestCase
         $this->assertSame($list->id, session('checklist_id'));
         $this->assertSame('Go', $list->plan_prompt);
     }
+
+    public function test_the_plan_page_opens_and_builds_a_plan(): void
+    {
+        Plan::$resolver = fn (string $prompt) => [
+            ['title' => 'First step', 'notes' => $prompt, 'subtasks' => ['a']],
+            ['title' => 'Second step', 'notes' => '', 'subtasks' => []],
+        ];
+
+        $this->get(route('griglia.plans.create'))->assertOk()->assertSee('plan-goal', false);
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+            ->set('prompt', 'Build a small website for the package documentation')
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $list = Checklist::where('name', 'Build a small website for the')->first();
+        $this->assertNotNull($list, 'the name comes from the first words of the goal');
+        $this->assertSame(2, $list->todos()->count());
+        $this->assertSame('Build a small website for the package documentation', $list->plan_prompt);
+    }
+
+    public function test_the_plan_page_refuses_an_empty_goal(): void
+    {
+        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+            ->set('prompt', 'too short')
+            ->call('create')
+            ->assertHasErrors('prompt');
+
+        $this->assertSame(0, Checklist::mine()->count(), 'no half-created list');
+    }
 }

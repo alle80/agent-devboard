@@ -242,6 +242,13 @@ return [
         'overview_title' => 'Tutte le liste (stesso periodo)',
     ],
     'plan' => [
+        'page_title' => 'Nuovo piano',
+        'goal_label' => 'L\'obiettivo',
+        'goal_too_short' => 'Descrivi l\'obiettivo un po\' meglio (almeno dieci caratteri).',
+        'name_label' => 'Nome della lista (facoltativo)',
+        'name_help' => 'Lascialo vuoto: il nome lo ricaviamo dalle prime parole dell\'obiettivo.',
+        'build' => 'Costruisci il piano',
+        'new_menu' => 'Nuovo piano…',
         'as_plan' => 'Crea come piano (task da un prompt)',
         'prompt_placeholder' => 'Descrivi l\'obiettivo: il piano viene spezzato in task concatenati…',
         'prompt_required' => 'Scrivi prima il prompt del piano.',
