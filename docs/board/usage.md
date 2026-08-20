@@ -19,8 +19,22 @@ Every row has a state dot:
 | ![stopped](../images/state-stop.svg){ width="18" } | stopped | you tapped the working badge — the agent stops at once |
 | ![done](../images/state-done.svg){ width="18" } | done | the agent (`--done`) or you (checkbox) |
 
-Tap the dot to move between *waiting* and *open to work* (or to stop the agent). Tasks the agent completed and you have not opened yet are
-highlighted until you open them.
+Tap the dot to move between *waiting* and *open to work* (or to stop the agent).
+
+### The colour of the row
+
+A row you have not read yet is outlined, and the colour says how much it wants from you:
+
+| Outline | Meaning | Where it comes from |
+|---------|---------|---------------------|
+| green | done, nothing to check | `--done` (no `--outcome`, or `--outcome=ok`) |
+| yellow | done, but something needs a look | `--done --outcome=alert` |
+| red | something is in the way | `--done --outcome=blocked` |
+| violet | the agent is waiting for your answers | `--ask` (open questions) |
+
+Yellow and red also put a badge next to the title and a chip in the modal, above the agent's answer, which
+says why. Open the task and the outline goes away: the row goes back to its usual grey. A task you close
+yourself has no outline — there is no result to read.
 
 ### Carrying on after a task is done
 

@@ -106,6 +106,7 @@ php artisan griglia:check --take=ID --progress=60 --phase="writing code"   # upd
 php artisan griglia:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
 php artisan griglia:check --done=ID --comment="…"                          # close it, with a note back → done
 php artisan griglia:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
+php artisan griglia:check --done=ID --comment="…" --outcome=alert|blocked   # …flagging a result that needs a look
 ```
 
 `griglia:check` also prints, at the top, the **behaviour settings** from `/settings` that the agent must

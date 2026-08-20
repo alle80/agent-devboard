@@ -12,7 +12,7 @@ class Todo extends Model
 {
     use SoftDeletes;
 
-    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -33,6 +33,27 @@ class Todo extends Model
             'stopped_at' => 'datetime',
             'order' => 'integer',
         ];
+    }
+
+    /** What the agent reports when it closes a task (griglia:check --done --outcome=…): how much attention the result needs. */
+    public const OUTCOMES = ['ok', 'alert', 'blocked'];
+
+    /**
+     * How loudly this row should ask for the user's attention, null = not at all.
+     * 'question' while the agent waits for answers; on a fresh result the user has not opened yet,
+     * the outcome reported by the agent ('blocked', 'alert', or 'ok' when there is nothing to check).
+     * Once the result is opened (result_seen) the row goes back to its usual look.
+     */
+    public function attention(): ?string
+    {
+        if ($this->question) {
+            return 'question';
+        }
+        if (! $this->completed || $this->result_seen) {
+            return null;
+        }
+
+        return in_array($this->outcome, ['alert', 'blocked'], true) ? $this->outcome : 'ok';
     }
 
     public function ingredients(): HasMany

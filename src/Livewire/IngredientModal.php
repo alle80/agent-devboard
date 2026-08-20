@@ -395,9 +395,10 @@ class IngredientModal extends Component
         }
         $wasWorking = $todo->working;
         $attrs = match ($state) {
-            'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'question' => false],
-            'open' => ['completed' => false, 'open_to_work' => true, 'working' => false, 'question' => false, 'stopped_at' => null],
-            'done' => ['completed' => true, 'open_to_work' => false, 'working' => false, 'question' => false, 'result_seen' => true, 'progress' => null],
+            'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'question' => false, 'outcome' => null],
+            'open' => ['completed' => false, 'open_to_work' => true, 'working' => false, 'question' => false, 'stopped_at' => null, 'outcome' => null],
+            // closed by the user: there is no agent result to flag, so no outcome
+            'done' => ['completed' => true, 'open_to_work' => false, 'working' => false, 'question' => false, 'result_seen' => true, 'progress' => null, 'outcome' => null],
         };
         if ($wasWorking && $state !== 'open') {
             $attrs['stopped_at'] = now();

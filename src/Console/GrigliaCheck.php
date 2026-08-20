@@ -26,6 +26,7 @@ class GrigliaCheck extends Command
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
         {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
         {--phase= : Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the %}
+        {--outcome= : With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it}
         {--ask= : Id of the todo to ask questions about (the task pauses in the question state)}
         {--q=* : Text of each question, repeatable}
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
@@ -54,6 +55,14 @@ class GrigliaCheck extends Command
             ->orderBy('id')->get();
         $scopeIds = $planLists->pluck('id')->push($list->id)->all();
         $find = fn (int $id) => Todo::whereIn('checklist_id', $scopeIds)->findOrFail($id);
+
+        // Outcome of a closed task: it decides the colour of the highlight the user sees on the board
+        $outcome = $this->option('outcome') !== null ? strtolower(trim((string) $this->option('outcome'))) : null;
+        if ($outcome !== null && ! in_array($outcome, Todo::OUTCOMES, true)) {
+            $this->error(sprintf('--outcome must be one of: %s', implode(', ', Todo::OUTCOMES)));
+
+            return self::FAILURE;
+        }
 
         // Questions: pause the work until the user answers and restarts the item
         if ($id = $this->option('ask')) {
@@ -96,9 +105,13 @@ class GrigliaCheck extends Command
                 if ($opt === 'take' && $this->option('phase') !== null) {
                     $attrs['phase'] = mb_substr(trim((string) $this->option('phase')), 0, 80) ?: null;
                 }
+                if ($opt === 'take') {
+                    $attrs['outcome'] = null; // back to work: the previous result no longer applies
+                }
                 if ($opt === 'done') {
                     $attrs['progress'] = null; // finished → no progress bar
                     $attrs['phase'] = null;
+                    $attrs['outcome'] = $outcome ?? 'ok';
                 }
                 $t->update($attrs + $this->tokenAttrs($t));
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
@@ -107,7 +120,9 @@ class GrigliaCheck extends Command
                 if ($opt === 'done') {
                     Notify::todoCompleted($t); // the app notifies the user (bell / web push / mail)
                 }
-                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take' ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '') : ''));
+                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take'
+                    ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '')
+                    : self::outcomeMark($attrs['outcome'] ?? 'ok')));
                 if ($opt === 'done' && $t->hasStats()) {
                     $this->line('   📊 '.$t->statsLine());
                 }
@@ -190,6 +205,9 @@ class GrigliaCheck extends Command
                 if ($t->notes) {
                     $this->line('        note: '.str_replace("\n", "\n              ", $t->notes));
                 }
+                if ($t->completed && in_array($t->outcome, ['alert', 'blocked'], true)) {
+                    $this->line('        '.trim(self::outcomeMark($t->outcome)));
+                }
                 if ($t->claude_comment) {
                     $this->line('        🤖 agent: '.str_replace("\n", "\n                 ", $opt->trim($t->claude_comment)));
                 }
@@ -232,6 +250,16 @@ class GrigliaCheck extends Command
         file_put_contents($marker, (string) now()->timestamp);
 
         return self::SUCCESS;
+    }
+
+    /** Short marker printed next to a closed task: nothing when the result is plain «ok». */
+    private static function outcomeMark(?string $outcome): string
+    {
+        return match ($outcome) {
+            'alert' => ' ⚠ alert: the result needs a look',
+            'blocked' => ' ⛔ blocked: something is in the way',
+            default => '',
+        };
     }
 
     /** Token counters to add to the todo from --tokens-in / --tokens-out (cumulative per todo). */

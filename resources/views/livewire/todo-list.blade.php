@@ -66,8 +66,10 @@
             </div>
 
             {{-- Riga todo --}}
-            @php($unseen = $todo->completed && ! $todo->result_seen)
-            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $unseen ? 'db-unseen' : '' }}">
+            {{-- Bordo colorato finché la riga chiede attenzione: verde/giallo/rosso secondo l'esito, viola se ci sono domande --}}
+            @php($attention = $todo->attention())
+            @php($unseen = $attention && $attention !== 'question')
+            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $attention ? 'db-attention db-att-'.$attention : '' }}">
 
                 @if ($todo->working && $todo->progress !== null)
                     <span class="db-progress-track" aria-hidden="true"></span>
@@ -115,7 +117,7 @@
                                 <span class="inline-flex shrink-0 items-center gap-0.5 text-sm" title="{{ __('griglia::t.images_count', ['count' => $todo->attachments_count]) }}"><x-griglia::icon name="image" />{{ $todo->attachments_count }}</span>
                             @endif
                             @if ($unseen)
-                                <span class="db-unseen-badge shrink-0" title="{{ __('griglia::t.result_new_hint') }}">{{ __('griglia::t.result_new') }}</span>
+                                <span class="db-attention-badge shrink-0" title="{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention).'_hint') }}">{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention)) }}</span>
                             @endif
                             @if (\Alle80\Griglia\Agent::many() && $todo->agent)
                                 <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('griglia::t.agent_of_task') }}">{{ \Alle80\Griglia\Agent::label($todo->agent) }}</span>

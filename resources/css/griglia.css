@@ -500,21 +500,33 @@ select.setting-input { appearance: auto; }
 .db-prose th { background: var(--tl-head, rgb(0 0 0 / .12)); font-weight: 700; }
 .db-prose input[type=checkbox] { margin-right: .4em; }
 
-/* ---------- Completed-but-unseen task highlight (agent finished, user hasn't opened it) ---------- */
-.todo-row.db-unseen {
-    outline: 2px solid var(--tl-accent, #22c55e); outline-offset: 1px;
-    box-shadow: 0 0 0 2px rgb(34 197 94 / .15), 0 0 14px rgb(34 197 94 / .25);
+/* ---------- Rows that ask for attention: fresh agent result (colour = its outcome) or open questions ----------
+   green = done, nothing to check · yellow = done, look at it · red = something is blocking · violet = open
+   questions. Opening the task clears the highlight and the row goes back to its usual look. */
+.todo-row.db-attention, .todo-row.db-unseen {
+    --db-att: var(--tl-accent, #22c55e); --db-att-fg: var(--tl-accent-fg, #04180c);
+    outline: 2px solid var(--db-att); outline-offset: 1px;
     opacity: 1 !important;                 /* override the completed dimming so it stands out */
-    animation: db-unseen-pulse 2.2s ease-in-out infinite;
+    animation: db-attention-pulse 2.2s ease-in-out infinite;
 }
-.todo-row.db-unseen .tl-item-title { filter: none !important; }  /* keep the title crisp */
-.db-unseen-badge {
+.todo-row.db-att-alert    { --db-att: #eab308; --db-att-fg: #241c00; }
+.todo-row.db-att-blocked  { --db-att: #ef4444; --db-att-fg: #2a0505; }
+.todo-row.db-att-question { --db-att: #a78bfa; --db-att-fg: #16092b; }
+.todo-row.db-attention .tl-item-title, .todo-row.db-unseen .tl-item-title { filter: none !important; }  /* keep the title crisp */
+.db-attention-badge, .db-unseen-badge {
     display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: .05em;
     font-size: .62rem; font-weight: 700; line-height: 1; padding: .22em .5em; border-radius: 999px;
-    background: var(--tl-accent, #22c55e); color: var(--tl-accent-fg, #04180c); white-space: nowrap;
+    background: var(--db-att, var(--tl-accent, #22c55e)); color: var(--db-att-fg, #04180c); white-space: nowrap;
 }
-@keyframes db-unseen-pulse { 0%,100% { box-shadow: 0 0 0 2px rgb(34 197 94 / .15), 0 0 8px rgb(34 197 94 / .18); } 50% { box-shadow: 0 0 0 2px rgb(34 197 94 / .28), 0 0 18px rgb(34 197 94 / .35); } }
-@media (prefers-reduced-motion: reduce) { .todo-row.db-unseen { animation: none; } }
+@keyframes db-attention-pulse {
+    0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--db-att) 18%, transparent), 0 0 8px color-mix(in srgb, var(--db-att) 20%, transparent); }
+    50%      { box-shadow: 0 0 0 2px color-mix(in srgb, var(--db-att) 30%, transparent), 0 0 18px color-mix(in srgb, var(--db-att) 38%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .todo-row.db-attention, .todo-row.db-unseen { animation: none; } }
+/* Outcome chip in the modal: says why the row was yellow or red */
+.db-outcome { border: 2px solid currentColor; text-transform: uppercase; letter-spacing: .04em; }
+.db-outcome-alert { color: #eab308; }
+.db-outcome-blocked { color: #ef4444; }
 
 /* ---------- Working: animated icon + progress bar/percentage ---------- */
 /* Matrix rain: dashed columns whose dashes flow downwards, staggered, with a faint flicker of the whole icon */

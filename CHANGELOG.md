@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.67.0] - 2026-08-20
+
+### Added
+- **The row of a fresh result is outlined in the colour of its outcome.** A completed task the user has not
+  opened yet was always highlighted the same way, so «done, nothing to check» and «done, but read this»
+  looked identical. `griglia:check --done` now takes `--outcome=ok|alert|blocked` (default `ok`), stored in
+  the new `todos.outcome` column: green outline for a plain result, yellow when it needs a look, red when
+  something is in the way, violet while the agent is waiting for answers (`--ask`). Yellow and red add a
+  badge next to the title and a chip in the modal, above the agent's answer. Opening the task clears the
+  highlight as before, and a task the user closes has no outcome at all. `griglia:check` prints the flag on
+  closed tasks it lists, and taking a task again clears the previous outcome.
+
+### Changed
+- The row highlight classes are now `db-attention` + `db-att-<level>` (`ok`, `alert`, `blocked`,
+  `question`) and the badge is `db-attention-badge`; the colour comes from the `--db-att` variable. The old
+  `db-unseen` / `db-unseen-badge` selectors keep working for themes that styled them.
+
 ## [0.66.0] - 2026-08-20
 
 ### Added
@@ -1166,7 +1183,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.66.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.67.0...HEAD
+[0.67.0]: https://github.com/alle80/griglia/compare/v0.66.0...v0.67.0
 [0.66.0]: https://github.com/alle80/griglia/compare/v0.65.0...v0.66.0
 [0.65.0]: https://github.com/alle80/griglia/compare/v0.64.0...v0.65.0
 [0.64.0]: https://github.com/alle80/griglia/compare/v0.63.0...v0.64.0

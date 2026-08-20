@@ -38,6 +38,7 @@ return new class extends Migration
                 $table->text('notes')->nullable();
                 $table->text('claude_comment')->nullable();        // agent's answer (read-only in UI)
                 $table->boolean('result_seen')->default(true);     // false = agent completed it, user hasn't opened the result yet
+                $table->string('outcome', 16)->nullable();         // agent's result: ok | alert | blocked (colour of the highlight)
                 $table->unsignedTinyInteger('progress')->nullable(); // 0-100 while working; set by griglia:check --progress
                 $table->string('phase', 80)->nullable();             // what the agent is doing right now (griglia:check --phase)
                 $table->timestamp('working_since')->nullable();     // start of the current working interval (stats)

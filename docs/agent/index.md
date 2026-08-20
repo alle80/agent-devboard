@@ -11,6 +11,8 @@ php artisan griglia:check --take=ID             # take in charge: the task turns
 php artisan griglia:check --take=ID --progress=60 --phase="testing"
 php artisan griglia:check --ask=ID --q="…" --q="…"     # pause the task with questions
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
+php artisan griglia:check --done=ID --comment="…" --outcome=alert   # done, but it needs a look (yellow row)
+php artisan griglia:check --done=ID --comment="…" --outcome=blocked # something is in the way (red row)
 ```
 
 `check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, autonomy,
@@ -20,7 +22,10 @@ list and, after them, the open tasks of the started **plans** (under a `Plan «n
 Rules worth knowing: take the task **first** (before reading/analysing), one task at a time in list order
 (`task_mode=ordered`) or several independent ones (`multitasking`), never touch *waiting* items, drop a
 task the moment it is stopped,
-keep the progress % and phase updated, report tokens on close when the setting asks for it.
+keep the progress % and phase updated, report tokens on close when the setting asks for it, and say with
+`--outcome` when a closed task is not plain sailing — it is what
+[colours the row](../board/usage.md#the-colour-of-the-row) the user sees (`ok` by default, `alert`,
+`blocked`).
 
 Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
 

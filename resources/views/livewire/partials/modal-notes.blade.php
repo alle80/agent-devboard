@@ -61,6 +61,13 @@
         </div>
     @endif
 
+    {{-- Esito riportato dall'agente alla chiusura: spiega il colore del bordo della riga --}}
+    @if ($todo->completed && in_array($todo->outcome, ['alert', 'blocked'], true))
+        <div class="db-outcome db-outcome-{{ $todo->outcome }} mt-3 inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-bold">
+            <x-griglia::icon :name="$todo->outcome === 'blocked' ? 'ban' : 'alert'" /> {{ __('griglia::t.outcome_'.$todo->outcome) }}
+        </div>
+    @endif
+
     {{-- Commento dell'assistente (risposta a una richiesta): sola lettura, distinto dalla nota --}}
     @if ($todo->claude_comment)
         <div class="mt-3 border-t-2 border-dashed border-current/30 pt-2">
