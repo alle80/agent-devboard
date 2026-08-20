@@ -15,9 +15,11 @@
         Queue your requests as tasks; your coding agent takes them, asks questions, reports progress and
         closes them — and you follow the whole thing live, from the sofa or from your phone.
       </p>
+      {# The site is built with directory urls, the dev.alle80.com preview without them: build the two links accordingly. #}
+      {% set ext = '/' if config.use_directory_urls else '.html' %}
       <div class="gr-hero__actions">
-        <a href="{{ 'getting-started/quickstart/' | url }}" class="md-button md-button--primary">Quickstart</a>
-        <a href="{{ 'getting-started/installation/' | url }}" class="md-button">Install</a>
+        <a href="{{ ('getting-started/quickstart' ~ ext) | url }}" class="md-button md-button--primary">Quickstart</a>
+        <a href="{{ ('getting-started/installation' ~ ext) | url }}" class="md-button">Install</a>
         <a href="https://github.com/alle80/griglia" class="md-button gr-hero__ghost">GitHub</a>
       </div>
       <p class="gr-hero__meta">Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …</p>
