@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.39.0] - 2026-08-20
+
+### Changed
+- **/stats scrolls far less on desktop.** From `lg` the daily chart and the per-list overview sit side by
+  side with the history below them (from `xl` the previous three-column split still applies), and the two
+  long tables scroll inside their own card (`.db-panel-scroll`, capped at `min(62vh, 38rem)`) with a
+  sticky header (`.db-sticky-head`) instead of stretching the page — the history has no row limit, so its
+  height used to grow with the data. Phones and tablets are untouched: both rules start at `lg`.
+
 ## [0.38.1] - 2026-08-20
 
 ### Fixed

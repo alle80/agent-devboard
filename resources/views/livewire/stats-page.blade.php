@@ -44,11 +44,11 @@
         </div>
 
         {{-- Da xl i tre blocchi si affiancano: storico a sinistra (2 colonne), grafico e panoramica a destra --}}
-        <div class="xl:grid xl:grid-cols-3 xl:items-start xl:gap-4">
+        <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 xl:grid-cols-3">
 
         {{-- Per-day series: completed tasks (bars) + cost/time on hover --}}
         @php($max = max(1, max(array_column($series, 'count'))))
-        <div class="{{ $skin['card'] }} mb-4 xl:order-2 xl:mb-0">
+        <div class="{{ $skin['card'] }} mb-4 lg:order-1 lg:mb-0 xl:order-2">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}</h2>
             <div class="db-series flex h-28 items-end gap-px" role="img" aria-label="{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}">
                 @foreach ($series as $date => $p)
@@ -59,7 +59,7 @@
         </div>
 
         {{-- History --}}
-        <div class="{{ $skin['card'] }} mb-4 xl:order-1 xl:col-span-2 xl:row-span-2 xl:mb-0">
+        <div class="{{ $skin['card'] }} mb-4 lg:order-3 lg:col-span-2 lg:mb-0 xl:order-1 xl:row-span-2">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.history_title', ['n' => $rows->count()]) }}</h2>
             @if ($rows->isEmpty())
                 <p class="{{ $skin['help'] }} py-3 text-center text-sm">{{ __('griglia::t.stats_page.empty') }}</p>
@@ -81,9 +81,9 @@
                         </li>
                     @endforeach
                 </ul>
-                <div class="hidden overflow-x-auto sm:block">
+                <div class="db-panel-scroll hidden overflow-x-auto sm:block">
                     <table class="db-history w-full text-sm">
-                        <thead>
+                        <thead class="db-sticky-head">
                             <tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide">
                                 <th class="py-1 pr-2">{{ __('griglia::t.stats_page.col_date') }}</th>
                                 <th class="py-1 pr-2">{{ __('griglia::t.stats_page.col_task') }}</th>
@@ -119,9 +119,9 @@
         </div>
 
         {{-- Overview of every list --}}
-        <div class="{{ $skin['card'] }} xl:order-3">
+        <div class="{{ $skin['card'] }} lg:order-2 xl:order-3">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.overview_title') }}</h2>
-            <div class="overflow-x-auto">
+            <div class="db-panel-scroll overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('griglia::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('griglia::t.stats_page.kpi_cost') }}</th></tr></thead>
                     <tbody class="{{ $skin['divide'] }}">
