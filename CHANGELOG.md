@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.48.0] - 2026-08-20
+
+### Changed
+- **The favicon is always the Griglia mark.** It used to be the icon of the current theme, so the browser
+  tab showed the little Slate terminal (or whatever pack was installed) instead of the logo. The tab
+  identifies the application, not the skin: theme icons stay where they belong, in the style menu. A 32px
+  PNG is linked next to the SVG for the browsers that ignore SVG favicons.
+
 ## [0.47.3] - 2026-08-20
 
 ### Added

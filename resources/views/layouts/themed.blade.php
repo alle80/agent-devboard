@@ -12,12 +12,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#111111">
     <title>{{ $title ?? 'Griglia — '.$t['label'] }}</title>
-    @if (! empty($t['icon_img']))
-        <link rel="icon" href="{{ asset($t['icon_img']) }}">
-    @else
-        <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark.svg') }}" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="{{ asset('vendor/griglia/images/brand/mark-180.png') }}">
-    @endif
+    {{-- La favicon è sempre il marchio Griglia, qualunque sia il tema: la linguetta identifica l'app, non
+         lo skin (l'icona del tema resta nel menu degli stili). --}}
+    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('vendor/griglia/images/brand/mark-32.png') }}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{ asset('vendor/griglia/images/brand/mark-180.png') }}">
     @if (! empty($t['fonts']) && config('griglia.fonts_url'))
         <link rel="preconnect" href="{{ parse_url(config('griglia.fonts_url'), PHP_URL_SCHEME) }}://{{ parse_url(config('griglia.fonts_url'), PHP_URL_HOST) }}">
         <link href="{{ config('griglia.fonts_url') }}{{ $t['fonts'] }}" rel="stylesheet">
