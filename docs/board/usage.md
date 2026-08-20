@@ -12,14 +12,14 @@ Every row has a state dot:
 
 | Dot | State | Who sets it |
 |-----|-------|-------------|
-| ⚪ | waiting | you — the agent must not touch it |
-| 🟢 | open to work | you — ready for the agent |
-| 🔧 | working | the agent (`--take`) — icon animated, progress % and phase next to the title |
-| ❓ | question | the agent asked something; answer in the modal and restart |
-| ⏹ | stopped | you tapped 🔧 — the agent stops at once |
-| ✔ | done | the agent (`--done`) or you (checkbox) |
+| ![waiting](../images/state-waiting.svg){ width="18" } | waiting | you — the agent must not touch it |
+| ![open to work](../images/state-open.svg){ width="18" } | open to work | you — ready for the agent |
+| ![working](../images/state-working.svg){ width="18" } | working | the agent (`--take`) — icon animated, progress % and phase next to the title |
+| ![question](../images/state-question.svg){ width="18" } | question | the agent asked something; answer in the modal and restart |
+| ![stopped](../images/state-stop.svg){ width="18" } | stopped | you tapped the working badge — the agent stops at once |
+| ![done](../images/state-done.svg){ width="18" } | done | the agent (`--done`) or you (checkbox) |
 
-Tap the dot to toggle ⚪ ⇄ 🟢 (or to stop the agent). Tasks the agent completed and you have not opened yet are
+Tap the dot to move between *waiting* and *open to work* (or to stop the agent). Tasks the agent completed and you have not opened yet are
 highlighted until you open them.
 
 ## The task modal
@@ -37,3 +37,9 @@ On a plan list the **Plan** bar shows progress and ▶ / ⏸ (see [Plans](../fea
 ## Mobile
 
 Everything is designed for phones: rows on two levels, full-screen modal, full-width notification panel, Web Push.
+
+## See also
+
+- [The agent side](../agent/index.md) — what the agent does with what you write here.
+- [Plans](../features/plans.md) · [Notifications](../features/notifications.md) · [AI features](../features/ai.md)
+- [Feature overview](../features/index.md) — the whole board in one page.

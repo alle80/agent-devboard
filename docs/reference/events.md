@@ -33,3 +33,8 @@ Event::listen(\Alle80\Griglia\Events\TodoChanged::class, function ($event) {
 Closing a task (`--done`) or asking questions (`--ask`) notifies the list owner through Laravel
 Notifications — in-app bell, Web Push and mail, each switchable in Settings. See
 [Notifications](../features/notifications.md).
+
+## See also
+
+- [Installation](../getting-started/installation.md#live-updates-optional) — Reverb and the channel.
+- [Notifications](../features/notifications.md)

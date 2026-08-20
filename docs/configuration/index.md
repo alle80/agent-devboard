@@ -1,18 +1,33 @@
 # Configuration & settings
 
-Two layers:
+Two layers, on purpose:
 
-- **Configuration** (`config/devboard.php`, env) — decided by the developer: routes, models, integrations, modes,
-  admin sources, rate limits, paths. Needs `config:cache` to change.
-- **Settings** (`/settings`, stored in the DB) — decided by the user at run time: `agent` (how the agent works),
-  `optimization` (token saving), `app` (board behaviour: default style, AI images, speech to text, notifications,
-  price list, dashboard tab, mode override).
+| | **Configuration** | **Settings** |
+|---|---|---|
+| Where | `config/griglia.php`, `.env` | `/settings`, stored in the database |
+| Who decides | the developer who installs the package | whoever uses the board |
+| When it changes | at deploy (`config:cache`) | at run time, immediately |
+| What it covers | routes, models, disks, modes, gates, integrations | how the agent works, token saving, board behaviour |
 
-## Modes
+```bash
+php artisan vendor:publish --tag=griglia-config     # config/griglia.php
+php artisan vendor:publish --tag=griglia-views      # override the Blade views
+php artisan vendor:publish --tag=griglia-lang       # translations (en, it)
+php artisan vendor:publish --tag=griglia-agents     # AGENTS.md, the rules for the agent
+```
 
-- `GRIGLIA_MODE=server` (default): authenticated users, lists per user; access can be restricted with
-  `canAccessDevboard(): bool` on the user model or `GRIGLIA_ACCESS_GATE`.
-- `GRIGLIA_MODE=local`: no authentication, one global set of lists — only on your own machine (banner on every page).
+## Settings the agent reads
 
-The complete inventory (current and future keys, defaults, priorities) is in
-[Configuration file](../reference/config.md) and [Settings](../reference/settings.md); what is still missing is tracked in the [settings backlog](../reference/config-and-settings.md).
+The `agent` and `optimization` groups are not decoration: `griglia:check` prints them at the top of its
+output and the agent is expected to follow them — commit policy, autonomy, notifications, one task at a
+time or several, terse mode. Change them from the page and the next `griglia:check` obeys.
+
+## The full inventory
+
+Generated from the code, so it never lags behind:
+
+- [Configuration file](../reference/config.md) — every key, its environment variable and its default.
+- [Settings](../reference/settings.md) — every option of the three groups, with the help text of the page.
+- [Settings backlog](../reference/config-and-settings.md) — what is deliberately not there yet.
+
+Access, administrators and the local mode have their own page: [Access & modes](access.md).

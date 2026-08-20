@@ -20,3 +20,7 @@ The switch **Generate the instruction files from the board** (top of `/context`,
 decides whether the host sync writes the generated files (on) or restores and leaves the **original** files alone
 (off) — useful when you stop using the board: the originals apply again. Host scripts read it with
 `php artisan griglia:context enabled` (prints `1`/`0`).
+
+## See also
+
+- [The agent side](index.md) · [Configuration & settings](../configuration/index.md)

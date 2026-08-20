@@ -33,3 +33,7 @@ By default only the **first registered user** is an administrator.
 Installable packs are treated as untrusted content: administrator-only install, SVG refused, CSS sanitised
 (no `@import`, no external urls), size caps (5 MB per file, 20 MB per pack, 200 files) and assets served
 from a sandboxed route. See [Security](../operations/security.md).
+
+## See also
+
+- [Security](../operations/security.md) · [Configuration & settings](index.md)

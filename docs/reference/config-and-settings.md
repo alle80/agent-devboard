@@ -41,7 +41,7 @@ implementation notes.
 | S4 | `agent.working_hours` | time range | the agent should not start new tasks outside the window | P3 | printed by `check`; agent rule |
 | S5 | `agent.auto_pause_on_usage` | int %, 0 | pause plans when the agent's weekly usage (`/agents`) exceeds N% | P2 | `AgentStatus` hook → `plan_paused`; toast/notification |
 | S6 | `app.notify_on_take` | bool, false | notification when the agent takes a task (user asked for done/question only so far) | P3 | `Notify::taken()` + `TodoTaken` notification |
-| S7 | `app.digest_time` + `app.daily_digest` | time/bool | the **app** (not the agent) sends the evening summary (bell/push/mail) | P2 | scheduled command `devboard:digest` |
+| S7 | `app.digest_time` + `app.daily_digest` | time/bool | the **app** (not the agent) sends the evening summary (bell/push/mail) | P2 | scheduled command `griglia:digest` |
 | S8 | `app.history_retention_days` | int, 0 | prune old completed+archived tasks (privacy/size) | P3 | extend `griglia:auto-archive` |
 | S9 | `app.default_plan_length` | int, 3–12 | hint for `PlanBuilder` (number of tasks) | P3 | prompt parameter |
 | S10 | `app.stats_default_period` | int days | default period of `/stats` | P3 | `StatsPage::mount` |

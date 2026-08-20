@@ -38,3 +38,7 @@ hint at all.
 Creating a list **as a plan** sends your prompt to the AI, which splits the goal into chained tasks
 (`depends_on_id`): closing one opens the next. Without AI the list is created with a single task holding
 the prompt, so the agent can split it itself. See [Plans](plans.md).
+
+## See also
+
+- [Configuration file](../reference/config.md) · [Settings](../reference/settings.md)

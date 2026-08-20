@@ -26,3 +26,8 @@ php artisan griglia:agent-status-import --file=snapshot.json   # {updated_at, ag
 
 The origin repository ships `scripts/agent-status.py` for Claude Code: it reads the OAuth credentials **on the
 host** and sends only percentages (cron every 5 minutes).
+
+## See also
+
+- [Using the board](../board/usage.md) — where the per-task statistics show up.
+- [The agent side](index.md) — the tokens are reported by the agent on `--done`.

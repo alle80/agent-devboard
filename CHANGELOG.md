@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs
+- Site polish: the state icons of the board are shown as the real SVGs instead of emoji, every page ends
+  with its «see also» links, and the thin pages (security, development, configuration, themes, skills,
+  plans) were rewritten as complete pages. `config/devboard.php` was still mentioned in one of them.
+
 ## [0.47.2] - 2026-08-20
 
 ### Changed

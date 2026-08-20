@@ -9,3 +9,8 @@ available) and press +: the AI SDK agent `PlanBuilder` splits it into ordered ta
 - **Pause** (⏸): open tasks go back to ⚪ and the chain stops; **Resume** clears the pause and opens the next one.
 - New tasks added to a plan list join the chain automatically; after completion you can add tasks and resume.
 - `griglia:check` / `griglia:watch` cover the started plans too (after the agent list).
+
+## See also
+
+- [The agent side](../agent/index.md) — how the agent walks the chain.
+- [AI features](ai.md) — the model that builds the plan.

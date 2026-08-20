@@ -27,3 +27,9 @@ Statistics: every 🔧 interval is timed automatically; tokens are whatever the 
 Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list (project) has a default agent
 (toolbar selector), a task may override it (modal header). Each agent runs `griglia:check --agent=<its key>`
 (or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id.
+
+## See also
+
+- [Quickstart](../getting-started/quickstart.md) — the same flow, step by step.
+- [Artisan commands](../reference/commands.md) — every command and option, generated from the code.
+- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md)
