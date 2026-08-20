@@ -23,6 +23,10 @@ keep the progress % and phase updated, report tokens on close when the setting a
 
 Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
 
+**A heavy session costs on every step**, because the context is re-read at every turn. The setting «suggest
+clearing the session» (⚡ optimization, in thousands of tokens) is the threshold past which the agent tells
+you to run `/clear` — it cannot run it for you.
+
 ## Several agents
 
 Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list (project) has a default agent

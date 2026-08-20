@@ -382,6 +382,7 @@ return [
         'terse_agent' => ['Terse mode', 'The agent writes almost nothing in the chat (no explanations or recaps), batches commands, reads only what it needs and does not repeat checks. The chat becomes hard to read for a human; the board (agent comment, notifications) keeps working as usual.'],
         'context_max_chars' => ['Max context characters', 'Cuts the previous notes/comments printed by the command (resumed items, agent comments) to N characters. 0 = no cut.'],
         'progress_piggyback' => ['Progress % only piggybacked', 'The agent updates the percentage only together with other commands, never with a step just for that (each step costs a whole context re-read).'],
+        'clear_reminder_k' => ['Suggest clearing the session (thousands of tokens)', 'The context is re-read at every turn: past a certain weight every single step costs more. When the session goes over this, the agent tells you to run /clear (the agent cannot run it for you). 0 = never.'],
         'token_report' => ['Record tokens on close', 'When closing a task the agent counts and records the tokens spent (one more command per task). Off = time only, no tokens.'],
         'default_style' => ['Default style', 'Opening the site takes you straight to this style.'],
         'title_max_length' => ['Maximum title length', 'Maximum characters for the title of an item (10–200).'],

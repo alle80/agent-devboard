@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.0] - 2026-08-20
+
+### Added
+- **A reminder to clear the session when it gets heavy.** New ⚡ optimization setting, «suggest clearing the
+  session» (thousands of tokens, default 400, 0 = never): past that weight the agent tells you to run
+  `/clear`, which only you can type. The context is re-read at every turn, so a heavy session makes every
+  single step more expensive — not just the long ones.
+
 ## [0.59.1] - 2026-08-20
 
 ### Fixed

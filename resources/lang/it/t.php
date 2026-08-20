@@ -376,6 +376,7 @@ return [
         'terse_agent' => ['Modalità stringata', 'L\'agente scrive quasi nulla in chat (niente spiegazioni né riepiloghi), accorpa i comandi, legge solo il necessario e non ripete i controlli. La chat diventa poco leggibile per un umano; la board (commento dell\'agente, notifiche) continua a funzionare come sempre.'],
         'context_max_chars' => ['Max caratteri di contesto', 'Taglia a N caratteri note/commenti precedenti stampati dal comando (task ripresi, commenti di l\'agente). 0 = nessun taglio.'],
         'progress_piggyback' => ['Percentuale solo «a bordo»', 'l\'agente aggiorna la % solo insieme ad altri comandi, mai con un passo apposta (ogni passo costa una rilettura intera del contesto).'],
+        'clear_reminder_k' => ['Suggerisci di ripulire la sessione (migliaia di token)', 'Il contesto viene riletto a ogni turno: oltre un certo peso ogni singolo passo costa di più. Superata questa soglia l\'agente ti avvisa di lanciare /clear (non può farlo lui). 0 = mai.'],
         'token_report' => ['Registra i token alla chiusura', 'Alla chiusura di un task l\'agente conta e registra i token spesi (un comando in più per task). Spento = solo il tempo, niente token.'],
         'default_style' => ['Stile predefinito', 'Aprendo il sito vai dritto a questo stile.'],
         'title_max_length' => ['Lunghezza massima titolo', 'Caratteri massimi per il titolo di un elemento (10–200).'],

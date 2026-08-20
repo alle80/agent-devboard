@@ -35,6 +35,16 @@ php artisan griglia:watch      # in one terminal: prints only the changes you mu
 
 Then, whenever `watch` reports something (or to start), read and act with `griglia:check`.
 
+## When the session gets heavy
+
+The context is re-read at every turn, so a long session makes **every** step more expensive. The setting
+«suggest clearing the session» (⚡ optimization, in thousands of tokens) is the threshold: when your session
+goes over it, say so to the user in one line — *«contesto a ~550k: conviene un /clear prima del prossimo
+task»* — and keep working. You cannot clear it yourself: `/clear` is typed by the user.
+
+The origin repository ships `scripts/claude-tokens.py --context`, which prints the current weight and warns
+on stderr past the threshold (it runs anyway when you count the tokens of a task with `--todo`).
+
 ## The dot on each row = the state
 
 | Dot | State | What you do |

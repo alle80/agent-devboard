@@ -30,6 +30,7 @@ The options of the `/settings` page: stored in the database, changed at run time
 | **Max context characters** (`context_max_chars`) | int | Cuts the previous notes/comments printed by the command (resumed items, agent comments) to N characters. 0 = no cut. |
 | **Progress % only piggybacked** (`progress_piggyback`) | bool | The agent updates the percentage only together with other commands, never with a step just for that (each step costs a whole context re-read). |
 | **Record tokens on close** (`token_report`) | bool | When closing a task the agent counts and records the tokens spent (one more command per task). Off = time only, no tokens. |
+| **Suggest clearing the session (thousands of tokens)** (`clear_reminder_k`) | int | The context is re-read at every turn: past a certain weight every single step costs more. When the session goes over this, the agent tells you to run /clear (the agent cannot run it for you). 0 = never. |
 
 ## App (`app`)
 

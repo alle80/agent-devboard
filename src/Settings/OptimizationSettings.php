@@ -28,6 +28,12 @@ class OptimizationSettings extends Settings
     /** The agent reports the tokens spent when closing a task (costs one extra command per task). */
     public bool $token_report;
 
+    /**
+     * Thousands of tokens after which the agent tells the user to clear the session (`/clear`): the context
+     * is re-read at every turn, so a heavy session costs on every single step. 0 = never remind.
+     */
+    public int $clear_reminder_k;
+
     public static function group(): string
     {
         return 'optimization';
@@ -45,6 +51,7 @@ class OptimizationSettings extends Settings
             'context_max_chars' => ['int', ['min' => 0, 'max' => 5000]],
             'progress_piggyback' => ['bool', []],
             'token_report' => ['bool', []],
+            'clear_reminder_k' => ['int', ['min' => 0, 'max' => 2000]],
         ];
         $labels = (array) __('griglia::t.settings_fields');
         $out = [];
