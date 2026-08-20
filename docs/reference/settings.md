@@ -27,7 +27,7 @@ The options of the `/settings` page: stored in the database, changed at run time
 |---|---|---|
 | **Compact command output** (`compact_check`) | bool | After --take/--done/--ask/--progress the command prints only the result line, without settings and list (about 700 characters saved per call, which would otherwise stay in the chat for the whole session). |
 | **Terse mode** (`terse_agent`) | bool | The agent writes almost nothing in the chat (no explanations or recaps), batches commands, reads only what it needs and does not repeat checks. The chat becomes hard to read for a human; the board (agent comment, notifications) keeps working as usual. |
-| **Max context characters** (`context_max_chars`) | int: `min`, `max` | Cuts the previous notes/comments printed by the command (resumed items, agent comments) to N characters. 0 = no cut. |
+| **Max context characters** (`context_max_chars`) | int | Cuts the previous notes/comments printed by the command (resumed items, agent comments) to N characters. 0 = no cut. |
 | **Progress % only piggybacked** (`progress_piggyback`) | bool | The agent updates the percentage only together with other commands, never with a step just for that (each step costs a whole context re-read). |
 | **Record tokens on close** (`token_report`) | bool | When closing a task the agent counts and records the tokens spent (one more command per task). Off = time only, no tokens. |
 
@@ -35,16 +35,16 @@ The options of the `/settings` page: stored in the database, changed at run time
 
 | Setting | Type | What it does |
 |---|---|---|
-| **Default style** (`default_style`) | select: ``, `slate` | Opening the site takes you straight to this style. |
-| **Maximum title length** (`title_max_length`) | int: `min`, `max` | Maximum characters for the title of an item (10–200). |
-| **Automatic archiving (days)** (`auto_archive_days`) | int: `min`, `max` | Items completed more than N days ago are archived automatically every night. 0 = never. |
+| **Default style** (`default_style`) | select | Opening the site takes you straight to this style. |
+| **Maximum title length** (`title_max_length`) | int | Maximum characters for the title of an item (10–200). |
+| **Automatic archiving (days)** (`auto_archive_days`) | int | Items completed more than N days ago are archived automatically every night. 0 = never. |
 | **AI description of images** (`ai_describe_images`) | bool | Every uploaded image is described by an AI model for the search (needs an API key in .env). |
-| **AI provider for images** (`ai_image_provider`) | select: `` | Which provider describes the images. |
+| **AI provider for images** (`ai_image_provider`) | select | Which provider describes the images. |
 | **AI model for images** (`ai_image_model`) | text | Model name (empty = cheapest of the provider / AI_IMAGE_MODEL). |
 | **Toast for console changes** (`toast_console_changes`) | bool | On-page notice when the agent changes the state of an item (working, done, question). |
-| **Board mode** (`mode`) | select: ``, `server` | Server = login required, each user has their own lists (access can be restricted, see config). Local = NO authentication, one global set of lists: only for a board on your own machine. Empty = as set in the config (GRIGLIA_MODE). |
+| **Board mode** (`mode`) | select | Server = login required, each user has their own lists (access can be restricted, see config). Local = NO authentication, one global set of lists: only for a board on your own machine. Empty = as set in the config (GRIGLIA_MODE). |
 | **DASHBOARD side tab** (`show_dashboard_tab`) | bool | Show the slide-out dashboard tab at the edge of the window (desktop). |
-| **Speech to text** (`speech_mode`) | select: `auto`, `server`, `browser` | Auto = server transcription (AI SDK, OpenAI…) when configured, otherwise the browser. Server = record and transcribe on the server (better quality, works on every browser with a microphone). Browser = the browser's own recognition (free, no server). |
+| **Speech to text** (`speech_mode`) | select | Auto = server transcription (AI SDK, OpenAI…) when configured, otherwise the browser. Server = record and transcribe on the server (better quality, works on every browser with a microphone). Browser = the browser's own recognition (free, no server). |
 | **Price per 1M input tokens** (`cost_per_m_in`) | text | Used by the statistics to turn tokens into cost (e.g. 3 for 3 €/M). 0 = cost not shown. |
 | **Price per 1M output tokens** (`cost_per_m_out`) | text | Same, for output tokens (e.g. 15). |
 | **Currency** (`cost_currency`) | text | Symbol or code shown next to costs (EUR, $, …). |
@@ -52,5 +52,5 @@ The options of the `/settings` page: stored in the database, changed at run time
 | **In-app notifications** (`notify_in_app`) | bool | Bell at the top of the board with what the agent did (task closed, question asked), live. |
 | **Web Push notifications** (`notify_webpush`) | bool | Notifications on the devices where you enabled them (button below), even with the app closed. iPhone: add the app to the Home screen first. |
 | **E-mail notifications** (`notify_mail`) | bool | Also by e-mail to your account address (needs a configured mailer: MAIL_MAILER). |
-| **Dashboard tab side** (`tab_side`) | select: `right`, `left` | Which side of the window the slide-out dashboard tab opens from (desktop). |
+| **Dashboard tab side** (`tab_side`) | select | Which side of the window the slide-out dashboard tab opens from (desktop). |
 

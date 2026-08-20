@@ -31,4 +31,9 @@ jobs:
 
       # The reference pages of the docs are generated from the code: fail when they were not refreshed.
       - name: Check the generated documentation
-        run: vendor/bin/testbench griglia:docs-generate --check
+        run: |
+          vendor/bin/testbench griglia:docs-generate --check || {
+            vendor/bin/testbench griglia:docs-generate --out=/tmp/generated
+            diff -u docs/reference /tmp/generated || true
+            exit 1
+          }

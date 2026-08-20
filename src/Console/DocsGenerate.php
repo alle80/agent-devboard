@@ -209,9 +209,13 @@ class DocsGenerate extends Command
             $md .= "## $title (`$group`)\n\n";
             $md .= "| Setting | Type | What it does |\n|---|---|---|\n";
 
+            // Options straight from the translations, not from the field: part of them is injected at
+            // run time (the AI providers installed in the app) and the page must stay the same everywhere.
+            $translated = (array) __('griglia::t.settings_options');
+
             foreach ($fields as $key => $field) {
                 [$label, $help, $type] = $field;
-                $options = $field[3] ?? [];
+                $options = is_array($translated[$key] ?? null) ? $translated[$key] : [];
                 $type = $options ? $type.': '.implode(', ', array_map(fn ($v) => "`$v`", array_keys($options))) : $type;
                 $md .= '| **'.$this->cell($label)."** (`$key`) | ".$this->cell($type).' | '.$this->cell($help)." |\n";
             }

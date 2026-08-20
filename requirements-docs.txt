@@ -1,0 +1,2 @@
+# Toolchain of the documentation site (see docs/contributing/docs-site.md)
+mkdocs-material>=9.5,<10
