@@ -206,8 +206,9 @@ class GrigliaCheck extends Command
         }
 
         // Dead ends: a plan with work left but nothing the agent may take. The user would wait for an agent
-        // that is waiting for the board — say it out loud, with the way out (task 347).
-        foreach ($planLists as $pl) {
+        // that is waiting for the board — say it out loud, with the way out (task 347). Never in --json:
+        // that output is parsed by scripts.
+        foreach ($this->option('json') ? collect() : $planLists as $pl) {
             $pending = $pl->todos()->whereNull('archived_at')->where('completed', false)->count();
             $openable = $pl->todos()->whereNull('archived_at')->where('completed', false)
                 ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true))->count();

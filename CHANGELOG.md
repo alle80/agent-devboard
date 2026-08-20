@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     that one is already done.
   - A task assigned to an agent key that is not configured any more belonged to nobody: every agent
     filtered it out and it waited forever. Unknown keys now fall back to the default agent.
-  - `griglia:check` warns when a plan still has work but nothing is open to work, and says how to get out.
+  - `griglia:check` warns when a plan still has work but nothing is open to work, and says how to get out
+    (never in `--json`, which stays machine-readable).
 
 ### Changed
 - **Reopening a completed task rolls the chain back.** Unticking a task of a plan puts the task it had

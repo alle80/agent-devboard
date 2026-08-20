@@ -81,4 +81,16 @@ class GrigliaCheckCommandTest extends TestCase
         config(['griglia.agent_list' => 'nope']);
         $this->artisan('griglia:check')->expectsOutputToContain('No list named "nope"')->assertSuccessful();
     }
+
+    public function test_json_output_stays_machine_readable_with_a_stuck_plan(): void
+    {
+        // The dead-end warning must never end up in --json: scripts parse that output (task 347).
+        $plan = Checklist::create(['name' => 'Stuck plan', 'user_id' => auth()->id(), 'plan_prompt' => 'Something']);
+        $plan->todos()->create(['title' => 'Waiting for ever', 'order' => 1]);
+
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--json' => true]);
+
+        $out = trim(\Illuminate\Support\Facades\Artisan::output());
+        $this->assertJson($out);
+    }
 }
