@@ -20,11 +20,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--transport",
         choices=("docker", "local"),
-        default=os.getenv("GRIGLIA_WORKER_TRANSPORT", "docker"),
-        help="How to invoke Artisan (default: docker)",
+        default=os.getenv("GRIGLIA_WORKER_TRANSPORT", os.getenv("GRIGLIA_TRANSPORT", "docker")),
+        help="How to invoke Artisan (default: docker); GRIGLIA_TRANSPORT is the shared fallback",
     )
-    parser.add_argument("--container", default=os.getenv("GRIGLIA_WORKER_CONTAINER", "laravel-dev-app"))
-    parser.add_argument("--php", default=os.getenv("GRIGLIA_WORKER_PHP", "php"), help="PHP executable for local transport")
+    parser.add_argument("--container", default=os.getenv("GRIGLIA_WORKER_CONTAINER", os.getenv("GRIGLIA_CONTAINER", "laravel-dev-app")))
+    parser.add_argument("--php", default=os.getenv("GRIGLIA_WORKER_PHP", os.getenv("GRIGLIA_PHP", "php")), help="PHP executable for local transport")
     parser.add_argument("--interval", type=int, default=int(os.getenv("GRIGLIA_WORKER_INTERVAL", "10")))
     parser.add_argument("--retry-delay", type=int, default=int(os.getenv("GRIGLIA_WORKER_RETRY_DELAY", "30")))
     parser.add_argument("--repo", type=Path, default=Path(os.getenv("GRIGLIA_WORKER_REPO", Path.cwd())))

@@ -16,9 +16,19 @@ php artisan vendor:publish --tag=griglia-scripts   # → scripts/ in your projec
 | `agent-status.py` | reads the agent's OAuth credentials and sends **only percentages** of the plan windows | `griglia:agent-status-import` |
 | `griglia-agent-worker.py` | polls assigned work and launches Codex, Claude Code or a custom CLI; the systemd template keeps it alive | `griglia:check` |
 
-All host scripts need `python3`; containerized applications also need the `docker` CLI (`GRIGLIA_CONTAINER`,
-default `laravel-dev-app`). The synchronization helpers provide print/check modes; the worker instead needs
-access to both the configured container and the selected agent CLI.
+All host scripts need `python3` and reach Artisan through one of two **transports**. The default is Docker
+(`docker exec <container> php artisan`, container from `GRIGLIA_CONTAINER`, default `laravel-dev-app`); where
+Laravel runs directly on the machine, set `GRIGLIA_TRANSPORT=local` and the scripts run `php artisan` from the
+project root instead, with `GRIGLIA_PHP` naming the executable when it is not simply `php`:
+
+```dotenv
+GRIGLIA_TRANSPORT=local
+GRIGLIA_PHP=/usr/bin/php8.4
+```
+
+So a host without Docker is enough to run the whole toolchain. The synchronization helpers provide print/check
+modes; the worker instead needs access to the selected transport **and** to the agent CLI it launches. It reads
+the same two variables and accepts per-instance overrides — see [Persistent workers](workers.md).
 
 ## Where they think they are
 

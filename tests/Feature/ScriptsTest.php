@@ -28,12 +28,24 @@ class ScriptsTest extends TestCase
             $this->assertStringContainsString('def project_root()', (string) file_get_contents($dir.'/'.$script));
         }
 
+        // No Docker required: every host script can reach Artisan through local PHP (task 389)
+        foreach (['sync-skills.py', 'sync-context.py', 'claude-tokens.py', 'agent-status.py'] as $script) {
+            $source = (string) file_get_contents($dir.'/'.$script);
+            $this->assertStringContainsString("os.environ.get('GRIGLIA_TRANSPORT', 'docker')", $source, "$script must support the local transport");
+            $this->assertStringContainsString("os.environ.get('GRIGLIA_PHP', 'php')", $source, "$script must honour GRIGLIA_PHP");
+            $this->assertStringNotContainsString("'laravel-dev-app'", str_replace("os.environ.get('GRIGLIA_CONTAINER', 'laravel-dev-app')", '', $source), "$script must not hardcode the container name");
+        }
+
         $worker = (string) file_get_contents($dir.'/griglia-agent-worker.py');
         $this->assertStringContainsString('choices=("codex", "claude", "custom")', $worker);
         $this->assertStringContainsString('GRIGLIA_WORKER_TRANSPORT', $worker);
         $this->assertStringContainsString('GRIGLIA_WORKER_PHP', $worker);
         $this->assertStringContainsString('["docker", "exec", args.container, "php", *artisan]', $worker);
         $this->assertStringContainsString('[args.php, *artisan]', $worker);
+        // Per-instance variables win, but the shared ones configure the whole machine at once
+        foreach (['GRIGLIA_TRANSPORT', 'GRIGLIA_PHP', 'GRIGLIA_CONTAINER'] as $shared) {
+            $this->assertStringContainsString('os.getenv("'.$shared.'"', $worker, "the worker must fall back to $shared");
+        }
         $unit = (string) file_get_contents($dir.'/systemd/griglia-agent-worker@.service.example');
         $this->assertStringContainsString('%h/.local/bin', $unit);
         $this->assertStringContainsString('/absolute/path/to/project', $unit);

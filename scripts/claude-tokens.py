@@ -37,6 +37,18 @@ def project_root():
 
 
 REPO = project_root()
+CONTAINER = os.environ.get('GRIGLIA_CONTAINER', 'laravel-dev-app')
+# Trasporto di Artisan: 'docker' (default, `docker exec <container>`) oppure 'local' (PHP sull'host, niente Docker)
+TRANSPORT = os.environ.get('GRIGLIA_TRANSPORT', 'docker')
+
+
+def artisan_command(*args):
+    """`php artisan …` via `docker exec` oppure, con GRIGLIA_TRANSPORT=local, con GRIGLIA_PHP sull'host."""
+    if TRANSPORT == 'local':
+        return [os.environ.get('GRIGLIA_PHP', 'php'), 'artisan', *args]
+    return ['docker', 'exec', CONTAINER, 'php', 'artisan', *args]
+
+
 # Claude Code stores transcripts under ~/.claude/projects/<repo path with / replaced by ->/
 PROJECT_DIR = os.path.expanduser('~/.claude/projects/' + os.environ.get('CLAUDE_PROJECT_SLUG', '-' + REPO.strip('/').replace('/', '-')))
 
@@ -59,7 +71,7 @@ def parse_ts(s: str) -> datetime:
 
 
 def working_since_of(todo_id: int) -> str:
-    out = subprocess.check_output(['docker', 'exec', 'laravel-dev-app', 'php', 'artisan', 'griglia:check', '--json', '--all'], text=True)
+    out = subprocess.check_output(artisan_command('griglia:check', '--json', '--all'), text=True, cwd=REPO if TRANSPORT == 'local' else None)
     for t in json.loads(out):
         if int(t['id']) == todo_id:
             if not t.get('working_since'):

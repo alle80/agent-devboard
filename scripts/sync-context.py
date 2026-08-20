@@ -36,6 +36,10 @@ ROOT = project_root()
 TARGETS = [t.strip() for t in os.environ.get('GRIGLIA_CONTEXT_TARGETS', 'CLAUDE.md,AGENTS.md').split(',') if t.strip()]
 TARGET = os.path.join(ROOT, TARGETS[0])
 CONTAINER = os.environ.get('GRIGLIA_CONTAINER', 'laravel-dev-app')
+GRIGLIA_USER = os.environ.get('GRIGLIA_USER', 'www-data')
+# Trasporto di Artisan: 'docker' (default, `docker exec <container>`) oppure 'local' (PHP sull'host, niente Docker)
+TRANSPORT = os.environ.get('GRIGLIA_TRANSPORT', 'docker')
+PHP = os.environ.get('GRIGLIA_PHP', 'php')
 HEADER = '<!-- Generato da Griglia (/context): modifica i blocchi lì, non questo file. -->\n'
 # Originali (pre-board) dei file generati: salvati qui la prima volta che un file viene sovrascritto e ripristinati
 # con --restore o quando in /context si spegne «Genera i file di istruzioni dalla board»
@@ -43,7 +47,13 @@ ORIGINALS = os.path.join(ROOT, 'docs', 'context-originals')
 
 
 def artisan(*args, stdin=None):
-    return subprocess.run(['docker', 'exec', '-i', '-u', 'www-data', CONTAINER, 'php', 'artisan', *args], input=stdin, text=True, capture_output=True)
+    """`php artisan …` via `docker exec` (default) oppure — con GRIGLIA_TRANSPORT=local, per un Laravel che gira
+    direttamente sull'host, senza Docker — con GRIGLIA_PHP dalla root del progetto."""
+    if TRANSPORT == 'local':
+        command, cwd = [PHP, 'artisan', *args], ROOT
+    else:
+        command, cwd = ['docker', 'exec', '-i', '-u', GRIGLIA_USER, CONTAINER, 'php', 'artisan', *args], None
+    return subprocess.run(command, input=stdin, text=True, capture_output=True, cwd=cwd)
 
 
 def is_generated(path):

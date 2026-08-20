@@ -17,6 +17,29 @@ from datetime import datetime, timezone
 
 HOME = os.path.expanduser('~')
 CONTAINER = os.environ.get('GRIGLIA_CONTAINER', 'laravel-dev-app')
+# Trasporto di Artisan: 'docker' (default, `docker exec <container>`) oppure 'local' (PHP sull'host, niente Docker)
+TRANSPORT = os.environ.get('GRIGLIA_TRANSPORT', 'docker')
+
+
+def project_root():
+    """La root del progetto che usa la board: $GRIGLIA_PROJECT_ROOT, altrimenti la cartella che contiene questi
+    script (<progetto>/scripts) oppure — lanciando lo script da vendor/alle80/griglia/scripts — quella che
+    contiene `vendor`. Serve come working directory quando Artisan gira in locale."""
+    env = os.environ.get('GRIGLIA_PROJECT_ROOT')
+    if env:
+        return os.path.abspath(os.path.expanduser(env))
+    here = os.path.dirname(os.path.abspath(__file__))
+    parts = here.split(os.sep)
+    if 'vendor' in parts:
+        return os.sep.join(parts[:parts.index('vendor')]) or os.sep
+    return os.path.dirname(here)
+
+
+def artisan_command(*args):
+    """`php artisan …` via `docker exec` oppure, con GRIGLIA_TRANSPORT=local, con GRIGLIA_PHP sull'host."""
+    if TRANSPORT == 'local':
+        return [os.environ.get('GRIGLIA_PHP', 'php'), 'artisan', *args]
+    return ['docker', 'exec', '-i', '-u', os.environ.get('GRIGLIA_USER', 'www-data'), CONTAINER, 'php', 'artisan', *args]
 PLAN_LABELS = {'max': 'Max', 'pro': 'Pro', 'team': 'Team', 'enterprise': 'Enterprise', 'free': 'Free'}
 
 
@@ -75,7 +98,7 @@ def main():
     payload = json.dumps(data, ensure_ascii=False, indent=1)
     if '--print' in sys.argv:
         print(payload); return
-    r = subprocess.run(['docker', 'exec', '-i', '-u', os.environ.get('GRIGLIA_USER', 'www-data'), CONTAINER, 'php', 'artisan', 'griglia:agent-status-import'], input=payload, text=True, capture_output=True)
+    r = subprocess.run(artisan_command('griglia:agent-status-import'), input=payload, text=True, capture_output=True, cwd=project_root() if TRANSPORT == 'local' else None)
     if '-q' not in sys.argv:
         print((r.stdout or r.stderr).strip())
     sys.exit(r.returncode)

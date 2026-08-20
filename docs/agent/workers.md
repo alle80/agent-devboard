@@ -67,13 +67,28 @@ GRIGLIA_WORKER_REPO=/srv/my-project
 ```
 
 The Docker transport is the default and runs `docker exec <container> php artisan`. If Laravel runs directly
-on the worker host, use the local transport instead; Artisan runs with the repository as working directory:
+on the worker host, use the local transport instead; Artisan runs with the repository as working directory, so
+no Docker is involved anywhere in the loop:
 
 ```dotenv
 GRIGLIA_WORKER_TRANSPORT=local
 GRIGLIA_WORKER_PHP=/usr/bin/php8.4
 GRIGLIA_WORKER_REPO=/srv/my-project
 ```
+
+The `GRIGLIA_WORKER_*` names configure one instance. When they are absent the worker falls back to the
+variables the other [host scripts](scripts.md) read — `GRIGLIA_TRANSPORT`, `GRIGLIA_PHP`, `GRIGLIA_CONTAINER` —
+so a single choice, exported once for the machine, covers the worker and the helpers the agent itself runs
+(token counting, context and skill synchronization). Every setting also has a flag, useful for a one-off run:
+
+| Flag | Env variable | Default |
+| --- | --- | --- |
+| `--transport docker\|local` | `GRIGLIA_WORKER_TRANSPORT`, `GRIGLIA_TRANSPORT` | `docker` |
+| `--container` | `GRIGLIA_WORKER_CONTAINER`, `GRIGLIA_CONTAINER` | `laravel-dev-app` |
+| `--php` | `GRIGLIA_WORKER_PHP`, `GRIGLIA_PHP` | `php` |
+| `--repo` | `GRIGLIA_WORKER_REPO` | current directory |
+| `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | the agent key |
+| `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
 
 The driver defaults to the agent key, so keys named `codex` and `claude` need no env file. If the key is
 different, set the matching driver explicitly.
@@ -102,7 +117,12 @@ Check configuration without launching an agent:
 
 ```bash
 scripts/griglia-agent-worker.py --agent=codex --driver=codex --once --dry-run
+scripts/griglia-agent-worker.py --agent=codex --transport=local --php=/usr/bin/php8.4 \
+  --repo=/srv/my-project --once --dry-run
 ```
+
+The command reads the board through the selected transport and prints the argv it would execute, so a failure
+here is a transport or permission problem, not an agent one.
 
 For an end-to-end smoke test, enable the service, create a harmless task assigned to that agent and mark it
 open to work. The journal should show `dispatching task <id> to <agent>` and the board should move from open,

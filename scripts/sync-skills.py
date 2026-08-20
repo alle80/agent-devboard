@@ -34,6 +34,15 @@ def project_root():
 HOME = os.path.expanduser('~')
 ROOT = project_root()
 CONTAINER = os.environ.get('GRIGLIA_CONTAINER', 'laravel-dev-app')
+# Trasporto di Artisan: 'docker' (default, `docker exec <container>`) oppure 'local' (PHP sull'host, niente Docker)
+TRANSPORT = os.environ.get('GRIGLIA_TRANSPORT', 'docker')
+
+
+def artisan_command(*args):
+    """`php artisan …` via `docker exec` oppure, con GRIGLIA_TRANSPORT=local, con GRIGLIA_PHP sull'host."""
+    if TRANSPORT == 'local':
+        return [os.environ.get('GRIGLIA_PHP', 'php'), 'artisan', *args]
+    return ['docker', 'exec', '-i', '-u', os.environ.get('GRIGLIA_USER', 'www-data'), CONTAINER, 'php', 'artisan', *args]
 
 
 def frontmatter(path):
@@ -108,7 +117,7 @@ def main():
     data = json.dumps(collect(), ensure_ascii=False, indent=1)
     if '--print' in sys.argv:
         print(data); return
-    r = subprocess.run(['docker', 'exec', '-i', '-u', os.environ.get('GRIGLIA_USER', 'www-data'), CONTAINER, 'php', 'artisan', 'griglia:skills-import'], input=data, text=True)
+    r = subprocess.run(artisan_command('griglia:skills-import'), input=data, text=True, cwd=ROOT if TRANSPORT == 'local' else None)
     sys.exit(r.returncode)
 
 
