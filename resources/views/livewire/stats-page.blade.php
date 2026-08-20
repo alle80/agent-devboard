@@ -1,6 +1,6 @@
 {{-- Desktop: contenitore più largo e, da xl, storico affiancato a grafico e panoramica (task 321).
      Sotto xl resta la colonna unica di prima. --}}
-<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8" style="{{ $skin['vars'] }}">
+<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:max-w-7xl xl:px-8 2xl:max-w-[90rem]" style="{{ $skin['vars'] }}">
     <div class="mb-4 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} db-ctx-h1">{{ __('griglia::t.stats_page.title') }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
@@ -44,11 +44,14 @@
         </div>
 
         {{-- Da xl i tre blocchi si affiancano: storico a sinistra (2 colonne), grafico e panoramica a destra --}}
-        <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 xl:grid-cols-3">
+        <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start xl:grid-cols-3">
+
+        {{-- Su lg i due blocchi entrano nella griglia (display:contents); da xl formano la colonna destra --}}
+        <aside class="contents xl:order-2 xl:block xl:space-y-4">
 
         {{-- Per-day series: completed tasks (bars) + cost/time on hover --}}
         @php($max = max(1, max(array_column($series, 'count'))))
-        <div class="{{ $skin['card'] }} mb-4 lg:order-1 lg:mb-0 xl:order-2">
+        <div class="{{ $skin['card'] }} order-1 lg:order-1 xl:order-none">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}</h2>
             <div class="db-series flex h-28 items-end gap-px" role="img" aria-label="{{ __('griglia::t.stats_page.series_title', ['days' => count($series)]) }}">
                 @foreach ($series as $date => $p)
@@ -58,8 +61,30 @@
             <div class="{{ $skin['help'] }} mt-1 flex justify-between text-[10px]"><span>{{ \Carbon\Carbon::parse(array_key_first($series))->format('d/m') }}</span><span>{{ \Carbon\Carbon::parse(array_key_last($series))->format('d/m') }}</span></div>
         </div>
 
+        {{-- Overview of every list --}}
+        <div class="{{ $skin['card'] }} order-3 lg:order-2 xl:order-none">
+            <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.overview_title') }}</h2>
+            <div class="db-panel-scroll db-panel-overview overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('griglia::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('griglia::t.stats_page.kpi_cost') }}</th></tr></thead>
+                    <tbody class="{{ $skin['divide'] }}">
+                        @foreach ($overview as $o)
+                            <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $list && $o['list']->id === $list->id ? 'font-bold' : '' }}">
+                                <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}@if ($o['list']->trashed()) <span class="opacity-60">{{ __('griglia::t.stats_page.deleted_list') }}</span>@endif</button></td>
+                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ $o['agg']['count'] }}</td>
+                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ \Alle80\Griglia\Support\Stats::duration($o['agg']['timed_count'] ? $o['agg']['work_seconds'] : null) }}</td>
+                                <td class="py-1.5 text-right tabular-nums">{{ \Alle80\Griglia\Support\Stats::money($o['agg']['cost']) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        </aside>
+
         {{-- History --}}
-        <div class="{{ $skin['card'] }} mb-4 lg:order-3 lg:col-span-2 lg:mb-0 xl:order-1 xl:row-span-2">
+        <div class="{{ $skin['card'] }} order-2 lg:order-3 lg:col-span-2 xl:order-1">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.history_title', ['n' => $rows->count()]) }}</h2>
             @if ($rows->isEmpty())
                 <p class="{{ $skin['help'] }} py-3 text-center text-sm">{{ __('griglia::t.stats_page.empty') }}</p>
@@ -118,24 +143,6 @@
             @endif
         </div>
 
-        {{-- Overview of every list --}}
-        <div class="{{ $skin['card'] }} lg:order-2 xl:order-3">
-            <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.overview_title') }}</h2>
-            <div class="db-panel-scroll db-panel-overview overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('griglia::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('griglia::t.stats_page.kpi_cost') }}</th></tr></thead>
-                    <tbody class="{{ $skin['divide'] }}">
-                        @foreach ($overview as $o)
-                            <tr wire:key="ov-{{ $o['list']->id }}" class="{{ $list && $o['list']->id === $list->id ? 'font-bold' : '' }}">
-                                <td class="py-1.5 pr-2"><button type="button" wire:click="setList({{ $o['list']->id }})" class="cursor-pointer text-left hover:underline">{{ $o['list']->name }}@if ($o['list']->trashed()) <span class="opacity-60">{{ __('griglia::t.stats_page.deleted_list') }}</span>@endif</button></td>
-                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ $o['agg']['count'] }}</td>
-                                <td class="py-1.5 pr-2 text-right tabular-nums">{{ \Alle80\Griglia\Support\Stats::duration($o['agg']['timed_count'] ? $o['agg']['work_seconds'] : null) }}</td>
-                                <td class="py-1.5 text-right tabular-nums">{{ \Alle80\Griglia\Support\Stats::money($o['agg']['cost']) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
         </div>
 
         </div>{{-- /griglia desktop --}}

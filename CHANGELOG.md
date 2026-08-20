@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.42.0] - 2026-08-20
+
+### Fixed
+- Responsive pass over the desktop work, measured at 1920, 1440, 1280, 1024 and 820 px (no horizontal
+  overflow at any width — document width always equals the viewport):
+  - **/settings**: the two-column layout now starts at `xl` instead of `lg`. At 1024 px the columns were
+    ~340 px wide and every label wrapped after two words; and three columns at `2xl` were worse, so the
+    page stays at two columns and widens to `90rem` instead. Selects get a minimum width and can take up
+    to 65% of the row, so options like «Chiedi quando in dubbio» are readable.
+  - **/stats**: the chart and the per-list overview are wrapped in an `<aside>` that is `display: contents`
+    below `xl` (so they keep taking part in the grid) and a single cell from `xl` — this removes the empty
+    gap that the implicit grid rows left between them. The stacked order on phones is preserved
+    (chart → history → overview) with flex `order`.
+
+### Changed
+- `/stats` and `/settings` widen to `90rem` on `2xl` screens.
+
 ## [0.41.0] - 2026-08-20
 
 ### Changed
