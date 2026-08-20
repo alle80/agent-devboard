@@ -1,6 +1,6 @@
 # Griglia — instructions for the coding agent
 
-You are a coding agent driven by an **Griglia**. The user queues work as todos in one
+You are a coding agent driven by **Griglia**, a task board. The user queues work as todos in one
 list (the **agent list**, `config('griglia.agent_list')`). Your job: pick them up, do them, close
 them — reacting to the board in real time.
 

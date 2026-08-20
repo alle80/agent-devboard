@@ -1,17 +1,22 @@
 <div class="tl-page relative mx-auto {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }} px-4 py-10">
 
     {{-- ===== HEADER ===== --}}
-    <header class="relative mb-10 text-center">
+    @php($done = $todos->where('completed', true)->count())
+    @php($total = $todos->count())
+    <header class="relative mb-8 text-center">
         <div class="tl-card inline-block px-7 py-4">
-            <h1 class="tl-display tl-title"><x-griglia::logo size="1.1em" /> {{ $listName }} <x-griglia::logo size="1.1em" class="max-sm:hidden" /></h1>
+            <h1 class="tl-display tl-title">{{ $listName }}</h1>
             <p class="tl-claim mt-1.5">{{ $t['claim'] }}</p>
         </div>
 
-        @php($done = $todos->where('completed', true)->count())
-        <div class="mt-6">
-            <span class="tl-card tl-display tl-counter inline-block px-4 py-1">
-                {{ $done }}/{{ $todos->count() }} {{ $t['counter'] }}{{ $done === $todos->count() && $todos->isNotEmpty() ? ' — '.$t['done_all'] : '' }}
-            </span>
+        {{-- Avanzamento della lista: stessa hairline del menu delle liste --}}
+        <div class="mx-auto mt-5 max-w-xs">
+            <p class="tl-display tl-counter">
+                <span class="tabular-nums">{{ $done }}/{{ $total }}</span> {{ $t['counter'] }}{{ $done === $total && $todos->isNotEmpty() ? ' — '.$t['done_all'] : '' }}
+            </p>
+            @if ($total > 0)
+                <span class="tl-meter mt-2 block" role="img" aria-label="{{ $done }}/{{ $total }} {{ $t['counter'] }}"><span style="width: {{ (int) round($done / max($total, 1) * 100) }}%"></span></span>
+            @endif
         </div>
     </header>
 

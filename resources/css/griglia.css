@@ -229,6 +229,58 @@ body { -webkit-tap-highlight-color: transparent; }
     background: var(--tl-head, transparent);
 }
 
+/* ---------- Chrome (barra in alto, pulsanti, menu a tendina) ----------
+   Selettore lista e notifiche stanno su OGNI pagina: prendono carta, bordo, raggio e font
+   dal tema corrente invece di avere un look proprio. I temi possono ritoccarli con
+   --tl-chrome-bg / --tl-chrome-hover / --tl-menu-bg. */
+
+.tl-chrome { font-family: var(--tl-font, ui-sans-serif, system-ui, sans-serif); }
+
+.tl-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.65rem;
+    background: var(--tl-chrome-bg, var(--tl-card, #fff));
+    color: var(--tl-chrome-fg, var(--tl-card-fg, var(--tl-fg, #111)));
+    border: var(--tl-bw, 2px) var(--tl-bstyle, solid) var(--tl-bcol, #000);
+    border-radius: var(--tl-radius, 10px);
+    box-shadow: var(--tl-shadow, none);
+    font-size: 0.8rem; font-weight: 700; line-height: 1.25;
+    cursor: pointer; user-select: none;
+    transition: background-color .15s ease, color .15s ease, transform .1s ease;
+}
+@media (min-width: 640px) { .tl-btn { padding: 0.35rem 0.75rem; font-size: 0.875rem; } }
+.tl-btn:hover { background: var(--tl-chrome-hover, color-mix(in srgb, var(--tl-accent, #16a34a) 16%, var(--tl-card, #fff))); }
+.tl-btn:active { transform: translateY(1px); }
+.tl-btn:focus-visible { outline: 2px solid var(--tl-accent, #16a34a); outline-offset: 2px; }
+details[open] > .tl-btn { background: var(--tl-chrome-hover, color-mix(in srgb, var(--tl-accent, #16a34a) 16%, var(--tl-card, #fff))); }
+details[open] > .tl-btn .tl-caret { transform: rotate(180deg); }
+.tl-caret { transition: transform .15s ease; opacity: .6; }
+
+.tl-btn-sm { padding: 0.2rem 0.45rem; font-size: 0.75rem; }
+@media (min-width: 640px) { .tl-btn-sm { padding: 0.2rem 0.5rem; font-size: 0.75rem; } }
+.tl-btn-icon { padding: 0.3rem; }
+@media (min-width: 640px) { .tl-btn-icon { padding: 0.35rem; } }
+.tl-btn-ghost { background: transparent; border-color: transparent; box-shadow: none; opacity: 0.45; }
+.tl-btn-ghost:hover { opacity: 1; background: color-mix(in srgb, var(--tl-accent, #16a34a) 14%, transparent); }
+.tl-btn-danger:hover { background: color-mix(in srgb, #dc2626 22%, transparent); color: #fecaca; }
+
+.tl-menu {
+    background: var(--tl-menu-bg, var(--tl-card, #fff));
+    color: var(--tl-card-fg, var(--tl-fg, #111));
+    border: var(--tl-bw, 2px) var(--tl-bstyle, solid) var(--tl-bcol, #000);
+    border-radius: var(--tl-radius, 10px);
+    box-shadow: var(--tl-menu-shadow, var(--tl-shadow, 0 12px 28px rgb(0 0 0 / 0.28)));
+}
+.tl-menu-label { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.55; }
+.tl-menu-item { border-radius: calc(var(--tl-radius, 10px) - 3px); }
+.tl-menu-item:hover { background: color-mix(in srgb, var(--tl-accent, #16a34a) 14%, transparent); }
+.tl-menu-item.is-current { background: color-mix(in srgb, var(--tl-accent, #16a34a) 26%, transparent); }
+.tl-menu-sep { border-top: 1px solid color-mix(in srgb, var(--tl-bcol, #000) 55%, transparent); }
+
+/* Avanzamento di una lista: hairline sotto il nome nel menu e sotto il titolo in header. */
+.tl-meter { height: 3px; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, var(--tl-fg, #111) 16%, transparent); }
+.tl-meter > span { display: block; height: 100%; background: var(--tl-accent, #16a34a); transition: width .3s ease; }
+
 /* ---------- Slate: minimal mono ---------- */
 .theme-slate {
     --tl-bg: #0d120d;
@@ -241,6 +293,7 @@ body { -webkit-tap-highlight-color: transparent; }
     --tl-input: #05130a; --tl-input-fg: #33d17a;
     --tl-num-radius: 4px; --tl-num-bg: #05130a; --tl-check-radius: 4px;
     --tl-mini-bg: #05130a; --tl-head: #10221a;
+    --tl-chrome-bg: #101c14; --tl-chrome-hover: #16301f; --tl-menu-bg: #0c150f;
     --tl-item-size: 1rem; --tl-counter-size: 1rem; --tl-footer-size: 0.9rem;
     --tl-done-filter: grayscale(1) brightness(0.8);
 }

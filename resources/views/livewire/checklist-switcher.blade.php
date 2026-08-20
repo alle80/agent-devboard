@@ -1,19 +1,28 @@
-{{-- Selettore della lista corrente, identico su tutte le pagine --}}
-<div class="fixed top-3 left-3 z-[60] flex items-start gap-2">
+{{-- Selettore della lista corrente, identico su tutte le pagine. Prende look e font dal tema
+     corrente (.tl-btn / .tl-menu): niente stile proprio hard-coded. --}}
+@php($current = $lists->firstWhere('id', $currentId))
+<div class="tl-chrome fixed top-3 left-3 z-[60] flex items-start gap-2">
 <details
     class="relative"
-    style="font-family: system-ui, sans-serif"
     x-data="{ open: false }"
     x-bind:open="open"
     x-on:toggle="open = $el.open"
+    x-on:click.outside="open = false"
 >
-    <summary class="max-w-[48vw] cursor-pointer list-none truncate rounded-lg border-2 border-black bg-white px-2.5 py-1 text-xs font-bold sm:px-3 sm:py-1.5 sm:text-sm text-black shadow-[2px_2px_0_#000] select-none hover:bg-emerald-100 active:translate-y-px sm:max-w-xs [&::-webkit-details-marker]:hidden">
-        <x-griglia::icon name="list" /> {{ $lists->firstWhere('id', $currentId)?->name ?? __('griglia::t.lists') }} <x-griglia::icon name="chevron" size=".9em" class="opacity-60" />
+    <summary class="tl-btn max-w-[48vw] list-none sm:max-w-xs [&::-webkit-details-marker]:hidden">
+        <x-griglia::icon name="list" />
+        <span class="truncate">{{ $current?->name ?? __('griglia::t.lists') }}</span>
+        @if ($current && $current->todos_count > 0)
+            <span class="text-[11px] tabular-nums opacity-60">{{ $current->done_count }}/{{ $current->todos_count }}</span>
+        @endif
+        <x-griglia::icon name="chevron" size=".9em" class="tl-caret" />
     </summary>
-    <div class="absolute left-0 mt-1.5 max-h-[70vh] w-64 overflow-y-auto rounded-lg border-2 border-black bg-white p-1 text-black shadow-[3px_3px_0_#000]">
+    <div class="tl-menu absolute left-0 mt-1.5 max-h-[70vh] w-72 overflow-y-auto p-1.5">
+
+        <p class="tl-menu-label px-2 pt-1 pb-1.5">{{ __('griglia::t.lists') }}</p>
 
         @foreach ($lists as $list)
-            <div wire:key="list-{{ $list->id }}" class="flex items-center gap-1 rounded {{ $list->id === $currentId ? 'bg-emerald-200' : 'hover:bg-emerald-100' }}">
+            <div wire:key="list-{{ $list->id }}" class="tl-menu-item flex items-center gap-1 {{ $list->id === $currentId ? 'is-current' : '' }}">
                 @if ($editingId === $list->id)
                     <form wire:submit="saveRename" class="flex min-w-0 flex-1 items-center gap-1 p-1">
                         <input
@@ -21,18 +30,24 @@
                             wire:model="nameDraft"
                             wire:keydown.escape="cancelRename"
                             x-init="$el.focus(); $el.select()"
-                            class="w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm font-bold focus:bg-emerald-50 focus:outline-none"
+                            class="tl-input w-full min-w-0 flex-1 px-2 py-1 text-sm font-bold focus:outline-none"
                         >
-                        <button type="submit" title="{{ __('griglia::t.save') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('griglia::t.save') }}"><x-griglia::icon name="check" :stroke="2.5" /></button>
-                        <button type="button" wire:click="cancelRename" title="{{ __('griglia::t.cancel') }}" class="shrink-0 cursor-pointer rounded border-2 border-black bg-white px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" aria-label="{{ __('griglia::t.cancel') }}"><x-griglia::icon name="close" /></button>
+                        <button type="submit" title="{{ __('griglia::t.save') }}" aria-label="{{ __('griglia::t.save') }}" class="tl-btn tl-btn-icon shrink-0"><x-griglia::icon name="check" :stroke="2.5" /></button>
+                        <button type="button" wire:click="cancelRename" title="{{ __('griglia::t.cancel') }}" aria-label="{{ __('griglia::t.cancel') }}" class="tl-btn tl-btn-icon tl-btn-ghost shrink-0"><x-griglia::icon name="close" /></button>
                     </form>
                 @else
                     <button
                         wire:click="switchTo({{ $list->id }})"
                         class="min-w-0 flex-1 cursor-pointer px-2 py-1.5 text-left text-sm font-bold"
                     >
-                        <span class="block truncate">{{ $list->name }}@if ($list->id === $currentId) <x-griglia::icon name="check" size=".9em" />@endif</span>
-                        <span class="block text-xs font-normal opacity-60">{{ $list->done_count }}/{{ $list->todos_count }} {{ __('griglia::t.done_short') }}</span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="min-w-0 flex-1 truncate">{{ $list->name }}</span>
+                            @if ($list->id === $currentId)<x-griglia::icon name="check" size=".9em" />@endif
+                            <span class="shrink-0 text-[11px] font-normal tabular-nums opacity-55">{{ $list->done_count }}/{{ $list->todos_count }}</span>
+                        </span>
+                        @if ($list->todos_count > 0)
+                            <span class="tl-meter mt-1 block" aria-hidden="true"><span style="width: {{ (int) round($list->done_count / max($list->todos_count, 1) * 100) }}%"></span></span>
+                        @endif
                     </button>
                     @if (($list->chained_count > 0 || $list->plan_prompt) && $list->running_count > 0)
                         {{-- Plan running: the agent follows the chain --}}
@@ -44,37 +59,39 @@
                             wire:click="startPlan({{ $list->id }})"
                             title="{{ $list->done_count > 0 ? __('griglia::t.plan.resume') : __('griglia::t.plan.start') }}"
                             aria-label="{{ $list->done_count > 0 ? __('griglia::t.plan.resume') : __('griglia::t.plan.start') }}"
-                            class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-1.5 py-1 text-sm shadow-[1px_1px_0_#000] active:translate-y-px"
+                            class="tl-btn tl-btn-icon shrink-0"
                         ><x-griglia::icon name="play" /></button>
                     @endif
                     <button
                         wire:click="startRename({{ $list->id }})"
                         title="{{ __('griglia::t.rename_list') }}"
-                        class="shrink-0 cursor-pointer px-1.5 py-1.5 text-sm opacity-30 hover:opacity-100"
+                        aria-label="{{ __('griglia::t.rename_list') }}"
+                        class="tl-btn tl-btn-icon tl-btn-ghost shrink-0"
                     ><x-griglia::icon name="edit" /></button>
                     @if ($lists->count() > 1)
                         <button
                             wire:click="deleteList({{ $list->id }})"
                             wire:confirm="{{ __('griglia::t.delete_list_confirm', ['name' => $list->name, 'count' => $list->todos_count]) }}"
                             title="{{ __('griglia::t.delete_list') }}"
-                            class="shrink-0 cursor-pointer px-2 py-1.5 text-sm opacity-30 hover:text-red-600 hover:opacity-100"
-                        ><x-griglia::icon name="close" /></button>
+                            aria-label="{{ __('griglia::t.delete_list') }}"
+                            class="tl-btn tl-btn-icon tl-btn-ghost tl-btn-danger shrink-0"
+                        ><x-griglia::icon name="trash" /></button>
                     @endif
                 @endif
             </div>
         @endforeach
 
         {{-- Nuova lista --}}
-        <form wire:submit="create" class="mt-1 border-t-2 border-black/20 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }">
+        <form wire:submit="create" class="tl-menu-sep mt-1.5 p-1 pt-2" x-data="{ plan: $wire.entangle('asPlan') }">
             <div class="flex items-center gap-1">
                 <input
                     type="text"
                     wire:model="newName"
                     placeholder="{{ __('griglia::t.new_list') }}"
-                    class="w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm focus:bg-emerald-50 focus:outline-none"
+                    class="tl-input w-full min-w-0 flex-1 px-2 py-1 text-sm focus:outline-none"
                 >
-                <button type="submit" class="shrink-0 cursor-pointer rounded border-2 border-black bg-emerald-200 px-2 py-1 text-sm font-bold shadow-[1px_1px_0_#000] active:translate-y-px" wire:loading.attr="disabled" wire:target="create">
-                    <span wire:loading.remove wire:target="create">+</span><span wire:loading wire:target="create">…</span>
+                <button type="submit" class="tl-btn tl-btn-icon shrink-0" wire:loading.attr="disabled" wire:target="create" aria-label="{{ __('griglia::t.new_list') }}">
+                    <span wire:loading.remove wire:target="create"><x-griglia::icon name="plus" :stroke="2.5" /></span><span wire:loading wire:target="create">…</span>
                 </button>
             </div>
             {{-- Plan mode: build the list from a prompt (chained tasks) --}}
@@ -84,28 +101,28 @@
             </label>
             <div x-show="plan" x-cloak class="mt-1.5 space-y-1 px-1">
                 <div class="flex items-start gap-1">
-                    <textarea wire:model="planPrompt" rows="4" placeholder="{{ __('griglia::t.plan.prompt_placeholder') }}" class="db-plan-prompt w-full min-w-0 flex-1 rounded border-2 border-black px-2 py-1 text-sm focus:bg-emerald-50 focus:outline-none"></textarea>
-                    <x-griglia::mic class="shrink-0 rounded border-2 border-black bg-white px-1.5 py-1 text-sm shadow-[1px_1px_0_#000]" within="form" target=".db-plan-prompt" />
+                    <textarea wire:model="planPrompt" rows="4" placeholder="{{ __('griglia::t.plan.prompt_placeholder') }}" class="db-plan-prompt tl-input w-full min-w-0 flex-1 px-2 py-1 text-sm focus:outline-none"></textarea>
+                    <x-griglia::mic class="tl-btn tl-btn-icon shrink-0" within="form" target=".db-plan-prompt" />
                 </div>
                 <p class="text-[11px] opacity-60">{{ \Alle80\Griglia\Support\Plan::available() ? __('griglia::t.plan.hint') : __('griglia::t.plan.hint_no_ai') }}</p>
                 <p class="text-[11px] font-bold" wire:loading wire:target="create">⏳ {{ __('griglia::t.plan.building') }}</p>
             </div>
         </form>
 
-        {{-- Utente + navigazione (testo, niente icone) e logout --}}
+        {{-- Utente, pagine e uscita --}}
         @php($logout = \Alle80\Griglia\Mode::isLocal() ? null : config('griglia.logout_route'))
-        <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="mt-1 border-t-2 border-black/20 px-1 pt-2 pb-1">
+        <form method="POST" action="{{ $logout && \Illuminate\Support\Facades\Route::has($logout) ? route($logout) : '#' }}" class="tl-menu-sep mt-1.5 px-1 pt-2 pb-1">
             @csrf
-            <p class="mb-1.5 truncate px-1 text-xs opacity-60">{{ \Alle80\Griglia\Mode::isLocal() ? __('griglia::t.local_mode') : (auth()->user()?->name ?? '') }}</p>
+            <p class="tl-menu-label mb-1.5 truncate px-1">{{ \Alle80\Griglia\Mode::isLocal() ? __('griglia::t.local_mode') : (auth()->user()?->name ?? '') }}</p>
             <nav class="grid grid-cols-2 gap-1" aria-label="{{ __('griglia::t.settings') }}">
-                <a href="{{ route('griglia.stats') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('griglia::t.stats_page.menu') }}</a>
-                <a href="{{ route('griglia.agents') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('griglia::t.agents.menu') }}</a>
+                <a href="{{ route('griglia.stats') }}" class="tl-btn tl-btn-sm justify-center">{{ __('griglia::t.stats_page.menu') }}</a>
+                <a href="{{ route('griglia.agents') }}" class="tl-btn tl-btn-sm justify-center">{{ __('griglia::t.agents.menu') }}</a>
                 @if (\Alle80\Griglia\Admin::check())
-                <a href="{{ route('griglia.context') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('griglia::t.ctx.menu') }}</a>
-                <a href="{{ route('griglia.settings') }}" class="rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold shadow-[1px_1px_0_#000] hover:bg-emerald-100 active:translate-y-px">{{ __('griglia::t.settings') }}</a>
+                <a href="{{ route('griglia.context') }}" class="tl-btn tl-btn-sm justify-center">{{ __('griglia::t.ctx.menu') }}</a>
+                <a href="{{ route('griglia.settings') }}" class="tl-btn tl-btn-sm justify-center">{{ __('griglia::t.settings') }}</a>
                 @endif
                 @if ($logout && \Illuminate\Support\Facades\Route::has($logout))
-                    <button type="submit" class="cursor-pointer rounded border-2 border-black bg-white px-2 py-1.5 text-center text-xs font-bold text-red-700 shadow-[1px_1px_0_#000] hover:bg-red-50 active:translate-y-px">{{ __('griglia::t.logout') }}</button>
+                    <button type="submit" class="tl-btn tl-btn-sm tl-btn-danger col-span-2 justify-center">{{ __('griglia::t.logout') }}</button>
                 @endif
             </nav>
         </form>

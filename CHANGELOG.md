@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.35.0] - 2026-08-20
+
+### Changed
+- **Chrome dressed by the theme.** The list switcher, the notification bell and their dropdowns used to
+  carry a hard-coded look (black borders, white paper, emerald hovers, system font) on every theme. They
+  now take paper, border, radius, shadow and font from the current theme through new shared classes
+  `.tl-btn` (+ `.tl-btn-sm`, `.tl-btn-icon`, `.tl-btn-ghost`, `.tl-btn-danger`), `.tl-menu`,
+  `.tl-menu-item`, `.tl-menu-label`, `.tl-menu-sep` and `.tl-meter`. Themes can fine-tune them with
+  `--tl-chrome-bg`, `--tl-chrome-hover`, `--tl-menu-bg` (set for `slate`).
+- **List header.** The brand logo no longer flanks the list title — the title stands alone. The counter
+  is now a line plus a hairline progress meter (`.tl-meter`), the same device used per list inside the
+  switcher, so header and menu read as one system.
+- The list menu shows a per-list progress meter and a `done/total` count on the button itself.
+
+### Removed
+- **Style switcher.** The floating `Style` menu (component `x-griglia::style-switcher`) is gone: the style
+  is chosen in `/settings` (`app.default_style`). Themes stay reachable by their own routes.
+
 ## [0.34.1] - 2026-08-20
 
 ### Changed

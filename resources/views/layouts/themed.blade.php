@@ -44,8 +44,6 @@
         </div>
     @endif
 
-    <x-griglia::style-switcher :current="$theme" />
-
     <livewire:griglia::checklist-switcher />
 
     <x-griglia::toasts />
