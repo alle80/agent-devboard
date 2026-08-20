@@ -236,12 +236,23 @@ body { -webkit-tap-highlight-color: transparent; }
    Da lg le tabelle lunghe (storico, panoramica) scorrono dentro la loro card invece di
    allungare la pagina; l'intestazione resta appesa in alto. Sotto lg scorre la pagina. */
 @media (min-width: 1024px) {
-    .db-panel-scroll { max-height: min(62vh, 38rem); overflow-y: auto; }
+    /* Altezza unica per i pannelli scrollabili: le colonne affiancate finiscono alla stessa quota. */
+    :root { --db-panel-h: min(62vh, 38rem); }
+    .db-panel-scroll { max-height: var(--db-panel-h); overflow-y: auto; }
     .db-sticky-head th {
         position: sticky; top: 0; z-index: 1;
         background: var(--tl-menu-bg, var(--tl-card, #fff));
     }
 }
+
+/* Da xl la panoramica divide la colonna col grafico: si accorcia per finire alla stessa quota
+   della tabella storico affiancata (niente colonna destra più lunga della sinistra). */
+@media (min-width: 1280px) {
+    .db-panel-overview { max-height: calc(var(--db-panel-h) - 12.5rem); }
+}
+
+/* Le ancore interne non devono finire sotto la barra fissa in alto. */
+html { scroll-padding-top: 6rem; }
 
 /* ---------- Chrome (barra in alto, pulsanti, menu a tendina) ----------
    Selettore lista e notifiche stanno su OGNI pagina: prendono carta, bordo, raggio e font

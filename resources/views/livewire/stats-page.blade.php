@@ -121,7 +121,7 @@
         {{-- Overview of every list --}}
         <div class="{{ $skin['card'] }} lg:order-2 xl:order-3">
             <h2 class="{{ $skin['h2'] }} mb-2 text-base">{{ __('griglia::t.stats_page.overview_title') }}</h2>
-            <div class="db-panel-scroll overflow-x-auto">
+            <div class="db-panel-scroll db-panel-overview overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead><tr class="{{ $skin['help'] }} text-left text-xs uppercase tracking-wide"><th class="py-1 pr-2">{{ __('griglia::t.stats_page.list') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_done') }}</th><th class="py-1 pr-2 text-right">{{ __('griglia::t.stats_page.kpi_time') }}</th><th class="py-1 text-right">{{ __('griglia::t.stats_page.kpi_cost') }}</th></tr></thead>
                     <tbody class="{{ $skin['divide'] }}">

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.41.0] - 2026-08-20
+
+### Changed
+- Desktop heights and overflow tidied up: the scrollable panels share one height (`--db-panel-h`), and
+  from `xl` the per-list overview shortens (`.db-panel-overview`) so the right column ends at the same
+  height as the history table beside it. Each panel is the only scroll container in its card — no nested
+  or double scrollbars — and the page keeps its own scrollbar as the single vertical one.
+- `/context` and `/agents` follow the same shell as the other pages (`lg:max-w-5xl`), instead of staying
+  at `max-w-3xl` on wide screens.
+- `scroll-padding-top: 6rem` on `html`, so in-page anchors do not land under the fixed top bar.
+
 ## [0.40.0] - 2026-08-20
 
 ### Changed

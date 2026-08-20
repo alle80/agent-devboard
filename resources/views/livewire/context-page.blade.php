@@ -1,4 +1,4 @@
-<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24" style="{{ $skin['vars'] }}">
+<div class="mx-auto w-full max-w-3xl px-4 pt-24 pb-16 sm:pt-24 lg:max-w-5xl xl:px-8" style="{{ $skin['vars'] }}">
     <div class="mb-4 flex items-center justify-between gap-3">
         <h1 class="{{ $skin['h1'] }} db-ctx-h1 inline-flex items-center gap-2"><x-griglia::icon name="book" size="1em" /> {{ __('griglia::t.ctx.title', ['agent' => \Alle80\Griglia\Agent::name()]) }}</h1>
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
