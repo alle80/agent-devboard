@@ -1,13 +1,17 @@
 {{--
-    Contesto ereditato: questo todo è stato «ripreso» da uno chiuso. Mostra, richiudibile,
-    la nota, il commento di Claude e i sotto-task dell'originale (sola lettura).
+    Contesto ereditato: questo todo è stato «ripreso» da uno chiuso. Mostra la nota, il commento
+    dell'agente e i sotto-task dell'originale (sola lettura), **chiuso**: è contesto, non la richiesta
+    di adesso — si apre quando serve (task 363).
     Variabili attese: $todo (con relazione parent), più le classi $boxClass/$labelClass/$textClass.
 --}}
 @if ($todo->parent)
-    <details class="{{ $boxClass }} modal-parent group" open>
-        <summary class="cursor-pointer list-none">
-            <span class="{{ $labelClass }}">{{ __('griglia::t.resumes', ['title' => $todo->parent->title]) }}</span>
-            <span class="ml-1 text-xs opacity-60">{{ __('griglia::t.resumes_hint') }}</span>
+    <details class="{{ $boxClass }} modal-parent group" x-data="{ o: false }" x-on:toggle="o = $el.open">
+        <summary class="flex cursor-pointer list-none items-start gap-1.5">
+            <x-griglia::icon name="chevron" class="mt-1 shrink-0 transition-transform" x-bind:class="o ? 'rotate-180' : ''" />
+            <span class="min-w-0">
+                <span class="{{ $labelClass }}">{{ __('griglia::t.resumes', ['title' => $todo->parent->title]) }}</span>
+                <span class="ml-1 text-xs opacity-60">{{ __('griglia::t.resumes_hint') }}</span>
+            </span>
         </summary>
         <div class="mt-2 space-y-2 text-[0.95em]">
             @if ($todo->parent->notes)

@@ -29,7 +29,8 @@ stays as it was answered, and nothing it already finished goes back in front of 
 
 To carry on there is one way: **resume** (the ↻ button on the row or in the modal). It creates a *new* task
 right after the old one, with the same title and the old one attached as context — note, answer, sub-tasks
-and images stay one click away, and `griglia:check` shows them to the agent.
+and images stay one click away (the box is closed until you open it: what matters now is what you are
+asking today), and `griglia:check` shows them to the agent.
 
 Nothing else is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to
 the task before it, so a plan never waits for something that will never arrive, and a task with open

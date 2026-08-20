@@ -74,4 +74,17 @@ class IngredientModalTest extends TestCase
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         Livewire::test(IngredientModal::class)->call('openFor', $todo->id);
     }
+
+    public function test_the_resumed_context_starts_collapsed(): void
+    {
+        // It is context, not the request of today: it must not push the note out of view (task 363).
+        $old = Todo::create(['title' => 'Old work', 'order' => 5, 'checklist_id' => $this->todo->checklist_id, 'completed' => true, 'notes' => 'What was asked before']);
+        $new = Todo::create(['title' => 'Old work', 'order' => 6, 'checklist_id' => $this->todo->checklist_id, 'parent_id' => $old->id]);
+
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $new->id);
+
+        $m->assertSee('modal-parent', false);
+        $m->assertSee('What was asked before', false);
+        $m->assertDontSee('modal-parent group" open', false);
+    }
 }

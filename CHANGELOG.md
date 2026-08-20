@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.57.0] - 2026-08-20
+
+### Changed
+- **On a resumed task, the old task's text starts collapsed.** It opened expanded, so the request you are
+  writing today was pushed below a wall of what was asked the last time. It is one click away, with a
+  chevron that turns — and `griglia:check` still prints it in full for the agent.
+
 ### Docs
 - The pages about plans were still describing the checkbox in the lists dropdown, which moved to its own
   page three releases ago: Plans now documents `/plans/new` (goal, dictation, optional name, agent, draft)
