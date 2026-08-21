@@ -21,6 +21,9 @@ class DocsBuild extends Command
 
     protected $description = 'Builds the package documentation as a static HTML site with MkDocs (Material theme)';
 
+    /** Local image built from docs.Dockerfile: Material plus the plugins of requirements-docs.txt. */
+    protected const IMAGE = 'griglia-docs:local';
+
     public function handle(): int
     {
         $root = realpath(__DIR__.'/../..');
@@ -44,10 +47,18 @@ class DocsBuild extends Command
 
                 return self::FAILURE;
             }
+            // The official Material image has no mkdocs-static-i18n, which the bilingual site needs:
+            // build the toolchain image (docs.Dockerfile) first — Docker caches it after the first run.
+            if (! $this->buildImage($docker, $root)) {
+                return self::FAILURE;
+            }
             $uid = function_exists('posix_getuid') ? posix_getuid().':'.posix_getgid() : '1000:1000';
             $cmd = $serve
-                ? [$docker, 'run', '--rm', '-it', '-p', '8000:8000', '-v', "$root:/docs", 'squidfunk/mkdocs-material', 'serve', '--dev-addr=0.0.0.0:8000']
-                : [$docker, 'run', '--rm', '-u', $uid, '-v', "$root:/docs", 'squidfunk/mkdocs-material', 'build', '--site-dir', '/docs/'.$this->relative($root, $out)];
+                ? [$docker, 'run', '--rm', '-it', '-p', '8000:8000', '-v', "$root:/docs", self::IMAGE, 'serve', '--dev-addr=0.0.0.0:8000']
+                : [$docker, 'run', '--rm', '-u', $uid, '-v', "$root:/docs", self::IMAGE, 'build', '--site-dir', '/docs/'.$this->relative($root, $out)];
+            if ($this->option('strict') && ! $serve) {
+                $cmd[] = '--strict';
+            }
         } else {
             $mkdocs = (new ExecutableFinder)->find('mkdocs');
             if ($mkdocs) {
@@ -87,9 +98,29 @@ class DocsBuild extends Command
         return self::SUCCESS;
     }
 
+    /** Builds the docs toolchain image; Docker's own cache makes every run after the first one instant. */
+    private function buildImage(string $docker, string $root): bool
+    {
+        if (! is_file($root.'/docs.Dockerfile')) {
+            $this->error('docs.Dockerfile not found in '.$root);
+
+            return false;
+        }
+        $this->line('Building the documentation toolchain image ('.self::IMAGE.')…');
+        $build = new Process([$docker, 'build', '-q', '-t', self::IMAGE, '-f', 'docs.Dockerfile', '.'], $root, null, null, 600);
+        $build->run();
+        if (! $build->isSuccessful()) {
+            $this->error('docker build failed: '.trim($build->getErrorOutput() ?: $build->getOutput()));
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function missing(): int
     {
-        $this->error('MkDocs is not installed. Install it with:  pip install mkdocs-material   (or run with --docker)');
+        $this->error('MkDocs is not installed. Install the toolchain with:  pip install -r requirements-docs.txt   (or run with --docker)');
 
         return self::FAILURE;
     }

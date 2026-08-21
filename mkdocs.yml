@@ -21,7 +21,9 @@ theme:
   icon:
     repo: fontawesome/brands/github
   features:
-    - navigation.instant
+    # navigation.instant is off on purpose: mkdocs-static-i18n cannot make the language switcher
+    # point at the same page in the other language while instant loading is on (it warns, and the
+    # site builds with --strict). Landing on the page you were reading is worth more than the SPA feel.
     - navigation.tracking
     - navigation.sections
     - navigation.indexes
@@ -59,6 +61,61 @@ extra:
       name: Griglia on GitHub
 
 plugins:
+  # The site is bilingual: English pages are `page.md`, Italian ones `page.it.md` next to them
+  # (docs_structure: suffix). Pages with no `.it.md` fall back to the English one, so a missing
+  # translation is never a broken link. See docs/contributing/translations.md.
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          name: English
+          default: true
+          build: true
+        - locale: it
+          name: Italiano
+          build: true
+          site_name: Griglia
+          site_description: Una board Livewire dove metti in coda il lavoro per il tuo agente e lo segui dal vivo
+          nav_translations:
+            Home: Home
+            Getting started: Per cominciare
+            Installation: Installazione
+            Quickstart: Primi cinque minuti
+            Front-end assets: Asset front-end
+            Using the board: Usare la board
+            The agent side: Il lato agente
+            Skills: Skill
+            Agent context: Contesto dell'agente
+            Statistics & agents status: Statistiche e stato degli agenti
+            Host scripts: Script sull'host
+            Persistent workers: Worker persistenti
+            Two agents at once: Due agenti insieme
+            Features: Funzioni
+            Plans: Piani
+            Notifications: Notifiche
+            Themes: Temi
+            AI features: Funzioni AI
+            Configuration: Configurazione
+            Access, administrators and modes: Accessi, amministratori e modalità
+            Reference: Reference
+            Artisan commands: Comandi artisan
+            Configuration file: File di configurazione
+            Settings: Impostazioni
+            Events and broadcasting: Eventi e broadcasting
+            Changelog: Changelog
+            Settings backlog: Impostazioni da fare
+            Operations: Esercizio
+            Security: Sicurezza
+            'Security assessment (2026-08-21)': 'Valutazione di sicurezza (21-08-2026)'
+            Upgrading: Aggiornare
+            Troubleshooting: Se qualcosa non va
+            Contributing: Contribuire
+            Development: Sviluppo
+            Building this site: Costruire questo sito
+            Translations: Traduzioni
   - search
 
 markdown_extensions:
@@ -122,3 +179,4 @@ nav:
       - Contributing: contributing/contributing.md
       - Development: contributing/development.md
       - Building this site: contributing/docs-site.md
+      - Translations: contributing/translations.md

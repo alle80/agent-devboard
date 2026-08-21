@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.75.0] - 2026-08-21
+
+### Added
+- **The documentation site is bilingual.** English stays the base language and Italian sits next to it as
+  `page.it.md` (`mkdocs-static-i18n`, suffix structure): English at `/`, Italian at `/it/`, a language
+  switcher in the header that lands on the same page, an Italian navigation, and a fallback to English for
+  any page that has no translation yet. Every page of the site is translated.
+- `docs/contributing/translations.md` — how a translated page works, how to write one (links, anchors, front
+  matter), how the generated pages get their Italian, and how to add a third language.
+- `resources/docs/reference.it.php` — Italian catalogue of the strings the reference pages take from the
+  code (command and option descriptions, comments of `config/griglia.php`), keyed by the English source.
+- `docs.Dockerfile` — the documentation toolchain as an image (Material plus the plugins of
+  `requirements-docs.txt`), built on the fly by `griglia:docs-build --docker`: the official
+  `squidfunk/mkdocs-material` image does not ship the i18n plugin.
+- Tests: the Italian reference pages, the pages that must not change with the locale of whoever generates
+  them, every code string being translated, and every English page having an Italian counterpart that is not
+  a copy of it.
+
+### Changed
+- `griglia:docs-generate` writes each reference page in both languages (`commands.md` and `commands.it.md`,
+  …). The settings page needs no catalogue: its labels and help come from the `it` translations of
+  `/settings`. Strings with no translation stay in English and are listed at the end of the run.
+- `griglia:docs-build --docker` now passes `--strict` when asked to, instead of silently dropping it, and
+  builds the toolchain image before running.
+- The `navigation.instant` theme feature is off: the i18n language switcher cannot point at the same page in
+  the other language while instant loading is on.
+- `requirements-docs.txt` gained `mkdocs-static-i18n`; the install hints of the troubleshooting page and of
+  `griglia:docs-build` now point at the file instead of `pip install mkdocs-material`.
+
 ## [0.74.3] - 2026-08-21
 ### Changed
 - **The agent selector of a task row now sits on a line of its own, under the title.** Squeezed between the

@@ -42,6 +42,46 @@ class DocsGenerateTest extends TestCase
         }
     }
 
+    public function test_it_generates_the_italian_pages_too(): void
+    {
+        $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();
+
+        $commands = file_get_contents($this->out.'/commands.it.md');
+        $this->assertStringContainsString('# Comandi artisan', $commands);
+        $this->assertStringContainsString('## `griglia:check`', $commands, 'command names are not translated');
+        $this->assertStringContainsString('| Argomento / opzione | Cosa fa | Default |', $commands);
+        $this->assertStringContainsString('non modificare a mano', $commands);
+
+        $config = file_get_contents($this->out.'/config.it.md');
+        $this->assertStringContainsString('# File di configurazione', $config);
+        $this->assertStringContainsString('| `agent_list` |', $config);
+
+        // The settings page is translated by the lang files of the /settings page itself.
+        $settings = file_get_contents($this->out.'/settings.it.md');
+        $this->assertStringContainsString('# Impostazioni', $settings);
+        $this->assertStringContainsString('(`commit_after_task`)', $settings);
+        $this->assertStringNotContainsString('| Setting | Type |', $settings);
+    }
+
+    public function test_the_pages_do_not_change_with_the_locale_of_whoever_runs_it(): void
+    {
+        app()->setLocale('it');
+        $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();
+        $english = file_get_contents($this->out.'/settings.md');
+
+        app()->setLocale('en');
+        $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();
+
+        $this->assertSame($english, file_get_contents($this->out.'/settings.md'));
+    }
+
+    public function test_every_string_coming_from_the_code_is_translated(): void
+    {
+        $this->artisan('griglia:docs-generate', ['--out' => $this->out])
+            ->doesntExpectOutputToContain('with no `it` translation')
+            ->assertSuccessful();
+    }
+
     public function test_check_reports_stale_pages(): void
     {
         $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();

@@ -1,0 +1,64 @@
+# Il lato agente
+
+La board non parla mai con un fornitore preciso: il contratto è una CLI. Dai al tuo agente le regole di
+`AGENTS.md` (Codex lo legge nativamente; Claude Code legge `CLAUDE.md`; Gemini CLI `GEMINI.md`) e lascialo
+lavorare:
+
+```bash
+php artisan griglia:watch                       # stampa solo i cambiamenti a cui deve reagire (eventi)
+php artisan griglia:watch --agent=codex         # solo gli eventi assegnati a un agente
+php artisan griglia:check                       # cosa è open to work o già preso, impostazioni, piani
+php artisan griglia:check --take=ID             # presa in carico: il task passa a working (0%)
+php artisan griglia:check --take=ID --progress=60 --phase="testando"
+php artisan griglia:check --ask=ID --q="…" --q="…"     # mette il task in pausa con delle domande
+php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
+php artisan griglia:check --done=ID --comment="…" --outcome=alert   # fatto, ma va guardato (riga gialla)
+php artisan griglia:check --done=ID --comment="…" --outcome=blocked # c'è qualcosa che blocca (riga rossa)
+```
+
+`check` stampa in testa le **impostazioni** dei gruppi `agent` e `optimization` (politica dei commit,
+autonomia, notifiche, modalità di lavoro, modalità stringata, …) che l'agente deve rispettare, poi i task
+aperti della lista dell'agente e, dopo di quelli, i task aperti dei **piani** avviati (sotto un titolo
+`Plan «nome»`).
+
+Regole che vale la pena conoscere: prendere il task **per primo** (prima di leggere e analizzare), un task
+alla volta nell'ordine della lista (`task_mode=ordered`) oppure più task indipendenti insieme
+(`multitasking`), non toccare mai gli elementi *in attesa*, mollare un task nell'istante in cui viene
+fermato, tenere aggiornate percentuale e fase, riportare i token alla chiusura quando l'impostazione lo
+chiede, e dire con `--outcome` quando un task chiuso non è filato liscio — è quello che
+[colora la riga](../board/usage.md#il-colore-della-riga) che vede l'utente (`ok` di default, `alert`,
+`blocked`).
+
+Un task nato da una **ripresa** si porta dietro la sua storia: `check` stampa nota, risposta e sotto-task di
+ogni passo precedente, dal più recente (`resumes «…»`, poi `2 steps back «…»`, `3 steps back «…»`), perché
+anche una ripresa può essere ripresa. Con `--json` la stessa storia sta nel campo `resume_chain` di ogni task,
+ordinata dal passo più vicino al più vecchio.
+
+Statistiche: ogni intervallo *working* viene cronometrato da solo; i token sono quelli che riporta l'agente.
+
+**Una sessione pesante costa a ogni passo**, perché il contesto viene riletto a ogni turno. L'impostazione
+«suggerisci di ripulire la sessione» (⚡ ottimizzazione, in migliaia di token) è la soglia oltre la quale
+l'agente ti dice di lanciare `/clear` — non può farlo al posto tuo.
+
+## Più agenti
+
+Si dichiarano con `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. Una lista (progetto) ha un agente di
+default (selettore nella barra), un task può cambiarlo (intestazione del modale). Ogni agente esegue
+`griglia:check --agent=<la sua chiave>` (oppure imposta `GRIGLIA_AGENT_KEY`) e vede solo i propri task;
+`--take/--done` continuano a funzionare per id. Le [skill](skills.md) proposte su un task sono filtrate allo
+stesso modo: solo quelle che il suo agente ha installate.
+
+`--take`, `--done` e `--ask` rifiutano un task che appartiene a un altro agente (`--force` forza la mano),
+`check` stampa una riga `🔒 busy elsewhere` con quello che gli altri hanno in lavorazione, e la baseline 🆕 è
+tenuta per chiave d'agente. Quello che si condivide fuori dalla board — checkout, build, migrazioni, rilasci —
+sta in [Due agenti insieme](concurrency.md).
+
+Con `griglia:watch --agent=<chiave>` si usa la stessa chiave. Con `--once` il comando stampa anche i task che
+erano già in attesa quando è partito, il che lo rende adatto ai cron e ai worker sorvegliati; `--no-initial`
+mantiene il comportamento a sola baseline.
+
+## Vedi anche
+
+- [Primi cinque minuti](../getting-started/quickstart.md) — lo stesso flusso, passo per passo.
+- [Comandi artisan](../reference/commands.md) — ogni comando e ogni opzione, generati dal codice.
+- [Skill](skills.md) · [Contesto dell'agente](context.md) · [Statistiche](stats.md) · [Script sull'host](scripts.md) · [Worker persistenti](workers.md) · [Due agenti insieme](concurrency.md)

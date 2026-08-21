@@ -1,22 +1,29 @@
 # Building this documentation site
 
 The docs are plain Markdown in `docs/` with a `mkdocs.yml` (theme **Material for MkDocs**) at the package root.
+The site is **bilingual**: English is the base language, Italian pages sit next to them as `page.it.md` —
+see [Translations](translations.md).
 
 ## Prerequisites
 
 ```bash
-pip install mkdocs-material          # Python 3.8+; brings mkdocs + the Material theme
+pip install -r requirements-docs.txt   # Python 3.8+; mkdocs + Material + the static-i18n plugin
 ```
-or, without Python, the official Docker image `squidfunk/mkdocs-material`.
+or, without Python, Docker: `griglia:docs-build --docker` builds the toolchain image from `docs.Dockerfile`
+(the official `squidfunk/mkdocs-material` image alone is not enough — it does not ship the i18n plugin).
 
 ## Generated pages
 
-Three pages of the Reference section are written by the package itself:
+Three pages of the Reference section are written by the package itself, in both languages:
 
 ```bash
-php artisan griglia:docs-generate            # → docs/reference/{commands,config,settings}.md
+php artisan griglia:docs-generate            # → docs/reference/{commands,config,settings}.md + .it.md
 php artisan griglia:docs-generate --check    # fails when the committed pages are out of date (CI)
 ```
+
+The Italian versions come from the same code: the settings from the `it` translations of the page, the
+command and config descriptions from the catalogue in `resources/docs/reference.it.php`
+(see [Translations](translations.md)).
 
 `griglia:docs-build` runs it before every build (`--no-generate` to skip), so the site always matches the
 code. Do not edit those three files by hand.
@@ -30,7 +37,7 @@ legitimately differs, because it lists the AI providers installed there.
 php artisan griglia:docs-build                    # → site/ (HTML)
 php artisan griglia:docs-build --serve            # live preview on http://127.0.0.1:8000
 php artisan griglia:docs-build --out=/var/www/docs
-php artisan griglia:docs-build --docker           # uses the squidfunk/mkdocs-material image
+php artisan griglia:docs-build --docker           # builds and uses the docs.Dockerfile image
 ```
 
 The command runs `mkdocs build` (or the Docker image) from the package directory, reports a clear error when
@@ -41,7 +48,8 @@ Equivalent without artisan: `mkdocs build` in the package root.
 
 Working on the package, the documentation is part of the change — not an afterthought:
 
-1. **Write** the page in `docs/` (never the three generated ones: `reference/{commands,config,settings}.md`).
+1. **Write** the page in `docs/` (never the generated ones: `reference/{commands,config,settings}.md` and
+   their `.it.md`) — and its Italian counterpart, see [Translations](translations.md).
 2. **Regenerate** what comes from the code, if you touched a command, a config key or a setting:
    `php artisan griglia:docs-generate` (from a host app) or `vendor/bin/testbench griglia:docs-generate`
    (inside the package repository).
@@ -51,6 +59,9 @@ Working on the package, the documentation is part of the change — not an after
 4. **Look at it**: `--serve` for a live preview, or build into a folder your web server already serves.
 5. **Commit** `docs/`, `mkdocs.yml` and the regenerated pages together with the code change, and add the
    line to `CHANGELOG.md` — the changelog *is* a page of the site.
+
+`griglia:docs-build --strict` builds **both languages**: a broken link in the Italian tree fails the build
+exactly like one in the English tree.
 
 ## Publishing
 

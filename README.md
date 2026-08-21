@@ -18,7 +18,7 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 - Archive · state filters · free-text search
 - Live updates between devices (any Laravel broadcaster, e.g. Reverb)
 - A theme system (built-in **Slate** theme + installable zip packs) and a settings page
-- English base language with an Italian translation
+- English base language with an Italian translation — UI **and** documentation site
 
 > Extracted from the original app at https://github.com/alle80/laravel-dev.
 
@@ -325,9 +325,11 @@ MIT — see [LICENSE](LICENSE).
 
 ## Documentation
 
-Full docs: **<https://alle80.github.io/griglia/>** — sources in [`docs/`](docs/index.md) (MkDocs, Material
-theme), published by GitHub Actions at every push. Build them yourself with
-`php artisan griglia:docs-build` (needs `pip install mkdocs-material`, or `--docker`), preview with `--serve`.
+Full docs: **<https://alle80.github.io/griglia/>** — in Italian: **<https://alle80.github.io/griglia/it/>**.
+Sources in [`docs/`](docs/index.md) (MkDocs, Material theme, `mkdocs-static-i18n`: `page.md` in English,
+`page.it.md` in Italian), published by GitHub Actions at every push. Build them yourself with
+`php artisan griglia:docs-build` (needs `pip install -r requirements-docs.txt`, or `--docker`), preview with
+`--serve`. Translating a page: [`docs/contributing/translations.md`](docs/contributing/translations.md).
 
 ## Security
 

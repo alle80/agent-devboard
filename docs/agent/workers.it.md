@@ -1,0 +1,148 @@
+# Worker persistenti
+
+Un terminale interattivo o una chat non restano vivi per sempre. Un **worker persistente** gira sotto il
+gestore dei servizi dell'host, interroga Griglia e avvia una nuova sessione non interattiva dell'agente ogni
+volta che c'è del lavoro assegnato. Chiudere il terminale, il browser o la sessione originale dell'agente non
+lo ferma.
+
+Griglia distribuisce il worker e un template di servizio utente systemd insieme agli altri script per l'host:
+
+```bash
+php artisan vendor:publish --tag=griglia-scripts
+```
+
+Il worker è neutro rispetto al fornitore, tutto attorno al contratto della board: ogni istanza usa la propria
+chiave d'agente con `griglia:check --agent=<chiave>`, il proprio lock e gli stessi stati dei task. Ci sono
+driver di lancio integrati per **Codex CLI** e **Claude Code**; un template di argv in JSON collega un'altra
+CLI senza passare da una shell.
+
+## Installare il servizio utente systemd
+
+Copia l'esempio e sostituisci `/absolute/path/to/project` in entrambe le righe con il percorso assoluto vero
+del progetto:
+
+```bash
+mkdir -p ~/.config/systemd/user
+cp scripts/systemd/griglia-agent-worker@.service.example \
+  ~/.config/systemd/user/griglia-agent-worker@.service
+sed -i 's#/absolute/path/to/project#/srv/my-project#g' \
+  ~/.config/systemd/user/griglia-agent-worker@.service
+systemctl --user daemon-reload
+```
+
+Abilita un'istanza per ogni agente configurato. Il nome dell'istanza è la chiave dell'agente in Griglia:
+
+```bash
+systemctl --user enable --now griglia-agent-worker@codex.service
+systemctl --user enable --now griglia-agent-worker@claude.service
+```
+
+`codex` invoca `codex exec --approve-for-me`; `claude` invoca `claude -p --permission-mode acceptEdits`.
+L'unit aggiunge `%h/.local/bin` al `PATH`, il posto solito dei launcher installati dall'utente. Se
+`command -v codex` o `command -v claude` indicano un'altra cartella, metti una riga `PATH=...` completa in
+`~/.config/griglia-worker/<chiave-agente>.env`.
+
+Per guardare il servizio e seguirne l'output:
+
+```bash
+systemctl --user status griglia-agent-worker@codex.service
+journalctl --user -u griglia-agent-worker@codex.service -f
+```
+
+Per tenere in piedi i servizi utente dopo il logout e farli partire all'avvio, abilita una volta il lingering:
+
+```bash
+loginctl enable-linger "$USER"
+loginctl show-user "$USER" -p Linger   # atteso: Linger=yes
+```
+
+## Configurazione
+
+Ogni istanza legge, se c'è, `~/.config/griglia-worker/<chiave-agente>.env`:
+
+```dotenv
+GRIGLIA_WORKER_DRIVER=codex
+GRIGLIA_WORKER_INTERVAL=10
+GRIGLIA_WORKER_RETRY_DELAY=30
+GRIGLIA_WORKER_TRANSPORT=docker
+GRIGLIA_WORKER_CONTAINER=laravel-dev-app
+GRIGLIA_WORKER_REPO=/srv/my-project
+```
+
+Il trasporto Docker è quello di default ed esegue `docker exec <container> php artisan`. Se Laravel gira
+direttamente sull'host del worker, usa il trasporto locale; Artisan parte con il repository come cartella di
+lavoro, così Docker non compare da nessuna parte nel giro:
+
+```dotenv
+GRIGLIA_WORKER_TRANSPORT=local
+GRIGLIA_WORKER_PHP=/usr/bin/php8.4
+GRIGLIA_WORKER_REPO=/srv/my-project
+```
+
+I nomi `GRIGLIA_WORKER_*` configurano una singola istanza. Quando mancano, il worker ripiega sulle variabili
+che leggono gli altri [script sull'host](scripts.md) — `GRIGLIA_TRANSPORT`, `GRIGLIA_PHP`, `GRIGLIA_CONTAINER` —
+così una scelta sola, esportata una volta per la macchina, copre sia il worker sia gli script che l'agente
+lancia da sé (conteggio dei token, sincronizzazione di contesto e skill). Ogni impostazione ha anche il suo
+flag, comodo per un lancio una tantum:
+
+| Flag | Variabile d'ambiente | Default |
+| --- | --- | --- |
+| `--transport docker\|local` | `GRIGLIA_WORKER_TRANSPORT`, `GRIGLIA_TRANSPORT` | `docker` |
+| `--container` | `GRIGLIA_WORKER_CONTAINER`, `GRIGLIA_CONTAINER` | `laravel-dev-app` |
+| `--php` | `GRIGLIA_WORKER_PHP`, `GRIGLIA_PHP` | `php` |
+| `--repo` | `GRIGLIA_WORKER_REPO` | cartella corrente |
+| `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | la chiave dell'agente |
+| `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
+
+Il driver di default è la chiave dell'agente, quindi le chiavi che si chiamano `codex` e `claude` non hanno
+bisogno di alcun file env. Se la chiave è diversa, indica il driver in modo esplicito.
+
+Per Gemini CLI, Aider o un altro agente, usa il driver `custom`. L'array JSON viene eseguito direttamente (mai
+attraverso una shell); `{prompt}`, `{repo}` e `{agent}` vengono sostituiti dentro i singoli argomenti:
+
+```dotenv
+GRIGLIA_WORKER_DRIVER=custom
+GRIGLIA_WORKER_COMMAND_JSON=["agent-cli","--cwd","{repo}","--prompt","{prompt}"]
+```
+
+Trasporto e driver sono indipendenti, quindi Codex, Claude e i driver personalizzati funzionano in tutte e due
+le modalità. L'utente del servizio deve poter usare Docker o l'eseguibile PHP locale configurato, e la CLI
+dell'agente scelto in modo non interattivo. Non usare flag che disattivano del tutto sandbox e approvazioni:
+concedi solo i permessi sul progetto che servono al flusso di lavoro.
+
+## Comportamento e prove
+
+Il worker interroga lo stato attuale della board, quindi trova anche il lavoro che era già aperto prima di un
+riavvio. Preferisce un task già in lavorazione, altrimenti il primo task aperto nell'ordine della board. Un
+`flock` per agente impedisce sessioni doppie. Mentre l'agente lavora il worker continua a interrogare la
+board; uno Stop dalla board termina quel processo figlio. Quando l'agente esce, il servizio torna a
+interrogare, e systemd riavvia il worker dopo un errore.
+
+Per controllare la configurazione senza lanciare un agente:
+
+```bash
+scripts/griglia-agent-worker.py --agent=codex --driver=codex --once --dry-run
+scripts/griglia-agent-worker.py --agent=codex --transport=local --php=/usr/bin/php8.4 \
+  --repo=/srv/my-project --once --dry-run
+```
+
+Il comando legge la board attraverso il trasporto scelto e stampa l'argv che eseguirebbe, così un errore qui è
+un problema di trasporto o di permessi, non dell'agente.
+
+Per una prova da capo a fondo, abilita il servizio, crea un task innocuo assegnato a quell'agente e mettilo
+open to work. Nel journal dovresti vedere `dispatching task <id> to <agent>` e sulla board il task dovrebbe
+passare da aperto a working a fatto. Chiudere il terminale da cui hai fatto la prova non tocca il servizio
+systemd.
+
+Per disabilitare un'istanza:
+
+```bash
+systemctl --user disable --now griglia-agent-worker@codex.service
+```
+
+## Vedi anche
+
+- [Il lato agente](index.md) — comandi, stati e ambito con più agenti.
+- [Due agenti insieme](concurrency.md) — cosa condividono due worker, e come si evitano.
+- [Script sull'host](scripts.md) — tutti gli script pubblicati da `griglia-scripts`.
+- [Comandi artisan](../reference/commands.md) — il reference dei comandi, generato.

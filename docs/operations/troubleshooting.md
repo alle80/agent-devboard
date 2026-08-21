@@ -38,8 +38,8 @@ No broadcaster is configured, or the private channel is not authorised. Set the 
 
 ## `griglia:docs-build` says MkDocs is missing
 
-Install it (`pip install mkdocs-material`) or build with the official image: `--docker`. See
-[Building this site](../contributing/docs-site.md).
+Install the toolchain (`pip install -r requirements-docs.txt` — Material plus the i18n plugin the bilingual
+site needs) or build with Docker: `--docker`. See [Building this site](../contributing/docs-site.md).
 
 ## Attachments 404
 

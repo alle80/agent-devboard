@@ -1,6 +1,7 @@
 name: docs
 
-# The documentation site (MkDocs Material) is published on GitHub Pages at every push to master.
+# The documentation site (MkDocs Material, English + Italian through mkdocs-static-i18n) is published on
+# GitHub Pages at every push to master.
 # The reference pages under docs/reference are generated from the code and committed, so this job
 # needs no PHP: `tests.yml` is the one that fails when they are out of date.
 
@@ -12,6 +13,7 @@ on:
       - 'overrides/**'
       - 'mkdocs.yml'
       - 'CHANGELOG.md'
+      - 'requirements-docs.txt'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 

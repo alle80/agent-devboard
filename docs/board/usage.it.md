@@ -1,0 +1,123 @@
+# Usare la board
+
+## Liste
+
+Il menu delle liste (in alto a sinistra) passa da una lista all'altra, ne crea di nuove, le rinomina o le
+cancella. Un piano si scrive in una pagina tutta sua — **Nuovo piano…** nello stesso menu, vedi
+[Piani](../features/plans.md). La **lista dell'agente** (config `agent_list`) è il canale con l'agente; ogni
+altra lista è tua (o è un piano).
+
+## Task e stati
+
+Ogni riga ha il pallino dello stato:
+
+| Pallino | Stato | Chi lo imposta |
+|-----|-------|-------------|
+| ![in attesa](../images/state-waiting.svg){ width="18" } | in attesa | tu — l'agente non deve toccarlo |
+| ![open to work](../images/state-open.svg){ width="18" } | open to work | tu — pronto per l'agente |
+| ![working](../images/state-working.svg){ width="18" } | working | l'agente (`--take`) — icona animata, percentuale e fase accanto al titolo |
+| ![domanda](../images/state-question.svg){ width="18" } | domanda | l'agente ha chiesto qualcosa; rispondi nel modale e fallo ripartire |
+| ![fermato](../images/state-stop.svg){ width="18" } | fermato | hai toccato il badge «working» — l'agente si ferma subito |
+| ![fatto](../images/state-done.svg){ width="18" } | fatto | l'agente (`--done`) o tu (spunta) |
+
+Quando c'è un risultato dell'agente, sotto il titolo compare un riassunto automatico molto breve. Gli agenti
+possono darne uno più preciso con `griglia:check --done --summary="…"`; altrimenti Griglia lo ricava dal
+commento di chiusura. Serve a distinguere una sequenza di task ripresi che hanno tutti lo stesso titolo.
+
+Tocca il pallino per passare fra *in attesa* e *open to work* (o per fermare l'agente).
+
+### Il colore della riga
+
+Una riga che non hai ancora letto è disegnata con un **bordo colorato attorno alla scheda**, e il colore dice
+quanto ha bisogno di te:
+
+| Bordo | Significato | Da dove viene |
+|--------|---------|---------------------|
+| verde | fatto, niente da controllare | `--done` (senza `--outcome`, oppure `--outcome=ok`) |
+| giallo | fatto, ma qualcosa va guardato | `--done --outcome=alert` |
+| rosso | c'è qualcosa che blocca | `--done --outcome=blocked` |
+| viola | l'agente aspetta le tue risposte | `--ask` (domande aperte) |
+
+I quattro colori sono fissi e non derivano dall'accento del tema, e una riga evidenziata li tiene a piena
+intensità: è esente sia dallo sbiadire sia dal grigio che un tema applica alle righe completate, che
+altrimenti slaverebbero il bordo.
+
+Le righe completate restano in sordina, ma i loro bottoni usano un grigio più chiaro (`--tl-done-action`) e
+un'opacità più decisa, così archivia, riprendi ed elimina restano leggibili anche sui temi scuri e sugli
+schermi piccoli.
+
+Il colore è tutto il segnale: nessun badge nella riga, nessuna targhetta nel modale. Apri il task e il bordo
+torna quello solito del tema; un task che chiudi tu non ha bordo colorato, perché non c'è nessun risultato da
+leggere. Uno screen reader riceve comunque il significato, da un'etichetta nascosta sulla riga, e il tooltip
+della riga lo scrive per esteso.
+
+Il colore del bordo la riga se lo scrive addosso (inline), non solo attraverso le classi
+`.db-attention` / `.db-att-*`. Un'applicazione che usa le viste del package da `vendor/` mentre il suo foglio
+di stile è compilato da un'altra copia del package può ritrovarsi senza alcuna regola per quelle classi:
+l'evidenziazione sparirebbe in silenzio. Il foglio di stile aggiunge comunque la pulsazione e si può
+ri-tematizzare con `--db-att`.
+
+### Andare avanti dopo che un task è finito
+
+**Un task chiuso resta chiuso.** La spunta e il pallino di stato non lo riaprono: quello che l'agente ha
+risposto resta come è stato risposto, e niente di già finito torna davanti.
+
+Per andare avanti c'è una strada sola: **riprendi** (il bottone ↻ nella riga o nel modale). Crea un task
+*nuovo* subito dopo quello vecchio, con lo stesso titolo e il vecchio attaccato come contesto — nota,
+risposta, sotto-task e immagini restano a un clic (il riquadro è chiuso finché non lo apri: quello che conta
+adesso è quello che stai chiedendo oggi), e `griglia:check` li mostra all'agente.
+
+Riprendere un task già ripreso conserva **tutta la catena**: il riquadro elenca ogni passo precedente, dal più
+recente fino alla richiesta che ha fatto partire tutto (`+2 precedenti` accanto al titolo), e l'agente riceve
+la stessa storia — così niente di quello che è stato chiesto o risposto per strada va perso. Se un anello della
+catena viene cancellato, il task successivo viene riagganciato a quello prima, esattamente come nella catena
+di un piano.
+
+Nient'altro è una porta a senso unico: un task che esce dalla board (archiviato o cancellato) passa la sua
+catena al task che lo precede, così un piano non resta mai in attesa di qualcosa che non arriverà, e un task
+con domande aperte può essere ritirato senza rispondere — tocca il suo badge nel modale: le domande restano
+registrate e il task torna in attesa.
+
+## Il modale del task
+
+Titolo, nota **Task** (editor Markdown, con un microfono per la
+[dettatura](../features/ai.md#dettatura-vocale-speech-to-text)), il riquadro con la risposta dell'agente, le
+statistiche (tempo di lavoro, token, costo), l'accordion delle **skill** dell'agente, le immagini (upload,
+fotocamera, incolla; descrizione AI quando è attiva), i sotto-task (Markdown, riordinabili), domande e
+risposte, il contesto del task ripreso. Nell'intestazione: badge di stato (si tocca per cambiarlo),
+**sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con modifiche** (un nuovo
+task collegato).
+
+### Passare da un task all'altro
+
+Il modale ha ‹ e › accanto al badge di stato, con la posizione del task nella lista (`3/7`): aprono il task
+precedente e quello successivo senza chiudere il modale — è il modo di seguire un piano da un passo all'altro.
+I **tasti freccia sinistra e destra** fanno lo stesso, a meno che tu non stia scrivendo in un campo.
+
+### Copiare quello che c'è in una nota
+
+Note e risposte dell'agente sono Markdown: gli a capo singoli si vedono come tali, un **blocco di codice ha il
+bottone «copia»** nel suo angolo (comandi, prompt, frammenti), il **codice inline si copia con un clic** e i
+link si aprono in una nuova scheda.
+
+## Barra degli strumenti
+
+Ricerca a testo libero (titolo, note, commento, sotto-task, domande, descrizioni delle immagini), filtri di
+stato, archivio. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
+[Piani](../features/plans.md)).
+
+## Mobile
+
+È tutto pensato per il telefono: righe su due livelli, modale a tutto schermo, pannello delle notifiche a
+tutta larghezza, Web Push.
+
+L'intestazione del modale si divide in due su uno schermo stretto: il badge di stato con ‹ `3/7` › resta sulla
+prima riga accanto al bottone di chiusura — sempre raggiungibile, qualunque cosa contenga la lista — e il resto
+dei comandi (agente, sposta, archivia, elimina) sta su una seconda riga, con bersagli abbastanza grandi per un
+pollice. Niente è nascosto dietro un menu, e niente esce dal bordo dello schermo.
+
+## Vedi anche
+
+- [Il lato agente](../agent/index.md) — cosa fa l'agente con quello che scrivi qui.
+- [Piani](../features/plans.md) · [Notifiche](../features/notifications.md) · [Funzioni AI](../features/ai.md)
+- [Panoramica delle funzioni](../features/index.md) — tutta la board in una pagina.

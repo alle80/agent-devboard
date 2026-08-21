@@ -1,6 +1,13 @@
 ---
 title: A dev board for coding agents
 template: home.html
+hero_title: A dev board for coding agents
+hero_text: >-
+  Queue your requests as tasks; your coding agent takes them, asks questions, reports progress and
+  closes them — and you follow the whole thing live, from the sofa or from your phone.
+hero_quickstart: Quickstart
+hero_install: Install
+hero_meta: Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …
 hide:
   - navigation
   - toc
