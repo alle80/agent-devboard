@@ -37,6 +37,6 @@ class TestNotification extends Notification
 
     public function toWebPush(object $notifiable, Notification $notification): WebPushMessage
     {
-        return (new WebPushMessage)->title('🔔 '.__('griglia::t.notif.test_title'))->body(__('griglia::t.notif.test_body'))->tag('devboard-test')->data(['url' => url('/')]);
+        return (new WebPushMessage)->title('🔔 '.__('griglia::t.notif.test_title'))->body(__('griglia::t.notif.test_body'))->tag('griglia-test')->data(['url' => url('/')]);
     }
 }

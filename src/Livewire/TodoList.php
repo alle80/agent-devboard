@@ -502,7 +502,7 @@ class TodoList extends Component
      * dell'assistente, altro dispositivo). Se riguarda la lista corrente si ri-renderizza
      * lista e modale; se lo stato è stato cambiato da console, lo si dice con un toast.
      */
-    /** Listeners: the private broadcast channel comes from config (devboard.broadcast_channel). */
+    /** Listeners: the private broadcast channel comes from config (griglia.broadcast_channel). */
     protected function getListeners(): array
     {
 

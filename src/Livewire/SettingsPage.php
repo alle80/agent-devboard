@@ -126,7 +126,7 @@ class SettingsPage extends Component
         } catch (\RuntimeException $e) {
             $this->dispatch('toast', message: $e->getMessage(), type: 'error'); // ThemeStore's own, translated messages
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('devboard: theme install failed: '.$e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('griglia: theme install failed: '.$e->getMessage());
             $this->dispatch('toast', message: __('griglia::t.themes.err_generic'), type: 'error');
         }
 

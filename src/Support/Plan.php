@@ -42,7 +42,7 @@ class Plan
 
             return self::normalize($data['tasks'] ?? $data);
         } catch (\Throwable $e) {
-            Log::warning('devboard: plan generation failed: '.$e->getMessage());
+            Log::warning('griglia: plan generation failed: '.$e->getMessage());
 
             return [];
         }

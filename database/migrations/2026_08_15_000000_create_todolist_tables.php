@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Consolidated schema of the agent-devboard package. Every step is guarded, so it is safe to run
+ * Consolidated schema of the griglia package. Every step is guarded, so it is safe to run
  * on databases that were created by the older incremental migrations of the original app.
  */
 return new class extends Migration

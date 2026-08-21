@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.80.2] - 2026-08-21
+
+### Fixed
+- **Leftover `devboard` names in the code.** The three warning logs (`Notify`, `Plan`, `SettingsPage`) were
+  still prefixed `devboard:` instead of `griglia:`, the `TodoList` listeners PHPDoc named the config key
+  `devboard.broadcast_channel` (it is `griglia.broadcast_channel`), the test push notification used the tag
+  `devboard-test` and the consolidated migration header still called the package `agent-devboard` (task 456).
+
 ## [0.80.1] - 2026-08-21
 
 ### Added

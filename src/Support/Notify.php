@@ -51,7 +51,7 @@ class Notify
         try {
             $user->notify($notification);
         } catch (\Throwable $e) {
-            Log::warning('devboard: notification failed: '.$e->getMessage(), ['todo' => $todo->id, 'type' => $notification::class]);
+            Log::warning('griglia: notification failed: '.$e->getMessage(), ['todo' => $todo->id, 'type' => $notification::class]);
         }
     }
 }
