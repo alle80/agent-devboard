@@ -32,7 +32,7 @@ return [
     'dot_done' => 'Task completato',
     'save' => 'Salva',
     'autosaved' => 'Salvato',
-    'autosave_hint' => 'Le modifiche si salvano da sole mentre scrivi.',
+    'autosave_hint' => 'Le modifiche si salvano da sole mentre scrivi: Esc, o un clic fuori, chiude l\'editor.',
     'task_prev' => 'Task precedente (←)',
     'task_next' => 'Task successivo (→)',
     'copy' => 'copia',
@@ -40,6 +40,7 @@ return [
     'copy_failed' => 'non copiato',
     'copy_block' => 'Copia il blocco di codice',
     'cancel' => 'Annulla',
+    'revert' => 'Torna alla versione precedente',
     'new_title' => 'Nuovo titolo',
     'ok' => 'OK',
 
@@ -134,7 +135,6 @@ return [
     'parent_empty' => 'L\'originale non aveva né nota né sotto-task.',
     'title_tap' => 'Tocca per rinominare',
     'title_rename' => 'Rinomina: :title',
-    'save_title' => 'Salva titolo',
     'close' => 'Chiudi',
 
     'rename_list' => 'Rinomina lista',
@@ -151,7 +151,7 @@ return [
     'msg' => [
         'added' => 'Aggiunto: :title',
         'deleted' => 'Eliminato: :title',
-        'renamed' => 'Rinominato',
+        'reverted' => 'Versione precedente ripristinata',
         'completed' => 'Fatto: :title',
         'done_is_done' => 'Un task chiuso resta chiuso. Per continuarlo premi ↻ riprendi: crea un task nuovo collegato a questo.',
         'reopened' => 'Riaperto: :title',
@@ -164,7 +164,6 @@ return [
         'resumed' => 'Ripreso: aggiungi nota o modifiche, poi mettilo «da fare»',
         'title_too_long' => 'Titolo troppo lungo: max :max caratteri (ne hai :n)',
         'readonly' => 'Elemento completato: in sola lettura',
-        'note_saved' => 'Nota salvata',
         'subtask_added' => 'Sotto-task aggiunto',
         'subtask_renamed' => 'Sotto-task rinominato',
         'subtask_deleted' => 'Sotto-task eliminato',

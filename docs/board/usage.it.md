@@ -90,10 +90,17 @@ task collegato).
 
 ### Il salvataggio si fa da solo
 
-Titolo e nota si salvano **mentre scrivi** — basta una pausa, non serve schiacciare il bottone. La scritta
-«Salvato» accanto al campo dice quando è successo; il ✓ (o **Salva**) ormai chiude soltanto la modifica, e
-**Annulla** (o `Esc`) rimette il testo com'era quando hai cominciato. Vale anche per la rinomina al volo di
-una riga della lista.
+Titolo e nota si salvano **mentre scrivi** — basta una pausa. Non c'è più il bottone «Salva» e non c'è più
+«Annulla»: quello che c'è scritto è quello che c'è. La scritta «Salvato» accanto al campo dice quando è
+successo, e la modifica si chiude con `Invio` (il titolo), `Esc` o un clic fuori dal campo.
+
+Appena il testo è diverso da quello di partenza compare il bottone **torna alla versione precedente** (↩)
+accanto alla scritta «Salvato»: rimette il titolo — o la nota — com'era quando hai aperto la modifica e ti
+lascia dentro il campo, per continuare da lì. È un passo indietro, non uno storico: se chiudi e riapri, la
+«versione precedente» diventa il testo che hai appena lasciato.
+
+Vale anche per la rinomina al volo di una riga della lista. I sotto-task non si salvano da soli: lì i
+bottoni ✓ e ✕ restano.
 
 ### Passare da un task all'altro
 

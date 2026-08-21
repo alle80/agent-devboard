@@ -31,7 +31,7 @@ class TodoListComponentTest extends TestCase
         Livewire::test(TodoList::class)->call('toggle', $todo->id);
         $this->assertTrue($todo->fresh()->completed);
 
-        Livewire::test(TodoList::class)->call('startEdit', $todo->id)->set('titleDraft', 'Buy oat milk')->call('saveEdit');
+        Livewire::test(TodoList::class)->call('startEdit', $todo->id)->set('titleDraft', 'Buy oat milk')->call('finishEdit');
         $this->assertSame('Buy oat milk', $todo->fresh()->title);
 
         Livewire::test(TodoList::class)->call('delete', $todo->id);

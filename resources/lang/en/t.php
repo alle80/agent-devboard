@@ -33,7 +33,7 @@ return [
     'dot_done' => 'Completed task',
     'save' => 'Save',
     'autosaved' => 'Saved',
-    'autosave_hint' => 'Changes are saved as you type.',
+    'autosave_hint' => 'Changes are saved as you type: Esc, or a click outside, closes the editor.',
     'task_prev' => 'Previous task (←)',
     'task_next' => 'Next task (→)',
     'copy' => 'copy',
@@ -41,6 +41,7 @@ return [
     'copy_failed' => 'not copied',
     'copy_block' => 'Copy the code block',
     'cancel' => 'Cancel',
+    'revert' => 'Back to the previous version',
     'new_title' => 'New title',
     'ok' => 'OK',
 
@@ -137,7 +138,6 @@ return [
     'parent_empty' => 'The original had neither a note nor sub-tasks.',
     'title_tap' => 'Tap to rename',
     'title_rename' => 'Rename: :title',
-    'save_title' => 'Save title',
     'close' => 'Close',
 
     // Lists menu
@@ -156,7 +156,7 @@ return [
     'msg' => [
         'added' => 'Added: :title',
         'deleted' => 'Deleted: :title',
-        'renamed' => 'Renamed',
+        'reverted' => 'Previous version restored',
         'completed' => 'Done: :title',
         'done_is_done' => 'A closed task stays closed. To carry on, press ↻ resume: it creates a new task linked to this one.',
         'reopened' => 'Reopened: :title',
@@ -169,7 +169,6 @@ return [
         'resumed' => 'Resumed: add a note or changes, then mark it «open to work»',
         'title_too_long' => 'Title too long: max :max characters (you have :n)',
         'readonly' => 'Completed item: read-only',
-        'note_saved' => 'Note saved',
         'subtask_added' => 'Sub-task added',
         'subtask_renamed' => 'Sub-task renamed',
         'subtask_deleted' => 'Sub-task deleted',

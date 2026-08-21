@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.79.0] - 2026-08-21
+### Changed
+- **No more «Save» and «Cancel» on the title and on the note: what is written is what is stored (task 438).**
+  Both fields already saved themselves while you type (task 433), so the two buttons only added noise — and
+  «Cancel» silently threw away text that had been saved for minutes. The editor now closes with `Enter` (the
+  title), `Esc` or a click outside it, and as soon as the text differs from the starting one a **back to the
+  previous version** button (↩, new `undo` icon) appears next to the «Saved» flag: it restores the value the
+  field had when the editor was opened and stays inside the editor. Sub-tasks, which are not saved live, keep
+  their ✓ and ✕.
+- Livewire methods renamed accordingly: `TodoList::saveEdit()` → `finishEdit()` and `cancelEdit()` →
+  `revertEdit()`; `IngredientModal::saveTitle()/saveNotes()` → `finishTitle()/finishNotes()` and
+  `cancelTitle()/cancelNotes()` → `revertTitle()/revertNotes()`. Custom views that call them must be updated.
+- Translations: new `revert` and `msg.reverted`, `autosave_hint` also mentions how to close the editor; the
+  now unused `save_title`, `msg.renamed` and `msg.note_saved` are gone (closing an editor no longer toasts:
+  with a click outside it would fire at every stray click).
+
 ## [0.78.1] - 2026-08-21
 ### Fixed
 - **The `/settings` selects (and the number, text and time fields) save again when you change them (task 436).**
@@ -1446,6 +1462,7 @@ monorepo into a standalone, installable Composer package.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
 [Unreleased]: https://github.com/alle80/griglia/compare/v0.78.0...HEAD
+[0.79.0]: https://github.com/alle80/griglia/compare/v0.78.1...v0.79.0
 [0.78.1]: https://github.com/alle80/griglia/compare/v0.78.0...v0.78.1
 [0.78.0]: https://github.com/alle80/griglia/compare/v0.77.1...v0.78.0
 [0.77.1]: https://github.com/alle80/griglia/compare/v0.77.0...v0.77.1

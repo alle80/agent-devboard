@@ -85,10 +85,17 @@ archive, delete, close, plus **resume with changes** (a new linked task) on a co
 
 ### Saving happens by itself
 
-The title and the note are saved **while you type** — a short pause is enough, no need to press the button.
-The small «Saved» flag next to the field says when it happened; the ✓ (or **Save**) button now only closes
-the editor, and **Cancel** (or `Esc`) puts back the text that was there when you started editing. The same
-goes for the inline rename of a row in the list.
+The title and the note are saved **while you type** — a short pause is enough. There is no «Save» button and
+no «Cancel» button: what is written is what is stored. The small «Saved» flag next to the field says when the
+last save happened, and the editor closes with `Enter` (title), `Esc`, or a click outside it.
+
+As soon as the text differs from the one you started from, a **back to the previous version** button (↩)
+appears next to the «Saved» flag: it puts back the title — or the note — as it was when you opened the
+editor, and leaves you inside it, so you can keep writing from there. It is one step back, not a history:
+close the editor and reopen it and the «previous version» becomes the text you have just left.
+
+The same goes for the inline rename of a row in the list. Sub-tasks are not saved live: they keep their own
+✓ and ✕ buttons.
 
 ### Moving between tasks
 

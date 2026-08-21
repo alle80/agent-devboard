@@ -483,18 +483,23 @@ class IngredientModal extends Component
         $this->titleOriginal = $todo->title;
     }
 
-    /** «Annulla»: il titolo è già stato salvato mentre si scriveva, quindi si rimette com'era. */
-    public function cancelTitle(): void
+    /**
+     * «Torna alla versione precedente»: rimette il titolo com'era quando la modifica è cominciata.
+     * Il campo resta aperto — è un passo indietro, non una chiusura (task 438).
+     */
+    public function revertTitle(): void
     {
-        $todo = $this->editable();
+        if (! ($todo = $this->editable()) || $this->titleOriginal === null) {
+            return;
+        }
 
-        if ($todo && $this->titleOriginal !== null && $todo->title !== $this->titleOriginal) {
+        if ($todo->title !== $this->titleOriginal) {
             $todo->update(['title' => $this->titleOriginal]);
             $this->dispatch('ingredients-updated');
         }
 
-        $this->titleDraft = null;
-        $this->titleOriginal = null;
+        $this->titleDraft = $this->titleOriginal;
+        $this->dispatch('toast', message: __('griglia::t.msg.reverted'));
     }
 
     /** Salvataggio live: la bozza arriva dal campo (wire:model.live) a ogni pausa nella digitazione. */
@@ -532,10 +537,13 @@ class IngredientModal extends Component
         return true;
     }
 
-    /** Il bottone ✓ conferma e chiude la modifica (il salvataggio vero è già avvenuto da solo). */
-    public function saveTitle(): void
+    /**
+     * Chiude la modifica del titolo senza bottoni: Invio, Esc o un clic fuori dal campo (task 438).
+     * Quello che c'è scritto è già salvato.
+     */
+    public function finishTitle(): void
     {
-        if (! ($todo = $this->editable()) || $this->titleDraft === null) {
+        if (! $this->editable() || $this->titleDraft === null) {
             return;
         }
 
@@ -546,13 +554,8 @@ class IngredientModal extends Component
             return; // titolo non valido: si resta in modifica, l'avviso l'ha già dato l'autosalvataggio
         }
 
-        $changed = $title !== $this->titleOriginal;
         $this->titleDraft = null;
         $this->titleOriginal = null;
-
-        if ($changed) {
-            $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
-        }
     }
 
     // ----- Nota -----
@@ -567,19 +570,24 @@ class IngredientModal extends Component
         $this->notesOriginal = $todo->notes ?? '';
     }
 
-    /** «Annulla»: la nota è già stata salvata mentre si scriveva, quindi si rimette com'era. */
-    public function cancelNotes(): void
+    /**
+     * «Torna alla versione precedente»: rimette la nota com'era quando la modifica è cominciata.
+     * L'editor resta aperto — è un passo indietro, non una chiusura (task 438).
+     */
+    public function revertNotes(): void
     {
-        $todo = $this->editable();
+        if (! ($todo = $this->editable()) || $this->notesOriginal === null) {
+            return;
+        }
 
-        if ($todo && $this->notesOriginal !== null && (string) $todo->notes !== $this->notesOriginal) {
+        if ((string) $todo->notes !== $this->notesOriginal) {
             $todo->notes = $this->notesOriginal === '' ? null : $this->notesOriginal;
             $todo->save();
             $this->dispatch('ingredients-updated');
         }
 
-        $this->notesDraft = null;
-        $this->notesOriginal = null;
+        $this->notesDraft = $this->notesOriginal;
+        $this->dispatch('toast', message: __('griglia::t.msg.reverted'));
     }
 
     /** Salvataggio live: la bozza arriva dall'editor (wire:model.live) a ogni pausa nella digitazione. */
@@ -610,22 +618,19 @@ class IngredientModal extends Component
         return true;
     }
 
-    /** Il bottone «Salva» conferma e chiude l'editor (il salvataggio vero è già avvenuto da solo). */
-    public function saveNotes(): void
+    /**
+     * Chiude l'editor della nota senza bottoni: Esc o un clic fuori (task 438). Quello che c'è
+     * scritto è già salvato.
+     */
+    public function finishNotes(): void
     {
-        if (! ($todo = $this->editable()) || $this->notesDraft === null) {
+        if (! $this->editable() || $this->notesDraft === null) {
             return;
         }
 
         $this->autosaveNotes();
-        $changed = trim($this->notesDraft) !== (string) $this->notesOriginal;
-
         $this->notesDraft = null;
         $this->notesOriginal = null;
-
-        if ($changed) {
-            $this->dispatch('toast', message: __('griglia::t.msg.note_saved'));
-        }
     }
 
     // ----- Skills of the agent chosen for this task -----

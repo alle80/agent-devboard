@@ -5,8 +5,7 @@
       $labelClass etichetta ("Nota")
       $textClass  testo della nota
       $inputClass textarea in modifica
-      $okClass    bottone salva
-      $cancelClass bottone annulla
+      $cancelClass bottone del passo indietro (niente più salva/annulla, task 438)
       $label      testo etichetta (default "Nota")
 --}}
 @php($label = $label ?? __('griglia::t.note'))
@@ -20,7 +19,12 @@
             <p class="{{ $textClass }} italic opacity-50">{{ __('griglia::t.note_empty_ro') }}</p>
         @endif
     @elseif ($notesDraft !== null)
-        <form wire:submit="saveNotes" class="space-y-2">
+        <form
+            wire:submit="finishNotes"
+            x-data="{}"
+            x-on:click.outside="$wire.set('notesDraft', $el.querySelector('textarea').value).then(() => $wire.finishNotes())"
+            class="space-y-2"
+        >
             <span class="{{ $labelClass }}">{{ $label }}</span>
             <x-griglia::md-editor
                 model="notesDraft"
@@ -28,13 +32,14 @@
                 :rows="4"
                 :placeholder="__('griglia::t.note_placeholder')"
                 :inputClass="$inputClass"
-                wire:keydown.escape="cancelNotes"
+                wire:keydown.escape="finishNotes"
             />
             <p class="text-xs opacity-60">{{ __('griglia::t.md_hint') }} {{ __('griglia::t.autosave_hint') }}</p>
             <div class="flex items-center justify-end gap-2">
                 <x-griglia::autosaved class="mr-auto" />
-                <button type="button" wire:click="cancelNotes" class="{{ $cancelClass }}">{{ __('griglia::t.cancel') }}</button>
-                <button type="submit" class="{{ $okClass }}">{{ __('griglia::t.save') }}</button>
+                @if ($notesOriginal !== null && trim($notesDraft) !== $notesOriginal)
+                    <button type="button" wire:click="revertNotes" class="{{ $cancelClass }} inline-flex items-center gap-1" title="{{ __('griglia::t.revert') }}"><x-griglia::icon name="undo" /> {{ __('griglia::t.revert') }}</button>
+                @endif
             </div>
         </form>
     @else

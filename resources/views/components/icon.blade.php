@@ -16,6 +16,7 @@
         'close'    => '<path d="M6 6l12 12M18 6 6 18"/>',
         'edit'     => '<path d="M4 20h4l10-10a2 2 0 0 0-2.8-2.8L5 17l-1 3z"/><path d="M13.5 6.5l4 4"/>',
         'restore'  => '<path d="M9 5 4 10l5 5"/><path d="M4 10h9a7 7 0 0 1 0 14h-2"/>',
+        'undo'     => '<path d="M9 7 4 12l5 5"/><path d="M4 12h10a5 5 0 0 1 0 10h-2"/>',
         'plus'     => '<path d="M12 5v14M5 12h14"/>',
         'check'    => '<path d="M5 12.5l4.5 4.5L19 7"/>',
         'check-all'=> '<path d="M3 12.5l4 4L14 9"/><path d="M10 12.5l4 4L21 9"/>',

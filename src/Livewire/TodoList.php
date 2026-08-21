@@ -315,15 +315,21 @@ class TodoList extends Component
         $this->titleOriginal = $todo->title;
     }
 
-    /** «Annulla»: il titolo è già stato salvato mentre si scriveva, quindi si rimette com'era. */
-    public function cancelEdit(): void
+    /**
+     * «Torna alla versione precedente»: rimette il titolo com'era quando la modifica è cominciata.
+     * La rinomina resta aperta — è un passo indietro, non una chiusura (task 438).
+     */
+    public function revertEdit(): void
     {
-        if ($this->editingId && $this->titleOriginal !== null) {
-            $this->scoped()->whereKey($this->editingId)->where('title', '!=', $this->titleOriginal)
-                ->update(['title' => $this->titleOriginal]);
+        if (! $this->editingId || $this->titleOriginal === null) {
+            return;
         }
 
-        $this->closeEdit();
+        $this->scoped()->whereKey($this->editingId)->where('title', '!=', $this->titleOriginal)
+            ->update(['title' => $this->titleOriginal]);
+
+        $this->titleDraft = $this->titleOriginal;
+        $this->dispatch('toast', message: __('griglia::t.msg.reverted'));
     }
 
     /** Chiude la rinomina senza toccare quello che è già stato salvato. */
@@ -359,8 +365,12 @@ class TodoList extends Component
         return $saved;
     }
 
-    /** Il bottone ✓ conferma e chiude la rinomina (il salvataggio vero è già avvenuto da solo). */
-    public function saveEdit(): void
+    /**
+     * Chiude la rinomina senza bottoni: Invio, Esc o un clic fuori dal campo (task 438). Quello che
+     * c'è scritto è già salvato; con un titolo vuoto o troppo lungo si resta dentro, altrimenti il
+     * testo appena scritto sparirebbe senza essere mai stato salvato.
+     */
+    public function finishEdit(): void
     {
         $title = trim($this->titleDraft);
 
@@ -369,12 +379,7 @@ class TodoList extends Component
         }
 
         $this->autosaveEdit();
-        $changed = $title !== $this->titleOriginal;
         $this->closeEdit();
-
-        if ($changed) {
-            $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
-        }
     }
 
     /** Titolo entro il limite? Altrimenti avvisa e non salva (niente troncamenti silenziosi). */

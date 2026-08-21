@@ -1,14 +1,23 @@
 {{--
     Titolo del todo nella testata del modale: tocca/click per rinominare (max TITLE_MAX caratteri).
-    Eredita font e colore dall'h2 dello stile che lo include. Variabili: $todo, $titleDraft, $readonly.
+    Eredita font e colore dall'h2 dello stile che lo include.
+    Variabili: $todo, $titleDraft, $titleOriginal, $readonly.
+    Niente ✓ e niente ✕ (task 438): si salva da solo, si chiude con Invio, Esc o un clic fuori, e
+    finché il testo è cambiato compare il passo indietro alla versione di partenza.
 --}}
 @if ($titleDraft !== null && ! $readonly)
-    <form wire:submit="saveTitle" x-data="{ len: {{ mb_strlen($titleDraft) }} }" class="flex min-w-0 flex-1 items-center gap-2" style="font: inherit; color: inherit">
+    <form
+        wire:submit="finishTitle"
+        x-data="{ len: {{ mb_strlen($titleDraft) }} }"
+        x-on:click.outside="$wire.set('titleDraft', $el.querySelector('input').value).then(() => $wire.finishTitle())"
+        class="flex min-w-0 flex-1 items-center gap-2"
+        style="font: inherit; color: inherit"
+    >
         <input
             type="text"
             wire:model.live.debounce.600ms="titleDraft"
             x-on:blur="$wire.set('titleDraft', $event.target.value)"
-            wire:keydown.escape="cancelTitle"
+            wire:keydown.escape="finishTitle"
             maxlength="{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}"
             x-init="$el.focus(); $el.select()"
             x-on:input="len = $event.target.value.length"
@@ -19,8 +28,9 @@
         <x-griglia::mic class="shrink-0 text-base leading-none opacity-70 hover:opacity-100" within="form" target="input" />
         <span class="shrink-0 text-xs font-normal tabular-nums opacity-70" style="font-family: system-ui, sans-serif" x-text="len + '/{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
         <x-griglia::autosaved />
-        <button type="submit" class="shrink-0 cursor-pointer text-lg leading-none" title="{{ __('griglia::t.save') }}" aria-label="{{ __('griglia::t.save_title') }}"><x-griglia::icon name="check" :stroke="2.5" /></button>
-        <button type="button" wire:click="cancelTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70" title="{{ __('griglia::t.cancel') }}" aria-label="{{ __('griglia::t.cancel') }}"><x-griglia::icon name="close" /></button>
+        @if ($titleOriginal !== null && trim($titleDraft) !== $titleOriginal)
+            <button type="button" wire:click="revertTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70 hover:opacity-100" title="{{ __('griglia::t.revert') }}" aria-label="{{ __('griglia::t.revert') }}"><x-griglia::icon name="undo" /></button>
+        @endif
     </form>
 @elseif ($readonly)
     <span class="break-words">{{ $todo->title }}</span>

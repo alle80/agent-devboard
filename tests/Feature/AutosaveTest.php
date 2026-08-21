@@ -11,7 +11,9 @@ use Livewire\Livewire;
 
 /**
  * Salvataggio live (task 433): titolo e nota si salvano da soli mentre si scrive, senza
- * schiacciare «Salva»; «Annulla» rimette il valore di partenza.
+ * schiacciare «Salva». Dal task 438 i bottoni «Salva» e «Annulla» non ci sono più: la modifica si
+ * chiude e basta (finish*), e il passo indietro (revert*) rimette la versione di partenza senza
+ * chiudere il campo.
  */
 class AutosaveTest extends TestCase
 {
@@ -37,23 +39,49 @@ class AutosaveTest extends TestCase
         $this->assertSame("line 1\nline 2", $this->todo->fresh()->notes);
         $this->assertNotNull($m->get('notesDraft'));
 
-        // Il bottone chiude soltanto: quello che c'è nel campo è già salvato.
-        $m->call('saveNotes')->call('saveTitle');
+        // La chiusura non salva niente di nuovo: quello che c'è nel campo è già salvato.
+        $m->call('finishNotes')->call('finishTitle');
         $this->assertNull($m->get('notesDraft'));
         $this->assertNull($m->get('titleDraft'));
         $this->assertSame('Live title', $this->todo->fresh()->title);
     }
 
-    public function test_cancel_puts_back_the_starting_value(): void
+    public function test_revert_puts_back_the_starting_value_without_closing(): void
     {
         $this->todo->update(['notes' => 'first note']);
         $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
 
-        $m->call('editTitle')->set('titleDraft', 'Oops')->call('cancelTitle');
+        $m->call('editTitle')->set('titleDraft', 'Oops');
+        $m->assertSee(__('griglia::t.revert'), false); // il passo indietro compare solo se il testo è cambiato
+        $m->call('revertTitle');
         $this->assertSame('Task', $this->todo->fresh()->title);
+        $this->assertSame('Task', $m->get('titleDraft'), 'the field stays open, on the old value');
 
-        $m->call('editNotes')->set('notesDraft', 'oops')->call('cancelNotes');
+        $m->call('editNotes')->set('notesDraft', 'oops')->call('revertNotes');
         $this->assertSame('first note', $this->todo->fresh()->notes);
+        $this->assertSame('first note', $m->get('notesDraft'), 'the editor stays open, on the old note');
+    }
+
+    public function test_closing_the_editor_keeps_what_was_typed(): void
+    {
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
+
+        $m->call('editTitle')->set('titleDraft', 'Kept title')->call('finishTitle');
+        $this->assertSame('Kept title', $this->todo->fresh()->title);
+        $this->assertNull($m->get('titleDraft'));
+
+        $m->call('editNotes')->set('notesDraft', 'kept note')->call('finishNotes');
+        $this->assertSame('kept note', $this->todo->fresh()->notes);
+        $this->assertNull($m->get('notesDraft'));
+    }
+
+    public function test_an_invalid_title_keeps_the_editor_open(): void
+    {
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
+
+        $m->call('editTitle')->set('titleDraft', '   ')->call('finishTitle');
+        $this->assertSame('   ', $m->get('titleDraft'), 'nothing to save yet: the field stays open');
+        $this->assertSame('Task', $this->todo->fresh()->title);
     }
 
     public function test_autosave_refuses_an_empty_or_too_long_title(): void
@@ -87,11 +115,12 @@ class AutosaveTest extends TestCase
         $l->assertDispatched('griglia-autosaved');
         $this->assertSame($this->todo->id, $l->get('editingId'), 'the row stays in edit mode');
 
-        $l->call('cancelEdit');
+        $l->call('revertEdit');
         $this->assertSame('Task', $this->todo->fresh()->title);
-        $this->assertNull($l->get('editingId'));
+        $this->assertSame($this->todo->id, $l->get('editingId'), 'the passo indietro does not close the row');
+        $this->assertSame('Task', $l->get('titleDraft'));
 
-        $l->call('startEdit', $this->todo->id)->set('titleDraft', 'Kept')->call('saveEdit');
+        $l->set('titleDraft', 'Kept')->call('finishEdit');
         $this->assertSame('Kept', $this->todo->fresh()->title);
         $this->assertNull($l->get('editingId'));
     }

@@ -29,10 +29,10 @@ class IngredientModalTest extends TestCase
         $m->call('toggleIngredient', $ing->id);
         $this->assertTrue($ing->fresh()->checked);
 
-        $m->call('editNotes')->set('notesDraft', "line 1\nline 2")->call('saveNotes');
+        $m->call('editNotes')->set('notesDraft', "line 1\nline 2")->call('finishNotes');
         $this->assertSame("line 1\nline 2", $this->todo->fresh()->notes);
 
-        $m->call('editTitle')->set('titleDraft', 'Renamed')->call('saveTitle');
+        $m->call('editTitle')->set('titleDraft', 'Renamed')->call('finishTitle');
         $this->assertSame('Renamed', $this->todo->fresh()->title);
     }
 
