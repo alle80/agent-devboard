@@ -110,6 +110,8 @@ next. The **left and right arrow keys** do the same, unless you are typing in a 
 
 Notes and agent answers are Markdown: single newlines are displayed as line breaks, and a **code block has a copy button** in its corner (commands, prompts,
 snippets), **inline code copies itself with one click**, and links open in a new tab.
+While editing a note, its field grows with the text and keeps that height across background autosaves; saving
+stays silent so it does not interrupt typing.
 
 ## Toolbar
 

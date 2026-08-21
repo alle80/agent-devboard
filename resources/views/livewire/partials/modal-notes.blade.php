@@ -36,7 +36,6 @@
             />
             <p class="text-xs opacity-60">{{ __('griglia::t.md_hint') }} {{ __('griglia::t.autosave_hint') }}</p>
             <div class="flex items-center justify-end gap-2">
-                <x-griglia::autosaved class="mr-auto" />
                 @if ($notesOriginal !== null && trim($notesDraft) !== $notesOriginal)
                     <button type="button" wire:click="revertNotes" class="{{ $cancelClass }} inline-flex items-center gap-1" title="{{ __('griglia::t.revert') }}"><x-griglia::icon name="undo" /> {{ __('griglia::t.revert') }}</button>
                 @endif

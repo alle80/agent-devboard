@@ -35,7 +35,7 @@
         t.selectionStart = t.selectionEnd = s + text.length;
         this.sync();
     },
-}">
+}" x-on:griglia-autosaved.window="$nextTick(() => grow())">
     <div class="db-md-bar">
         <button type="button" class="db-md-btn" @click="wrap('**','**','{{ __('griglia::t.md.bold') }}')" title="{{ __('griglia::t.md.bold') }}"><span style="font-weight:800">B</span></button>
         <button type="button" class="db-md-btn" @click="wrap('*','*','{{ __('griglia::t.md.italic') }}')" title="{{ __('griglia::t.md.italic') }}"><span style="font-style:italic">I</span></button>

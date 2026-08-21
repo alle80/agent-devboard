@@ -34,10 +34,13 @@ class AutosaveTest extends TestCase
         $this->assertSame('Live title', $this->todo->fresh()->title);
         $m->assertDispatched('griglia-autosaved');
         $this->assertSame('Live title', $m->get('titleDraft'), 'the field stays in edit mode');
+        $m->call('finishTitle');
 
         $m->call('editNotes')->set('notesDraft', "line 1\nline 2");
         $this->assertSame("line 1\nline 2", $this->todo->fresh()->notes);
         $this->assertNotNull($m->get('notesDraft'));
+        $m->assertDispatched('griglia-autosaved');
+        $m->assertDontSee(__('griglia::t.autosaved'));
 
         // La chiusura non salva niente di nuovo: quello che c'è nel campo è già salvato.
         $m->call('finishNotes')->call('finishTitle');
