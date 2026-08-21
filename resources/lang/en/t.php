@@ -203,6 +203,7 @@ return [
     'agent_of_task' => 'Agent for this task',
     'agent_default' => 'Default (:agent)',
     'agent_set' => 'Agent of the list: :agent',
+    'agent_set_task' => '«:title» → :agent',
     'local_mode' => 'local mode',
     'settings_saves' => 'Every change is saved immediately.',
     'settings_footer' => 'To add settings: leave a request in the agent list.',

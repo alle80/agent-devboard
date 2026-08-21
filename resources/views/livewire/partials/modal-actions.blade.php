@@ -54,12 +54,12 @@
 
         @if (\Alle80\Griglia\Agent::many())
             {{-- Multi-agent: which agent handles this task --}}
-            <select class="db-cmd db-agent-select min-w-0 cursor-pointer bg-transparent text-xs" wire:change="setAgent($event.target.value)" title="{{ __('griglia::t.agent_of_task') }}" aria-label="{{ __('griglia::t.agent_of_task') }}" x-on:click.stop>
-                <option value="" @selected(! $todo->agent)>{{ __('griglia::t.agent_default', ['agent' => \Alle80\Griglia\Agent::label($todo->checklist?->agent ?: \Alle80\Griglia\Agent::defaultKey())]) }}</option>
-                @foreach (\Alle80\Griglia\Agent::all() as $k => $label)
-                    <option value="{{ $k }}" @selected($todo->agent === $k)>{{ $label }}</option>
-                @endforeach
-            </select>
+            @include('griglia::livewire.partials.agent-select', [
+                'todo' => $todo,
+                'change' => 'setAgent($event.target.value)',
+                'inheritLabel' => __('griglia::t.agent_default', ['agent' => \Alle80\Griglia\Agent::label($todo->checklist?->agent ?: \Alle80\Griglia\Agent::defaultKey())]),
+                'class' => 'db-cmd min-w-0 text-xs',
+            ])
         @endif
 
         @if ($otherLists->isNotEmpty())

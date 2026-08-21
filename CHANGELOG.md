@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.0] - 2026-08-21
+### Added
+- Agent selector on the task row of the list, not only in the modal header: the same dropdown doubles as the
+  agent badge, so the name of the agent that will take the task is always visible — also when the task simply
+  inherits the default agent of the list.
+
 ## [0.73.3] - 2026-08-21
 
 ### Fixed

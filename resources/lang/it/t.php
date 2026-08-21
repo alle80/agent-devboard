@@ -197,6 +197,7 @@ return [
     'agent_of_task' => 'Agente per questo task',
     'agent_default' => 'Predefinito (:agent)',
     'agent_set' => 'Agente della lista: :agent',
+    'agent_set_task' => '«:title» → :agent',
     'local_mode' => 'modalità locale',
     'settings_saves' => 'Ogni modifica salva subito.',
     'settings_footer' => 'Per aggiungere impostazioni: metti la richiesta nella lista «sviluppo».',

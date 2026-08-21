@@ -131,9 +131,6 @@
                             @if ($attention)
                                 <span class="sr-only">{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention)) }}</span>
                             @endif
-                            @if (\Alle80\Griglia\Agent::many() && $todo->agent)
-                                <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('griglia::t.agent_of_task') }}">{{ \Alle80\Griglia\Agent::label($todo->agent) }}</span>
-                            @endif
                             @if ($todo->depends_on_id)
                                 <span class="db-chain shrink-0 text-xs opacity-70" title="{{ __('griglia::t.plan.after', ['title' => $todo->dependsOn?->title ?? '#'.$todo->depends_on_id]) }}"><x-griglia::icon name="link" />@if ($todo->dependsOn?->completed)<x-griglia::icon name="check" size=".9em" />@endif</span>
                             @endif
@@ -149,6 +146,17 @@
                     @endif
                     @endif
                 </div>
+
+                    {{-- Multi-agente: chi lavora questo task, scelto dalla riga stessa. Il nome si vede SEMPRE,
+                         anche quando il task eredita l'agente della lista (opzione vuota = eredita). --}}
+                    @if (\Alle80\Griglia\Agent::many() && $editingId !== $todo->id)
+                        @include('griglia::livewire.partials.agent-select', [
+                            'todo' => $todo,
+                            'change' => 'setTodoAgent('.$todo->id.', $event.target.value)',
+                            'inheritLabel' => \Alle80\Griglia\Agent::label($todo->agent ?: ($listAgent ?: \Alle80\Griglia\Agent::defaultKey())),
+                            'class' => 'db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase '.($todo->agent ? 'opacity-75' : 'opacity-50'),
+                        ])
+                    @endif
 
                     @if ($editingId !== $todo->id)
                     @php($st = $todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting')))

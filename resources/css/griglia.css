@@ -462,6 +462,12 @@ select.setting-input { appearance: auto; }
 /* La tendina dell'agente ha etichette lunghe («Predefinito (Claude Code)»): tronca, non sfonda la testata */
 .db-agent-select { max-width: 12rem; text-overflow: ellipsis; }
 .db-agent-select:hover { transform: none; }
+/* Nella riga la tendina fa da targhetta: niente freccia di sistema, larghezza da chip, nome dell'agente sempre visibile
+   (anche quando il task eredita quello della lista). Le option tornano ai colori di sistema, altrimenti su temi scuri
+   il menu a tendina resta testo chiaro su fondo chiaro. */
+.db-agent-chip { appearance: none; -webkit-appearance: none; max-width: 7.5rem; text-overflow: ellipsis; letter-spacing: .04em; }
+.db-agent-chip:hover { opacity: 1; }
+.db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
 .db-cmd:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
 .db-cmd-danger:hover { color: #ef4444; }
 @media (prefers-reduced-motion: reduce) { .db-cmd { transition: opacity .15s ease; } .db-cmd:hover { transform: none; } }

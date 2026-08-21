@@ -122,6 +122,21 @@ class TodoList extends Component
         $this->dispatch('toast', message: __('griglia::t.agent_set', ['agent' => \Alle80\Griglia\Agent::label($agent ?: \Alle80\Griglia\Agent::defaultKey())]));
     }
 
+    /** Multi-agent: agent of a single task from the list row ('' = the list's default). */
+    public function setTodoAgent(int $todoId, string $agent): void
+    {
+        $agent = trim($agent);
+        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
+            return;
+        }
+        $todo = $this->scoped()->findOrFail($todoId);
+        $todo->update(['agent' => $agent ?: null]);
+        $this->dispatch('toast', message: __('griglia::t.agent_set_task', [
+            'title' => $todo->title,
+            'agent' => \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)),
+        ]));
+    }
+
     /* ---------- Plan mode: start / status ---------- */
 
     /** Plan status of the current list: null if not a plan, else [next id|null, done, total, running]. */

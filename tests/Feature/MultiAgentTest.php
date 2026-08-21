@@ -56,6 +56,30 @@ class MultiAgentTest extends TestCase
         $this->assertNull($dev->fresh()->agent);
     }
 
+    /** Task 422: the row itself assigns the agent, and its name shows even when the task inherits the list's. */
+    public function test_agent_select_on_the_list_row(): void
+    {
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
+        $user = $this->actingAsUser();
+        $dev = Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
+        session(['checklist_id' => $dev->id]);
+        $todo = Todo::create(['title' => 'Row assignment', 'order' => 1, 'checklist_id' => $dev->id, 'open_to_work' => true]);
+
+        // inherited: no agent on the task, but the row shows the effective one (the badge is always there)
+        Livewire::test(TodoList::class)->assertSee('Claude Code')->assertSeeHtml('setTodoAgent('.$todo->id.', $event.target.value)');
+
+        Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, 'codex')->assertDispatched('toast');
+        $this->assertSame('codex', $todo->fresh()->agent);
+
+        Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, 'nope');
+        $this->assertSame('codex', $todo->fresh()->agent, 'unknown agent ignored');
+
+        // empty value = back to the list's default
+        Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, '');
+        $this->assertNull($todo->fresh()->agent);
+        $this->assertSame('claude', Agent::effective($todo->fresh()));
+    }
+
     public function test_a_task_assigned_to_an_unknown_agent_is_not_invisible(): void
     {
         config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
