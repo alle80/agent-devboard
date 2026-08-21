@@ -13,9 +13,22 @@ abstract class TestCase extends Orchestra
 {
     use RefreshDatabase;
 
+    /** @var bool compiled Blade cache emptied once per process (see below) */
+    private static bool $viewsCleared = false;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        // The compiled Blade cache lives in the shared testbench storage: a file compiled from another branch
+        // (or by another agent working on its own checkout) is reused whenever the source is older than it,
+        // and the suite fails on code that does not exist any more. Start every run from an empty cache.
+        if (! self::$viewsCleared) {
+            self::$viewsCleared = true;
+            foreach (glob(rtrim((string) config('view.compiled'), '/').'/*.php') ?: [] as $compiled) {
+                @unlink($compiled);
+            }
+        }
         \Alle80\Griglia\Mode::reset(); // static cache must not leak between tests
         $this->withoutVite();
 

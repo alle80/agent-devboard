@@ -4,6 +4,7 @@ namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Lang;
 
 class AssetsTest extends TestCase
 {
@@ -46,5 +47,40 @@ class AssetsTest extends TestCase
         // The copy button on code blocks is drawn by JS: its labels come from the translations (task 367).
         $this->actingAsUser();
         $this->get('/')->assertOk()->assertSee('GRIGLIA_I18N', false)->assertSee('"copied"', false);
+    }
+
+    public function test_inline_runtime_objects_are_encoded_for_a_script_context(): void
+    {
+        $payload = '</script>"'."\u{2028}\u{2029}";
+        config([
+            'griglia.assets' => 'precompiled',
+            'griglia.echo' => ['key' => 'abc', 'host' => $payload],
+            'webpush.vapid.public_key' => $payload,
+        ]);
+        app()->setLocale('x-test');
+        Lang::addLines([
+            't.copy' => $payload,
+            't.mic_busy' => $payload,
+        ], 'x-test', 'griglia');
+        $this->actingAsUser();
+
+        $html = Blade::render('<x-griglia::assets />');
+
+        $this->assertStringNotContainsString($payload, $html);
+        $this->assertStringContainsString('\\u003C\\/script\\u003E\\u0022\\u2028\\u2029', $html);
+        $this->assertSame(4, preg_match_all(
+            '/window\.(GRIGLIA_(?:ECHO|I18N|SPEECH|PUSH)) = (\{.*?\});<\\/script>/',
+            $html,
+            $objects,
+        ));
+
+        $decoded = array_combine($objects[1], array_map(
+            static fn (string $json): array => json_decode($json, true, flags: JSON_THROW_ON_ERROR),
+            $objects[2],
+        ));
+        $this->assertSame($payload, $decoded['GRIGLIA_ECHO']['host']);
+        $this->assertSame($payload, $decoded['GRIGLIA_I18N']['copy']);
+        $this->assertSame($payload, $decoded['GRIGLIA_SPEECH']['busy']);
+        $this->assertSame($payload, $decoded['GRIGLIA_PUSH']['key']);
     }
 }

@@ -56,6 +56,7 @@ php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--co
 | `--tokens-in` | Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--tokens-out` | Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--agent` | Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent) | — |
+| `--force` | Act on a task that belongs to another agent (--take/--done/--ask refuse it otherwise) | flag |
 
 ## `griglia:context`
 
@@ -97,11 +98,20 @@ php artisan griglia:docs-build [--out [OUT]] [--serve] [--docker] [--strict] [--
 
 | Argument / option | What it does | Default |
 |---|---|---|
+| `command` | The command to execute | required |
 | `--out` | Output directory (default: <package>/site) | — |
 | `--serve` | Run `mkdocs serve` (live preview) instead of building | flag |
 | `--docker` | Use the squidfunk/mkdocs-material Docker image instead of a local mkdocs | flag |
 | `--strict` | Pass --strict to mkdocs (warnings fail the build) | flag |
 | `--no-generate` | Do not refresh the generated reference pages before building | flag |
+| `--help` | Display help for the given command. When no command is given display help for the <info>list</info> command | flag |
+| `--silent` | Do not output any message | flag |
+| `--quiet` | Only errors are displayed. All other output is suppressed | flag |
+| `--verbose` | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug | flag |
+| `--version` | Display this application version | flag |
+| `--ansi` | Force (or disable --no-ansi) ANSI output | flag |
+| `--no-interaction` | Do not ask any interactive question | flag |
+| `--env` | The environment the command should run under | — |
 
 ## `griglia:docs-generate`
 

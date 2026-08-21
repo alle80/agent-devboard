@@ -27,6 +27,11 @@ keep the progress % and phase updated, report tokens on close when the setting a
 [colours the row](../board/usage.md#the-colour-of-the-row) the user sees (`ok` by default, `alert`,
 `blocked`).
 
+A task born from a **resume** carries its history: `check` prints the note, the answer and the sub-tasks of
+every previous step, newest first (`resumes «…»`, then `2 steps back «…»`, `3 steps back «…»`), because a
+resume can itself be resumed. With `--json` the same history is in the `resume_chain` field of each task,
+ordered from the closest step to the oldest one.
+
 Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
 
 **A heavy session costs on every step**, because the context is re-read at every turn. The setting «suggest
@@ -40,6 +45,11 @@ Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list 
 (or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id. The [skills](skills.md)
 offered on a task are filtered the same way: only the ones its agent has installed.
 
+`--take`, `--done` and `--ask` refuse a task that belongs to another agent (`--force` overrides), `check`
+prints a `🔒 busy elsewhere` line with what the others have in progress, and the 🆕 baseline is kept per
+agent key. What is shared outside the board — checkouts, builds, migrations, releases — is covered in
+[Two agents at once](concurrency.md).
+
 Use the same key with `griglia:watch --agent=<key>`. With `--once`, the command also prints tasks that
 were already waiting when it started, which makes it suitable for cron jobs and supervised workers;
 `--no-initial` keeps baseline-only behaviour.
@@ -48,4 +58,4 @@ were already waiting when it started, which makes it suitable for cron jobs and 
 
 - [Quickstart](../getting-started/quickstart.md) — the same flow, step by step.
 - [Artisan commands](../reference/commands.md) — every command and option, generated from the code.
-- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md) · [Host scripts](scripts.md) · [Persistent workers](workers.md)
+- [Skills](skills.md) · [Agent context](context.md) · [Statistics](stats.md) · [Host scripts](scripts.md) · [Persistent workers](workers.md) · [Two agents at once](concurrency.md)

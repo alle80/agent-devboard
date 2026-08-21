@@ -41,6 +41,8 @@ broadcaster is configured). It ships them precompiled, so **by default there is 
 
 - The Echo client is configured at runtime from `config('griglia.echo')` (`VITE_REVERB_*` / `REVERB_*`).
   An empty key opens no WebSocket at all.
+- Runtime Echo, translation, speech and Web Push configuration is emitted as script-safe JSON. Values that
+  contain HTML end tags, quotes or Unicode line separators cannot terminate their inline script element.
 - Theme fonts come from `config('griglia.fonts_url')` (bunny.net by default; set it to `''` to self-host).
 - To rebuild the precompiled files after editing the package sources:
   `cd vendor/alle80/griglia && npm install && npm run build`.

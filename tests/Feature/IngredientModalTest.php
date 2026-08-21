@@ -87,4 +87,21 @@ class IngredientModalTest extends TestCase
         $m->assertSee('What was asked before', false);
         $m->assertDontSee('modal-parent group" open', false);
     }
+
+    public function test_the_modal_shows_the_whole_resume_chain(): void
+    {
+        // A resume of a resume keeps every step of the history one tap away (task 416).
+        $list = $this->todo->checklist_id;
+        $first = Todo::create(['title' => 'Dark mode', 'order' => 7, 'checklist_id' => $list, 'completed' => true, 'notes' => 'The very first request', 'claude_comment' => 'The very first answer']);
+        $second = Todo::create(['title' => 'Dark mode', 'order' => 8, 'checklist_id' => $list, 'completed' => true, 'parent_id' => $first->id, 'notes' => 'The second request']);
+        $third = Todo::create(['title' => 'Dark mode', 'order' => 9, 'checklist_id' => $list, 'parent_id' => $second->id]);
+
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $third->id);
+
+        $m->assertSee('The second request', false);
+        $m->assertSee('The very first request', false);
+        $m->assertSee('The very first answer', false);
+        $m->assertSee('+1 earlier', false);
+        $m->assertSee('Before that: «Dark mode»', false);
+    }
 }

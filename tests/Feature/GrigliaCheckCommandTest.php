@@ -111,4 +111,57 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertTrue($todo->completed, 'still closed');
         $this->assertFalse($todo->working, 'and the agent did not take it');
     }
+
+    public function test_resume_chain_prints_the_whole_history(): void
+    {
+        // A resume can be resumed again: the agent must get every previous step, not just the last one (task 416).
+        $list = $this->todo->checklist_id;
+        $first = Todo::create(['title' => 'Dark mode', 'order' => 2, 'checklist_id' => $list, 'completed' => true, 'completed_at' => now(), 'notes' => 'first request', 'claude_comment' => 'first answer']);
+        $first->ingredients()->create(['name' => 'first subtask', 'order' => 1, 'checked' => true]);
+        $second = Todo::create(['title' => 'Dark mode', 'order' => 3, 'checklist_id' => $list, 'completed' => true, 'completed_at' => now(), 'parent_id' => $first->id, 'notes' => 'second request', 'claude_comment' => 'second answer']);
+        $third = Todo::create(['title' => 'Dark mode', 'order' => 4, 'checklist_id' => $list, 'parent_id' => $second->id, 'open_to_work' => true, 'notes' => 'still not right']);
+
+        $this->artisan('griglia:check')
+            ->expectsOutputToContain('↩ resume chain: 2 previous tasks')
+            ->expectsOutputToContain(sprintf('↩ resumes «Dark mode» (id:%d)', $second->id))
+            ->expectsOutputToContain('previous note: second request')
+            ->expectsOutputToContain('🤖 previous: second answer')
+            ->expectsOutputToContain(sprintf('↩ 2 steps back «Dark mode» (id:%d)', $first->id))
+            ->expectsOutputToContain('previous note: first request')
+            ->expectsOutputToContain('🤖 previous: first answer')
+            ->expectsOutputToContain('- [x] first subtask')
+            ->assertSuccessful();
+
+        // JSON output carries the same history for scripts
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--json' => true]);
+        $rows = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true);
+        $row = collect($rows)->firstWhere('id', $third->id);
+        $this->assertSame([$second->id, $first->id], array_column($row['resume_chain'], 'id'));
+        $this->assertSame('first answer', $row['resume_chain'][1]['claude_comment']);
+        $this->assertSame([['name' => 'first subtask', 'checked' => true]], $row['resume_chain'][1]['ingredients']);
+    }
+
+    public function test_a_single_resume_step_keeps_the_short_wording(): void
+    {
+        $list = $this->todo->checklist_id;
+        $old = Todo::create(['title' => 'Login', 'order' => 5, 'checklist_id' => $list, 'completed' => true, 'completed_at' => now(), 'notes' => 'old note']);
+        Todo::create(['title' => 'Login', 'order' => 6, 'checklist_id' => $list, 'parent_id' => $old->id, 'open_to_work' => true]);
+
+        $this->artisan('griglia:check')
+            ->expectsOutputToContain(sprintf('↩ resumes «Login» (id:%d): the previous context still applies', $old->id))
+            ->doesntExpectOutputToContain('resume chain:')
+            ->assertSuccessful();
+    }
+
+    public function test_a_broken_chain_does_not_loop_for_ever(): void
+    {
+        $list = $this->todo->checklist_id;
+        $a = Todo::create(['title' => 'A', 'order' => 7, 'checklist_id' => $list, 'open_to_work' => true]);
+        $b = Todo::create(['title' => 'B', 'order' => 8, 'checklist_id' => $list, 'parent_id' => $a->id]);
+        // Corrupt data (a cycle) must not hang the command
+        $a->update(['parent_id' => $b->id]);
+
+        $this->assertSame([$b->id], $a->fresh()->resumeChain()->pluck('id')->all(), 'the walk stops as soon as it meets a task it already saw');
+        $this->artisan('griglia:check')->assertSuccessful();
+    }
 }

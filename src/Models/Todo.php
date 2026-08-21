@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Todo extends Model
 {
@@ -89,6 +90,32 @@ class Todo extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Todo::class, 'parent_id');
+    }
+
+    /**
+     * Catena dei «riprendi»: tutti i todo da cui questo discende, dal più recente al più vecchio
+     * (parent, nonno, …). Un resume può nascere da un resume: l'agente deve avere tutto lo storico,
+     * non solo l'ultimo passo (task 416). Protetta da cicli e da catene assurdamente lunghe.
+     *
+     * @return Collection<int, Todo>
+     */
+    public function resumeChain(int $max = 20): Collection
+    {
+        $chain = new Collection;
+        $seen = [$this->id => true];
+        $node = $this;
+
+        while ($node->parent_id && $chain->count() < $max && ! isset($seen[$node->parent_id])) {
+            $seen[$node->parent_id] = true;
+            $next = $node->relationLoaded('parent') ? $node->getRelation('parent') : $node->parent()->with('ingredients')->first();
+            if (! $next) {
+                break;
+            }
+            $chain->push($next);
+            $node = $next;
+        }
+
+        return $chain;
     }
 
     /** Todo aperti a partire da questo con «Riprendi». */

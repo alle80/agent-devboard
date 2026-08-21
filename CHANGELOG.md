@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Security
+- Encode all four inline JavaScript runtime configuration objects with Blade's script-safe JSON encoder,
+  preventing values containing HTML end tags, quotes or Unicode line separators from terminating the script.
 
 ## [0.72.0] - 2026-08-21
 
@@ -79,6 +82,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Show an automatic, very short result summary below completed task titles; agents can refine it with `griglia:check --done --summary`.
 
+
+### Added
+- **The resume chain is kept whole.** A task born from «resume» can itself be resumed: until now only the
+  last step travelled with it, so the agent lost the request that started the thread. `Todo::resumeChain()`
+  walks the whole ancestry (cycle-safe, 20 steps at most) and it is used everywhere: `griglia:check` prints
+  every previous step newest first (`resumes «…»`, `2 steps back «…»`, …) with its note, agent answer and
+  sub-tasks, `griglia:check --json` carries the same history in the new `resume_chain` field, and the task
+  modal lists every step inside the (still collapsed) context box, with a `+N earlier` counter.
+
+### Fixed
+- Deleting a task in the middle of a resume chain no longer breaks it: the tasks resumed from it are
+  re-linked to the step before, the way a plan hands its chain over.
 
 ## [0.67.0] - 2026-08-20
 

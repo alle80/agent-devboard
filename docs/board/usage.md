@@ -59,6 +59,11 @@ right after the old one, with the same title and the old one attached as context
 and images stay one click away (the box is closed until you open it: what matters now is what you are
 asking today), and `griglia:check` shows them to the agent.
 
+Resuming a resumed task keeps the **whole chain**: the box lists every previous step, from the most recent
+one down to the request that started it all (`+2 earlier` next to the title), and the agent receives the same
+history — so nothing that was asked or answered along the way is lost. If a step of the chain is deleted, the
+task after it is re-linked to the one before, exactly like the chain of a plan.
+
 Nothing else is a one-way door: a task that leaves the board (archived or deleted) hands its chain over to
 the task before it, so a plan never waits for something that will never arrive, and a task with open
 questions can be taken back without answering — tap its badge in the modal: the questions stay recorded and

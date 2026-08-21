@@ -137,5 +137,6 @@ systemctl --user disable --now griglia-agent-worker@codex.service
 ## See also
 
 - [The agent side](index.md) — commands, states and multi-agent scoping.
+- [Two agents at once](concurrency.md) — what two workers share, and how they avoid each other.
 - [Host scripts](scripts.md) — all helpers published by `griglia-scripts`.
 - [Artisan commands](../reference/commands.md) — generated command reference.

@@ -10,14 +10,15 @@
     <script>window.GRIGLIA_ECHO = @json($echo);</script>
 @endif
 {{-- Etichette usate dal JS (pulsante «copia» dei blocchi di codice) --}}
-<script>window.GRIGLIA_I18N = {!! json_encode(['copy' => __('griglia::t.copy'), 'copied' => __('griglia::t.copied'), 'copy_failed' => __('griglia::t.copy_failed'), 'copy_block' => __('griglia::t.copy_block')]) !!};</script>
+@php($i18n = ['copy' => __('griglia::t.copy'), 'copied' => __('griglia::t.copied'), 'copy_failed' => __('griglia::t.copy_failed'), 'copy_block' => __('griglia::t.copy_block')])
+<script>window.GRIGLIA_I18N = @json($i18n);</script>
 @if (\Illuminate\Support\Facades\Route::has('griglia.transcribe'))
     @php($speech = ['mode' => \Alle80\Griglia\Support\Speech::mode(), 'url' => route('griglia.transcribe'), 'csrf' => csrf_token(), 'lang' => \Alle80\Griglia\Support\Speech::language(), 'busy' => __('griglia::t.mic_busy'), 'error' => __('griglia::t.mic_error')])
-    <script>window.GRIGLIA_SPEECH = {!! json_encode($speech) !!};</script>
+    <script>window.GRIGLIA_SPEECH = @json($speech);</script>
 @endif
 @if (auth()->check() && \Illuminate\Support\Facades\Route::has('griglia.push.store'))
     @php($push = ['key' => (string) config('webpush.vapid.public_key', ''), 'subscribeUrl' => route('griglia.push.store'), 'testUrl' => route('griglia.notifications.test'), 'sw' => route('griglia.sw', absolute: false), 'csrf' => csrf_token()])
-    <script>window.GRIGLIA_PUSH = {!! json_encode($push) !!};</script>
+    <script>window.GRIGLIA_PUSH = @json($push);</script>
 @endif
 @if ($mode === 'precompiled')
     @php($base = rtrim((string) config('griglia.assets_url', '/vendor/griglia/build'), '/'))

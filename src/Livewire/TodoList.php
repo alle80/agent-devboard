@@ -393,6 +393,8 @@ class TodoList extends Component
     public function delete(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
+        // Resume chain: chi era «ripreso» da questo passa al nonno, così lo storico non si spezza (task 416)
+        Todo::where('parent_id', $todo->id)->update(['parent_id' => $todo->parent_id]);
         $todo->delete();
 
         // Richiude il buco lasciato dall'elemento eliminato (solo se era attivo: gli archiviati non hanno posto in numerazione)

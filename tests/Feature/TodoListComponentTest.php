@@ -142,4 +142,19 @@ class TodoListComponentTest extends TestCase
         $this->assertNotNull($new);
         $this->assertFalse($new->completed);
     }
+
+    public function test_deleting_a_task_hands_its_resume_chain_to_the_task_before(): void
+    {
+        // The history must survive a task leaving the board: the child is re-linked to the grandparent (task 416).
+        $first = $this->add('Dark mode');
+        Livewire::test(TodoList::class)->call('toggle', $first->id)->call('resume', $first->id);
+        $second = Todo::where('parent_id', $first->id)->firstOrFail();
+        Livewire::test(TodoList::class)->call('toggle', $second->id)->call('resume', $second->id);
+        $third = Todo::where('parent_id', $second->id)->firstOrFail();
+
+        Livewire::test(TodoList::class)->call('delete', $second->id);
+
+        $this->assertSame($first->id, $third->fresh()->parent_id, 'the chain skips the deleted step instead of breaking');
+        $this->assertSame([$first->id], $third->fresh()->resumeChain()->pluck('id')->all());
+    }
 }
