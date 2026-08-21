@@ -26,6 +26,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--container", default=os.getenv("GRIGLIA_WORKER_CONTAINER", os.getenv("GRIGLIA_CONTAINER", "laravel-dev-app")))
     parser.add_argument("--php", default=os.getenv("GRIGLIA_WORKER_PHP", os.getenv("GRIGLIA_PHP", "php")), help="PHP executable for local transport")
+    parser.add_argument("--model", default=os.getenv("GRIGLIA_WORKER_MODEL"), help="Model for the agent CLI (alias or full name, e.g. fable or claude-fable-5)")
+    parser.add_argument("--effort", default=os.getenv("GRIGLIA_WORKER_EFFORT"), help="Reasoning effort for the agent CLI (low, medium, high, xhigh, max)")
     parser.add_argument("--interval", type=int, default=int(os.getenv("GRIGLIA_WORKER_INTERVAL", "10")))
     parser.add_argument("--retry-delay", type=int, default=int(os.getenv("GRIGLIA_WORKER_RETRY_DELAY", "30")))
     parser.add_argument("--repo", type=Path, default=Path(os.getenv("GRIGLIA_WORKER_REPO", Path.cwd())))
@@ -69,16 +71,28 @@ def prompt(agent: str, task: dict) -> str:
 
 
 def driver_command(args: argparse.Namespace, message: str) -> list[str]:
+    """Build the argv of one agent session, adding model and effort when configured."""
     driver = args.driver or args.agent
     if driver == "codex":
-        return ["codex", "exec", "--approve-for-me", "-C", str(args.repo), message]
+        command = ["codex", "exec", "--approve-for-me", "-C", str(args.repo)]
+        if args.model:
+            command += ["--model", args.model]
+        if args.effort:
+            command += ["-c", f'model_reasoning_effort="{args.effort}"']
+        return [*command, message]
     if driver == "claude":
-        return ["claude", "-p", "--permission-mode", "bypassPermissions", message]
+        command = ["claude", "-p", "--permission-mode", "bypassPermissions"]
+        if args.model:
+            command += ["--model", args.model]
+        if args.effort:
+            command += ["--effort", args.effort]
+        return [*command, message]
     if driver == "custom":
         raw = os.getenv("GRIGLIA_WORKER_COMMAND_JSON")
         if not raw:
             raise RuntimeError("GRIGLIA_WORKER_COMMAND_JSON is required for the custom driver")
-        return [str(part).format(prompt=message, repo=args.repo, agent=args.agent) for part in json.loads(raw)]
+        placeholders = {"prompt": message, "repo": args.repo, "agent": args.agent, "model": args.model or "", "effort": args.effort or ""}
+        return [str(part).format(**placeholders) for part in json.loads(raw)]
     raise RuntimeError(f"No driver for agent {args.agent!r}; set GRIGLIA_WORKER_DRIVER=custom")
 
 

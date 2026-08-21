@@ -44,6 +44,13 @@ class ScriptsTest extends TestCase
         $this->assertStringContainsString('[args.php, *artisan]', $worker);
         $this->assertStringContainsString('hashlib.sha256(str(repo).encode()).hexdigest()[:12]', $worker);
         $this->assertStringContainsString('lock_path(args.repo, args.agent)', $worker);
+        // The model and the reasoning effort of the dispatched session are configurable (task 475)
+        foreach (['GRIGLIA_WORKER_MODEL', 'GRIGLIA_WORKER_EFFORT'] as $variable) {
+            $this->assertStringContainsString('os.getenv("'.$variable.'")', $worker, "the worker must read $variable");
+        }
+        $this->assertStringContainsString('command += ["--model", args.model]', $worker);
+        $this->assertStringContainsString('command += ["--effort", args.effort]', $worker);
+        $this->assertStringContainsString('model_reasoning_effort=', $worker);
         // Per-instance variables win, but the shared ones configure the whole machine at once
         foreach (['GRIGLIA_TRANSPORT', 'GRIGLIA_PHP', 'GRIGLIA_CONTAINER'] as $shared) {
             $this->assertStringContainsString('os.getenv("'.$shared.'"', $worker, "the worker must fall back to $shared");

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.81.0] - 2026-08-21
+
+### Added
+- **The worker chooses model and reasoning effort.** `griglia-agent-worker.py` accepts `--model`/`--effort`
+  (env `GRIGLIA_WORKER_MODEL`, `GRIGLIA_WORKER_EFFORT`): the `claude` driver appends `--model`/`--effort`, the
+  `codex` driver `--model` and `-c model_reasoning_effort="…"`, and the custom driver gets the new `{model}` and
+  `{effort}` placeholders. Without them nothing changes — each CLI keeps its own default. Documented in
+  «Persistent workers», EN + IT (task 475).
+
+### Fixed
+- **Worker documentation: the Claude driver's real permission mode.** «Persistent workers» announced
+  `claude -p --permission-mode acceptEdits`, while the script has used `bypassPermissions` for a while (task 475).
+
 ## [0.80.3] - 2026-08-21
 
 ### Fixed

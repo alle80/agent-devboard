@@ -67,7 +67,7 @@ del progetto possono sovrascriverla in
 particolare ogni applicazione Docker deve indicare un `GRIGLIA_WORKER_CONTAINER` diverso; per il trasporto
 locale imposta invece `GRIGLIA_WORKER_REPO` e, se serve, `GRIGLIA_WORKER_PHP`.
 
-`codex` invoca `codex exec --approve-for-me`; `claude` invoca `claude -p --permission-mode acceptEdits`.
+`codex` invoca `codex exec --approve-for-me`; `claude` invoca `claude -p --permission-mode bypassPermissions`.
 L'unit aggiunge `%h/.local/bin` al `PATH`, il posto solito dei launcher installati dall'utente. Se
 `command -v codex` o `command -v claude` indicano un'altra cartella, metti una riga `PATH=...` completa in
 `~/.config/griglia-worker/<chiave-agente>.env`.
@@ -123,12 +123,34 @@ flag, comodo per un lancio una tantum:
 | `--repo` | `GRIGLIA_WORKER_REPO` | cartella corrente |
 | `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | la chiave dell'agente |
 | `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
+| `--model` | `GRIGLIA_WORKER_MODEL` | il default della CLI dell'agente |
+| `--effort` | `GRIGLIA_WORKER_EFFORT` | il default della CLI dell'agente |
 
 Il driver di default è la chiave dell'agente, quindi le chiavi che si chiamano `codex` e `claude` non hanno
 bisogno di alcun file env. Se la chiave è diversa, indica il driver in modo esplicito.
 
+### Modello e livello di ragionamento
+
+Senza altra configurazione ogni sessione usa il modello con cui è configurata la CLI dell'agente.
+`GRIGLIA_WORKER_MODEL` e `GRIGLIA_WORKER_EFFORT` li scelgono per singolo worker, così l'agente della board può
+girare su un modello diverso da quello delle sessioni interattive della stessa CLI:
+
+```dotenv
+GRIGLIA_WORKER_MODEL=fable
+GRIGLIA_WORKER_EFFORT=max
+```
+
+Il driver `claude` li passa come `--model` e `--effort` (`low`, `medium`, `high`, `xhigh`, `max`); il driver
+`codex` come `--model` e `-c model_reasoning_effort="<effort>"`. Il driver custom li riceve come segnaposto
+`{model}` e `{effort}` (stringa vuota se non impostati), quindi è il template argv a decidere dove finiscono.
+Il worker non valida i valori: un modello o un livello sconosciuto fallisce dentro la CLI dell'agente.
+
+Le variabili si leggono all'avvio del worker, quindi una modifica ha effetto al prossimo
+`systemctl --user restart griglia-agent-worker@<chiave-agente>.service` — che interrompe anche la sessione in
+corso in quel momento.
+
 Per Gemini CLI, Aider o un altro agente, usa il driver `custom`. L'array JSON viene eseguito direttamente (mai
-attraverso una shell); `{prompt}`, `{repo}` e `{agent}` vengono sostituiti dentro i singoli argomenti:
+attraverso una shell); `{prompt}`, `{repo}`, `{agent}`, `{model}` e `{effort}` vengono sostituiti dentro i singoli argomenti:
 
 ```dotenv
 GRIGLIA_WORKER_DRIVER=custom

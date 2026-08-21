@@ -64,7 +64,7 @@ pattern). In particular, each Docker application needs a distinct `GRIGLIA_WORKE
 transport set `GRIGLIA_WORKER_REPO` and, when needed, `GRIGLIA_WORKER_PHP` instead.
 
 `codex` invokes `codex exec --approve-for-me`; `claude` invokes
-`claude -p --permission-mode acceptEdits`. The unit adds `%h/.local/bin` to `PATH`, the usual location for
+`claude -p --permission-mode bypassPermissions`. The unit adds `%h/.local/bin` to `PATH`, the usual location for
 user-installed launchers. If `command -v codex` or `command -v claude` reports another directory, put a
 complete `PATH=...` line in `~/.config/griglia-worker/<agent-key>.env`.
 
@@ -118,12 +118,34 @@ so a single choice, exported once for the machine, covers the worker and the hel
 | `--repo` | `GRIGLIA_WORKER_REPO` | current directory |
 | `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | the agent key |
 | `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
+| `--model` | `GRIGLIA_WORKER_MODEL` | the agent CLI's own default |
+| `--effort` | `GRIGLIA_WORKER_EFFORT` | the agent CLI's own default |
 
 The driver defaults to the agent key, so keys named `codex` and `claude` need no env file. If the key is
 different, set the matching driver explicitly.
 
+### Model and reasoning effort
+
+Without further configuration each session uses the model the agent CLI is configured with. `GRIGLIA_WORKER_MODEL`
+and `GRIGLIA_WORKER_EFFORT` choose them per worker instead, so the board agent can run on a different model than
+the interactive sessions of the same CLI:
+
+```dotenv
+GRIGLIA_WORKER_MODEL=fable
+GRIGLIA_WORKER_EFFORT=max
+```
+
+The `claude` driver passes them as `--model` and `--effort` (`low`, `medium`, `high`, `xhigh`, `max`); the
+`codex` driver as `--model` and `-c model_reasoning_effort="<effort>"`. The custom driver receives them as the
+`{model}` and `{effort}` placeholders (empty strings when unset), so an argv template decides where they go.
+Values are not validated by the worker: an unknown model or effort level fails inside the agent CLI.
+
+The variables are read when the worker starts, so a change takes effect at the next
+`systemctl --user restart griglia-agent-worker@<agent-key>.service` — which also terminates a session that is
+running at that moment.
+
 For Gemini CLI, Aider or another agent, use the custom driver. The JSON array is executed directly (never
-through a shell); `{prompt}`, `{repo}` and `{agent}` are replaced in individual arguments:
+through a shell); `{prompt}`, `{repo}`, `{agent}`, `{model}` and `{effort}` are replaced in individual arguments:
 
 ```dotenv
 GRIGLIA_WORKER_DRIVER=custom
