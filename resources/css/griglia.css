@@ -519,8 +519,17 @@ select.setting-input { appearance: auto; }
    questions. Opening the task clears the highlight and the row goes back to its usual look. */
 .todo-row.db-attention, .todo-row.db-unseen {
     --db-att: #22c55e; --db-att-fg: #04180c;
-    outline: 2px solid var(--db-att); outline-offset: 1px;
+    /* The coloured border IS the card's own border (task 406): a detached ring around the row reads as
+       a focus artefact, the frame of the card reads as «this task». Never thinner than 2px so it shows
+       up on themes with a hairline border, and never thinner than the theme's own border either. */
+    border-color: var(--db-att);
+    border-style: solid;
+    border-width: max(var(--tl-bw, 2px), 2px);
     opacity: 1 !important;                 /* override the completed dimming so it stands out */
+    /* .tl-done applies --tl-done-filter, which is «grayscale(1)» on the slate theme: it desaturated the
+       border together with the rest of the row, so the green/yellow/red arrived at the eye grey — that
+       is why the highlight «did not seem to work» (tasks 402 and 406). */
+    filter: none !important;
     animation: db-attention-pulse 2.2s ease-in-out infinite;
 }
 .todo-row.db-att-ok       { --db-att: #22c55e; --db-att-fg: #04180c; }

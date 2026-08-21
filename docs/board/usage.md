@@ -25,19 +25,23 @@ Tap the dot to move between *waiting* and *open to work* (or to stop the agent).
 
 ### The colour of the row
 
-A row you have not read yet is outlined, and the colour says how much it wants from you:
+A row you have not read yet is drawn with a coloured **border around its card**, and the colour says how
+much it wants from you:
 
-| Outline | Meaning | Where it comes from |
-|---------|---------|---------------------|
+| Border | Meaning | Where it comes from |
+|--------|---------|---------------------|
 | green | done, nothing to check | `--done` (no `--outcome`, or `--outcome=ok`) |
 | yellow | done, but something needs a look | `--done --outcome=alert` |
 | red | something is in the way | `--done --outcome=blocked` |
 | violet | the agent is waiting for your answers | `--ask` (open questions) |
 
+The four colours are fixed rather than derived from the theme accent, and a highlighted row keeps them at
+full strength: it is exempt from both the fading and the greyscale a theme applies to completed rows,
+which would otherwise wash the border out.
+
 Yellow and red also put a badge next to the title and a chip in the modal, above the agent's answer, which
-The green outline is fixed rather than derived from the current theme accent, so it remains distinct in every style.
-says why. Open the task and the outline goes away: the row goes back to its usual grey. A task you close
-yourself has no outline — there is no result to read.
+says why. Open the task and the border goes back to the usual one of the theme. A task you close yourself
+has no coloured border — there is no result to read.
 
 ### Carrying on after a task is done
 

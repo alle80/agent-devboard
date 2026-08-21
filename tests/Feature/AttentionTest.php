@@ -129,5 +129,23 @@ class AttentionTest extends TestCase
         $this->assertMatchesRegularExpression('/\.todo-row\.db-att-ok\s*\{[^}]*--db-att:\s*#22c55e/s', $css);
     }
 
+    /**
+     * The highlight paints the card's own border, and it survives the look a theme gives to completed
+     * rows: `.tl-done` fades them and may greyscale them (`--tl-done-filter`), which used to turn the
+     * green/yellow/red border grey — the row looked exactly like every other done row (task 406).
+     */
+    public function test_the_highlight_colours_the_card_border_and_escapes_the_done_greying(): void
+    {
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+
+        preg_match('/\.todo-row\.db-attention[^{]*\{(.*?)\}/s', $css, $m);
+        $rule = $m[1] ?? '';
+
+        $this->assertStringContainsString('border-color: var(--db-att)', $rule);
+        $this->assertMatchesRegularExpression('/border-width:\s*max\(/', $rule);
+        $this->assertMatchesRegularExpression('/filter:\s*none\s*!important/', $rule);
+        $this->assertMatchesRegularExpression('/opacity:\s*1\s*!important/', $rule);
+    }
+
 
 }

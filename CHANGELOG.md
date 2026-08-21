@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.70.1] - 2026-08-21
+
+### Fixed
+
+- The highlight of a task that asks for attention now colours **the border of the row's own card** instead of
+  drawing a separate ring outside it, and it is no longer washed out by the look a theme gives to completed
+  rows: `.tl-done` also applies `--tl-done-filter`, which is `grayscale(1)` on the slate theme, so the green,
+  yellow, red and violet all reached the eye grey — the highlight looked like it was not working at all.
+
 ## [0.70.0] - 2026-08-20
 
 ### Fixed
@@ -1233,7 +1242,11 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.67.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.70.1...HEAD
+[0.70.1]: https://github.com/alle80/griglia/compare/v0.70.0...v0.70.1
+[0.70.0]: https://github.com/alle80/griglia/compare/v0.69.0...v0.70.0
+[0.69.0]: https://github.com/alle80/griglia/compare/v0.68.0...v0.69.0
+[0.68.0]: https://github.com/alle80/griglia/compare/v0.67.0...v0.68.0
 [0.67.0]: https://github.com/alle80/griglia/compare/v0.66.0...v0.67.0
 [0.66.0]: https://github.com/alle80/griglia/compare/v0.65.0...v0.66.0
 [0.65.0]: https://github.com/alle80/griglia/compare/v0.64.0...v0.65.0
