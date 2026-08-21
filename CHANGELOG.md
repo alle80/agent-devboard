@@ -6,6 +6,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.73.1] - 2026-08-21
+
+### Fixed
+- **v0.73.0 was published from an incomplete tree — use this one instead.** While the release was running,
+  another agent checked out a different branch in the shared working copy, so the files copied to the mirror
+  were the ones from before the fix: `griglia:check` died with `Undefined variable $me` (the multi-agent
+  guard kept its call sites but lost its definitions), the coloured attention border went back to its
+  pre-0.72.0 shape and the outcome chip removed in 0.72.0 came back. This release ships the source the
+  test suite is green on.
+
+## [0.73.0] - 2026-08-21
+### Added
+- **Two agents on the same board stay out of each other's way.** With several agents configured, every task
+  already belonged to one of them, but `--take`, `--done` and `--ask` acted on any id: a stale id in a prompt,
+  or a worker started with the wrong key, could steal, close or pause work another agent was doing. The three
+  actions now refuse a task owned by somebody else (`--force` is the deliberate way in), `griglia:check`
+  prints a `🔒 busy elsewhere` line listing what the other agents have in progress, and the "new since the
+  last check" 🆕 baseline is stored per agent key instead of being consumed by whoever checks first. The new
+  documentation page *Two agents at once* maps what is left outside the board — checkouts, branches, asset
+  builds, migrations, releases, container-wide commands — with the rule for each.
+- **The resume chain is kept whole.** A task born from «resume» can itself be resumed: until now only the
+  last step travelled with it, so the agent lost the request that started the thread. `Todo::resumeChain()`
+  walks the whole ancestry (cycle-safe, 20 steps at most) and it is used everywhere: `griglia:check` prints
+  every previous step newest first (`resumes «…»`, `2 steps back «…»`, …) with its note, agent answer and
+  sub-tasks, `griglia:check --json` carries the same history in the new `resume_chain` field, and the task
+  modal lists every step inside the (still collapsed) context box, with a `+N earlier` counter.
+
+### Fixed
+- Deleting a task in the middle of a resume chain no longer breaks it: the tasks resumed from it are
+  re-linked to the step before, the way a plan hands its chain over.
+- **The package test suite no longer fails on a view compiled from another branch.** The compiled Blade cache
+  lives in the shared testbench storage: a template compiled from another checkout was reused whenever the
+  source file was older than it, and the suite died on code that did not exist any more. Every run now starts
+  from an empty compiled-views directory.
+
 ### Security
 - Encode all four inline JavaScript runtime configuration objects with Blade's script-safe JSON encoder,
   preventing values containing HTML end tags, quotes or Unicode line separators from terminating the script.
@@ -82,18 +118,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Show an automatic, very short result summary below completed task titles; agents can refine it with `griglia:check --done --summary`.
 
-
-### Added
-- **The resume chain is kept whole.** A task born from «resume» can itself be resumed: until now only the
-  last step travelled with it, so the agent lost the request that started the thread. `Todo::resumeChain()`
-  walks the whole ancestry (cycle-safe, 20 steps at most) and it is used everywhere: `griglia:check` prints
-  every previous step newest first (`resumes «…»`, `2 steps back «…»`, …) with its note, agent answer and
-  sub-tasks, `griglia:check --json` carries the same history in the new `resume_chain` field, and the task
-  modal lists every step inside the (still collapsed) context box, with a `+N earlier` counter.
-
-### Fixed
-- Deleting a task in the middle of a resume chain no longer breaks it: the tasks resumed from it are
-  re-linked to the step before, the way a plan hands its chain over.
 
 ## [0.67.0] - 2026-08-20
 
@@ -1295,7 +1319,10 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.71.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.73.1...HEAD
+[0.73.1]: https://github.com/alle80/griglia/compare/v0.73.0...v0.73.1
+[0.73.0]: https://github.com/alle80/griglia/compare/v0.72.0...v0.73.0
+[0.72.0]: https://github.com/alle80/griglia/compare/v0.71.0...v0.72.0
 [0.71.0]: https://github.com/alle80/griglia/compare/v0.70.2...v0.71.0
 [0.70.2]: https://github.com/alle80/griglia/compare/v0.70.1...v0.70.2
 [0.70.1]: https://github.com/alle80/griglia/compare/v0.70.0...v0.70.1

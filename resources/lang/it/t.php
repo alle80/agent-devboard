@@ -72,8 +72,6 @@ return [
     'result_blocked_hint' => 'Completato, ma c’è qualcosa che blocca — apri per vedere cosa.',
     'result_question' => 'domande',
     'result_question_hint' => 'L’agente aspetta le tue risposte — apri per rispondere.',
-    'outcome_alert' => 'Da controllare',
-    'outcome_blocked' => 'C’è qualcosa che blocca',
     'progress' => 'Avanzamento',
     'stats' => 'Statistiche',
     'skills' => 'Skill di :agent',

@@ -37,7 +37,7 @@ Lists the open requests of the agent list (see config griglia.agent_list)
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]]
+php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argument / option | What it does | Default |
@@ -98,20 +98,11 @@ php artisan griglia:docs-build [--out [OUT]] [--serve] [--docker] [--strict] [--
 
 | Argument / option | What it does | Default |
 |---|---|---|
-| `command` | The command to execute | required |
 | `--out` | Output directory (default: <package>/site) | — |
 | `--serve` | Run `mkdocs serve` (live preview) instead of building | flag |
 | `--docker` | Use the squidfunk/mkdocs-material Docker image instead of a local mkdocs | flag |
 | `--strict` | Pass --strict to mkdocs (warnings fail the build) | flag |
 | `--no-generate` | Do not refresh the generated reference pages before building | flag |
-| `--help` | Display help for the given command. When no command is given display help for the <info>list</info> command | flag |
-| `--silent` | Do not output any message | flag |
-| `--quiet` | Only errors are displayed. All other output is suppressed | flag |
-| `--verbose` | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug | flag |
-| `--version` | Display this application version | flag |
-| `--ansi` | Force (or disable --no-ansi) ANSI output | flag |
-| `--no-interaction` | Do not ask any interactive question | flag |
-| `--env` | The environment the command should run under | — |
 
 ## `griglia:docs-generate`
 

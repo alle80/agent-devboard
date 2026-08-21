@@ -66,10 +66,20 @@
             </div>
 
             {{-- Riga todo --}}
-            {{-- Bordo colorato finché la riga chiede attenzione: verde/giallo/rosso secondo l'esito, viola se ci sono domande --}}
+            {{-- Bordo colorato finché la riga chiede attenzione: verde/giallo/rosso secondo l'esito, viola se ci sono domande.
+                 Il colore è scritto INLINE, non solo nelle classi: le viste arrivano da vendor/ mentre il CSS passa da una
+                 build dell'app, e finché le due versioni non coincidono le regole `.db-attention` possono mancare (o essere
+                 quelle vecchie) — il bordo non si vedeva affatto. Inline vince anche sul filtro grigio di `.tl-done`. --}}
             @php($attention = $todo->attention())
             @php($unseen = $attention && $attention !== 'question')
-            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $attention ? 'db-attention db-att-'.$attention : '' }}">
+            @php($attentionColor = $todo->attentionColor())
+            <div
+                class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $attention ? 'db-attention db-att-'.$attention : '' }}"
+                @if ($attention)
+                    style="--db-att: {{ $attentionColor }}; border-color: {{ $attentionColor }}; border-style: solid; border-width: max(var(--tl-bw, 2px), 2px); outline: none; opacity: 1; filter: none;"
+                    title="{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention).'_hint') }}"
+                @endif
+            >
 
                 @if ($todo->working && $todo->progress !== null)
                     <span class="db-progress-track" aria-hidden="true"></span>

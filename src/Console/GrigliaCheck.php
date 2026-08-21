@@ -58,6 +58,24 @@ class GrigliaCheck extends Command
         $scopeIds = $planLists->pluck('id')->push($list->id)->all();
         $find = fn (int $id) => Todo::whereIn('checklist_id', $scopeIds)->findOrFail($id);
 
+        // Multi-agent: which agent am I? (option, else config key); with several agents only my tasks are listed
+        $me = (string) ($this->option('agent') ?: (\Alle80\Griglia\Agent::many() ? \Alle80\Griglia\Agent::defaultKey() : ''));
+
+        // Several agents at once must not step on each other: every task belongs to ONE agent (task override,
+        // else list default, else the default agent). Acting on somebody else's task is refused, so a wrong id
+        // in a prompt cannot steal the work another agent is already doing; --force is the deliberate way in.
+        $trespass = function (Todo $t, string $action) use ($me): bool {
+            $owner = \Alle80\Griglia\Agent::effective($t);
+            if ($me === '' || $this->option('force') || $owner === $me) {
+                return false;
+            }
+            $this->error(sprintf('«%s» (id:%d) belongs to agent «%s», you are «%s»: refusing to %s it%s. Reassign it on the board (task or list agent), or re-run with --force.',
+                $t->title, $t->id, \Alle80\Griglia\Agent::label($owner), \Alle80\Griglia\Agent::label($me), $action,
+                $t->working ? ' — it is being worked on right now' : ''));
+
+            return true;
+        };
+
         // Outcome of a closed task: it decides the colour of the highlight the user sees on the board
         $outcome = $this->option('outcome') !== null ? strtolower(trim((string) $this->option('outcome'))) : null;
         if ($outcome !== null && ! in_array($outcome, Todo::OUTCOMES, true)) {

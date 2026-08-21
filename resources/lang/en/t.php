@@ -75,8 +75,6 @@ return [
     'result_blocked_hint' => 'Finished, but something is in the way — open to see what.',
     'result_question' => 'questions',
     'result_question_hint' => 'The agent is waiting for your answers — open to reply.',
-    'outcome_alert' => 'Needs a look',
-    'outcome_blocked' => 'Something is blocking',
     'progress' => 'Progress',
     'stats' => 'Stats',
     'skills' => ':agent skills',
