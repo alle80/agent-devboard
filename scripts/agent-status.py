@@ -6,13 +6,13 @@ Raccoglie piano e finestre di utilizzo degli agenti CLI sul server e le manda al
 Agenti:
   - Claude Code: ~/.claude/.credentials.json (claudeAiOauth) → GET https://api.anthropic.com/api/oauth/usage
     (five_hour / seven_day: utilization %, resets_at; extra_usage). Piano da subscriptionType/rateLimitTier.
-  - Codex CLI: nessuna API di utilizzo nota → riga «non configurato» se ~/.codex esiste.
+  - Codex CLI: ultimo evento `token_count.rate_limits` nei rollout locali (nessuna credenziale esce dall'host).
 
 Uso:  scripts/agent-status.py            # raccoglie e importa nel container
       scripts/agent-status.py --print    # stampa solo il JSON
 Cron: */5 * * * * /path/to/laravel-dev/scripts/agent-status.py -q
 """
-import json, os, subprocess, sys, urllib.request
+import glob, json, os, subprocess, sys, urllib.request
 from datetime import datetime, timezone
 
 HOME = os.path.expanduser('~')
@@ -89,7 +89,39 @@ def claude():
 def codex():
     if not os.path.isdir(os.path.join(HOME, '.codex')):
         return None
-    return {'key': 'codex', 'name': 'Codex CLI', 'plan': None, 'plan_kind': None, 'windows': [], 'extra_usage': None, 'error': None}
+    agent = {'key': 'codex', 'name': 'Codex CLI', 'plan': None, 'plan_kind': None, 'windows': [], 'extra_usage': None, 'error': None}
+    files = sorted(glob.glob(os.path.join(HOME, '.codex', 'sessions', '**', 'rollout-*.jsonl'), recursive=True), key=os.path.getmtime, reverse=True)
+    limits = None
+    for path in files[:20]:
+        try:
+            with open(path, encoding='utf-8') as stream:
+                lines = stream.readlines()
+            for line in reversed(lines):
+                event = json.loads(line)
+                payload = event.get('payload') or {}
+                if payload.get('type') == 'token_count' and isinstance(payload.get('rate_limits'), dict):
+                    limits = payload['rate_limits']; break
+        except (OSError, ValueError):
+            continue
+        if limits:
+            break
+    if not limits:
+        agent['error'] = 'usage telemetry not found'
+        return agent
+    plan = str(limits.get('plan_type') or '').lower()
+    agent['plan'] = PLAN_LABELS.get(plan, plan.capitalize()) or None
+    agent['plan_kind'] = plan or None
+    for key, label in (('secondary', '5 ore'), ('primary', '7 giorni')):
+        window = limits.get(key)
+        if not isinstance(window, dict):
+            continue
+        minutes = window.get('window_minutes')
+        if minutes == 300: label = '5 ore'
+        elif minutes == 10080: label = '7 giorni'
+        reset = window.get('resets_at')
+        agent['windows'].append({'key': key, 'label': label, 'utilization': window.get('used_percent'),
+                                 'resets_at': datetime.fromtimestamp(reset, timezone.utc).isoformat() if isinstance(reset, (int, float)) else None})
+    return agent
 
 
 def main():

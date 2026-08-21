@@ -237,7 +237,7 @@ php artisan griglia:skills-import --file=skills.json   # or JSON on stdin
 php artisan griglia:agent-status-import --file=snapshot.json
 ```
 
-(the shipped `scripts/agent-status.py` does it for Claude Code — credentials never leave the host).
+(the shipped `scripts/agent-status.py` does it for Claude Code and Codex CLI — credentials and local rollout data never leave the host). At 100%, the owner of the task held by that agent receives one notification; the alert is armed again after the window resets.
 
 ### Configuration vs settings
 

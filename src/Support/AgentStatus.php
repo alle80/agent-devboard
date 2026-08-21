@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Support;
 
+use Alle80\Griglia\Models\Todo;
 use Carbon\CarbonImmutable;
 
 /**
@@ -33,6 +34,7 @@ class AgentStatus
     /** Store a snapshot (validated/normalized). Returns the number of agents. */
     public static function import(array $data): int
     {
+        $previous = self::snapshot();
         $agents = [];
         foreach ((array) ($data['agents'] ?? []) as $a) {
             if (! is_array($a) || trim((string) ($a['key'] ?? '')) === '') {
@@ -68,8 +70,40 @@ class AgentStatus
             mkdir(dirname($path), 0775, true);
         }
         file_put_contents($path, json_encode($snapshot, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        self::notifyNewLimits($previous, $snapshot);
 
         return count($agents);
+    }
+
+    /** Notify once when a usage window crosses 100%; a later reset arms the next alert. */
+    private static function notifyNewLimits(?array $previous, array $snapshot): void
+    {
+        $old = [];
+        foreach ((array) ($previous['agents'] ?? []) as $agent) {
+            foreach ((array) ($agent['windows'] ?? []) as $window) {
+                $old[($agent['key'] ?? '').':'.($window['key'] ?? '')] = $window['utilization'] ?? null;
+            }
+        }
+        foreach ($snapshot['agents'] as $agent) {
+            foreach ($agent['windows'] as $window) {
+                $key = $agent['key'].':'.$window['key'];
+                if (($window['utilization'] ?? 0) < 100 || (($old[$key] ?? null) !== null && $old[$key] >= 100)) {
+                    continue;
+                }
+                $defaultAgent = array_key_first((array) config('griglia.agents')) ?: 'claude';
+                $todo = Todo::query()->with('checklist')->where('working', true)
+                    ->where(function ($query) use ($agent, $defaultAgent) {
+                        $query->where('agent', $agent['key'])
+                            ->orWhere(fn ($inherited) => $inherited->whereNull('agent')->whereHas('checklist', fn ($list) => $list->where('agent', $agent['key'])));
+                        if ($agent['key'] === $defaultAgent) {
+                            $query->orWhere(fn ($inherited) => $inherited->whereNull('agent')->whereHas('checklist', fn ($list) => $list->whereNull('agent')));
+                        }
+                    })->latest('working_since')->first();
+                if ($todo) {
+                    Notify::agentLimitReached($todo, $agent['name'], $window['label'], $window['resets_at']);
+                }
+            }
+        }
     }
 
     /**

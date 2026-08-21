@@ -25,9 +25,13 @@ reset, livelli ok/alto/quasi esaurito/oltre il limite). I dati vengono da uno sn
 php artisan griglia:agent-status-import --file=snapshot.json   # {updated_at, agents:[{key,name,plan,windows:[…]}]}
 ```
 
-Il package porta con sé `scripts/agent-status.py` per Claude Code: legge le credenziali OAuth **sull'host** e
+Il package porta con sé `scripts/agent-status.py` per Claude Code e Codex CLI: legge l'uso OAuth di Claude e la telemetria locale dei rollout Codex **sull'host** e
 manda solo percentuali (cron ogni 5 minuti). Lo stesso vale per i token di un task:
 `scripts/claude-tokens.py --todo=ID --args`. Vedi [gli script](scripts.md).
+
+Quando una finestra raggiunge per la prima volta il 100%, la board notifica il proprietario del task in mano
+a quell’agente tramite i canali in-app, Web Push ed e-mail attivi. Gli snapshot successivi non ripetono
+l’avviso: il ritorno sotto il 100% abilita quello seguente. Perché funzioni, il collector va schedulato.
 
 ## Vedi anche
 

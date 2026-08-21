@@ -3,6 +3,7 @@
 namespace Alle80\Griglia\Support;
 
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Notifications\AgentLimitReached;
 use Alle80\Griglia\Notifications\QuestionAsked;
 use Alle80\Griglia\Notifications\TodoCompleted;
 use Alle80\Griglia\Settings\AgentSettings;
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Log;
  */
 class Notify
 {
+    public static function agentLimitReached(Todo $todo, string $agentName, string $windowLabel, ?string $resetsAt): void
+    {
+        self::send($todo, new AgentLimitReached($todo, $agentName, $windowLabel, $resetsAt));
+    }
+
     public static function todoCompleted(Todo $todo): void
     {
         if (app(AgentSettings::class)->notify_on_done) {

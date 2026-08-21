@@ -2,9 +2,13 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Notifications\AgentLimitReached;
 use Alle80\Griglia\Support\AgentStatus;
 use Alle80\Griglia\Tests\TestCase;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Notification;
 
 /** Agents status: derived values (used/remaining/level/reset), import command, page states. */
 class AgentStatusTest extends TestCase
@@ -80,5 +84,28 @@ class AgentStatusTest extends TestCase
 
         AgentStatus::import(['updated_at' => now()->subHour()->toIso8601String(), 'agents' => [['key' => 'claude', 'name' => 'Claude Code', 'windows' => []]]]);
         $this->get('/agents')->assertOk()->assertSee('Stale data');
+    }
+
+    public function test_import_notifies_once_when_a_working_agent_reaches_a_limit(): void
+    {
+        Notification::fake();
+        $user = auth()->user();
+        $list = Checklist::create(['name' => 'dev', 'user_id' => $user->id, 'agent' => 'codex']);
+        $todo = Todo::create(['title' => 'Ship it', 'order' => 1, 'checklist_id' => $list->id, 'agent' => 'codex', 'working' => true]);
+        $snapshot = fn (int $used) => ['agents' => [[
+            'key' => 'codex', 'name' => 'Codex CLI', 'windows' => [[
+                'key' => 'primary', 'label' => '7 days', 'utilization' => $used, 'resets_at' => '2026-08-28T10:00:00+00:00',
+            ]],
+        ]]];
+
+        AgentStatus::import($snapshot(99));
+        Notification::assertNothingSent();
+        AgentStatus::import($snapshot(100));
+        Notification::assertSentTo($user, AgentLimitReached::class, fn ($notification) => $notification->todo->is($todo) && str_contains($notification->body(), '7 days'));
+        AgentStatus::import($snapshot(100));
+        Notification::assertSentToTimes($user, AgentLimitReached::class, 1);
+        AgentStatus::import($snapshot(10));
+        AgentStatus::import($snapshot(100));
+        Notification::assertSentToTimes($user, AgentLimitReached::class, 2);
     }
 }

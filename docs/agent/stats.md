@@ -24,7 +24,7 @@ exhausted/over the limit). Data come from a snapshot imported with:
 php artisan griglia:agent-status-import --file=snapshot.json   # {updated_at, agents:[{key,name,plan,windows:[…]}]}
 ```
 
-The package ships `scripts/agent-status.py` for Claude Code: it reads the OAuth credentials **on the host** and
+The package ships `scripts/agent-status.py` for Claude Code and Codex CLI: it reads Claude OAuth usage and Codex local rollout telemetry **on the host** and
 sends only percentages (cron every 5 minutes). Same for the tokens of a task: `scripts/claude-tokens.py --todo=ID
 --args`. See [the scripts](scripts.md).
 

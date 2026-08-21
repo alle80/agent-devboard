@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.82.0] - 2026-08-22
+
+### Added
+- **Usage-limit alerts for coding agents.** The host collector now reads Codex CLI rate-limit telemetry in
+  local rollouts as well as Claude usage, and the board sends one notification when a working agent's window
+  reaches 100%; a reset re-arms the next alert (task 490).
+
 ## [0.81.4] - 2026-08-22
 
 ### Fixed
@@ -1606,7 +1613,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.80.3...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.82.0...HEAD
+[0.82.0]: https://github.com/alle80/griglia/compare/v0.81.4...v0.82.0
 [0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3
 [0.80.2]: https://github.com/alle80/griglia/compare/v0.80.1...v0.80.2
 [0.80.1]: https://github.com/alle80/griglia/compare/v0.80.0...v0.80.1
