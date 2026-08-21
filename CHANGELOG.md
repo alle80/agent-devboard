@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.77.1] - 2026-08-21
+### Fixed
+- **The agent selector appeared twice on every task row.** When the selector moved to a line of its own
+  under the title the old copy, between the row commands, came back in the released package: a release cut
+  from a tree that did not have the move re-added it next to the new one. Only the line under the title is
+  left.
+
 ## [0.77.0] - 2026-08-21
 ### Added
 - **The language of the board is chosen in `/settings` (task 432).** The App group opens with «Board
@@ -1422,7 +1429,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.77.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.77.1...HEAD
+[0.77.1]: https://github.com/alle80/griglia/compare/v0.77.0...v0.77.1
 [0.77.0]: https://github.com/alle80/griglia/compare/v0.76.0...v0.77.0
 [0.76.0]: https://github.com/alle80/griglia/compare/v0.75.0...v0.76.0
 [0.75.0]: https://github.com/alle80/griglia/compare/v0.74.3...v0.75.0
