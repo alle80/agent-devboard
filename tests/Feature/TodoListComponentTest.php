@@ -54,6 +54,18 @@ class TodoListComponentTest extends TestCase
         Livewire::test(TodoList::class)
             ->assertSee('title="Completed task"', false)            ->assertSee('class="todo-action db-badge db-badge-done', false);
     }
+    public function test_working_task_cannot_be_renamed_completed_archived_or_deleted(): void
+    {
+        $todo = $this->add('Agent owns this');
+        $todo->update(['working' => true]);
+        Livewire::test(TodoList::class)->call('startEdit', $todo->id)->assertSet('editingId', null)
+            ->call('toggle', $todo->id)->call('archive', $todo->id)->call('delete', $todo->id);
+        $todo->refresh();
+        $this->assertFalse($todo->completed);
+        $this->assertNull($todo->archived_at);
+        $this->assertNull($todo->deleted_at);
+    }
+
     public function test_title_length_is_enforced(): void
     {
         Livewire::test(TodoList::class)->call('startInsert', 1)->set('newTitle', str_repeat('x', 51))->call('saveInsert')

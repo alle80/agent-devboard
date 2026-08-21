@@ -88,6 +88,10 @@ risposte, il contesto del task ripreso. Nell'intestazione: badge di stato (si to
 **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con modifiche** (un nuovo
 task collegato).
 
+Un task è in sola lettura mentre è **in lavorazione**, così la richiesta non cambia sotto i piedi
+dell’agente. Tocca il badge working per fermarlo e riportarlo in attesa prima di modificarlo; poi potrai
+rimetterlo open to work.
+
 ### Il salvataggio si fa da solo
 
 Titolo e nota si salvano **mentre scrivi** — basta una pausa. Non c'è più il bottone «Salva» e non c'è più

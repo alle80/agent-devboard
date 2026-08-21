@@ -133,6 +133,7 @@ class TodoList extends Component
             return;
         }
         $todo = $this->scoped()->findOrFail($todoId);
+        if ($todo->working) { return; }
         $todo->update(['agent' => $agent ?: null]);
         $this->dispatch('toast', message: __('griglia::t.agent_set_task', [
             'title' => $todo->title,
@@ -200,6 +201,7 @@ class TodoList extends Component
     public function archive(int $todoId): void
     {
         $todo = $this->active()->findOrFail($todoId);
+        if ($todo->working) { return; }
         $todo->update(['archived_at' => now()]);
 
         // Richiude il buco nella numerazione degli attivi
@@ -223,6 +225,7 @@ class TodoList extends Component
     public function toggle(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
+        if ($todo->working) { return; }
 
         // A closed task stays closed: reopening it would put back in front of the agent something it had
         // already answered. To carry on, «resume» makes a new task linked to this one (task 348).
@@ -310,6 +313,7 @@ class TodoList extends Component
     public function startEdit(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
+        if ($todo->working) { return; }
         $this->editingId = $todo->id;
         $this->titleDraft = $todo->title;
         $this->titleOriginal = $todo->title;
@@ -355,7 +359,7 @@ class TodoList extends Component
             return false;
         }
 
-        $saved = $this->scoped()->whereKey($this->editingId)->where('title', '!=', $title)
+        $saved = $this->scoped()->whereKey($this->editingId)->where('working', false)->where('title', '!=', $title)
             ->update(['title' => $title]) > 0;
 
         if ($saved) {
@@ -460,6 +464,7 @@ class TodoList extends Component
     public function delete(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
+        if ($todo->working) { return; }
         // Resume chain: chi era «ripreso» da questo passa al nonno, così lo storico non si spezza (task 416)
         Todo::where('parent_id', $todo->id)->update(['parent_id' => $todo->parent_id]);
         $todo->delete();

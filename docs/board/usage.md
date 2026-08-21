@@ -79,6 +79,9 @@ Title, **Task** note (Markdown editor, with a microphone for [speech to text](..
 tokens, cost), the agent's **skills** accordion, images (upload, camera, paste; AI description when enabled),
 sub-tasks (Markdown, sortable), questions/answers, resume-from context.
 
+A task is read-only while it is **working**, so the request cannot change under the agent’s feet. Tap the
+working badge to stop it and return it to waiting before editing; it can then be marked open to work again.
+
 The header uses the whole bar: on the left the **state badge** with ‹ `3/7` › — from a tablet up the badge
 carries its name — and on the right the commands: the agent that owns the task, **move to another list**,
 archive, delete, close, plus **resume with changes** (a new linked task) on a completed one.

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.79.3] - 2026-08-21
+
+### Fixed
+- Working tasks are now read-only in both the list and task modal. Stop a task first to edit its title,
+  note, sub-tasks, skills or assignment, move it, archive it, delete it, or mark it completed (task 446).
+
 ## [0.79.2] - 2026-08-21
 ### Fixed
 - **The agent select in the modal header no longer gets clipped: it has a row of its own, aligned left

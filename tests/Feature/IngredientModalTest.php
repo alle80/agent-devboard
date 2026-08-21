@@ -47,6 +47,19 @@ class IngredientModalTest extends TestCase
         $this->assertSame(0, $this->todo->ingredients()->count());
     }
 
+    public function test_working_todo_is_read_only_until_stopped(): void
+    {
+        $this->todo->update(['working' => true, 'notes' => 'keep']);
+        $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
+        $m->assertSee('read-only')->call('editTitle')->call('editNotes')->set('newIngredient', 'x')->call('addIngredient');
+        $this->assertNull($m->get('titleDraft'));
+        $this->assertNull($m->get('notesDraft'));
+        $this->assertSame(0, $this->todo->ingredients()->count());
+
+        $m->call('setState', 'waiting')->call('editTitle')->set('titleDraft', 'Editable')->call('finishTitle');
+        $this->assertSame('Editable', $this->todo->fresh()->title);
+    }
+
     public function test_questions_flow(): void
     {
         $q = $this->todo->questions()->create(['question' => 'Which colour?', 'order' => 1]);

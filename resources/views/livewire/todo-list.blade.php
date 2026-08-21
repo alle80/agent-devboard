@@ -96,6 +96,7 @@
                 {{-- Checkbox --}}
                 <button
                     wire:click="toggle({{ $todo->id }})"
+                    @disabled($todo->working)
                     class="tl-check tl-display flex size-8 shrink-0 cursor-pointer items-center justify-center transition active:translate-y-px {{ $todo->completed ? 'tl-check-on' : '' }}"
                 >@if ($todo->completed)<x-griglia::icon name="check" :stroke="3" />@endif</button>
 
@@ -147,7 +148,7 @@
                     {{-- Multi-agente: chi lavora questo task. La targhetta sta su una riga sua, SOTTO il titolo
                          (task 427): in mezzo ai comandi era schiacciata fra le icone. Il nome si vede SEMPRE,
                          anche quando il task eredita l'agente della lista (opzione vuota = eredita). --}}
-                    @if (\Alle80\Griglia\Agent::many())
+                    @if (\Alle80\Griglia\Agent::many() && ! $todo->working)
                         <div class="db-agent-row mt-1 flex items-center">
                             @include('griglia::livewire.partials.agent-select', [
                                 'todo' => $todo,
@@ -168,11 +169,13 @@
                         title="{{ $todo->completed ? __('griglia::t.dot_done') : ($todo->question ? __('griglia::t.dot_question') : ($todo->working ? __('griglia::t.dot_working') : ($todo->open_to_work ? __('griglia::t.dot_otw_on') : __('griglia::t.dot_otw_off')))) }}"
                         class="todo-action db-badge db-badge-{{ $st }} shrink-0 cursor-pointer transition hover:scale-125 {{ $st === 'waiting' ? 'opacity-40 hover:opacity-100' : '' }}"
                     ><x-griglia::icon :name="$st" size="1.2em" :stroke="2" /></button>
+                    @unless($todo->working)
                     <button
                         wire:click="startEdit({{ $todo->id }})"
                         title="{{ __('griglia::t.rename') }}"
                         class="todo-action shrink-0 cursor-pointer opacity-30 transition hover:scale-125 hover:opacity-100"
                     ><x-griglia::icon name="edit" size="1.05em" /></button>
+                    @endunless
                     @endif
 
                 {{-- Elimina --}}

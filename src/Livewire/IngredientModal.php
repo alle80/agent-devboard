@@ -63,14 +63,14 @@ class IngredientModal extends Component
     }
 
     /**
-     * Un elemento completato è in sola lettura: note, domande e sotto-task non si toccano
-     * finché non viene riaperto dalla lista. Restituisce il todo solo se modificabile.
+     * Un elemento completato o in lavorazione è in sola lettura: note, domande e sotto-task non si toccano
+     * finché non torna a uno stato precedente. Restituisce il todo solo se modificabile.
      */
     protected function editable(): ?Todo
     {
         $todo = $this->todo();
 
-        if ($todo && $todo->completed) {
+        if ($todo && ($todo->completed || $todo->working)) {
             $this->dispatch('toast', message: __('griglia::t.msg.readonly'), type: 'info');
 
             return null;
@@ -423,7 +423,7 @@ class IngredientModal extends Component
     public function setAgent(string $agent): void
     {
         $todo = $this->todo();
-        if (! $todo) {
+        if (! $todo || $todo->working) {
             return;
         }
         $agent = trim($agent);
@@ -438,7 +438,7 @@ class IngredientModal extends Component
     public function moveTo(int $checklistId): void
     {
         $todo = $this->todo();
-        if (! $todo || $checklistId === (int) $todo->checklist_id || ! Checklist::mine()->whereKey($checklistId)->exists()) {
+        if (! $todo || $todo->working || $checklistId === (int) $todo->checklist_id || ! Checklist::mine()->whereKey($checklistId)->exists()) {
             return;
         }
         $from = $todo->checklist_id;
@@ -457,7 +457,7 @@ class IngredientModal extends Component
     /** Archive / delete reuse the list logic (order reindex) then close the modal. */
     public function archiveTodo(): void
     {
-        if ($todo = $this->todo()) {
+        if (($todo = $this->todo()) && ! $todo->working) {
             $this->dispatch('cmd-archive', todoId: $todo->id);
             $this->close();
         }
@@ -465,7 +465,7 @@ class IngredientModal extends Component
 
     public function deleteTodo(): void
     {
-        if ($todo = $this->todo()) {
+        if (($todo = $this->todo()) && ! $todo->working) {
             $this->dispatch('cmd-delete', todoId: $todo->id);
             $this->close();
         }
@@ -764,7 +764,7 @@ class IngredientModal extends Component
 
         return [
             'todo' => $todo,
-            'readonly' => (bool) $todo?->completed,
+            'readonly' => (bool) ($todo?->completed || $todo?->working),
             'skills' => $todo ? $this->skillCatalogue($todo) : \Alle80\Griglia\Support\Skills::all(),
             'skillsAgent' => $todo ? \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)) : \Alle80\Griglia\Agent::name(),
             'otherLists' => $todo ? Checklist::mine()->whereKeyNot($todo->checklist_id)->orderBy('name')->get(['id', 'name']) : collect(),

@@ -47,14 +47,14 @@
     </div>
 
     <div class="modal-cmds-tools flex min-w-0 items-center gap-1.5">
-        @if ($readonly)
+        @if ($todo->completed)
             <button type="button" class="db-cmd shrink-0" wire:click="resumeTodo"
                     title="{{ __('griglia::t.resume') }}" aria-label="{{ __('griglia::t.resume') }}">
                 <x-griglia::icon name="resume" />
             </button>
         @endif
 
-        @if ($otherLists->isNotEmpty())
+        @if (! $todo->working && $otherLists->isNotEmpty())
             {{-- Move to another list --}}
             <details class="relative shrink-0" x-data="{ o: false }" x-bind:open="o" x-on:toggle="o = $el.open" x-on:click.outside="o = false" x-on:keydown.escape.window="o = false">
                 <summary class="db-cmd cursor-pointer list-none [&::-webkit-details-marker]:hidden" title="{{ __('griglia::t.move_to') }}" aria-label="{{ __('griglia::t.move_to') }}" aria-haspopup="menu">
@@ -70,6 +70,7 @@
             </details>
         @endif
 
+        @unless($todo->working)
         <button type="button" class="db-cmd shrink-0" wire:click="archiveTodo"
                 title="{{ __('griglia::t.archive') }}" aria-label="{{ __('griglia::t.archive') }}">
             <x-griglia::icon name="archive" />
@@ -80,10 +81,11 @@
                 title="{{ __('griglia::t.delete') }}" aria-label="{{ __('griglia::t.delete') }}">
             <x-griglia::icon name="trash" />
         </button>
+        @endunless
     </div>
 </div>
 
-@if (\Alle80\Griglia\Agent::many())
+@if (\Alle80\Griglia\Agent::many() && ! $todo->working)
     {{-- Multi-agent: which agent handles this task. Own full-width row under the commands, aligned left:
          squeezed among the icons the label «Default (Claude Code)» ended up clipped, on a phone above all. --}}
     <div class="modal-cmds-agent flex min-w-0 items-center" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
