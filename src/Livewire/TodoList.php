@@ -91,6 +91,9 @@ class TodoList extends Component
 
     public string $titleDraft = '';
 
+    /** Titolo com'era quando è iniziata la rinomina: il salvataggio è live, «annulla» rimette questo. */
+    public ?string $titleOriginal = null;
+
     /** Query dei todo della lista corrente. */
     protected function scoped(): Builder
     {
@@ -191,7 +194,7 @@ class TodoList extends Component
     {
         $this->showArchived = ! $this->showArchived;
         $this->cancelInsert();
-        $this->cancelEdit();
+        $this->closeEdit(); // quello che si stava scrivendo è già salvato: non si butta via
     }
 
     public function archive(int $todoId): void
@@ -309,14 +312,54 @@ class TodoList extends Component
         $todo = $this->scoped()->findOrFail($todoId);
         $this->editingId = $todo->id;
         $this->titleDraft = $todo->title;
+        $this->titleOriginal = $todo->title;
     }
 
+    /** «Annulla»: il titolo è già stato salvato mentre si scriveva, quindi si rimette com'era. */
     public function cancelEdit(): void
+    {
+        if ($this->editingId && $this->titleOriginal !== null) {
+            $this->scoped()->whereKey($this->editingId)->where('title', '!=', $this->titleOriginal)
+                ->update(['title' => $this->titleOriginal]);
+        }
+
+        $this->closeEdit();
+    }
+
+    /** Chiude la rinomina senza toccare quello che è già stato salvato. */
+    protected function closeEdit(): void
     {
         $this->editingId = null;
         $this->titleDraft = '';
+        $this->titleOriginal = null;
     }
 
+    /** Salvataggio live: la bozza arriva dal campo (wire:model.live) a ogni pausa nella digitazione. */
+    public function updatedTitleDraft(): void
+    {
+        $this->autosaveEdit();
+    }
+
+    /** Persiste la bozza senza chiudere la rinomina e senza toast (sarebbe uno a ogni pausa). */
+    protected function autosaveEdit(): bool
+    {
+        $title = trim($this->titleDraft);
+
+        if ($title === '' || ! $this->editingId || ! $this->titleFits($title)) {
+            return false;
+        }
+
+        $saved = $this->scoped()->whereKey($this->editingId)->where('title', '!=', $title)
+            ->update(['title' => $title]) > 0;
+
+        if ($saved) {
+            $this->dispatch('griglia-autosaved'); // spia «salvato» accanto al campo
+        }
+
+        return $saved;
+    }
+
+    /** Il bottone ✓ conferma e chiude la rinomina (il salvataggio vero è già avvenuto da solo). */
     public function saveEdit(): void
     {
         $title = trim($this->titleDraft);
@@ -325,9 +368,13 @@ class TodoList extends Component
             return;
         }
 
-        $this->scoped()->whereKey($this->editingId)->update(['title' => $title]);
-        $this->cancelEdit();
-        $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
+        $this->autosaveEdit();
+        $changed = $title !== $this->titleOriginal;
+        $this->closeEdit();
+
+        if ($changed) {
+            $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
+        }
     }
 
     /** Titolo entro il limite? Altrimenti avvisa e non salva (niente troncamenti silenziosi). */

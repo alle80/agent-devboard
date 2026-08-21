@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.78.0] - 2026-08-21
+### Changed
+- **The title and the note of a task save themselves while you type (task 433).** No more «Save» button to
+  remember: the field sends what you wrote after a short pause (600 ms for a title, 800 ms for the note) and
+  when it loses the focus, and a discreet «Saved» flag appears next to it. The ✓ / **Save** button now only
+  closes the editor, and since nothing is left unsaved, **Cancel** (or `Esc`) puts back the text that was
+  there when the editing started. It works in the modal (title and note) and in the inline rename of a row.
+
 ## [0.77.1] - 2026-08-21
 ### Fixed
 - **The agent selector appeared twice on every task row.** When the selector moved to a line of its own
@@ -1429,7 +1437,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.77.1...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.78.0...HEAD
+[0.78.0]: https://github.com/alle80/griglia/compare/v0.77.1...v0.78.0
 [0.77.1]: https://github.com/alle80/griglia/compare/v0.77.0...v0.77.1
 [0.77.0]: https://github.com/alle80/griglia/compare/v0.76.0...v0.77.0
 [0.76.0]: https://github.com/alle80/griglia/compare/v0.75.0...v0.76.0

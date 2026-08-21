@@ -83,6 +83,13 @@ The header uses the whole bar: on the left the **state badge** with ‹ `3/7` �
 carries its name — and on the right the commands: the agent that owns the task, **move to another list**,
 archive, delete, close, plus **resume with changes** (a new linked task) on a completed one.
 
+### Saving happens by itself
+
+The title and the note are saved **while you type** — a short pause is enough, no need to press the button.
+The small «Saved» flag next to the field says when it happened; the ✓ (or **Save**) button now only closes
+the editor, and **Cancel** (or `Esc`) puts back the text that was there when you started editing. The same
+goes for the inline rename of a row in the list.
+
 ### Moving between tasks
 
 The modal has ‹ and › next to the state badge, with the position of the task in the list (`3/7`): they open

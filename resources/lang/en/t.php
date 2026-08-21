@@ -32,6 +32,8 @@ return [
     'dot_otw_off' => 'Mark as open to work',
     'dot_done' => 'Completed task',
     'save' => 'Save',
+    'autosaved' => 'Saved',
+    'autosave_hint' => 'Changes are saved as you type.',
     'task_prev' => 'Previous task (←)',
     'task_next' => 'Next task (→)',
     'copy' => 'copy',

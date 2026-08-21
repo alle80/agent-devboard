@@ -88,6 +88,13 @@ risposte, il contesto del task ripreso. Nell'intestazione: badge di stato (si to
 **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con modifiche** (un nuovo
 task collegato).
 
+### Il salvataggio si fa da solo
+
+Titolo e nota si salvano **mentre scrivi** — basta una pausa, non serve schiacciare il bottone. La scritta
+«Salvato» accanto al campo dice quando è successo; il ✓ (o **Salva**) ormai chiude soltanto la modifica, e
+**Annulla** (o `Esc`) rimette il testo com'era quando hai cominciato. Vale anche per la rinomina al volo di
+una riga della lista.
+
 ### Passare da un task all'altro
 
 Il modale ha ‹ e › accanto al badge di stato, con la posizione del task nella lista (`3/7`): aprono il task

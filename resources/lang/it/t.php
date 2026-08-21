@@ -31,6 +31,8 @@ return [
     'dot_otw_off' => 'Segna come open to work',
     'dot_done' => 'Task completato',
     'save' => 'Salva',
+    'autosaved' => 'Salvato',
+    'autosave_hint' => 'Le modifiche si salvano da sole mentre scrivi.',
     'task_prev' => 'Task precedente (←)',
     'task_next' => 'Task successivo (→)',
     'copy' => 'copia',

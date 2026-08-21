@@ -3,7 +3,10 @@
     'rows' => 4,
     'placeholder' => '',
     'inputClass' => '',
+    'live' => false,         // true = salvataggio live: la bozza va al componente a ogni pausa
+    'debounce' => '800ms',
 ])
+@php($wireModel = $live ? 'wire:model.live.debounce.'.$debounce : 'wire:model')
 {{--
     Markdown editor: a textarea with a small toolbar that inserts Markdown syntax. The value stays
     bound to Livewire via wire:model; buttons edit the textarea and dispatch 'input' to sync.
@@ -48,7 +51,9 @@
         <span class="db-md-sep"></span>
         <x-griglia::mic class="db-md-btn" within=".db-md" target="textarea" />
     </div>
-    <textarea x-ref="ta" wire:model="{{ $model }}" rows="{{ $rows }}" placeholder="{{ $placeholder }}"
+    {{-- Con live: l'uscita dal campo manda subito quello che c'è, senza aspettare il debounce --}}
+    <textarea x-ref="ta" {{ $wireModel }}="{{ $model }}" rows="{{ $rows }}" placeholder="{{ $placeholder }}"
+              @if ($live) @blur="$wire.set('{{ $model }}', $event.target.value)" @endif
               x-init="$nextTick(() => grow())" @input="grow()" style="overflow:hidden; resize:none;"
               {{ $attributes->merge(['class' => 'db-md-input '.$inputClass]) }}></textarea>
 </div>

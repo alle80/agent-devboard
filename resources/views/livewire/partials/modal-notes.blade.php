@@ -24,13 +24,15 @@
             <span class="{{ $labelClass }}">{{ $label }}</span>
             <x-griglia::md-editor
                 model="notesDraft"
+                :live="true"
                 :rows="4"
                 :placeholder="__('griglia::t.note_placeholder')"
                 :inputClass="$inputClass"
                 wire:keydown.escape="cancelNotes"
             />
-            <p class="text-xs opacity-60">{{ __('griglia::t.md_hint') }}</p>
+            <p class="text-xs opacity-60">{{ __('griglia::t.md_hint') }} {{ __('griglia::t.autosave_hint') }}</p>
             <div class="flex items-center justify-end gap-2">
+                <x-griglia::autosaved class="mr-auto" />
                 <button type="button" wire:click="cancelNotes" class="{{ $cancelClass }}">{{ __('griglia::t.cancel') }}</button>
                 <button type="submit" class="{{ $okClass }}">{{ __('griglia::t.save') }}</button>
             </div>

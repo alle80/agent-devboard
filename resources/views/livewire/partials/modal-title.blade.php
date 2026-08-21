@@ -6,7 +6,8 @@
     <form wire:submit="saveTitle" x-data="{ len: {{ mb_strlen($titleDraft) }} }" class="flex min-w-0 flex-1 items-center gap-2" style="font: inherit; color: inherit">
         <input
             type="text"
-            wire:model="titleDraft"
+            wire:model.live.debounce.600ms="titleDraft"
+            x-on:blur="$wire.set('titleDraft', $event.target.value)"
             wire:keydown.escape="cancelTitle"
             maxlength="{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}"
             x-init="$el.focus(); $el.select()"
@@ -17,6 +18,7 @@
         >
         <x-griglia::mic class="shrink-0 text-base leading-none opacity-70 hover:opacity-100" within="form" target="input" />
         <span class="shrink-0 text-xs font-normal tabular-nums opacity-70" style="font-family: system-ui, sans-serif" x-text="len + '/{{ \Alle80\Griglia\Livewire\TodoList::titleMax() }}'" aria-hidden="true"></span>
+        <x-griglia::autosaved />
         <button type="submit" class="shrink-0 cursor-pointer text-lg leading-none" title="{{ __('griglia::t.save') }}" aria-label="{{ __('griglia::t.save_title') }}"><x-griglia::icon name="check" :stroke="2.5" /></button>
         <button type="button" wire:click="cancelTitle" class="shrink-0 cursor-pointer text-lg leading-none opacity-70" title="{{ __('griglia::t.cancel') }}" aria-label="{{ __('griglia::t.cancel') }}"><x-griglia::icon name="close" /></button>
     </form>

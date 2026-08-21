@@ -37,6 +37,14 @@ class IngredientModal extends Component
     /** Bozza del titolo mentre è in rinomina dal modale (null = non in modifica). */
     public ?string $titleDraft = null;
 
+    /**
+     * Valori com'erano all'apertura della modifica: il salvataggio è live (a ogni pausa nella
+     * digitazione), quindi «annulla» non basta più a buttare via la bozza — deve rimettere questi.
+     */
+    public ?string $titleOriginal = null;
+
+    public ?string $notesOriginal = null;
+
     /** Ingrediente in rinomina e relativa bozza. */
     public ?int $editingIngredientId = null;
 
@@ -169,6 +177,8 @@ class IngredientModal extends Component
         $this->newIngredient = '';
         $this->notesDraft = null;
         $this->titleDraft = null;
+        $this->titleOriginal = null;
+        $this->notesOriginal = null;
         $this->editingIngredientId = null;
         $this->ingredientDraft = '';
         $this->images = [];
@@ -470,35 +480,79 @@ class IngredientModal extends Component
         }
 
         $this->titleDraft = $todo->title;
+        $this->titleOriginal = $todo->title;
     }
 
+    /** «Annulla»: il titolo è già stato salvato mentre si scriveva, quindi si rimette com'era. */
     public function cancelTitle(): void
     {
+        $todo = $this->editable();
+
+        if ($todo && $this->titleOriginal !== null && $todo->title !== $this->titleOriginal) {
+            $todo->update(['title' => $this->titleOriginal]);
+            $this->dispatch('ingredients-updated');
+        }
+
         $this->titleDraft = null;
+        $this->titleOriginal = null;
     }
 
+    /** Salvataggio live: la bozza arriva dal campo (wire:model.live) a ogni pausa nella digitazione. */
+    public function updatedTitleDraft(): void
+    {
+        $this->autosaveTitle();
+    }
+
+    /**
+     * Persiste la bozza del titolo senza chiudere la modifica e senza toast (sarebbe uno a ogni pausa):
+     * la spia «salvato» accanto al campo basta. Restituisce false se non c'era niente da salvare.
+     */
+    protected function autosaveTitle(): bool
+    {
+        if (! ($todo = $this->editable()) || $this->titleDraft === null) {
+            return false;
+        }
+
+        $title = trim($this->titleDraft);
+
+        if ($title === '' || $title === $todo->title) {
+            return false;
+        }
+
+        if (mb_strlen($title) > TodoList::titleMax()) {
+            $this->dispatch('toast', message: __('griglia::t.msg.title_too_long', ['max' => TodoList::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
+
+            return false;
+        }
+
+        $todo->update(['title' => $title]);
+        $this->dispatch('ingredients-updated'); // la lista mostra il nuovo titolo
+        $this->dispatch('griglia-autosaved'); // spia «salvato» accanto al campo
+
+        return true;
+    }
+
+    /** Il bottone ✓ conferma e chiude la modifica (il salvataggio vero è già avvenuto da solo). */
     public function saveTitle(): void
     {
         if (! ($todo = $this->editable()) || $this->titleDraft === null) {
             return;
         }
 
+        $this->autosaveTitle();
         $title = trim($this->titleDraft);
 
-        if ($title === '') {
-            return;
+        if ($title === '' || mb_strlen($title) > TodoList::titleMax()) {
+            return; // titolo non valido: si resta in modifica, l'avviso l'ha già dato l'autosalvataggio
         }
 
-        if (mb_strlen($title) > TodoList::titleMax()) {
-            $this->dispatch('toast', message: __('griglia::t.msg.title_too_long', ['max' => TodoList::titleMax(), 'n' => mb_strlen($title)]), type: 'error');
-
-            return;
-        }
-
-        $todo->update(['title' => $title]);
+        $changed = $title !== $this->titleOriginal;
         $this->titleDraft = null;
-        $this->dispatch('ingredients-updated'); // la lista mostra il nuovo titolo
-        $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
+        $this->titleOriginal = null;
+
+        if ($changed) {
+            $this->dispatch('toast', message: __('griglia::t.msg.renamed'));
+        }
     }
 
     // ----- Nota -----
@@ -510,26 +564,68 @@ class IngredientModal extends Component
         }
 
         $this->notesDraft = $todo->notes ?? '';
+        $this->notesOriginal = $todo->notes ?? '';
     }
 
+    /** «Annulla»: la nota è già stata salvata mentre si scriveva, quindi si rimette com'era. */
     public function cancelNotes(): void
     {
+        $todo = $this->editable();
+
+        if ($todo && $this->notesOriginal !== null && (string) $todo->notes !== $this->notesOriginal) {
+            $todo->notes = $this->notesOriginal === '' ? null : $this->notesOriginal;
+            $todo->save();
+            $this->dispatch('ingredients-updated');
+        }
+
         $this->notesDraft = null;
+        $this->notesOriginal = null;
     }
 
+    /** Salvataggio live: la bozza arriva dall'editor (wire:model.live) a ogni pausa nella digitazione. */
+    public function updatedNotesDraft(): void
+    {
+        $this->autosaveNotes();
+    }
+
+    /** Persiste la bozza della nota senza chiudere l'editor e senza toast. */
+    protected function autosaveNotes(): bool
+    {
+        if (! ($todo = $this->editable()) || $this->notesDraft === null) {
+            return false;
+        }
+
+        $notes = trim($this->notesDraft);
+        $notes = $notes === '' ? null : $notes;
+
+        if ($notes === $todo->notes) {
+            return false;
+        }
+
+        $todo->notes = $notes;
+        $todo->save();
+        $this->dispatch('ingredients-updated');
+        $this->dispatch('griglia-autosaved'); // spia «salvato» accanto all'editor
+
+        return true;
+    }
+
+    /** Il bottone «Salva» conferma e chiude l'editor (il salvataggio vero è già avvenuto da solo). */
     public function saveNotes(): void
     {
         if (! ($todo = $this->editable()) || $this->notesDraft === null) {
             return;
         }
 
-        $notes = trim($this->notesDraft);
-        $todo->notes = $notes === '' ? null : $notes;
-        $todo->save();
+        $this->autosaveNotes();
+        $changed = trim($this->notesDraft) !== (string) $this->notesOriginal;
 
         $this->notesDraft = null;
-        $this->dispatch('ingredients-updated');
-        $this->dispatch('toast', message: __('griglia::t.msg.note_saved'));
+        $this->notesOriginal = null;
+
+        if ($changed) {
+            $this->dispatch('toast', message: __('griglia::t.msg.note_saved'));
+        }
     }
 
     // ----- Skills of the agent chosen for this task -----
