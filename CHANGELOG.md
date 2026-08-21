@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.72.0] - 2026-08-21
+
+### Fixed
+
+- **The coloured border of a task now really shows up in the list.** The row painted it only through the
+  `.db-attention` / `.db-att-*` rules of this stylesheet, but a host app runs the package's *views* from
+  `vendor/` while its CSS comes from a build of its own: when the two copies are on different versions the
+  rules are missing — or are an older version of themselves — and the highlight is simply not there. That
+  is why it looked broken three releases in a row (tasks 397, 402, 406). The row now writes the colour on
+  itself (`Todo::attentionColor()`, inline `border-color`/`border-width`/`opacity`/`filter`/`outline`), so
+  the border survives a stale stylesheet *and* the grey filter a theme puts on completed rows. The
+  stylesheet keeps the pulse and the `--db-att` variable for themes.
+
+### Changed
+
+- The border is the only signal an unopened result gives: the **badge next to the title and the outcome chip
+  in the modal are gone** (task 415 — they were never asked for). Screen readers still get the meaning from
+  a hidden label, and the row carries it as a tooltip. Removed with them: the `.db-attention-badge`,
+  `.db-unseen-badge` and `.db-outcome*` rules and the `outcome_alert` / `outcome_blocked` strings. New
+  strings `result_question` / `result_question_hint` describe a row with open questions.
+
 ## [0.71.0] - 2026-08-21
 
 ### Changed

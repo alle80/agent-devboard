@@ -56,6 +56,25 @@ class Todo extends Model
         return in_array($this->outcome, ['alert', 'blocked'], true) ? $this->outcome : 'ok';
     }
 
+    /**
+     * Colour of each attention level. The row paints it inline (see the board view): the border must be
+     * visible even when the host app's compiled CSS is older than the package — the views come from
+     * `vendor/`, the stylesheet from a build step, and the two drifted apart for three releases in a row
+     * (tasks 397, 402, 406), so the border simply never showed up.
+     */
+    public const ATTENTION_COLORS = [
+        'ok' => '#22c55e',        // done, nothing to check
+        'alert' => '#eab308',     // done, but look at it
+        'blocked' => '#ef4444',   // something is in the way
+        'question' => '#a78bfa',  // the agent is waiting for answers
+    ];
+
+    /** Hex colour of this row's attention level, null when the row asks for nothing. */
+    public function attentionColor(): ?string
+    {
+        return self::ATTENTION_COLORS[$this->attention()] ?? null;
+    }
+
     public function ingredients(): HasMany
     {
         return $this->hasMany(Ingredient::class)->orderBy('order')->orderBy('id');

@@ -115,10 +115,57 @@ class AttentionTest extends TestCase
     {
         $todo = $this->todo(['completed' => true, 'result_seen' => false, 'outcome' => 'blocked']);
 
-        Livewire::test(TodoList::class)->assertSee('db-att-blocked')->assertSee(__('griglia::t.result_blocked'));
+        Livewire::test(TodoList::class)->assertSee('db-att-blocked');
 
         $todo->update(['result_seen' => true]);
         Livewire::test(TodoList::class)->assertDontSee('db-att-blocked');
+    }
+
+
+    /**
+     * The colour is written on the row itself, not only in the stylesheet: an app that runs these views
+     * from `vendor/` while its CSS is built from another copy of the package showed no border at all
+     * (tasks 397, 402, 406). Inline also beats the grey filter `.tl-done` puts on completed rows.
+     */
+    public function test_the_row_paints_the_border_inline(): void
+    {
+        foreach (Todo::ATTENTION_COLORS as $level => $colour) {
+            $todo = $level === 'question'
+                ? $this->todo(['question' => true])
+                : $this->todo(['completed' => true, 'result_seen' => false, 'outcome' => $level === 'ok' ? null : $level]);
+
+            $this->assertSame($level, $todo->attention());
+            $this->assertSame($colour, $todo->attentionColor());
+
+            Livewire::test(TodoList::class)
+                ->assertSee('border-color: '.$colour, false)
+                ->assertSee('filter: none', false);
+
+            $todo->delete();
+        }
+    }
+
+
+    public function test_a_row_that_asks_for_nothing_has_no_inline_border(): void
+    {
+        $this->todo(['completed' => true, 'result_seen' => true, 'outcome' => 'alert']);
+
+        Livewire::test(TodoList::class)->assertDontSee('border-color: #eab308', false);
+    }
+
+
+    /** The user asked for the coloured border and nothing else: no badge in the row, no chip in the modal. */
+    public function test_the_highlight_shows_no_badge_and_no_chip(): void
+    {
+        $todo = $this->todo(['completed' => true, 'result_seen' => false, 'outcome' => 'alert', 'claude_comment' => 'done']);
+
+        Livewire::test(TodoList::class)->assertDontSee('db-attention-badge');
+
+        Livewire::test(IngredientModal::class)->call('openFor', $todo->id)->assertDontSee('db-outcome');
+
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $this->assertStringNotContainsString('.db-attention-badge', $css);
+        $this->assertStringNotContainsString('.db-outcome', $css);
     }
 
     public function test_plain_ok_uses_green_instead_of_the_theme_accent(): void

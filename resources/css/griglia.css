@@ -516,7 +516,12 @@ select.setting-input { appearance: auto; }
 
 /* ---------- Rows that ask for attention: fresh agent result (colour = its outcome) or open questions ----------
    green = done, nothing to check · yellow = done, look at it · red = something is blocking · violet = open
-   questions. Opening the task clears the highlight and the row goes back to its usual look. */
+   questions. Opening the task clears the highlight and the row goes back to its usual look. There is no
+   badge and no chip: the border is the whole signal (task 415).
+   The row also carries the very same border inline (`Todo::attentionColor()`), because a host app whose
+   stylesheet is built from a different copy of this package than the views it runs would otherwise show
+   no border at all — which is exactly what happened for three releases. These rules add the pulse and
+   keep working for themes that restyle `--db-att`. */
 .todo-row.db-attention, .todo-row.db-unseen {
     --db-att: #22c55e; --db-att-fg: #04180c;
     /* The coloured border IS the card's own border (task 406): a detached ring around the row reads as
@@ -537,20 +542,11 @@ select.setting-input { appearance: auto; }
 .todo-row.db-att-blocked  { --db-att: #ef4444; --db-att-fg: #2a0505; }
 .todo-row.db-att-question { --db-att: #a78bfa; --db-att-fg: #16092b; }
 .todo-row.db-attention .tl-item-title, .todo-row.db-unseen .tl-item-title { filter: none !important; }  /* keep the title crisp */
-.db-attention-badge, .db-unseen-badge {
-    display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: .05em;
-    font-size: .62rem; font-weight: 700; line-height: 1; padding: .22em .5em; border-radius: 999px;
-    background: var(--db-att, var(--tl-accent, #22c55e)); color: var(--db-att-fg, #04180c); white-space: nowrap;
-}
 @keyframes db-attention-pulse {
     0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--db-att) 18%, transparent), 0 0 8px color-mix(in srgb, var(--db-att) 20%, transparent); }
     50%      { box-shadow: 0 0 0 2px color-mix(in srgb, var(--db-att) 30%, transparent), 0 0 18px color-mix(in srgb, var(--db-att) 38%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) { .todo-row.db-attention, .todo-row.db-unseen { animation: none; } }
-/* Outcome chip in the modal: says why the row was yellow or red */
-.db-outcome { border: 2px solid currentColor; text-transform: uppercase; letter-spacing: .04em; }
-.db-outcome-alert { color: #eab308; }
-.db-outcome-blocked { color: #ef4444; }
 
 /* ---------- Working: animated icon + progress bar/percentage ---------- */
 /* Matrix rain: dashed columns whose dashes flow downwards, staggered, with a faint flicker of the whole icon */

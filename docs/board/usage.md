@@ -39,9 +39,15 @@ The four colours are fixed rather than derived from the theme accent, and a high
 full strength: it is exempt from both the fading and the greyscale a theme applies to completed rows,
 which would otherwise wash the border out.
 
-Yellow and red also put a badge next to the title and a chip in the modal, above the agent's answer, which
-says why. Open the task and the border goes back to the usual one of the theme. A task you close yourself
-has no coloured border — there is no result to read.
+The colour is the whole signal: no badge in the row, no chip in the modal. Open the task and the border goes
+back to the usual one of the theme; a task you close yourself has no coloured border, because there is no
+result to read. A screen reader still gets the meaning, from a hidden label on the row, and the row's tooltip
+spells it out.
+
+The row writes the border colour on itself (inline), not only through the `.db-attention` / `.db-att-*`
+classes. An app that runs the package views from `vendor/` while its stylesheet is compiled from another
+copy of the package can end up with no rule at all for those classes: the highlight would silently
+disappear. The stylesheet still adds the pulse and can be re-themed through `--db-att`.
 
 ### Carrying on after a task is done
 

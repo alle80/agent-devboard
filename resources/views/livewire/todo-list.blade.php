@@ -66,10 +66,20 @@
             </div>
 
             {{-- Riga todo --}}
-            {{-- Bordo colorato finché la riga chiede attenzione: verde/giallo/rosso secondo l'esito, viola se ci sono domande --}}
+            {{-- Bordo colorato finché la riga chiede attenzione: verde/giallo/rosso secondo l'esito, viola se ci sono domande.
+                 Il colore è scritto INLINE, non solo nelle classi: le viste arrivano da vendor/ mentre il CSS passa da una
+                 build dell'app, e finché le due versioni non coincidono le regole `.db-attention` possono mancare (o essere
+                 quelle vecchie) — il bordo non si vedeva affatto. Inline vince anche sul filtro grigio di `.tl-done`. --}}
             @php($attention = $todo->attention())
             @php($unseen = $attention && $attention !== 'question')
-            <div class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $attention ? 'db-attention db-att-'.$attention : '' }}">
+            @php($attentionColor = $todo->attentionColor())
+            <div
+                class="tl-card todo-row relative my-1.5 flex items-center gap-3 px-3 py-2.5 transition sm:px-4 {{ $todo->completed ? 'tl-done' : '' }} {{ $attention ? 'db-attention db-att-'.$attention : '' }}"
+                @if ($attention)
+                    style="--db-att: {{ $attentionColor }}; border-color: {{ $attentionColor }}; border-style: solid; border-width: max(var(--tl-bw, 2px), 2px); outline: none; opacity: 1; filter: none;"
+                    title="{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention).'_hint') }}"
+                @endif
+            >
 
                 @if ($todo->working && $todo->progress !== null)
                     <span class="db-progress-track" aria-hidden="true"></span>
@@ -116,8 +126,10 @@
                             @if ($todo->attachments_count)
                                 <span class="inline-flex shrink-0 items-center gap-0.5 text-sm" title="{{ __('griglia::t.images_count', ['count' => $todo->attachments_count]) }}"><x-griglia::icon name="image" />{{ $todo->attachments_count }}</span>
                             @endif
-                            @if ($unseen)
-                                <span class="db-attention-badge shrink-0" title="{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention).'_hint') }}">{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention)) }}</span>
+                            {{-- Niente targhetta visibile: l'utente ha chiesto il bordo colorato e basta (task 415).
+                                 Il testo resta per chi legge con uno screen reader, che il colore non lo vede. --}}
+                            @if ($attention)
+                                <span class="sr-only">{{ __('griglia::t.result_'.($attention === 'ok' ? 'new' : $attention)) }}</span>
                             @endif
                             @if (\Alle80\Griglia\Agent::many() && $todo->agent)
                                 <span class="db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase opacity-75" title="{{ __('griglia::t.agent_of_task') }}">{{ \Alle80\Griglia\Agent::label($todo->agent) }}</span>
