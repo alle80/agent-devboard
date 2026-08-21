@@ -223,6 +223,14 @@ body { -webkit-tap-highlight-color: transparent; }
 }
 
 .tl-done { opacity: 0.55; filter: var(--tl-done-filter, none); }
+/* I comandi partivano gia' attenuati e dentro una riga completata l'opacita' si moltiplicava
+   (0.55 x 0.30): su temi scuri archivio, riprendi ed elimina diventavano quasi invisibili. */
+.tl-done > .todo-action {
+    color: var(--tl-done-action, #e5e7eb);
+    opacity: 0.9;
+}
+.tl-done > .todo-action:hover,
+.tl-done > .todo-action:focus-visible { opacity: 1; }
 
 .tl-add {
     font-size: var(--tl-add-size, 1.25rem);

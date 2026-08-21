@@ -40,6 +40,8 @@ class AssetsTest extends TestCase
         $css = file_get_contents(__DIR__.'/../../public/build/griglia.css');
         $this->assertStringContainsString('.tl-card', $css);
         $this->assertStringContainsString('.setting-switch', $css);
+        $this->assertStringContainsString('.tl-done>.todo-action', $css);
+        $this->assertStringContainsString('var(--tl-done-action,#e5e7eb)', $css);
     }
 
     public function test_the_labels_of_the_copy_button_reach_the_browser(): void

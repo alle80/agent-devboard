@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.73.3] - 2026-08-21
+
+### Fixed
+- Completed-task action buttons now use a lighter grey and stronger opacity, instead of becoming almost
+  invisible when their own dimming was compounded by the completed row's opacity.
+
 ## [0.73.2] - 2026-08-21
 ### Fixed
 - Render single newlines in Markdown notes and agent answers as HTML `<br>` elements.

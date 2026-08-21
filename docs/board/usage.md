@@ -39,6 +39,9 @@ The four colours are fixed rather than derived from the theme accent, and a high
 full strength: it is exempt from both the fading and the greyscale a theme applies to completed rows,
 which would otherwise wash the border out.
 
+Completed rows remain subdued, but their action buttons use a lighter grey (`--tl-done-action`) and stronger
+opacity so archive, resume and delete stay legible, including on dark themes and small screens.
+
 The colour is the whole signal: no badge in the row, no chip in the modal. Open the task and the border goes
 back to the usual one of the theme; a task you close yourself has no coloured border, because there is no
 result to read. A screen reader still gets the meaning, from a hidden label on the row, and the row's tooltip
