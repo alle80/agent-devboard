@@ -4,8 +4,10 @@
     'class' => '',
 ])
 {{--
-    Speech-to-text button (Web Speech API, window.grigliaMic): appends what you say to the nearest field.
-    Hidden when the browser has no speech recognition (Chrome/Edge/Android/iOS Safari have it).
+    Speech-to-text button (window.grigliaMic): appends what you say to the nearest field.
+    While recording it shows the elapsed time, turns amber when the microphone hears nothing and keeps
+    the error until you tap again (a failed transcription is retried, the audio is not thrown away).
+    Hidden when the browser can neither record nor recognise speech.
 --}}
 <button
     type="button"
@@ -13,11 +15,12 @@
     x-show="supported"
     x-cloak
     x-on:click="toggle()"
-    x-bind:class="{ 'db-mic-on': on, 'db-mic-busy': busy, 'db-mic-error': error }"
-    x-bind:title="error ? error : (busy ? @js(__('griglia::t.mic_busy')) : (on ? @js(__('griglia::t.mic_stop')) : @js(__('griglia::t.mic_start'))))"
+    x-bind:class="{ 'db-mic-on': on, 'db-mic-busy': busy, 'db-mic-error': error, 'db-mic-warn': silent }"
+    x-bind:title="hint"
+    x-bind:aria-label="hint"
     x-bind:aria-pressed="on ? 'true' : 'false'"
     x-bind:aria-busy="busy ? 'true' : 'false'"
     x-bind:disabled="busy"
     aria-label="{{ __('griglia::t.mic_start') }}"
     {{ $attributes->merge(['class' => 'db-mic cursor-pointer '.$class]) }}
-><x-griglia::icon name="mic" /></button>
+><x-griglia::icon name="mic" /><span x-show="on" x-cloak x-text="clock" class="db-mic-time tabular-nums"></span></button>

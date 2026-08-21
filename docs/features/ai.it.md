@@ -34,6 +34,23 @@ escono giusti («l'agente», non «la gente»). È tradotto con la lingua dell'a
 `GRIGLIA_SPEECH_PROMPT` (o `config('griglia.speech_prompt')`), e metterlo a stringa vuota per non mandare
 alcun suggerimento.
 
+### Non si perde niente
+
+Si detta dentro una pagina Livewire, quindi il campo può essere ri-renderizzato mentre parli (un altro
+dispositivo, l'agente che aggiorna un task). La registrazione vive fuori dal componente, così un
+ri-render non la uccide più in silenzio, e:
+
+- il pulsante mostra i **secondi trascorsi** mentre registra: si vede che sta davvero registrando;
+- diventa ambra e lo dice quando il **microfono non sente nulla**, invece di lasciarti parlare cinque
+  minuti a un microfono morto;
+- una **trascrizione fallita non butta via l'audio**: tocca di nuovo il microfono per riprovare (ci
+  riprova anche da solo quando torni sulla scheda). L'errore resta sul pulsante finché non fai qualcosa;
+- un testo trascritto che **non trova più il campo** (modale chiuso durante la trascrizione) viene messo
+  da parte e inserito quando il campo torna;
+- lasciare la pagina con una dettatura in corso (o ancora da trascrivere) chiede conferma;
+- la dettatura viene chiusa e trascritta dopo `speech_max_seconds` secondi (default 300, `0` = nessun
+  limite, `GRIGLIA_SPEECH_MAX_SECONDS`): un solo upload non supera mai quello che il provider accetta.
+
 ## Costruttore di piani
 
 La pagina **Nuovo piano…** manda il tuo obiettivo all'AI, che lo spezza in task concatenati

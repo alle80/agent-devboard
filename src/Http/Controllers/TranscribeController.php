@@ -26,7 +26,9 @@ class TranscribeController
 
         try {
             $audio = \Laravel\Ai\Files\Base64Audio::fromUpload($file, $mime);
-            $pending = \Laravel\Ai\Transcription::of($audio)->language($lang)->timeout(90);
+            // A long dictation is a big file: a fixed short timeout threw away five minutes of talking.
+            $pending = \Laravel\Ai\Transcription::of($audio)->language($lang)
+                ->timeout($file->getSize() > 2_000_000 ? 180 : 90);
 
             if ($prompt !== '' && method_exists($pending, 'withProviderOptions')) {
                 $pending = $pending->withProviderOptions(['prompt' => $prompt]);
@@ -34,7 +36,14 @@ class TranscribeController
 
             $text = (string) $pending->generate();
         } catch (\Throwable $e) {
-            Log::warning('devboard: transcription failed: '.$e->getMessage());
+            // Details in the log only (the browser gets a generic message), but enough to tell a provider
+            // failure from an audio the browser recorded badly: size and mime are half the diagnosis.
+            Log::warning('griglia: transcription failed: '.$e->getMessage(), [
+                'bytes' => $file->getSize(),
+                'mime' => $mime,
+                'client_mime' => $file->getClientMimeType(),
+                'lang' => $lang,
+            ]);
 
             return response()->json(['ok' => false, 'error' => __('griglia::t.mic_error')], 502); // details only in the log
         }

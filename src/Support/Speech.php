@@ -51,6 +51,44 @@ class Speech
         return false;
     }
 
+    /**
+     * Everything the browser needs to dictate (window.GRIGLIA_SPEECH): mode, endpoint and the labels the
+     * mic button shows on its own (errors, silence warning, retry) — the JS has no access to the
+     * translations, so a missing label here means a mute failure for the user.
+     */
+    public static function frontend(): array
+    {
+        return [
+            'mode' => self::mode(),
+            'url' => route('griglia.transcribe'),
+            'csrf' => csrf_token(),
+            'lang' => self::language(),
+            'max_seconds' => self::maxSeconds(),
+            'start' => __('griglia::t.mic_start'),
+            'stop' => __('griglia::t.mic_stop'),
+            'busy' => __('griglia::t.mic_busy'),
+            'error' => __('griglia::t.mic_error'),
+            'retry' => __('griglia::t.mic_retry'),
+            'empty' => __('griglia::t.mic_empty'),
+            'silent' => __('griglia::t.mic_silent'),
+            'denied' => __('griglia::t.mic_denied'),
+            'lost' => __('griglia::t.mic_lost'),
+            'expired' => __('griglia::t.mic_expired'),
+            'kept' => __('griglia::t.mic_kept'),
+            'recovered' => __('griglia::t.mic_recovered'),
+            'limit' => __('griglia::t.mic_limit'),
+        ];
+    }
+
+    /**
+     * Hard limit of a single dictation, in seconds (0 = none): when it is reached the recording is closed
+     * and transcribed instead of growing until the upload or the provider refuses it.
+     */
+    public static function maxSeconds(): int
+    {
+        return max(0, (int) config('griglia.speech_max_seconds', 300));
+    }
+
     /** Two-letter language for the transcription (from the app locale). */
     public static function language(): string
     {

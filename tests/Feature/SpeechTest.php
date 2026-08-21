@@ -57,6 +57,48 @@ class SpeechTest extends TestCase
         $this->assertSame('', Speech::prompt(), 'empty string disables the hint');
     }
 
+    public function test_the_front_end_payload_carries_every_label_and_the_time_limit(): void
+    {
+        // The mic button reports errors on its own (the JS cannot read the translations): a missing
+        // label means the user talks for five minutes and is never told that it failed (task 431).
+        $speech = Speech::frontend();
+
+        foreach (['mode', 'url', 'csrf', 'lang', 'max_seconds', 'start', 'stop', 'busy', 'error',
+            'retry', 'empty', 'silent', 'denied', 'lost', 'expired', 'kept', 'recovered', 'limit'] as $key) {
+            $this->assertArrayHasKey($key, $speech);
+            if ($key !== 'csrf') {   // the token is empty without a session, the labels never are
+                $this->assertNotSame('', (string) $speech[$key], "empty speech label: $key");
+            }
+        }
+
+        $this->assertSame(300, $speech['max_seconds'], 'a dictation is closed and transcribed after five minutes');
+        $this->get('/settings')->assertOk()->assertSee('"max_seconds":300', false);
+    }
+
+    public function test_the_time_limit_comes_from_the_config_and_can_be_disabled(): void
+    {
+        config(['griglia.speech_max_seconds' => 120]);
+        $this->assertSame(120, Speech::maxSeconds());
+
+        config(['griglia.speech_max_seconds' => 0]);
+        $this->assertSame(0, Speech::maxSeconds(), '0 = no limit');
+
+        config(['griglia.speech_max_seconds' => -5]);
+        $this->assertSame(0, Speech::maxSeconds(), 'a negative limit would stop the recording at once');
+    }
+
+    public function test_the_shipped_build_contains_the_resilient_dictation(): void
+    {
+        // The dictation must survive a Livewire re-render: the session lives in the module (not in the
+        // Alpine component) and a failed upload keeps its audio. Guard the built bundle, not the source.
+        $js = file_get_contents(__DIR__.'/../../public/build/griglia.js');
+
+        $this->assertStringContainsString('grigliaMic', $js);
+        $this->assertStringContainsString('max_seconds', $js);
+        $this->assertStringContainsString('isConnected', $js, 'the target field is resolved again at every tick');
+        $this->assertStringContainsString('beforeunload', $js, 'leaving the page mid-dictation must warn');
+    }
+
     public function test_transcribe_endpoint_refuses_when_not_configured(): void
     {
         $this->post(route('griglia.transcribe'), ['audio' => UploadedFile::fake()->create('speech.webm', 10, 'audio/webm')])

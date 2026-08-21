@@ -620,6 +620,8 @@ select.setting-input { appearance: auto; }
 .db-mic-on { color: #ef4444; animation: db-mic-pulse 1.2s ease-in-out infinite; }
 .db-mic-busy { opacity: .5; animation: db-mic-pulse .7s ease-in-out infinite; cursor: progress; }
 .db-mic-error { color: #ef4444; }
+.db-mic-warn { color: #f59e0b; }
+.db-mic-time { margin-left: .25rem; font-size: .72em; opacity: .8; }
 @keyframes db-mic-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { .db-mic-on { animation: none; } }
 

@@ -94,6 +94,10 @@ return [
     // «l'agente» instead of «la gente»). null = use the translated default, '' = no hint at all.
     'speech_prompt' => env('GRIGLIA_SPEECH_PROMPT', null),
 
+    // Hard limit of a single dictation, in seconds (0 = no limit): when it is reached the recording is
+    // closed and transcribed, instead of growing until the upload or the provider refuses it.
+    'speech_max_seconds' => (int) env('GRIGLIA_SPEECH_MAX_SECONDS', 300),
+
     // Front-end assets: 'precompiled' (default) = the CSS/JS built by the package, published in
     // public/vendor/griglia/build — nothing to build in the host app; 'vite' = the host app bundles
     // resources/css/griglia.css + resources/js/griglia.js in its own Vite build (entries below)

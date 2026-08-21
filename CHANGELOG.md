@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.76.0] - 2026-08-21
+### Fixed
+- **Speech to text lost entire dictations without saying a word (task 431).** The recorder lived inside the
+  Alpine component of the mic button: any Livewire re-render of the page — a broadcast from another device,
+  the agent updating a task while you dictate a new one — morphed the DOM, destroyed the component and left
+  a `MediaRecorder` running that nobody would ever stop, upload or transcribe. Five minutes of talking, no
+  text and no error. The dictation session now lives in the module, outside Alpine: the button re-adopts it
+  after every re-render and keeps the resolver of the target field fresh, so the transcript is written into
+  the field that is on the page *now* and not into a detached node. Other silent deaths fixed with it: an
+  empty recording used to `return` without a word (now it says so), a failed upload threw the audio away
+  (now it is kept and retried — by tapping the mic, or by itself when you come back to the tab), an expired
+  session was reported as a generic failure, and errors erased themselves after four seconds.
+- Transcribing a long recording no longer times out at 90 seconds: over 2 MB of audio the call gets 180.
+
+### Added
+- The mic button shows the **elapsed time** while it records, turns amber when the microphone has been
+  hearing **nothing** for twelve seconds, and keeps the error visible until you act on it. A transcript that
+  finds no field to write into (modal closed mid-transcription) is kept and inserted when the field comes
+  back; leaving the page mid-dictation asks for confirmation.
+- `griglia.speech_max_seconds` (`GRIGLIA_SPEECH_MAX_SECONDS`, default 300, `0` = no limit): a dictation is
+  closed and transcribed when it reaches the limit, instead of growing until the upload or the provider
+  refuses it.
+- `Alle80\Griglia\Support\Speech::frontend()` builds `window.GRIGLIA_SPEECH` (mode, endpoint, limit and
+  every label the button needs): the JS reports failures on its own and cannot read the translations.
+- Translations `mic_retry|empty|silent|denied|lost|expired|kept|recovered|limit`; CSS `.db-mic-warn`,
+  `.db-mic-time`. Failed transcriptions are logged with size and mime, to tell a provider failure from a
+  recording the browser botched.
+
 ## [0.75.0] - 2026-08-21
 
 ### Added
@@ -1381,7 +1409,9 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.74.3...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.76.0...HEAD
+[0.76.0]: https://github.com/alle80/griglia/compare/v0.75.0...v0.76.0
+[0.75.0]: https://github.com/alle80/griglia/compare/v0.74.3...v0.75.0
 [0.74.3]: https://github.com/alle80/griglia/compare/v0.74.2...v0.74.3
 [0.74.2]: https://github.com/alle80/griglia/compare/v0.74.1...v0.74.2
 [0.74.1]: https://github.com/alle80/griglia/compare/v0.74.0...v0.74.1
