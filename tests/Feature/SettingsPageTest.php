@@ -39,6 +39,20 @@ class SettingsPageTest extends TestCase
         $this->assertSame('21:00', app(AgentSettings::class)->refresh()->daily_summary_time);
     }
 
+    /**
+     * Le select (e gli altri campi non-bool) devono salvare da sole al cambio: in Livewire 4
+     * «wire:model.change» senza «.live» aggiorna il valore solo lato client e non invia la
+     * richiesta, quindi updatedValues() non scattava e il settaggio restava quello vecchio (task 436).
+     */
+    public function test_non_bool_fields_are_bound_live_so_they_save_on_change(): void
+    {
+        $html = Livewire::test(SettingsPage::class)->html();
+
+        $this->assertStringNotContainsString('wire:model.change="values.', $html);
+        $this->assertStringContainsString('wire:model.live.change="values.agent.git_flow"', $html);
+        $this->assertStringContainsString('wire:model.live.change="values.app.title_max_length"', $html);
+    }
+
     public function test_default_style_redirects_home(): void
     {
         $this->get('/')->assertOk();

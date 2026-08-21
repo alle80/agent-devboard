@@ -16,6 +16,9 @@ php artisan vendor:publish --tag=griglia-lang       # translations (en, it)
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md, the rules for the agent
 ```
 
+Every field of `/settings` saves by itself, with no «Save» button: the switches when you click them,
+the selects, numbers, texts and times as soon as they change (a toast confirms it).
+
 ## Settings the agent reads
 
 The `agent` and `optimization` groups are not decoration: `griglia:check` prints them at the top of its

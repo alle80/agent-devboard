@@ -16,6 +16,9 @@ php artisan vendor:publish --tag=griglia-lang       # traduzioni (en, it)
 php artisan vendor:publish --tag=griglia-agents     # AGENTS.md, le regole per l'agente
 ```
 
+Ogni campo di `/settings` si salva da solo, senza pulsante «Salva»: gli interruttori al clic, le select,
+i numeri, i testi e gli orari appena cambiano (un toast lo conferma).
+
 ## Le impostazioni che legge l'agente
 
 I gruppi `agent` e `optimization` non sono decorazione: `griglia:check` li stampa in testa al proprio output e

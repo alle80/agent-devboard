@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.78.1] - 2026-08-21
+### Fixed
+- **The `/settings` selects (and the number, text and time fields) save again when you change them (task 436).**
+  Only the switches were still saving: with Livewire 4 the `wire:model.change` modifier alone updates the value
+  in the browser without sending it to the server, so `updatedValues()` never ran and the old value stayed in
+  the database — you changed «Git» to «commit on main», left the page and found «branch + PR» again. The fields
+  are now bound with `wire:model.live.change`.
+
 ## [0.78.0] - 2026-08-21
 ### Changed
 - **The title and the note of a task save themselves while you type (task 433).** No more «Save» button to
@@ -1438,6 +1446,7 @@ monorepo into a standalone, installable Composer package.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
 [Unreleased]: https://github.com/alle80/griglia/compare/v0.78.0...HEAD
+[0.78.1]: https://github.com/alle80/griglia/compare/v0.78.0...v0.78.1
 [0.78.0]: https://github.com/alle80/griglia/compare/v0.77.1...v0.78.0
 [0.77.1]: https://github.com/alle80/griglia/compare/v0.77.0...v0.77.1
 [0.77.0]: https://github.com/alle80/griglia/compare/v0.76.0...v0.77.0

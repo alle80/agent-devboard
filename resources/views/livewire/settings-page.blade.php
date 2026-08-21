@@ -79,6 +79,9 @@
                             <p class="{{ $skin['help'] }}">{{ $help }}</p>
                         </div>
 
+                        {{-- I campi non-bool salvano da soli sull'evento «change» (task 436): in Livewire 4
+                             «.change» da solo aggiorna il valore solo lato client, serve «.live» perché
+                             parta la richiesta e scatti updatedValues() → save(). --}}
                         @if ($type === 'bool')
                             <button
                                 type="button"
@@ -95,7 +98,7 @@
                         @elseif ($type === 'select')
                             <select
                                 id="{{ $id }}"
-                                wire:model.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[60%]"
                             >
                                 @foreach ($opts as $v => $lbl)
@@ -108,21 +111,21 @@
                                 type="number"
                                 inputmode="numeric"
                                 min="{{ $opts['min'] ?? 0 }}" max="{{ $opts['max'] ?? 9999 }}"
-                                wire:model.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-28 text-right sm:mt-1"
                             >
                         @elseif ($type === 'time')
                             <input
                                 id="{{ $id }}"
                                 type="time"
-                                wire:model.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-36 sm:mt-1"
                             >
                         @else
                             <input
                                 id="{{ $id }}"
                                 type="text"
-                                wire:model.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
                                 placeholder="{{ __('griglia::t.settings_empty_default') }}"
                                 autocomplete="off"
                                 class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-48"
