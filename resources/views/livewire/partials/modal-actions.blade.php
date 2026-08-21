@@ -3,11 +3,13 @@
     Uses the modal component methods: stateKey(), toggleOpenToWork(), resumeTodo(), archiveTodo(), deleteTodo().
     Vars available from the modal: $todo, $readonly.
 
-    Two groups: «nav» (state + previous/next), always next to the close button, and «tools» (agent, move,
-    archive, delete), which on a phone drops to its own line — see .modal-cmds in griglia.css (task 399).
+    Two groups: «nav» (state + previous/next) pinned to the left edge of the title bar and «tools» (agent,
+    move, archive, delete) pinned to the right, next to the close button — the bar spans the whole width
+    instead of piling up on the right (task 421). Below md the state name steps aside (the icon says it) and
+    on a phone «tools» drops to its own line — see .modal-cmds in griglia.css (task 399).
 --}}
 @php($state = $this->stateKey())
-<div class="modal-cmds ml-auto flex min-w-0 items-center gap-1.5" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
+<div class="modal-cmds flex min-w-0 items-center gap-1.5" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
     <div class="modal-cmds-nav flex shrink-0 items-center gap-1.5">
         {{-- State badge = the same toggle as the dot in the row: tap → waiting ⚪ ⇄ open to work 🟢
              (working 🔧 → tap = stop; question ❓ → tap = take the task back without answering, the questions
@@ -22,6 +24,7 @@
                 aria-label="{{ __('griglia::t.state.'.$state) }}{{ $next ? ' — '.__('griglia::t.state_tap', ['state' => __('griglia::t.state.'.$next)]) : '' }}"
                 @unless ($next) aria-disabled="true" @endunless>
             <x-griglia::icon :name="$state" size="1.25em" :stroke="2" />
+            <span class="db-state-name">{{ __('griglia::t.state.'.$state) }}</span>
         </button>
 
         {{-- Prev / next task of the list: seguire una catena senza chiudere il modale (task 365) --}}
@@ -41,8 +44,6 @@
             </button>
         @endif
     </div>
-
-    <span class="db-sep mx-0.5 opacity-20" aria-hidden="true">|</span>
 
     <div class="modal-cmds-tools flex min-w-0 items-center gap-1.5">
         @if ($readonly)

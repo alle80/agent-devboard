@@ -77,8 +77,11 @@ the task goes back to waiting.
 
 Title, **Task** note (Markdown editor, with a microphone for [speech to text](../features/ai.md#speech-to-text)), the agent's answer box, statistics (working time,
 tokens, cost), the agent's **skills** accordion, images (upload, camera, paste; AI description when enabled),
-sub-tasks (Markdown, sortable), questions/answers, resume-from context. Header: state badge (tap to toggle),
-**move to another list**, archive, delete; on a completed task: **resume with changes** (a new linked task).
+sub-tasks (Markdown, sortable), questions/answers, resume-from context.
+
+The header uses the whole bar: on the left the **state badge** with ‹ `3/7` › — from a tablet up the badge
+carries its name — and on the right the commands: the agent that owns the task, **move to another list**,
+archive, delete, close, plus **resume with changes** (a new linked task) on a completed one.
 
 ### Moving between tasks
 
@@ -100,8 +103,9 @@ On a plan list the **Plan** bar shows progress and the start/pause buttons (see 
 
 Everything is designed for phones: rows on two levels, full-screen modal, full-width notification panel, Web Push.
 
-The modal header splits in two on a narrow screen: the state badge with ‹ `3/7` › stays on the first line
-next to the close button — always reachable, whatever the list holds — and the rest of the commands (agent,
+The modal header splits in two on a narrow screen: the state badge (icon only — its name needs a wider
+panel) with ‹ `3/7` › stays on the first line next to the close button — always reachable, whatever the
+list holds — and the rest of the commands (agent,
 move, archive, delete) sit on a second line, with touch targets big enough for a thumb. Nothing is hidden
 behind a menu, and nothing runs off the edge of the screen.
 

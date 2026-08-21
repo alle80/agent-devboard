@@ -200,4 +200,23 @@ class ModalCommandsTest extends TestCase
         $this->assertStringContainsString('.modal-head > .modal-close { order: 2; }', $css);
         $this->assertStringContainsString('.modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem;', $css);
     }
+
+    public function test_the_modal_header_uses_the_whole_bar(): void
+    {
+        // Task 421: everything used to be pushed against the right edge (ml-auto), half the bar empty and
+        // the agent label cut mid-word. The two groups now sit on the two edges and the state says its name.
+        $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
+
+        $html = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
+
+        $this->assertStringNotContainsString('modal-cmds ml-auto', $html, 'the command bar no longer hugs the right edge');
+        $this->assertStringContainsString('db-state-name', $html);
+        $this->assertStringContainsString('Waiting', $html, 'the state badge carries its own label');
+
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $this->assertStringContainsString('.modal-cmds { flex: 1 1 auto; justify-content: space-between; }', $css);
+        $this->assertStringContainsString('.db-state-name { display: none;', $css, 'the label steps aside on a narrow panel');
+        $this->assertStringContainsString('.db-state-name { display: inline; }', $css, 'and comes back from md, where there is room');
+        $this->assertStringContainsString('.db-agent-select { max-width: 16rem; }', $css, 'the agent label has room from md');
+    }
 }

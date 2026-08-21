@@ -61,7 +61,6 @@ body { -webkit-tap-highlight-color: transparent; }
        ‹ 3/7 › e la X, sotto gli altri comandi, con bersagli da 36px. */
     .modal-head { flex-wrap: wrap; row-gap: 0.4rem !important; column-gap: 0.5rem !important; }
     .modal-cmds { display: contents; }
-    .modal-cmds > .db-sep { display: none; }
     .modal-cmds-nav { order: 1; margin-right: auto; }
     .modal-head > .modal-close { order: 2; }
     .modal-cmds-tools { order: 3; flex-basis: 100%; justify-content: flex-end; gap: 0.15rem; }
@@ -459,8 +458,15 @@ select.setting-input { appearance: auto; }
     opacity: .8; transition: opacity .15s ease, transform .15s ease, color .15s ease;
 }
 .db-cmd:hover { opacity: 1; transform: scale(1.15); }
+/* Testata del modale (task 421): la barra dei comandi prende tutta la larghezza disponibile e si divide
+   in due — stato e navigazione ‹ 3/7 › sul bordo sinistro, comandi e chiusura sul destro — invece di
+   ammassare tutto a destra lasciando vuota mezza riga. Su telefono vince .modal-cmds { display: contents }. */
+.modal-cmds { flex: 1 1 auto; justify-content: space-between; }
+.db-state-trigger { gap: 0.4rem; }
+
 /* La tendina dell'agente ha etichette lunghe («Predefinito (Claude Code)»): tronca, non sfonda la testata */
 .db-agent-select { max-width: 12rem; text-overflow: ellipsis; }
+
 .db-agent-select:hover { transform: none; }
 /* Nella riga la tendina fa da targhetta: niente freccia di sistema, larghezza da chip, nome dell'agente sempre visibile
    (anche quando il task eredita quello della lista). Le option tornano ai colori di sistema, altrimenti su temi scuri
@@ -468,6 +474,14 @@ select.setting-input { appearance: auto; }
 .db-agent-chip { appearance: none; -webkit-appearance: none; max-width: 7.5rem; text-overflow: ellipsis; letter-spacing: .04em; }
 .db-agent-chip:hover { opacity: 1; }
 .db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
+
+/* Il nome dello stato accanto al pallino e la tendina dell'agente per intero chiedono spazio vero: da md
+   (dove il pannello passa da 28rem a 42rem) ce n'è, sotto no — lì il pallino parla da solo. */
+.db-state-name { display: none; font-size: 0.75rem; opacity: 0.7; white-space: nowrap; }
+@media (min-width: 768px) {
+    .db-state-name { display: inline; }
+    .db-agent-select { max-width: 16rem; }
+}
 .db-cmd:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
 .db-cmd-danger:hover { color: #ef4444; }
 @media (prefers-reduced-motion: reduce) { .db-cmd { transition: opacity .15s ease; } .db-cmd:hover { transform: none; } }

@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.74.2] - 2026-08-21
+### Changed
+- **The task modal header now uses the whole bar.** Everything was pushed against the right edge — half the
+  title bar empty, the agent name cut mid-word (`Predefinito (Claude Co…`) — because the command block
+  carried `ml-auto`. State badge and ‹ `3/7` › now sit on the left edge, agent/move/archive/delete/close on
+  the right, and from `md` — where the panel is wide enough — the state badge shows its name (`Working`,
+  `Open to work`…) and the agent select fits its full label. Narrower than that nothing grows: the icon
+  speaks for the state and, on a phone, the two-line layout of 0.69.0 is untouched.
+
 ## [0.74.1] - 2026-08-21
 ### Fixed
 - Show the done state icon on completed rows instead of retaining their previous open-to-work icon.
@@ -1334,7 +1344,10 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.73.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.74.2...HEAD
+[0.74.2]: https://github.com/alle80/griglia/compare/v0.74.1...v0.74.2
+[0.74.1]: https://github.com/alle80/griglia/compare/v0.74.0...v0.74.1
+[0.74.0]: https://github.com/alle80/griglia/compare/v0.73.3...v0.74.0
 [0.73.0]: https://github.com/alle80/griglia/compare/v0.72.0...v0.73.0
 [0.72.0]: https://github.com/alle80/griglia/compare/v0.71.0...v0.72.0
 [0.71.0]: https://github.com/alle80/griglia/compare/v0.70.2...v0.71.0
