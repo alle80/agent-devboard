@@ -114,6 +114,7 @@ nav:
       - Settings backlog: reference/config-and-settings.md
   - Operations:
       - Security: operations/security.md
+      - Security assessment (2026-08-21): operations/security-assessment-2026-08-21.md
       - Upgrading: operations/upgrading.md
       - Troubleshooting: operations/troubleshooting.md
   - Contributing:

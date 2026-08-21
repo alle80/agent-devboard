@@ -3,6 +3,10 @@
 The full model, the hardening checklist and how to report a vulnerability are in
 [SECURITY.md](https://github.com/alle80/griglia/blob/master/SECURITY.md). The short version:
 
+The latest source review and its prioritized findings are in the
+[security assessment dated 2026-08-21](security-assessment-2026-08-21.md).
+
+
 ## What the package guarantees
 
 - **Everything is scoped to its owner.** Lists, tasks, sub-tasks, questions and attachments are always read

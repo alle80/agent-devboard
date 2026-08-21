@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.70.2] - 2026-08-21
+
+### Documentation
+- Added a source-level security assessment covering dependencies, configuration, input/output handling,
+  secrets, permissions and build/release practices, with evidence and prioritized remediations.
+
 ## [0.70.1] - 2026-08-21
 
 ### Fixed
