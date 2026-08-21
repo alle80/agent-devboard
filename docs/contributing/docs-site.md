@@ -12,6 +12,10 @@ pip install -r requirements-docs.txt   # Python 3.8+; mkdocs + Material + the st
 or, without Python, Docker: `griglia:docs-build --docker` builds the toolchain image from `docs.Dockerfile`
 (the official `squidfunk/mkdocs-material` image alone is not enough — it does not ship the i18n plugin).
 
+Half a toolchain — `mkdocs` and Material installed, `mkdocs-static-i18n` missing — is the common case: the
+command stops on `The "i18n" plugin is not installed` and adds the line to fix it (install the plugins, or
+build with `--docker`).
+
 ## Generated pages
 
 Three pages of the Reference section are written by the package itself, in both languages:

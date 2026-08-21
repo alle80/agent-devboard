@@ -13,6 +13,10 @@ oppure, senza Python, Docker: `griglia:docs-build --docker` costruisce l'immagin
 partire da `docs.Dockerfile` (l'immagine ufficiale `squidfunk/mkdocs-material` da sola non basta — non porta
 il plugin i18n).
 
+Il caso frequente è mezza catena di strumenti — `mkdocs` e Material installati, `mkdocs-static-i18n` no: il
+comando si ferma su `The "i18n" plugin is not installed` e aggiunge la riga per rimediare (installare i
+plugin, oppure costruire con `--docker`).
+
 ## Pagine generate
 
 Tre pagine della sezione Reference le scrive il package stesso, in tutte e due le lingue:

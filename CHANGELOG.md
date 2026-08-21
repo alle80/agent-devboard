@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.80.3] - 2026-08-21
+
+### Fixed
+- **`griglia:docs-build`: half a toolchain now says so.** With `mkdocs` and Material installed but
+  `mkdocs-static-i18n` missing, the command died on MkDocs' own `The "i18n" plugin is not installed`, which
+  says nothing about how to repair it. The `python3 -m mkdocs` probe now also requires `mkdocs_static_i18n`,
+  and a build that stops on a missing plugin prints the line that fixes it (`pip install -r
+  requirements-docs.txt`, or `--docker`). Documented in «Building this documentation site», EN + IT (task 457).
+
 ## [0.80.2] - 2026-08-21
 
 ### Fixed
@@ -1555,7 +1564,9 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.80.1...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.80.3...HEAD
+[0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3
+[0.80.2]: https://github.com/alle80/griglia/compare/v0.80.1...v0.80.2
 [0.80.1]: https://github.com/alle80/griglia/compare/v0.80.0...v0.80.1
 [0.80.0]: https://github.com/alle80/griglia/compare/v0.79.1...v0.80.0
 [0.79.1]: https://github.com/alle80/griglia/compare/v0.79.0...v0.79.1

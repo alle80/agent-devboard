@@ -64,7 +64,10 @@ class DocsBuild extends Command
             if ($mkdocs) {
                 $base = [$mkdocs];
             } elseif ($py = (new ExecutableFinder)->find('python3')) {
-                $probe = new Process([$py, '-c', 'import mkdocs, material']);
+                // Same interpreter that will run the build, so this is a reliable check: the bilingual
+                // site also needs mkdocs-static-i18n, and a partial toolchain is better reported here
+                // than by MkDocs, which only says «The "i18n" plugin is not installed».
+                $probe = new Process([$py, '-c', 'import mkdocs, material, mkdocs_static_i18n']);
                 $probe->run();
                 if (! $probe->isSuccessful()) {
                     return $this->missing();
@@ -88,6 +91,11 @@ class DocsBuild extends Command
 
         if (! $process->isSuccessful()) {
             $this->error('MkDocs failed (exit '.$process->getExitCode().').'.($process->getErrorOutput() ? ' '.trim($process->getErrorOutput()) : ''));
+            // A `mkdocs` binary from another interpreter cannot be probed beforehand: if it stops on a
+            // missing plugin, MkDocs says nothing about how to fix it — point at the toolchain here.
+            if (preg_match('/The "[\w-]+" plugin is not installed/', $process->getOutput().$process->getErrorOutput())) {
+                $this->error('The MkDocs toolchain is incomplete: install the plugins with  pip install -r requirements-docs.txt   (or run with --docker).');
+            }
 
             return self::FAILURE;
         }
@@ -120,7 +128,7 @@ class DocsBuild extends Command
 
     private function missing(): int
     {
-        $this->error('MkDocs is not installed. Install the toolchain with:  pip install -r requirements-docs.txt   (or run with --docker)');
+        $this->error('The MkDocs toolchain is not installed (mkdocs, Material, mkdocs-static-i18n). Install it with:  pip install -r requirements-docs.txt   (or run with --docker)');
 
         return self::FAILURE;
     }
