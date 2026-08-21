@@ -84,7 +84,7 @@ next. The **left and right arrow keys** do the same, unless you are typing in a 
 
 ### Copying what is in a note
 
-Notes and agent answers are Markdown: a **code block has a copy button** in its corner (commands, prompts,
+Notes and agent answers are Markdown: single newlines are displayed as line breaks, and a **code block has a copy button** in its corner (commands, prompts,
 snippets), **inline code copies itself with one click**, and links open in a new tab.
 
 ## Toolbar

@@ -19,6 +19,9 @@ class Markdown
             'html_input' => 'strip',        // drop any raw HTML in the source
             'allow_unsafe_links' => false,  // no javascript: / data: links
             'max_nesting_level' => 20,
+            'renderer' => [
+                'soft_break' => "<br>\n",
+            ],
         ]);
     }
 

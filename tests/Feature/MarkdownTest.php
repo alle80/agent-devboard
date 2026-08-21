@@ -15,6 +15,11 @@ class MarkdownTest extends TestCase
         $this->assertStringContainsString('<ul>', $html);
     }
 
+    public function test_renders_single_newlines_as_break_tags(): void
+    {
+        $this->assertStringContainsString("first<br>\nsecond", Markdown::render("first\nsecond"));
+    }
+
     public function test_renders_tables(): void
     {
         $this->assertStringContainsString('<table>', Markdown::render("| a | b |\n| --- | --- |\n| 1 | 2 |"));

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.73.2] - 2026-08-21
+### Fixed
+- Render single newlines in Markdown notes and agent answers as HTML `<br>` elements.
+
 ## [0.73.1] - 2026-08-21
 
 ### Fixed
@@ -1319,8 +1323,7 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.73.1...HEAD
-[0.73.1]: https://github.com/alle80/griglia/compare/v0.73.0...v0.73.1
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.73.0...HEAD
 [0.73.0]: https://github.com/alle80/griglia/compare/v0.72.0...v0.73.0
 [0.72.0]: https://github.com/alle80/griglia/compare/v0.71.0...v0.72.0
 [0.71.0]: https://github.com/alle80/griglia/compare/v0.70.2...v0.71.0
