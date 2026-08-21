@@ -23,7 +23,13 @@ i numeri, i testi e gli orari appena cambiano (un toast lo conferma).
 
 I gruppi `agent` e `optimization` non sono decorazione: `griglia:check` li stampa in testa al proprio output e
 l'agente deve rispettarli — politica dei commit, autonomia, notifiche, un task alla volta o più di uno,
-modalità stringata. Cambiali dalla pagina e il `griglia:check` successivo obbedisce.
+modalità stringata, tono e lunghezza delle risposte. Cambiali dalla pagina e il `griglia:check` successivo
+obbedisce. Il tono **Chiaro e strutturato** è pensato anche per programmatori esperti: non elimina i dettagli
+tecnici, ma riduce il gergo non necessario, spiega i termini inevitabili e usa formattazione leggibile.
+
+`Commento dell'agente` regola solo il resoconto salvato sotto il task; `Tono delle risposte` e `Lunghezza
+delle risposte` regolano invece la comunicazione rivolta all'utente. La modalità stringata resta una scelta
+separata di risparmio token e, quando è attiva, prevale riducendo quasi del tutto la conversazione in chat.
 
 ## La lingua della board
 

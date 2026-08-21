@@ -18,6 +18,8 @@ class MigrationTest extends TestCase
 
         $this->assertTrue(app(AgentSettings::class)->commit_after_task);
         $this->assertSame('ask', app(AgentSettings::class)->autonomy);
+        $this->assertSame('clear', app(AgentSettings::class)->response_tone);
+        $this->assertSame('balanced', app(AgentSettings::class)->response_length);
         $this->assertSame(50, app(AppSettings::class)->title_max_length);
     }
 

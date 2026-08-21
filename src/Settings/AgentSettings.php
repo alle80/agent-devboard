@@ -32,6 +32,12 @@ class AgentSettings extends Settings
     /** 'short' = commento 🤖 essenziale; 'detailed' = con dettagli tecnici e come provare. */
     public string $comment_detail;
 
+    /** Tono e leggibilità delle risposte rivolte all'utente. */
+    public string $response_tone;
+
+    /** Lunghezza desiderata delle risposte rivolte all'utente. */
+    public string $response_length;
+
     /** 'main' = commit diretti su main; 'branch_pr' = branch per task + Pull Request su GitHub. */
     public string $git_flow;
 
@@ -65,7 +71,8 @@ class AgentSettings extends Settings
     {
         $types = [
             'commit_after_task' => 'bool', 'push_after_commit' => 'bool', 'autonomy' => 'select', 'notify_on_done' => 'bool',
-            'notify_on_question' => 'bool', 'verify_before_close' => 'bool', 'comment_detail' => 'select', 'git_flow' => 'select',
+            'notify_on_question' => 'bool', 'verify_before_close' => 'bool', 'comment_detail' => 'select',
+            'response_tone' => 'select', 'response_length' => 'select', 'git_flow' => 'select',
             'daily_summary' => 'bool', 'daily_summary_time' => 'time', 'check_subtasks_on_done' => 'bool',
             'task_mode' => 'select',
         ];

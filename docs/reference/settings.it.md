@@ -15,6 +15,8 @@ Le opzioni della pagina `/settings`: salvate nel database, si cambiano a runtime
 | **Notifiche per le domande** (`notify_on_question`) | bool | Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando l'agente fa una domanda, e l'agente riceve l'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due. |
 | **Verifica prima di chiudere** (`verify_before_close`) | bool | Screenshot mobile+desktop e test Livewire automatici prima di chiudere un task (più lento, più sicuro). |
 | **Commento dell'agente** (`comment_detail`) | select: `short`, `detailed` | Quanto è dettagliata la risposta sotto la nota. |
+| **Tono delle risposte** (`response_tone`) | select: `clear`, `technical`, `conversational` | Come l'agente scrive in chat e nei riepiloghi. «Chiaro e strutturato» conserva la precisione tecnica, ma spiega il gergo e usa paragrafi, elenchi e titoli quando aiutano. |
+| **Lunghezza delle risposte** (`response_length`) | select: `concise`, `balanced`, `detailed` | Quanto deve approfondire una risposta normale. Non limita codice, verifiche o dettagli richiesti esplicitamente. |
 | **Git** (`git_flow`) | select: `main`, `branch_pr` | Dove finiscono i commit di ogni task. |
 | **Riepilogo serale** (`daily_summary`) | bool | Una notifica push la sera con cosa è stato chiuso in giornata. |
 | **Ora del riepilogo** (`daily_summary_time`) | time | A che ora arriva il riepilogo serale. |

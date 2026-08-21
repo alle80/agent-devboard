@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.83.0] - 2026-08-22
+
+### Added
+- **Configurable response tone and length.** The agent settings now distinguish the task comment detail from
+  user-facing communication, with clear, technical or conversational tones and concise, balanced or detailed
+  response lengths. The default keeps technical accuracy while making jargon and formatting easier to follow
+  (task 497).
 ## [0.82.0] - 2026-08-22
 
 ### Added

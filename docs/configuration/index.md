@@ -23,7 +23,13 @@ the selects, numbers, texts and times as soon as they change (a toast confirms i
 
 The `agent` and `optimization` groups are not decoration: `griglia:check` prints them at the top of its
 output and the agent is expected to follow them — commit policy, autonomy, notifications, one task at a
-time or several, terse mode. Change them from the page and the next `griglia:check` obeys.
+time or several, terse mode, response tone and response length. Change them from the page and the next
+`griglia:check` obeys. **Clear and structured** is suitable for experienced programmers too: it preserves
+technical detail while reducing unnecessary jargon, explaining unavoidable terms and using readable formatting.
+
+`Agent comment` controls only the report stored below a task; `Response tone` and `Response length` control
+user-facing communication. Terse mode remains a separate token-saving choice and, when enabled, takes priority
+by reducing chat almost entirely.
 
 ## The language of the board
 

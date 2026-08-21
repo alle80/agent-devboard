@@ -15,6 +15,8 @@ The options of the `/settings` page: stored in the database, changed at run time
 | **Notifications for questions** (`notify_on_question`) | bool | One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when the agent asks a question, and the agent is told to notify you on its own channel too. Off = neither of them says anything. |
 | **Verify before closing** (`verify_before_close`) | bool | Automatic mobile+desktop screenshots and Livewire tests before closing a task (slower, safer). |
 | **Agent comment** (`comment_detail`) | select: `short`, `detailed` | How detailed the answer under the note is. |
+| **Response tone** (`response_tone`) | select: `clear`, `technical`, `conversational` | How the agent writes in chat and summaries. “Clear and structured” keeps technical accuracy while explaining jargon and using paragraphs, lists and headings when helpful. |
+| **Response length** (`response_length`) | select: `concise`, `balanced`, `detailed` | How deeply a normal response should go. It does not limit code, verification or details explicitly requested. |
 | **Git** (`git_flow`) | select: `main`, `branch_pr` | Where the commits of each task go. |
 | **Evening summary** (`daily_summary`) | bool | A push notification in the evening with what was closed during the day. |
 | **Summary time** (`daily_summary_time`) | time | When the evening summary arrives. |

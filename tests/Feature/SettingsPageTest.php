@@ -31,6 +31,12 @@ class SettingsPageTest extends TestCase
         $page->set('values.agent.autonomy', 'bogus');
         $this->assertSame('decide', app(AgentSettings::class)->refresh()->autonomy);
 
+        $page->set('values.agent.response_tone', 'conversational');
+        $this->assertSame('conversational', app(AgentSettings::class)->refresh()->response_tone);
+
+        $page->set('values.agent.response_length', 'detailed');
+        $this->assertSame('detailed', app(AgentSettings::class)->refresh()->response_length);
+
         $page->set('values.app.title_max_length', 999);
         $this->assertSame(200, app(AppSettings::class)->refresh()->title_max_length);
         $this->assertSame(200, TodoList::titleMax());

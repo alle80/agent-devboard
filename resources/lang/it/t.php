@@ -392,6 +392,8 @@ return [
         'notify_on_question' => ['Notifiche per le domande', 'Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando l\'agente fa una domanda, e l\'agente riceve l\'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due.'],
         'verify_before_close' => ['Verifica prima di chiudere', 'Screenshot mobile+desktop e test Livewire automatici prima di chiudere un task (più lento, più sicuro).'],
         'comment_detail' => ['Commento dell\'agente', 'Quanto è dettagliata la risposta sotto la nota.'],
+        'response_tone' => ['Tono delle risposte', 'Come l\'agente scrive in chat e nei riepiloghi. «Chiaro e strutturato» conserva la precisione tecnica, ma spiega il gergo e usa paragrafi, elenchi e titoli quando aiutano.'],
+        'response_length' => ['Lunghezza delle risposte', 'Quanto deve approfondire una risposta normale. Non limita codice, verifiche o dettagli richiesti esplicitamente.'],
         'git_flow' => ['Git', 'Dove finiscono i commit di ogni task.'],
         'daily_summary' => ['Riepilogo serale', 'Una notifica push la sera con cosa è stato chiuso in giornata.'],
         'daily_summary_time' => ['Ora del riepilogo', 'A che ora arriva il riepilogo serale.'],
@@ -426,6 +428,8 @@ return [
     'settings_options' => [
         'autonomy' => ['ask' => 'Chiedi quando in dubbio', 'decide' => 'Decidi da solo e spiega nel commento'],
         'comment_detail' => ['short' => 'Breve', 'detailed' => 'Dettagliato (tecnica + come provare)'],
+        'response_tone' => ['clear' => 'Chiaro e strutturato — preciso, poco gergo, formattazione leggibile', 'technical' => 'Tecnico — terminologia specialistica e alta densità', 'conversational' => 'Conversazionale — informale e guidato'],
+        'response_length' => ['concise' => 'Concisa — solo esito e punti essenziali', 'balanced' => 'Equilibrata — esito, motivazione e prossimi passi', 'detailed' => 'Approfondita — contesto, alternative ed esempi'],
         'git_flow' => ['main' => 'Direttamente su main', 'branch_pr' => 'Branch per task + Pull Request'],
         'task_mode' => ['ordered' => 'Task ordinati — uno alla volta, in ordine', 'multitasking' => 'Multitasking — più task in parallelo'],
         'task_mode_warn' => 'Attenzione: con il multitasking l\'agente può prendere in carico più task «da fare» insieme: più veloce, ma può creare conflitti (commit sovrapposti, modifiche agli stessi file). Usalo solo per task indipendenti.',

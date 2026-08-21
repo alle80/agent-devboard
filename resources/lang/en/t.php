@@ -398,6 +398,8 @@ return [
         'notify_on_question' => ['Notifications for questions', 'One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when the agent asks a question, and the agent is told to notify you on its own channel too. Off = neither of them says anything.'],
         'verify_before_close' => ['Verify before closing', 'Automatic mobile+desktop screenshots and Livewire tests before closing a task (slower, safer).'],
         'comment_detail' => ['Agent comment', 'How detailed the answer under the note is.'],
+        'response_tone' => ['Response tone', 'How the agent writes in chat and summaries. “Clear and structured” keeps technical accuracy while explaining jargon and using paragraphs, lists and headings when helpful.'],
+        'response_length' => ['Response length', 'How deeply a normal response should go. It does not limit code, verification or details explicitly requested.'],
         'git_flow' => ['Git', 'Where the commits of each task go.'],
         'daily_summary' => ['Evening summary', 'A push notification in the evening with what was closed during the day.'],
         'daily_summary_time' => ['Summary time', 'When the evening summary arrives.'],
@@ -432,6 +434,8 @@ return [
     'settings_options' => [
         'autonomy' => ['ask' => 'Ask when in doubt', 'decide' => 'Decide alone and explain in the comment'],
         'comment_detail' => ['short' => 'Short', 'detailed' => 'Detailed (technical + how to try)'],
+        'response_tone' => ['clear' => 'Clear and structured — precise, low-jargon, readable formatting', 'technical' => 'Technical — specialist terminology and high density', 'conversational' => 'Conversational — informal and guided'],
+        'response_length' => ['concise' => 'Concise — outcome and essentials only', 'balanced' => 'Balanced — outcome, rationale and next steps', 'detailed' => 'Detailed — context, alternatives and examples'],
         'git_flow' => ['main' => 'Directly on main', 'branch_pr' => 'Branch per task + Pull Request'],
         'task_mode' => ['ordered' => 'Ordered tasks — one at a time, in order', 'multitasking' => 'Multitasking — several tasks in parallel'],
         'task_mode_warn' => 'Warning: with multitasking the agent may take several «open to work» tasks at once: faster, but it can cause conflicts (overlapping commits, edits to the same files). Use it only for independent tasks.',
