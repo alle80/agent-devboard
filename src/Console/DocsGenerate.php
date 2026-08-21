@@ -41,6 +41,9 @@ class DocsGenerate extends Command
     /** Descriptions found in the code with no entry in the catalogue of the current language. */
     protected array $untranslated = [];
 
+    /** Config keys with no comment of their own right above them. */
+    protected array $undocumented = [];
+
     public function handle(): int
     {
         $out = rtrim((string) ($this->option('out') ?: realpath(__DIR__.'/../..').'/docs/reference'), '/');
@@ -70,6 +73,7 @@ class DocsGenerate extends Command
             }
         }
         $this->reportUntranslated();
+        $this->reportUndocumented();
 
         if ($this->option('check')) {
             if ($stale) {
@@ -132,6 +136,18 @@ class DocsGenerate extends Command
         }
 
         return $this->catalogues[$this->lang];
+    }
+
+    /** A key with no comment of its own gets an empty description: worth a warning (an error with --strict). */
+    protected function reportUndocumented(): void
+    {
+        if (! $this->undocumented) {
+            return;
+        }
+        $keys = array_keys($this->undocumented);
+        $this->warn(count($keys).' config key(s) with no comment of their own in config/griglia.php: '
+            .implode(', ', $keys));
+        $this->line('    Write one comment per key: a comment is used by the key right below it and not reused.');
     }
 
     /** Not an error: the pages are still generated, in English where a translation is missing. */
@@ -240,8 +256,14 @@ class DocsGenerate extends Command
             $env = preg_match("/env\(\s*'([A-Z0-9_]+)'/", $value, $e) ? '`'.$e[1].'`' : '—';
             $default = $this->configDefault($value);
 
-            // The comment above a block describes every key of that block: keep it until a blank line.
+            // One comment per key: what is written right above `$key` describes `$key` only, so a block of
+            // keys sharing a single comment would repeat the same description — the comment is consumed here
+            // and the next key must bring its own (reported by reportUndocumented()).
+            if (! $comment) {
+                $this->undocumented[$key] = true;
+            }
             $md .= "| `$key` | $env | $default | ".$this->cell($this->t(trim(implode(' ', $comment))))." |\n";
+            $comment = [];
         }
 
         return $md;

@@ -32,6 +32,14 @@ corrisponde sempre al codice. Non modificare a mano quei file.
 `--check` è pensato per il repository del package (e per la sua CI): dentro un'applicazione ospite la pagina
 delle impostazioni è legittimamente diversa, perché elenca i provider AI installati lì.
 
+### Un commento per chiave di configurazione
+
+La colonna «Cos'è» di `reference/config.md` è il commento `//` scritto **subito sopra** la chiave in
+`config/griglia.php`, e quel commento appartiene solo a quella chiave: non viene ereditato dalle chiavi che
+seguono. Perciò un gruppo come `admin_gate` + `admins` vuole un commento per ciascuna — con un unico commento
+di blocco tutte le chiavi del blocco finivano per avere la stessa descrizione. Una chiave senza un commento
+proprio ottiene una cella vuota e `griglia:docs-generate` lo segnala (errore con `griglia:docs-build --strict`).
+
 ## Compilare
 
 ```bash

@@ -42,6 +42,29 @@ class DocsGenerateTest extends TestCase
         }
     }
 
+    /** Task 455: a comment describes the key right below it, so no two keys share a description. */
+    public function test_every_config_key_has_a_description_of_its_own(): void
+    {
+        $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();
+
+        $seen = [];
+        foreach (file($this->out.'/config.md') as $line) {
+            if (! preg_match('/^\| `([a-z0-9_]+)` \| .* \| .* \| (.*) \|$/', trim($line), $m)) {
+                continue;
+            }
+            [, $key, $description] = $m;
+            $this->assertNotSame('', trim($description), "config key `$key` has no comment of its own");
+            $this->assertArrayNotHasKey(
+                $description,
+                $seen,
+                "config keys `$key` and `".($seen[$description] ?? '')."` share the same description"
+            );
+            $seen[$description] = $key;
+        }
+
+        $this->assertArrayHasKey('agents', array_flip($seen), 'the table was actually parsed');
+    }
+
     public function test_it_generates_the_italian_pages_too(): void
     {
         $this->artisan('griglia:docs-generate', ['--out' => $this->out])->assertSuccessful();

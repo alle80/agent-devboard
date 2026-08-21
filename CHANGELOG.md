@@ -7,12 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.80.1] - 2026-08-21
+
 ### Added
 - **Documentation: the `TodoChanged` payload** — the events reference described the channel, its
   authorisation and `Event::listen()`, but not what actually reaches the client. It now lists every field sent
   by `broadcastWith()` (`checklist_id`, `todo_id`, `title`, `state`, `source`, `deleted`, `state_changed`) with
   the possible values of `state` (`done`, `question`, `working`, `otw`, `waiting`), and shows how to listen
   with Echo in both modes and from a Livewire component via `Mode::echoListener()` (EN + IT, task 454).
+
+### Fixed
+- **`griglia:docs-generate`: one description per config key.** The comment above a block of keys was reused
+  for every key of that block, so `agents` and `agent_key` — and `assets`, `vite_entries`, `assets_url` —
+  read as if they did the same thing. A comment now describes only the key right below it, `config/griglia.php`
+  gives each of those keys its own, and a key left with no comment is reported as a warning (an error under
+  `griglia:docs-build --strict`). Reference pages regenerated, EN + IT (task 455).
 
 ## [0.80.0] - 2026-08-21
 
@@ -1538,7 +1547,9 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.78.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.80.1...HEAD
+[0.80.1]: https://github.com/alle80/griglia/compare/v0.80.0...v0.80.1
+[0.80.0]: https://github.com/alle80/griglia/compare/v0.79.1...v0.80.0
 [0.79.1]: https://github.com/alle80/griglia/compare/v0.79.0...v0.79.1
 [0.79.0]: https://github.com/alle80/griglia/compare/v0.78.1...v0.79.0
 [0.78.1]: https://github.com/alle80/griglia/compare/v0.78.0...v0.78.1

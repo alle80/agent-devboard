@@ -31,6 +31,14 @@ code. Do not edit those three files by hand.
 `--check` is meant for the package repository (and its CI): run inside a host app the settings page
 legitimately differs, because it lists the AI providers installed there.
 
+### One comment per config key
+
+The «What it is» column of `reference/config.md` is the `//` comment written **right above** the key in
+`config/griglia.php`, and that comment belongs to that key alone: it is not carried over to the keys that
+follow it. So a group like `admin_gate` + `admins` needs one comment each — sharing a single block comment
+used to give every key of the block the same description. A key left with no comment of its own gets an empty
+cell and `griglia:docs-generate` warns about it (an error under `griglia:docs-build --strict`).
+
 ## Build
 
 ```bash

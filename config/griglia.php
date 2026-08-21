@@ -9,9 +9,11 @@ return [
     'agent_name' => env('GRIGLIA_AGENT_NAME', 'Agent'),
 
     // Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list
-    // (project) chooses its default agent, a task may override it; each agent runs `griglia:check --agent=<key>`
-    // (or sets GRIGLIA_AGENT_KEY) and sees only its tasks. Empty = a single agent named `agent_name`.
+    // (project) chooses its default agent, a task may override it. Empty = a single agent named `agent_name`.
     'agents' => env('GRIGLIA_AGENTS'),
+
+    // Which of those agents is running here: the key `griglia:check` assumes when `--agent=<key>` is omitted,
+    // so that this installation sees only its own tasks. Empty = the agent must pass `--agent=` itself.
     'agent_key' => env('GRIGLIA_AGENT_KEY'),
 
     // Mode: 'server' (default) = authenticated users with their own lists; 'local' = no authentication,
@@ -23,11 +25,13 @@ return [
     // if set; otherwise every authenticated user.
     'access_gate' => env('GRIGLIA_ACCESS_GATE'),
 
-    // Server mode: who may ADMINISTER the board (settings, agent context, theme packs). Checked in this order:
-    // `canManageGriglia(): bool` on the user model if defined (the pre-rename `canManageDevboard()` is still
-    // honoured); else this Gate ability if set; else the ids/e-mails in `admins`
-    // (GRIGLIA_ADMINS="1,alice@example.com") if set; else the first registered user only.
+    // Server mode: Gate ability deciding who may ADMINISTER the board (settings, agent context, theme packs).
+    // It is consulted after `canManageGriglia(): bool` on the user model (the pre-rename `canManageDevboard()`
+    // is still honoured) and before `admins`.
     'admin_gate' => env('GRIGLIA_ADMIN_GATE'),
+
+    // Server mode: the administrators themselves, as ids or e-mails (GRIGLIA_ADMINS="1,alice@example.com").
+    // Used when neither `canManageGriglia()` nor `admin_gate` decides. Empty = the first registered user only.
     'admins' => env('GRIGLIA_ADMINS'),
 
     // Allow switching the board to local mode (no authentication) from /settings. Off by default: the override
@@ -104,7 +108,11 @@ return [
     // public/vendor/griglia/build — nothing to build in the host app; 'vite' = the host app bundles
     // resources/css/griglia.css + resources/js/griglia.js in its own Vite build (entries below)
     'assets' => env('GRIGLIA_ASSETS', 'precompiled'),
+
+    // With `assets` = 'vite': the entry points of the host app passed to @vite() on the package pages.
     'vite_entries' => ['resources/css/app.css', 'resources/js/app.js'],
+
+    // With `assets` = 'precompiled': public URL where the published build is served from.
     'assets_url' => '/vendor/griglia/build',
 
     // Runtime configuration of the Echo client (live updates). Empty key = no WebSocket at all.
