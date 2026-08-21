@@ -26,6 +26,15 @@ class AutosaveTest extends TestCase
         $this->todo = Todo::create(['title' => 'Task', 'order' => 1, 'checklist_id' => Checklist::currentId()]);
     }
 
+    public function test_note_editor_uses_layout_native_content_sizing(): void
+    {
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $editor = file_get_contents(__DIR__.'/../../resources/views/components/md-editor.blade.php');
+
+        $this->assertStringContainsString('field-sizing: content', $css);
+        $this->assertStringContainsString("CSS.supports('field-sizing', 'content')", $editor);
+    }
+
     public function test_modal_title_and_notes_save_without_the_button(): void
     {
         $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);

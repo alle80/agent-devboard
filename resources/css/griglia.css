@@ -508,7 +508,10 @@ select.setting-input { appearance: auto; }
 }
 .db-md-btn:hover { opacity: 1; background: var(--tl-accent, #16a34a); color: var(--tl-accent-fg, #fff); }
 .db-md-sep { width: 1px; height: 18px; margin: 0 3px; background: currentColor; opacity: .2; }
-.db-md .db-md-input { border-top-left-radius: 0; border-top-right-radius: 0; width: 100%; resize: vertical; }
+.db-md .db-md-input {
+    border-top-left-radius: 0; border-top-right-radius: 0; width: 100%; resize: none;
+    field-sizing: content;
+}
 
 /* Rendered markdown (read-only note / sub-task) */
 .db-prose { line-height: 1.55; word-break: break-word; }

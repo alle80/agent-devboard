@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.81.4] - 2026-08-22
+
+### Fixed
+- **The note editor now stays open at its content height during autosave.** Native content sizing makes the
+  textarea independent from Livewire DOM morphs, with the JavaScript resize retained only as a fallback for
+  older browsers (task 494).
+
 ## [0.81.3] - 2026-08-22
 
 ### Fixed

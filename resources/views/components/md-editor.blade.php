@@ -13,7 +13,10 @@
 --}}
 <div class="db-md" x-data="{
     ta() { return this.$refs.ta; },
-    grow() { const t = this.ta(); t.style.height = 'auto'; t.style.height = Math.max(t.scrollHeight, 40) + 'px'; },
+    grow() {
+        if (CSS.supports('field-sizing', 'content')) return;
+        const t = this.ta(); t.style.height = 'auto'; t.style.height = Math.max(t.scrollHeight, 40) + 'px';
+    },
     sync() { this.ta().dispatchEvent(new Event('input', { bubbles: true })); this.grow(); this.ta().focus(); },
     wrap(before, after, ph) {
         const t = this.ta(); const s = t.selectionStart, e = t.selectionEnd;

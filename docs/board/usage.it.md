@@ -117,6 +117,9 @@ I **tasti freccia sinistra e destra** fanno lo stesso, a meno che tu non stia sc
 Note e risposte dell'agente sono Markdown: gli a capo singoli si vedono come tali, un **blocco di codice ha il
 bottone «copia»** nel suo angolo (comandi, prompt, frammenti), il **codice inline si copia con un clic** e i
 link si aprono in una nuova scheda.
+Durante la modifica di una nota il browser dimensiona il campo direttamente dal contenuto: i salvataggi in
+background non possono quindi richiuderlo o nascondere le ultime righe, e restano silenziosi per non interrompere
+la scrittura.
 
 ## Barra degli strumenti
 
