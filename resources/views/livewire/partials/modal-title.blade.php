@@ -9,7 +9,7 @@
     <form
         wire:submit="finishTitle"
         x-data="{ len: {{ mb_strlen($titleDraft) }} }"
-        x-on:click.outside="$wire.set('titleDraft', $el.querySelector('input').value).then(() => $wire.finishTitle())"
+        x-on:click.outside="$wire.set('titleDraft', $el.querySelector('input').value); $wire.finishTitle()"
         class="flex min-w-0 flex-1 items-center gap-2"
         style="font: inherit; color: inherit"
     >

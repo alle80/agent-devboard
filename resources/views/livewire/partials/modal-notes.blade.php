@@ -22,7 +22,7 @@
         <form
             wire:submit="finishNotes"
             x-data="{}"
-            x-on:click.outside="$wire.set('notesDraft', $el.querySelector('textarea').value).then(() => $wire.finishNotes())"
+            x-on:click.outside="$wire.set('notesDraft', $el.querySelector('textarea').value); $wire.finishNotes()"
             class="space-y-2"
         >
             <span class="{{ $labelClass }}">{{ $label }}</span>

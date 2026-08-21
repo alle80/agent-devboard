@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.79.1] - 2026-08-21
+### Fixed
+- Closing an editor with a click outside no longer depends on the promise returned by `$wire.set()`: the
+  field is flushed and `finish*()` is called in the same tick, so Livewire pools them into one round trip
+  (updates first, then the call) whatever `set()` returns.
+
 ## [0.79.0] - 2026-08-21
 ### Changed
 - **No more «Save» and «Cancel» on the title and on the note: what is written is what is stored (task 438).**
@@ -1462,6 +1468,7 @@ monorepo into a standalone, installable Composer package.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
 [Unreleased]: https://github.com/alle80/griglia/compare/v0.78.0...HEAD
+[0.79.1]: https://github.com/alle80/griglia/compare/v0.79.0...v0.79.1
 [0.79.0]: https://github.com/alle80/griglia/compare/v0.78.1...v0.79.0
 [0.78.1]: https://github.com/alle80/griglia/compare/v0.78.0...v0.78.1
 [0.78.0]: https://github.com/alle80/griglia/compare/v0.77.1...v0.78.0

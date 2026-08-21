@@ -8,7 +8,7 @@
     wire:submit="finishEdit"
     x-data="{ len: 0 }"
     x-init="len = $el.querySelector('input').value.length"
-    x-on:click.outside="$wire.set('titleDraft', $el.querySelector('input').value).then(() => $wire.finishEdit())"
+    x-on:click.outside="$wire.set('titleDraft', $el.querySelector('input').value); $wire.finishEdit()"
     class="flex min-w-0 flex-1 items-center gap-2"
 >
     <input
