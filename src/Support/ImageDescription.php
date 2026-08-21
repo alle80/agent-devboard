@@ -43,7 +43,7 @@ class ImageDescription
 
     public static function describe(Attachment $attachment): ?string
     {
-        if (! self::enabled() || ! Storage::disk(config('griglia.attachments_disk', 'public'))->exists($attachment->path)) {
+        if (! self::enabled() || ! Storage::disk(config('griglia.attachments_disk', 'local'))->exists($attachment->path)) {
             return null;
         }
 
@@ -53,7 +53,7 @@ class ImageDescription
 
             $response = (new ImageDescriber)->prompt(
                 'Describe this image.',
-                attachments: [Image::fromStorage($attachment->path, config('griglia.attachments_disk', 'public'))],
+                attachments: [Image::fromStorage($attachment->path, config('griglia.attachments_disk', 'local'))],
                 provider: count($providers) > 1 ? $providers : $providers[0],
                 model: $model,
             );

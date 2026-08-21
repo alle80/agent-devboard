@@ -35,7 +35,6 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 ```bash
 composer require alle80/griglia -W                   # -W: see the note below
 php artisan migrate                                  # tables + settings defaults (idempotent)
-php artisan storage:link                             # attachments live on the "public" disk
 ```
 
 That's it: the board ships its own precompiled CSS/JS (published by composer with Laravel's

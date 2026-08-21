@@ -43,5 +43,6 @@ Install it (`pip install mkdocs-material`) or build with the official image: `--
 
 ## Attachments 404
 
-`php artisan storage:link`, and check the disk in `config/griglia.php` (`attachments_disk`, default
-`public`).
+Keep `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER=true` (the default) and check that `GRIGLIA_ATTACHMENTS_DISK`
+names a configured, writable disk (`local` by default). A storage symlink is neither needed nor used for
+the private default disk.

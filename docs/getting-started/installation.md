@@ -14,7 +14,6 @@ The package is on Packagist as [`alle80/griglia`](https://packagist.org/packages
 ```bash
 composer require alle80/griglia -W                  # -W: Web Push caps brick/math at ^0.17 (see the note below)
 php artisan migrate                                 # tables + settings defaults
-php artisan storage:link                            # attachments live on the "public" disk
 ```
 
 That is the whole installation: the board ships its **precompiled** CSS and JS, published automatically by

@@ -14,8 +14,8 @@ The latest source review and its prioritized findings are in the
 - **Administration is a separate gate.** Settings, the agent context and theme packs are admin-only —
   `canManageDevboard()`, a Gate ability or `GRIGLIA_ADMINS`; by default only the first registered user.
   See [Access & modes](../configuration/access.md).
-- **Uploads are validated**: type and size checked, images re-encoded, stored on the configured disk, served
-  through the app.
+- **Uploads are validated**: type and size checked, images re-encoded, stored on the private `local` disk by
+  default, and served only through the owner-scoped controller. Keep `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER=true`.
 - **Theme packs are treated as code**: administrator-only install, SVG refused, CSS sanitised (no `@import`,
   no external urls), caps on file size, pack size and number of entries, assets served from a sandboxed route.
 - **Expensive endpoints are rate-limited** (transcription, test notification, push subscription).

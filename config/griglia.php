@@ -58,9 +58,11 @@ return [
     // User model owning the lists
     'user_model' => env('GRIGLIA_USER_MODEL', 'App\\Models\\User'),
 
-    // Filesystem disk for image attachments. With `attachments_via_controller` (default) images are served by an
-    // authorised route, so the disk can be private (e.g. 'local'); set it to false to link the disk's public URLs.
-    'attachments_disk' => env('GRIGLIA_ATTACHMENTS_DISK', 'public'),
+    // Filesystem disk for image attachments. The private `local` disk is the secure default.
+    'attachments_disk' => env('GRIGLIA_ATTACHMENTS_DISK', 'local'),
+
+    // Serve attachments through the authorised, owner-scoped controller. Keep enabled for private disks;
+    // disable only when `attachments_disk` deliberately points to a publicly accessible disk.
     'attachments_via_controller' => env('GRIGLIA_ATTACHMENTS_VIA_CONTROLLER', true),
 
     // Name of the list used as request channel between the user and the coding agent (griglia:check)

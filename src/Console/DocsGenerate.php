@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Artisan;
  */
 class DocsGenerate extends Command
 {
+    /** Symfony application inputs inherited at run time, not part of a package command's contract. */
+    protected const GLOBAL_ARGUMENTS = ['command'];
+
+    protected const GLOBAL_OPTIONS = ['help', 'silent', 'quiet', 'verbose', 'version', 'ansi', 'no-interaction', 'env'];
+
     protected $signature = 'griglia:docs-generate
         {--out= : Output directory (default: <package>/docs/reference)}
         {--check : Do not write; exit with 1 when a page is out of date}';
@@ -98,9 +103,15 @@ class DocsGenerate extends Command
 
             $rows = [];
             foreach ($command->getDefinition()->getArguments() as $arg) {
+                if (in_array($arg->getName(), self::GLOBAL_ARGUMENTS, true)) {
+                    continue;
+                }
                 $rows[] = ['`'.$arg->getName().'`', $arg->getDescription() ?: '—', $arg->isRequired() ? 'required' : $this->def($arg->getDefault())];
             }
             foreach ($command->getDefinition()->getOptions() as $opt) {
+                if (in_array($opt->getName(), self::GLOBAL_OPTIONS, true)) {
+                    continue;
+                }
                 $rows[] = ['`--'.$opt->getName().'`', $opt->getDescription() ?: '—', $opt->acceptValue() ? $this->def($opt->getDefault()) : 'flag'];
             }
             if ($rows) {

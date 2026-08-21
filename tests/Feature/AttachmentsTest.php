@@ -15,7 +15,9 @@ class AttachmentsTest extends TestCase
 {
     public function test_store_refuses_decompression_bombs_and_serves_through_the_authorised_route(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
+        $this->assertSame('local', config('griglia.attachments_disk'));
+        $this->assertTrue(config('griglia.attachments_via_controller'));
         $user = $this->actingAsUser();
         $list = Checklist::create(['name' => 'l', 'user_id' => $user->id]);
         $todo = Todo::create(['title' => 't', 'order' => 1, 'checklist_id' => $list->id]);
@@ -24,6 +26,7 @@ class AttachmentsTest extends TestCase
         $this->assertSame(40, $a->width);
         $this->assertStringContainsString('/griglia/attachments/'.$a->id, $a->url(), 'served by the authorised route');
         $this->get($a->url())->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
+        $this->get('/storage/'.$a->path)->assertNotFound();
 
         // another user cannot fetch it
         $this->actingAs(User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')]));
@@ -43,7 +46,8 @@ class AttachmentsTest extends TestCase
         }
 
         // public disk url when the controller is disabled
-        config(['griglia.attachments_via_controller' => false]);
+        Storage::fake('public');
+        config(['griglia.attachments_disk' => 'public', 'griglia.attachments_via_controller' => false]);
         $this->assertStringContainsString('/storage/', $a->url());
     }
 }

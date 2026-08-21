@@ -18,7 +18,7 @@ class Attachment extends Model
         static::deleted(fn ($m) => $m->todo && Live::todoChanged($m->todo));
 
         // Cancellando il record sparisce anche il file
-        static::deleted(fn (Attachment $a) => Storage::disk(config('griglia.attachments_disk', 'public'))->delete($a->path));
+        static::deleted(fn (Attachment $a) => Storage::disk(config('griglia.attachments_disk', 'local'))->delete($a->path));
     }
 
     public function todo(): BelongsTo
@@ -33,6 +33,6 @@ class Attachment extends Model
             return route('griglia.attachment', $this->id);
         }
 
-        return Storage::disk(config('griglia.attachments_disk', 'public'))->url($this->path);
+        return Storage::disk(config('griglia.attachments_disk', 'local'))->url($this->path);
     }
 }

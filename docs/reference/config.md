@@ -24,8 +24,8 @@ Decided by whoever installs the package; the run-time options live in [Settings]
 | `default_theme` | — | `'slate'` | Generic theme used by the home route and as fallback |
 | `themes` | — | _array_ | Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin()) |
 | `user_model` | `GRIGLIA_USER_MODEL` | `'App\\Models\\User'` | User model owning the lists |
-| `attachments_disk` | `GRIGLIA_ATTACHMENTS_DISK` | `'public'` | Filesystem disk for image attachments. With `attachments_via_controller` (default) images are served by an authorised route, so the disk can be private (e.g. 'local'); set it to false to link the disk's public URLs. |
-| `attachments_via_controller` | `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER` | `true` | Filesystem disk for image attachments. With `attachments_via_controller` (default) images are served by an authorised route, so the disk can be private (e.g. 'local'); set it to false to link the disk's public URLs. |
+| `attachments_disk` | `GRIGLIA_ATTACHMENTS_DISK` | `'local'` | Filesystem disk for image attachments. The private `local` disk is the secure default. |
+| `attachments_via_controller` | `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER` | `true` | Serve attachments through the authorised, owner-scoped controller. Keep enabled for private disks; disable only when `attachments_disk` deliberately points to a publicly accessible disk. |
 | `agent_list` | `GRIGLIA_AGENT_LIST` | `'dev'` | Name of the list used as request channel between the user and the coding agent (griglia:check) |
 | `default_list_name` | — | `'My list'` | Name of the default list created for a new user |
 | `broadcast_channel` | — | `'App.Models.User.{id}'` | Private broadcast channel per user for live updates ({id} = user id); requires a broadcaster |

@@ -15,7 +15,7 @@ class AttachmentController
         $a = Attachment::findOrFail($attachment);
         $list = $a->todo?->checklist;
         abort_unless($list && Checklist::mine()->whereKey($list->id)->exists(), 404);
-        $disk = Storage::disk(config('griglia.attachments_disk', 'public'));
+        $disk = Storage::disk(config('griglia.attachments_disk', 'local'));
         abort_unless($disk->exists($a->path), 404);
 
         return $disk->response($a->path, null, [

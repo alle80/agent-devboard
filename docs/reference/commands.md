@@ -113,17 +113,8 @@ php artisan griglia:docs-generate [--out [OUT]] [--check]
 
 | Argument / option | What it does | Default |
 |---|---|---|
-| `command` | The command to execute | required |
 | `--out` | Output directory (default: <package>/docs/reference) | — |
 | `--check` | Do not write; exit with 1 when a page is out of date | flag |
-| `--help` | Display help for the given command. When no command is given display help for the <info>list</info> command | flag |
-| `--silent` | Do not output any message | flag |
-| `--quiet` | Only errors are displayed. All other output is suppressed | flag |
-| `--verbose` | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug | flag |
-| `--version` | Display this application version | flag |
-| `--ansi` | Force (or disable --no-ansi) ANSI output | flag |
-| `--no-interaction` | Do not ask any interactive question | flag |
-| `--env` | The environment the command should run under | — |
 
 ## `griglia:empty-trash`
 

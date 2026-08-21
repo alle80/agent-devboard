@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.0] - 2026-08-21
+
+### Changed
+- **Attachment storage is private by default.** `attachments_disk` now defaults to Laravel's `local` disk and
+  all internal fallbacks match it. Keep `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER=true`; the owner-scoped controller
+  is the only package route that serves these objects. The upgrade guide covers existing public files.
+
+### Fixed
+- Generated command reference no longer moves Artisan's inherited global inputs between commands depending on
+  which command launched the generator, so `griglia:docs-generate --check` is deterministic.
+
 ## [0.70.2] - 2026-08-21
 
 ### Documentation
@@ -1248,7 +1259,9 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.70.1...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.71.0...HEAD
+[0.71.0]: https://github.com/alle80/griglia/compare/v0.70.2...v0.71.0
+[0.70.2]: https://github.com/alle80/griglia/compare/v0.70.1...v0.70.2
 [0.70.1]: https://github.com/alle80/griglia/compare/v0.70.0...v0.70.1
 [0.70.0]: https://github.com/alle80/griglia/compare/v0.69.0...v0.70.0
 [0.69.0]: https://github.com/alle80/griglia/compare/v0.68.0...v0.69.0

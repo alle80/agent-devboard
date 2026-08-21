@@ -40,7 +40,7 @@ class ImageStore
         [$data, $ext, $w, $h, $outMime] = self::process($file->getRealPath(), $mime);
 
         $path = sprintf('attachments/%d/%s.%s', $todo->id, Str::ulid(), $ext);
-        Storage::disk(config('griglia.attachments_disk', 'public'))->put($path, $data);
+        Storage::disk(config('griglia.attachments_disk', 'local'))->put($path, $data);
 
         return $todo->attachments()->create([
             'path' => $path,
