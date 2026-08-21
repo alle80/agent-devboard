@@ -85,7 +85,7 @@
     </div>
 </div>
 
-@if (\Alle80\Griglia\Agent::many() && ! $todo->working)
+@if (\Alle80\Griglia\Agent::many())
     {{-- Multi-agent: which agent handles this task. Own full-width row under the commands, aligned left:
          squeezed among the icons the label «Default (Claude Code)» ended up clipped, on a phone above all. --}}
     <div class="modal-cmds-agent flex min-w-0 items-center" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">

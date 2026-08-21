@@ -21,7 +21,8 @@ list and, after them, the open tasks of the started **plans** (under a `Plan «n
 
 Rules worth knowing: take the task **first** (before reading/analysing), one task at a time in list order
 (`task_mode=ordered`) or several independent ones (`multitasking`), never touch *waiting* items, drop a
-task the moment it is stopped,
+task the moment it is stopped (and do not take it again until the user puts it back to 🟢: `--take` refuses a
+stopped task, so a late `--take=ID --progress=N` cannot silently resume it),
 keep the progress % and phase updated, report tokens on close when the setting asks for it, and say with
 `--outcome` when a closed task is not plain sailing — it is what
 [colours the row](../board/usage.md#the-colour-of-the-row) the user sees (`ok` by default, `alert`,
@@ -45,11 +46,12 @@ Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list 
 under the commands, or straight from its row in the list, where
 the same selector sits on its own line under the title and doubles as the agent badge: the name of the agent
 that will take the task is always visible, also when the task simply inherits the list default (the empty
-option). Each agent runs `griglia:check --agent=<its key>`
+option). While a task is working, the same name stays visible as a read-only badge in both the list and modal. Each agent runs `griglia:check --agent=<its key>`
 (or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id. The [skills](skills.md)
 offered on a task are filtered the same way: only the ones its agent has installed.
 
-`--take`, `--done` and `--ask` refuse a task that belongs to another agent (`--force` overrides), `check`
+`--take`, `--done` and `--ask` refuse a task that belongs to another agent, and `--take` a task the user stopped
+(`--force` overrides both), `check`
 prints a `🔒 busy elsewhere` line with what the others have in progress, and the 🆕 baseline is kept per
 agent key. What is shared outside the board — checkouts, builds, migrations, releases — is covered in
 [Two agents at once](concurrency.md).

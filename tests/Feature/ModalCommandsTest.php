@@ -244,5 +244,11 @@ class ModalCommandsTest extends TestCase
         $this->assertStringContainsString('.modal-cmds-agent { order: 3; flex-basis: 100%; justify-content: flex-start; }', $css);
         $this->assertStringContainsString('.modal-cmds-agent .db-agent-select { max-width: 100%; }', $css, 'the whole row is the select\'s');
         $this->assertStringNotContainsString('.modal-cmds-tools .db-agent-select', $css, 'no more squeezing among the icons');
+
+        $a->update(["agent" => "codex", "working" => true]);
+        $workingHtml = Livewire::test(IngredientModal::class)->call("openFor", $a->id)->html();
+        $this->assertStringContainsString("Codex CLI", $workingHtml);
+        $this->assertStringContainsString("modal-cmds-agent", $workingHtml);
+        $this->assertStringNotContainsString("setAgent(\$event.target.value)", $workingHtml);
     }
 }

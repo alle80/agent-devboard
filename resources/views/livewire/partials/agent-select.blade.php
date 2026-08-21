@@ -7,6 +7,9 @@
       $inheritLabel   testo dell'opzione «eredita» (nella riga è il nome dell'agente effettivo: il badge si vede sempre)
       $class          classi aggiuntive del select (opzionale)
 --}}
+@if ($todo->working)
+<span class="db-agent-select {{ $class ?? '' }}" title="{{ __('griglia::t.agent_of_task') }}" aria-label="{{ __('griglia::t.agent_of_task') }}">{{ \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)) }}</span>
+@else
 <select
     class="db-agent-select cursor-pointer bg-transparent {{ $class ?? '' }}"
     wire:change="{{ $change }}"
@@ -19,3 +22,4 @@
         <option value="{{ $k }}" @selected($todo->agent === $k)>{{ $label }}</option>
     @endforeach
 </select>
+@endif

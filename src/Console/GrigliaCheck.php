@@ -33,7 +33,7 @@ class GrigliaCheck extends Command
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
         {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
         {--agent= : Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)}
-        {--force : Act on a task that belongs to another agent (--take/--done/--ask refuse it otherwise)}';
+        {--force : Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise)}';
 
     protected $aliases = ['sviluppo:check'];
 
@@ -107,7 +107,8 @@ class GrigliaCheck extends Command
 
         // Quick actions: take in charge / complete with comment
         // A completed task stays completed: to carry on, the user creates a new one with «resume» (task 348).
-        foreach (['take' => ['working' => true, 'stopped_at' => null, 'question' => false], 'done' => ['working' => false, 'completed' => true, 'result_seen' => false]] as $opt => $attrs) {
+        // Done is done: a closed task carries no open question and is no longer «open to work» (same as closing it from the modal).
+        foreach (['take' => ['working' => true, 'stopped_at' => null, 'question' => false], 'done' => ['working' => false, 'completed' => true, 'question' => false, 'open_to_work' => false, 'result_seen' => false]] as $opt => $attrs) {
             if ($id = $this->option($opt)) {
                 $t = $find((int) $id);
 
@@ -116,6 +117,13 @@ class GrigliaCheck extends Command
                 }
                 if ($opt === 'take' && $t->completed) {
                     $this->error(sprintf('«%s» (id:%d) is already completed — a closed task stays closed. Ask the user to press ↻ resume: it creates a new task linked to this one.', $t->title, $t->id));
+
+                    return self::FAILURE;
+                }
+                // ⏹ The user stopped it (click on the 🔧 dot) and has not put it back to 🟢: a progress update
+                // run as «--take=ID --progress=N» must not silently resume the work and wipe the stop.
+                if ($opt === 'take' && $t->stopped_at && ! $t->open_to_work && ! $t->working && ! $this->option('force')) {
+                    $this->error(sprintf('«%s» (id:%d) was stopped by the user on %s: do NOT work on it until it is 🟢 again (re-run with --force only if the user told you to go on).', $t->title, $t->id, $t->stopped_at->format('d/m H:i')));
 
                     return self::FAILURE;
                 }

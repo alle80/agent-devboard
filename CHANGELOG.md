@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.81.2] - 2026-08-22
+
+### Fixed
+- **Working tasks keep their agent badge visible.** In multi-agent boards, taking a task used to hide the agent
+  selector entirely from both the row and modal. The effective agent name now remains visible in both places as
+  a read-only badge while the task is working; it becomes editable again after work stops (task 482).
+- **`griglia:check --take` no longer undoes a stop.** A progress update now refuses a task stopped by the user
+  until it is open to work again; `--force` remains the deliberate override (task 477).
+- **`griglia:check --done` leaves no open question behind.** Closing a task now clears both the question and
+  open-to-work flags, matching closure from the modal (task 477).
+
 
 ## [0.81.1] - 2026-08-22
 

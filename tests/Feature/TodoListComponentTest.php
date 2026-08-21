@@ -64,6 +64,10 @@ class TodoListComponentTest extends TestCase
         $this->assertFalse($todo->completed);
         $this->assertNull($todo->archived_at);
         $this->assertNull($todo->deleted_at);
+        config(["griglia.agents" => "claude:Claude Code,codex:Codex CLI"]);
+        Livewire::test(TodoList::class)
+            ->assertSee("Claude Code")
+            ->assertDontSeeHtml("setTodoAgent(".$todo->id);
     }
 
     public function test_title_length_is_enforced(): void

@@ -24,7 +24,8 @@ aperti della lista dell'agente e, dopo di quelli, i task aperti dei **piani** av
 Regole che vale la pena conoscere: prendere il task **per primo** (prima di leggere e analizzare), un task
 alla volta nell'ordine della lista (`task_mode=ordered`) oppure più task indipendenti insieme
 (`multitasking`), non toccare mai gli elementi *in attesa*, mollare un task nell'istante in cui viene
-fermato, tenere aggiornate percentuale e fase, riportare i token alla chiusura quando l'impostazione lo
+fermato (e non riprenderlo finché l'utente non lo rimette 🟢: `--take` rifiuta un task fermato, così un
+`--take=ID --progress=N` in ritardo non può riavviarlo di nascosto), tenere aggiornate percentuale e fase, riportare i token alla chiusura quando l'impostazione lo
 chiede, e dire con `--outcome` quando un task chiuso non è filato liscio — è quello che
 [colora la riga](../board/usage.md#il-colore-della-riga) che vede l'utente (`ok` di default, `alert`,
 `blocked`).
@@ -43,13 +44,14 @@ l'agente ti dice di lanciare `/clear` — non può farlo al posto tuo.
 ## Più agenti
 
 Si dichiarano con `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. Una lista (progetto) ha un agente di
-default (selettore nella barra), un task può cambiarlo (tendina su una riga sua sotto i comandi
-dell'intestazione del modale). Ogni agente esegue
+default (selettore nella barra), un task può cambiarlo dalla propria riga o dal modale. Il nome resta sempre
+visibile: durante la lavorazione diventa un badge di sola lettura sia nella lista sia nel dettaglio. Ogni agente esegue
 `griglia:check --agent=<la sua chiave>` (oppure imposta `GRIGLIA_AGENT_KEY`) e vede solo i propri task;
 `--take/--done` continuano a funzionare per id. Le [skill](skills.md) proposte su un task sono filtrate allo
 stesso modo: solo quelle che il suo agente ha installate.
 
-`--take`, `--done` e `--ask` rifiutano un task che appartiene a un altro agente (`--force` forza la mano),
+`--take`, `--done` e `--ask` rifiutano un task che appartiene a un altro agente, e `--take` un task fermato
+dall'utente (`--force` forza la mano in entrambi i casi),
 `check` stampa una riga `🔒 busy elsewhere` con quello che gli altri hanno in lavorazione, e la baseline 🆕 è
 tenuta per chiave d'agente. Quello che si condivide fuori dalla board — checkout, build, migrazioni, rilasci —
 sta in [Due agenti insieme](concurrency.md).

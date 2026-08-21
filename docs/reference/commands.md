@@ -56,7 +56,7 @@ php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--co
 | `--tokens-in` | Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--tokens-out` | Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--agent` | Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent) | — |
-| `--force` | Act on a task that belongs to another agent (--take/--done/--ask refuse it otherwise) | flag |
+| `--force` | Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise) | flag |
 
 ## `griglia:context`
 

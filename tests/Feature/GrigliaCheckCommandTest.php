@@ -164,4 +164,48 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertSame([$b->id], $a->fresh()->resumeChain()->pluck('id')->all(), 'the walk stops as soon as it meets a task it already saw');
         $this->artisan('griglia:check')->assertSuccessful();
     }
+
+    public function test_taking_a_task_the_user_stopped_is_refused(): void
+    {
+        // The agent is working; the user clicks the 🔧 dot: the task goes back to ⚪ with stopped_at set.
+        $this->artisan('griglia:check', ['--take' => $this->todo->id])->assertSuccessful();
+        $this->todo->fresh()->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
+
+        // The agent, unaware of the stop, updates its progress (the documented «piggyback» pattern):
+        // that must NOT silently put the task back to 🔧 and wipe the stop.
+        $this->artisan('griglia:check', ['--take' => $this->todo->id, '--progress' => 50, '--phase' => 'writing code'])
+            ->expectsOutputToContain('stopped')
+            ->assertFailed();
+        $this->todo->refresh();
+        $this->assertFalse($this->todo->working, 'the stop still holds');
+        $this->assertNotNull($this->todo->stopped_at, 'and its trace is kept');
+        $this->assertNotSame(50, $this->todo->progress);
+
+        // Once the user puts it back to 🟢 the agent may take it again (and the stop is cleared)
+        $this->todo->update(['open_to_work' => true, 'stopped_at' => null]);
+        $this->artisan('griglia:check', ['--take' => $this->todo->id, '--progress' => 50, '--phase' => 'writing code'])->assertSuccessful();
+        $this->todo->refresh();
+        $this->assertTrue($this->todo->working);
+        $this->assertNull($this->todo->stopped_at);
+        $this->assertSame(50, $this->todo->progress);
+
+        // --force is the deliberate way past the stop (e.g. the user said «go on» in the chat)
+        $this->todo->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
+        $this->artisan('griglia:check', ['--take' => $this->todo->id, '--force' => true])->assertSuccessful();
+        $this->assertTrue($this->todo->fresh()->working);
+    }
+
+    public function test_done_leaves_no_question_or_open_to_work_flag_behind(): void
+    {
+        // Closed while the questions were still open: the row must read «done», not «question» for ever
+        $this->artisan('griglia:check', ['--take' => $this->todo->id])->assertSuccessful();
+        $this->artisan('griglia:check', ['--ask' => $this->todo->id, '--q' => ['Which shade?']])->assertSuccessful();
+        $this->artisan('griglia:check', ['--done' => $this->todo->id, '--comment' => 'Picked the dark one'])->assertSuccessful();
+
+        $this->todo->refresh();
+        $this->assertTrue($this->todo->completed);
+        $this->assertFalse($this->todo->question, 'done is done: no open question left on a closed task');
+        $this->assertFalse($this->todo->open_to_work);
+        $this->assertSame('ok', $this->todo->attention(), 'the row asks for a look at the result, not for answers');
+    }
 }

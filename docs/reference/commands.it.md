@@ -56,7 +56,7 @@ php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--co
 | `--tokens-in` | Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
 | `--tokens-out` | Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
 | `--agent` | Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo) | — |
-| `--force` | Agisci su un task che appartiene a un altro agente (altrimenti --take/--done/--ask si rifiutano) | flag |
+| `--force` | Agisci su un task che appartiene a un altro agente, oppure riprendi un task fermato dall'utente (--take/--done/--ask altrimenti lo rifiutano) | flag |
 
 ## `griglia:context`
 

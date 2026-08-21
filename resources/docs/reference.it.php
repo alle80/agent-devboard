@@ -66,7 +66,7 @@ return [
         'Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)' => "Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo)",
-        'Act on a task that belongs to another agent (--take/--done/--ask refuse it otherwise)' => "Agisci su un task che appartiene a un altro agente (altrimenti --take/--done/--ask si rifiutano)",
+        'Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise)' => "Agisci su un task che appartiene a un altro agente, oppure riprendi un task fermato dall'utente (--take/--done/--ask altrimenti lo rifiutano)",
 
         // ----- griglia:context
         'Agent context (instructions file) as switchable groups/blocks: import, export, status' => "Contesto dell'agente (file di istruzioni) come gruppi/blocchi accendibili: import, export, status",

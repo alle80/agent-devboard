@@ -151,7 +151,7 @@
                     {{-- Multi-agente: chi lavora questo task. La targhetta sta su una riga sua, SOTTO il titolo
                          (task 427): in mezzo ai comandi era schiacciata fra le icone. Il nome si vede SEMPRE,
                          anche quando il task eredita l'agente della lista (opzione vuota = eredita). --}}
-                    @if (\Alle80\Griglia\Agent::many() && ! $todo->working)
+                    @if (\Alle80\Griglia\Agent::many())
                         <div class="db-agent-row mt-1 flex items-center">
                             @include('griglia::livewire.partials.agent-select', [
                                 'todo' => $todo,
