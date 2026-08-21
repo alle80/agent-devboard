@@ -473,6 +473,9 @@ select.setting-input { appearance: auto; }
    il menu a tendina resta testo chiaro su fondo chiaro. */
 .db-agent-chip { appearance: none; -webkit-appearance: none; max-width: 7.5rem; text-overflow: ellipsis; letter-spacing: .04em; }
 .db-agent-chip:hover { opacity: 1; }
+/* Sotto il titolo la targhetta ha la riga tutta per sé: può respirare senza spingere via i comandi (task 427). */
+.db-agent-row { line-height: 1; }
+.db-agent-row .db-agent-chip { max-width: 12rem; }
 .db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
 
 /* Il nome dello stato accanto al pallino e la tendina dell'agente per intero chiedono spazio vero: da md

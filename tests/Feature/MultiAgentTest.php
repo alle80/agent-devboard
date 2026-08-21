@@ -65,8 +65,12 @@ class MultiAgentTest extends TestCase
         session(['checklist_id' => $dev->id]);
         $todo = Todo::create(['title' => 'Row assignment', 'order' => 1, 'checklist_id' => $dev->id, 'open_to_work' => true]);
 
-        // inherited: no agent on the task, but the row shows the effective one (the badge is always there)
-        Livewire::test(TodoList::class)->assertSee('Claude Code')->assertSeeHtml('setTodoAgent('.$todo->id.', $event.target.value)');
+        // inherited: no agent on the task, but the row shows the effective one (the badge is always there),
+        // on a line of its own under the title (task 427) — not squeezed between the row commands
+        Livewire::test(TodoList::class)
+            ->assertSee('Claude Code')
+            ->assertSeeHtml('setTodoAgent('.$todo->id.', $event.target.value)')
+            ->assertSeeHtml('db-agent-row');
 
         Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, 'codex')->assertDispatched('toast');
         $this->assertSame('codex', $todo->fresh()->agent);

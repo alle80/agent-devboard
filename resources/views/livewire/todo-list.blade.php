@@ -144,19 +144,21 @@
                     @if ($todo->claude_comment && $todo->result_summary)
                         <p class="mt-0.5 truncate text-xs opacity-60" title="{{ $todo->result_summary }}">{{ $todo->result_summary }}</p>
                     @endif
+                    {{-- Multi-agente: chi lavora questo task. La targhetta sta su una riga sua, SOTTO il titolo
+                         (task 427): in mezzo ai comandi era schiacciata fra le icone. Il nome si vede SEMPRE,
+                         anche quando il task eredita l'agente della lista (opzione vuota = eredita). --}}
+                    @if (\Alle80\Griglia\Agent::many())
+                        <div class="db-agent-row mt-1 flex items-center">
+                            @include('griglia::livewire.partials.agent-select', [
+                                'todo' => $todo,
+                                'change' => 'setTodoAgent('.$todo->id.', $event.target.value)',
+                                'inheritLabel' => \Alle80\Griglia\Agent::label($todo->agent ?: ($listAgent ?: \Alle80\Griglia\Agent::defaultKey())),
+                                'class' => 'db-agent-chip rounded border border-current/40 px-1 text-[10px] uppercase '.($todo->agent ? 'opacity-75' : 'opacity-50'),
+                            ])
+                        </div>
+                    @endif
                     @endif
                 </div>
-
-                    {{-- Multi-agente: chi lavora questo task, scelto dalla riga stessa. Il nome si vede SEMPRE,
-                         anche quando il task eredita l'agente della lista (opzione vuota = eredita). --}}
-                    @if (\Alle80\Griglia\Agent::many() && $editingId !== $todo->id)
-                        @include('griglia::livewire.partials.agent-select', [
-                            'todo' => $todo,
-                            'change' => 'setTodoAgent('.$todo->id.', $event.target.value)',
-                            'inheritLabel' => \Alle80\Griglia\Agent::label($todo->agent ?: ($listAgent ?: \Alle80\Griglia\Agent::defaultKey())),
-                            'class' => 'db-agent-chip shrink-0 rounded border border-current/40 px-1 text-[10px] uppercase '.($todo->agent ? 'opacity-75' : 'opacity-50'),
-                        ])
-                    @endif
 
                     @if ($editingId !== $todo->id)
                     @php($st = $todo->completed ? 'done' : ($todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting'))))

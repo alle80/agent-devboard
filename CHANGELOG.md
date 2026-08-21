@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.3] - 2026-08-21
+### Changed
+- **The agent selector of a task row now sits on a line of its own, under the title.** Squeezed between the
+  row commands it crowded the icons and its label was cut after a few characters; on its own line it has room
+  for the full agent name (up to `12rem`) and the row icons keep their space. The gesture does not change:
+  picking an agent assigns the task, the empty option gives it back to the list default, and the name stays
+  visible either way.
+
 ## [0.74.2] - 2026-08-21
 ### Changed
 - **The task modal header now uses the whole bar.** Everything was pushed against the right edge — half the
@@ -1344,7 +1352,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.74.2...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.74.3...HEAD
+[0.74.3]: https://github.com/alle80/griglia/compare/v0.74.2...v0.74.3
 [0.74.2]: https://github.com/alle80/griglia/compare/v0.74.1...v0.74.2
 [0.74.1]: https://github.com/alle80/griglia/compare/v0.74.0...v0.74.1
 [0.74.0]: https://github.com/alle80/griglia/compare/v0.73.3...v0.74.0
