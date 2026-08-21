@@ -125,10 +125,12 @@ stato, archivio. Su una lista-piano la barra **Piano** mostra l'avanzamento e i 
 È tutto pensato per il telefono: righe su due livelli, modale a tutto schermo, pannello delle notifiche a
 tutta larghezza, Web Push.
 
-L'intestazione del modale si divide in due su uno schermo stretto: il badge di stato con ‹ `3/7` › resta sulla
-prima riga accanto al bottone di chiusura — sempre raggiungibile, qualunque cosa contenga la lista — e il resto
-dei comandi (agente, sposta, archivia, elimina) sta su una seconda riga, con bersagli abbastanza grandi per un
-pollice. Niente è nascosto dietro un menu, e niente esce dal bordo dello schermo.
+L'intestazione del modale si impila su uno schermo stretto: il badge di stato con ‹ `3/7` › resta sulla prima
+riga accanto al bottone di chiusura — sempre raggiungibile, qualunque cosa contenga la lista —, la tendina
+dell'agente prende la riga sotto, allineata a sinistra, e gli altri comandi (sposta, archivia, elimina) stanno
+sull'ultima riga, con bersagli abbastanza grandi per un pollice. La tendina ha una riga tutta sua su qualsiasi
+schermo: in mezzo alle icone la sua etichetta («Predefinito (Claude Code)») finiva tagliata. Niente è nascosto
+dietro un menu, e niente esce dal bordo dello schermo.
 
 ## Vedi anche
 

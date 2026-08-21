@@ -7,7 +7,8 @@ macchina (cache, build, migrazioni, rilasci) lo fa un agente alla volta.
 
 ## Cosa garantisce la board
 
-Ogni task appartiene a **un** agente: quello scelto sul task (intestazione del modale), altrimenti quello di
+Ogni task appartiene a **un** agente: quello scelto sul task (tendina su una riga sua nell'intestazione del
+modale), altrimenti quello di
 default della lista (selettore nella barra), altrimenti l'agente predefinito. `griglia:check --agent=<chiave>`
 elenca solo i task di quell'agente, e le azioni si rifiutano di toccare quelli degli altri:
 

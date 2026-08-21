@@ -7,7 +7,8 @@ shared by the machine (caches, builds, migrations, releases) is done by one agen
 
 ## What the board guarantees
 
-Every task belongs to **one** agent: its own override (modal header), else the list default (toolbar
+Every task belongs to **one** agent: its own override (the selector on its own row in the modal header),
+else the list default (toolbar
 selector), else the default agent. `griglia:check --agent=<key>` lists only that agent's tasks, and the
 actions refuse to touch anybody else's:
 

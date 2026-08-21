@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.79.2] - 2026-08-21
+### Fixed
+- **The agent select in the modal header no longer gets clipped: it has a row of its own, aligned left
+  (task 440).** Squeezed among the header icons the label («Default (Claude Code)») was cut mid-word, on a
+  phone above all, where it was capped at `8.5rem`. The select now sits on a full-width row under the
+  commands (`.modal-cmds-agent`), so on a phone the header stacks in three rows — state with ‹ 3/7 › and
+  the close button, the agent, then move/archive/delete.
+
 ## [0.79.1] - 2026-08-21
 ### Fixed
 - Closing an editor with a click outside no longer depends on the promise returned by `$wire.set()`: the

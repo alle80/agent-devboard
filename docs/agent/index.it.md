@@ -43,7 +43,8 @@ l'agente ti dice di lanciare `/clear` — non può farlo al posto tuo.
 ## Più agenti
 
 Si dichiarano con `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. Una lista (progetto) ha un agente di
-default (selettore nella barra), un task può cambiarlo (intestazione del modale). Ogni agente esegue
+default (selettore nella barra), un task può cambiarlo (tendina su una riga sua sotto i comandi
+dell'intestazione del modale). Ogni agente esegue
 `griglia:check --agent=<la sua chiave>` (oppure imposta `GRIGLIA_AGENT_KEY`) e vede solo i propri task;
 `--take/--done` continuano a funzionare per id. Le [skill](skills.md) proposte su un task sono filtrate allo
 stesso modo: solo quelle che il suo agente ha installate.

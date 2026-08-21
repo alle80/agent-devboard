@@ -189,14 +189,14 @@ class ModalCommandsTest extends TestCase
         $tools = strpos($html, 'modal-cmds-tools');
         $close = strpos($html, 'modal-close');
         $this->assertNotFalse($nav, 'the state badge and the prev/next arrows are their own group');
-        $this->assertNotFalse($tools, 'agent, move, archive and delete are their own group');
+        $this->assertNotFalse($tools, 'move, archive and delete are their own group');
         $this->assertNotFalse($close, 'the close button carries the hook the mobile layout orders');
         $this->assertTrue($nav < $tools && $tools < $close, 'DOM order: nav, tools, close');
         $this->assertStringContainsString('aria-label="Close"', $html);
 
         $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
         $this->assertStringContainsString('.modal-cmds { display: contents; }', $css);
-        $this->assertStringContainsString('.modal-cmds-tools { order: 3; flex-basis: 100%;', $css);
+        $this->assertStringContainsString('.modal-cmds-tools { order: 4; flex-basis: 100%;', $css);
         $this->assertStringContainsString('.modal-head > .modal-close { order: 2; }', $css);
         $this->assertStringContainsString('.modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem;', $css);
     }
@@ -218,5 +218,31 @@ class ModalCommandsTest extends TestCase
         $this->assertStringContainsString('.db-state-name { display: none;', $css, 'the label steps aside on a narrow panel');
         $this->assertStringContainsString('.db-state-name { display: inline; }', $css, 'and comes back from md, where there is room');
         $this->assertStringContainsString('.db-agent-select { max-width: 16rem; }', $css, 'the agent label has room from md');
+    }
+
+    public function test_the_agent_select_has_a_row_of_its_own_aligned_left(): void
+    {
+        // Task 440: squeezed among the header icons the select was clipped, on a phone above all. It now sits
+        // on a full-width row under the commands, aligned left.
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
+        $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
+
+        $html = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
+
+        $tools = strpos($html, 'modal-cmds-tools');
+        $agent = strpos($html, 'modal-cmds-agent');
+        $this->assertNotFalse($agent, 'the select is its own group');
+        $this->assertTrue($tools < $agent, 'and comes after the tools, so it wraps to the row below');
+        $this->assertSame(
+            substr_count($html, 'db-agent-select'),
+            substr_count($html, 'modal-cmds-agent'),
+            'the header holds exactly one select, the one on its own row',
+        );
+
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $this->assertStringContainsString('.modal-head { flex-wrap: wrap; }', $css, 'the header wraps, so the row exists');
+        $this->assertStringContainsString('.modal-cmds-agent { order: 3; flex-basis: 100%; justify-content: flex-start; }', $css);
+        $this->assertStringContainsString('.modal-cmds-agent .db-agent-select { max-width: 100%; }', $css, 'the whole row is the select\'s');
+        $this->assertStringNotContainsString('.modal-cmds-tools .db-agent-select', $css, 'no more squeezing among the icons');
     }
 }

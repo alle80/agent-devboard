@@ -3,10 +3,11 @@
     Uses the modal component methods: stateKey(), toggleOpenToWork(), resumeTodo(), archiveTodo(), deleteTodo().
     Vars available from the modal: $todo, $readonly.
 
-    Two groups: «nav» (state + previous/next) pinned to the left edge of the title bar and «tools» (agent,
-    move, archive, delete) pinned to the right, next to the close button — the bar spans the whole width
-    instead of piling up on the right (task 421). Below md the state name steps aside (the icon says it) and
-    on a phone «tools» drops to its own line — see .modal-cmds in griglia.css (task 399).
+    Two groups: «nav» (state + previous/next) pinned to the left edge of the title bar and «tools» (move,
+    archive, delete) pinned to the right, next to the close button — the bar spans the whole width instead
+    of piling up on the right (task 421). Below md the state name steps aside (the icon says it) and on a
+    phone «tools» drops to its own line — see .modal-cmds in griglia.css (task 399). The agent select is a
+    row of its own under the bar, left aligned, so its label is never clipped (task 440).
 --}}
 @php($state = $this->stateKey())
 <div class="modal-cmds flex min-w-0 items-center gap-1.5" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
@@ -53,16 +54,6 @@
             </button>
         @endif
 
-        @if (\Alle80\Griglia\Agent::many())
-            {{-- Multi-agent: which agent handles this task --}}
-            @include('griglia::livewire.partials.agent-select', [
-                'todo' => $todo,
-                'change' => 'setAgent($event.target.value)',
-                'inheritLabel' => __('griglia::t.agent_default', ['agent' => \Alle80\Griglia\Agent::label($todo->checklist?->agent ?: \Alle80\Griglia\Agent::defaultKey())]),
-                'class' => 'db-cmd min-w-0 text-xs',
-            ])
-        @endif
-
         @if ($otherLists->isNotEmpty())
             {{-- Move to another list --}}
             <details class="relative shrink-0" x-data="{ o: false }" x-bind:open="o" x-on:toggle="o = $el.open" x-on:click.outside="o = false" x-on:keydown.escape.window="o = false">
@@ -91,3 +82,16 @@
         </button>
     </div>
 </div>
+
+@if (\Alle80\Griglia\Agent::many())
+    {{-- Multi-agent: which agent handles this task. Own full-width row under the commands, aligned left:
+         squeezed among the icons the label «Default (Claude Code)» ended up clipped, on a phone above all. --}}
+    <div class="modal-cmds-agent flex min-w-0 items-center" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
+        @include('griglia::livewire.partials.agent-select', [
+            'todo' => $todo,
+            'change' => 'setAgent($event.target.value)',
+            'inheritLabel' => __('griglia::t.agent_default', ['agent' => \Alle80\Griglia\Agent::label($todo->checklist?->agent ?: \Alle80\Griglia\Agent::defaultKey())]),
+            'class' => 'db-cmd min-w-0 text-xs',
+        ])
+    </div>
+@endif
