@@ -47,6 +47,13 @@ class TodoListComponentTest extends TestCase
         Livewire::test(TodoList::class)->assertSee('Implemented compact labels');
     }
 
+    public function test_completed_task_uses_the_done_state_icon(): void
+    {
+        $todo = $this->add('Finished task');
+        $todo->update(['completed' => true, 'open_to_work' => true]);
+        Livewire::test(TodoList::class)
+            ->assertSee('title="Completed task"', false)            ->assertSee('class="todo-action db-badge db-badge-done', false);
+    }
     public function test_title_length_is_enforced(): void
     {
         Livewire::test(TodoList::class)->call('startInsert', 1)->set('newTitle', str_repeat('x', 51))->call('saveInsert')

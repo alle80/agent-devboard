@@ -29,6 +29,7 @@ return [
     'dot_working' => 'In lavorazione: clicca per fermare',
     'dot_otw_on' => 'Open to work: clicca per disattivare',
     'dot_otw_off' => 'Segna come open to work',
+    'dot_done' => 'Task completato',
     'save' => 'Salva',
     'task_prev' => 'Task precedente (←)',
     'task_next' => 'Task successivo (→)',

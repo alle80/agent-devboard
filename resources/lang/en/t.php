@@ -30,6 +30,7 @@ return [
     'dot_working' => 'In progress: click to stop',
     'dot_otw_on' => 'Open to work: click to disable',
     'dot_otw_off' => 'Mark as open to work',
+    'dot_done' => 'Completed task',
     'save' => 'Save',
     'task_prev' => 'Previous task (←)',
     'task_next' => 'Next task (→)',

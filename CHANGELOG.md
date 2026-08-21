@@ -6,19 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
+## [0.74.1] - 2026-08-21
+### Fixed
+- Show the done state icon on completed rows instead of retaining their previous open-to-work icon.
 ## [0.74.0] - 2026-08-21
 ### Added
 - Agent selector on the task row of the list, not only in the modal header: the same dropdown doubles as the
   agent badge, so the name of the agent that will take the task is always visible — also when the task simply
   inherits the default agent of the list.
-
 ## [0.73.3] - 2026-08-21
-
 ### Fixed
 - Completed-task action buttons now use a lighter grey and stronger opacity, instead of becoming almost
   invisible when their own dimming was compounded by the completed row's opacity.
-
 ## [0.73.2] - 2026-08-21
 ### Fixed
 - Render single newlines in Markdown notes and agent answers as HTML `<br>` elements.

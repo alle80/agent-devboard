@@ -159,11 +159,11 @@
                     @endif
 
                     @if ($editingId !== $todo->id)
-                    @php($st = $todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting')))
+                    @php($st = $todo->completed ? 'done' : ($todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting'))))
                     <button
                         wire:click="toggleOpenToWork({{ $todo->id }})"
                         @if ($todo->working) wire:confirm="{{ __('griglia::t.stop_confirm', ['title' => $todo->title]) }}" @endif
-                        title="{{ $todo->question ? __('griglia::t.dot_question') : ($todo->working ? __('griglia::t.dot_working') : ($todo->open_to_work ? __('griglia::t.dot_otw_on') : __('griglia::t.dot_otw_off'))) }}"
+                        title="{{ $todo->completed ? __('griglia::t.dot_done') : ($todo->question ? __('griglia::t.dot_question') : ($todo->working ? __('griglia::t.dot_working') : ($todo->open_to_work ? __('griglia::t.dot_otw_on') : __('griglia::t.dot_otw_off')))) }}"
                         class="todo-action db-badge db-badge-{{ $st }} shrink-0 cursor-pointer transition hover:scale-125 {{ $st === 'waiting' ? 'opacity-40 hover:opacity-100' : '' }}"
                     ><x-griglia::icon :name="$st" size="1.2em" :stroke="2" /></button>
                     <button
