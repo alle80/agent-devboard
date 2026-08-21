@@ -11,9 +11,10 @@ use Alle80\Griglia\Http\Controllers\ServiceWorkerController;
 use Alle80\Griglia\Http\Middleware\GrigliaAccess;
 use Alle80\Griglia\Http\Middleware\GrigliaAdmin;
 use Alle80\Griglia\Http\Middleware\OpenFromLink;
+use Alle80\Griglia\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(array_merge(array_values(array_diff((array) config('griglia.middleware', ['web']), ['auth'])), [GrigliaAccess::class, RememberStyle::class, OpenFromLink::class]))
+Route::middleware(array_merge(array_values(array_diff((array) config('griglia.middleware', ['web']), ['auth'])), [GrigliaAccess::class, SetLocale::class, RememberStyle::class, OpenFromLink::class]))
     ->prefix((string) config('griglia.route_prefix', ''))
     ->group(function () {
         if (config('griglia.home_route', true)) {

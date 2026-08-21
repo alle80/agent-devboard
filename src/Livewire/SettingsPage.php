@@ -103,6 +103,7 @@ class SettingsPage extends Component
 
         $settings->save();
         \Alle80\Griglia\Mode::reset();
+        \Alle80\Griglia\Support\Locale::apply(); // cambiando lingua la pagina si ridisegna già tradotta
         $this->values[$group][$key] = $settings->{$key};
         $this->dispatch('toast', message: __('griglia::t.msg.setting_saved', ['label' => $field[0]]));
     }

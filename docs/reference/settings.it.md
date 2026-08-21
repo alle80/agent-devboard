@@ -36,6 +36,7 @@ Le opzioni della pagina `/settings`: salvate nel database, si cambiano a runtime
 
 | Impostazione | Tipo | Cosa fa |
 |---|---|---|
+| **Lingua della board** (`locale`) | select | Lingua dell'interfaccia della board (menu, bottoni, impostazioni). Vuoto = la lingua dell'applicazione (APP_LOCALE). |
 | **Stile predefinito** (`default_style`) | select | Aprendo il sito vai dritto a questo stile. |
 | **Lunghezza massima titolo** (`title_max_length`) | int | Caratteri massimi per il titolo di un elemento (10–200). |
 | **Archiviazione automatica (giorni)** (`auto_archive_days`) | int | I completati da più di N giorni finiscono in archivio da soli, ogni notte. 0 = mai. |

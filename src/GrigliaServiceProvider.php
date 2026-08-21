@@ -49,7 +49,7 @@ class GrigliaServiceProvider extends ServiceProvider
         Livewire::addNamespace('griglia', classNamespace: 'Alle80\\Griglia\\Livewire');
         // Security: GrigliaAccess replaces `auth` on the package routes, so it must also run on Livewire's
         // /livewire/update requests (only "persistent" middleware is re-applied there)
-        Livewire::addPersistentMiddleware([\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Alle80\Griglia\Http\Middleware\GrigliaAdmin::class]);
+        Livewire::addPersistentMiddleware([\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Alle80\Griglia\Http\Middleware\GrigliaAdmin::class, \Alle80\Griglia\Http\Middleware\SetLocale::class]);
 
         if (config('griglia.register_routes', true)) {
             // After the host app's routes, so its own routes (e.g. dedicated styles) win over /{theme}

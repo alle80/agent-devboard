@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.77.0] - 2026-08-21
+### Added
+- **The language of the board is chosen in `/settings` (task 432).** The App group opens with «Board
+  language»: *as in the application* (the `app.locale` config, i.e. `APP_LOCALE`), English or Italiano —
+  the languages the board is translated into, read from `resources/lang` (the published
+  `lang/vendor/griglia` counts too, so a host application that adds a language sees it in the list).
+  The choice is applied by the new `SetLocale` middleware to every board page and, being a persistent
+  Livewire middleware, to the `/livewire/update` requests of modals and saves; Carbon follows, so «3 hours
+  ago» is translated as well. Choosing a language redraws `/settings` already translated.
+- `Alle80\Griglia\Support\Locale` — available languages, their names, the options of the selector and
+  `apply()`. With no choice («as in the application») it touches nothing: a host application that sets the
+  locale by itself keeps deciding.
+
 ## [0.76.0] - 2026-08-21
 ### Fixed
 - **Speech to text lost entire dictations without saying a word (task 431).** The recorder lived inside the
@@ -1409,7 +1422,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.76.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.77.0...HEAD
+[0.77.0]: https://github.com/alle80/griglia/compare/v0.76.0...v0.77.0
 [0.76.0]: https://github.com/alle80/griglia/compare/v0.75.0...v0.76.0
 [0.75.0]: https://github.com/alle80/griglia/compare/v0.74.3...v0.75.0
 [0.74.3]: https://github.com/alle80/griglia/compare/v0.74.2...v0.74.3

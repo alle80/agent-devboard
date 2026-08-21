@@ -11,6 +11,9 @@ due cose diverse che si chiamano «traduzioni», e non si toccano fra loro:
 
 Questa pagina parla della prima. Per la seconda vedi [Contribuire](contributing.md).
 
+Quale lingua *mostra* la board è un'impostazione: **Lingua della board**, nel gruppo App di `/settings`
+(vedi [Configurazione e impostazioni](../configuration/index.md#la-lingua-della-board)).
+
 ## Come funziona una pagina tradotta
 
 Il sito usa [mkdocs-static-i18n](https://ultrabug.github.io/mkdocs-static-i18n/) con la struttura a

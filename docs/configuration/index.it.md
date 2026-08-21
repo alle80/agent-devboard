@@ -22,6 +22,23 @@ I gruppi `agent` e `optimization` non sono decorazione: `griglia:check` li stamp
 l'agente deve rispettarli — politica dei commit, autonomia, notifiche, un task alla volta o più di uno,
 modalità stringata. Cambiali dalla pagina e il `griglia:check` successivo obbedisce.
 
+## La lingua della board
+
+La board parla le lingue in cui è tradotta — inglese (base) e italiano — e il gruppo **App** di `/settings`
+si apre con la scelta:
+
+- **Come nell'applicazione (`EN`)** — il default: la board segue `config('app.locale')`, così
+  un'applicazione ospite che imposta la lingua per conto suo (un suo `SetLocale`, una preferenza per
+  utente) continua a decidere lei.
+- **English**, **Italiano**, … — una voce per ogni cartella di lingua trovata in `resources/lang` del
+  package e in `lang/vendor/griglia` pubblicato: pubblica le tue traduzioni e compaiono qui.
+
+La scelta vale per ogni pagina della board e per le richieste Livewire dietro modali e salvataggi, date
+comprese («3 ore fa»). Non tocca la console: `griglia:check` continua a parlare all'agente in inglese.
+
+Aggiungere una lingua è una cartella accanto a `en` e `it` — vedi
+[Traduzioni](../contributing/translations.md).
+
 ## L'inventario completo
 
 Generato dal codice, così non resta mai indietro:

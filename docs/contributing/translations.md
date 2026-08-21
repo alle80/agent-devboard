@@ -11,6 +11,9 @@ things called "translations" in this repository, and they do not touch each othe
 
 This page is about the first one. For the second, see [Contributing](contributing.md).
 
+Which language the board *shows* is a setting: **Board language** in the App group of `/settings`
+(see [Configuration & settings](../configuration/index.md#the-language-of-the-board)).
+
 ## How a translated page works
 
 The site uses [mkdocs-static-i18n](https://ultrabug.github.io/mkdocs-static-i18n/) with the **suffix**

@@ -10,6 +10,9 @@ use Spatie\LaravelSettings\Settings;
  */
 class AppSettings extends Settings
 {
+    /** Lingua dell'interfaccia: '' = come il config dell'applicazione (APP_LOCALE), altrimenti 'en', 'it'… */
+    public string $locale;
+
     /** Stile aperto da «/»: '' = manga (nessun redirect), altrimenti slug (jack, c64, slate…). */
     public string $default_style;
 
@@ -83,6 +86,7 @@ class AppSettings extends Settings
 
         $labels = (array) __('griglia::t.settings_fields');
         $def = [
+            'locale' => ['select', \Alle80\Griglia\Support\Locale::options()],
             'default_style' => ['select', $styles],
             'title_max_length' => ['int', ['min' => 10, 'max' => 200]],
             'auto_archive_days' => ['int', ['min' => 0, 'max' => 365]],
