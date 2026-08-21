@@ -94,11 +94,11 @@ rimetterlo open to work.
 
 ### Il salvataggio si fa da solo
 
-Titolo e nota si salvano **mentre scrivi** — basta una pausa. Non c'è più il bottone «Salva» e non c'è più
-«Annulla»: quello che c'è scritto è quello che c'è. La scritta «Salvato» accanto al campo dice quando è
+Titolo e nota si salvano **mentre scrivi** — basta una pausa. Non c'è più il bottone «Salva»: quello che
+c'è scritto viene salvato automaticamente. La scritta «Salvato» accanto al campo dice quando è
 successo, e la modifica si chiude con `Invio` (il titolo), `Esc` o un clic fuori dal campo.
 
-Appena il testo è diverso da quello di partenza compare il bottone **torna alla versione precedente** (↩)
+Appena il testo è diverso da quello di partenza compare il bottone **Annulla** (↩)
 accanto alla scritta «Salvato»: rimette il titolo — o la nota — com'era quando hai aperto la modifica e ti
 lascia dentro il campo, per continuare da lì. È un passo indietro, non uno storico: se chiudi e riapri, la
 «versione precedente» diventa il testo che hai appena lasciato.

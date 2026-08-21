@@ -48,6 +48,9 @@ class AutosaveTest extends TestCase
 
     public function test_revert_puts_back_the_starting_value_without_closing(): void
     {
+        $this->assertSame('Cancel', trans('griglia::t.revert', locale: 'en'));
+        $this->assertSame('Annulla', trans('griglia::t.revert', locale: 'it'));
+
         $this->todo->update(['notes' => 'first note']);
         $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
 

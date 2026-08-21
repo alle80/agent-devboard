@@ -40,7 +40,7 @@ return [
     'copy_failed' => 'non copiato',
     'copy_block' => 'Copia il blocco di codice',
     'cancel' => 'Annulla',
-    'revert' => 'Torna alla versione precedente',
+    'revert' => 'Annulla',
     'new_title' => 'Nuovo titolo',
     'ok' => 'OK',
 

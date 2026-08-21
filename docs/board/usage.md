@@ -88,11 +88,11 @@ archive, delete, close, plus **resume with changes** (a new linked task) on a co
 
 ### Saving happens by itself
 
-The title and the note are saved **while you type** — a short pause is enough. There is no «Save» button and
-no «Cancel» button: what is written is what is stored. The small «Saved» flag next to the field says when the
+The title and the note are saved **while you type** — a short pause is enough. There is no «Save» button: what is
+written is stored automatically. The small «Saved» flag next to the field says when the
 last save happened, and the editor closes with `Enter` (title), `Esc`, or a click outside it.
 
-As soon as the text differs from the one you started from, a **back to the previous version** button (↩)
+As soon as the text differs from the one you started from, a **Cancel** button (↩)
 appears next to the «Saved» flag: it puts back the title — or the note — as it was when you opened the
 editor, and leaves you inside it, so you can keep writing from there. It is one step back, not a history:
 close the editor and reopen it and the «previous version» becomes the text you have just left.

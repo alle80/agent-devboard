@@ -332,7 +332,7 @@ class TodoList extends Component
     }
 
     /**
-     * «Torna alla versione precedente»: rimette il titolo com'era quando la modifica è cominciata.
+     * «Annulla»: rimette il titolo com'era quando la modifica è cominciata.
      * La rinomina resta aperta — è un passo indietro, non una chiusura (task 438).
      */
     public function revertEdit(): void

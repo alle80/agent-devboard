@@ -41,7 +41,7 @@ return [
     'copy_failed' => 'not copied',
     'copy_block' => 'Copy the code block',
     'cancel' => 'Cancel',
-    'revert' => 'Back to the previous version',
+    'revert' => 'Cancel',
     'new_title' => 'New title',
     'ok' => 'OK',
 

@@ -484,7 +484,7 @@ class IngredientModal extends Component
     }
 
     /**
-     * «Torna alla versione precedente»: rimette il titolo com'era quando la modifica è cominciata.
+     * «Annulla»: rimette il titolo com'era quando la modifica è cominciata.
      * Il campo resta aperto — è un passo indietro, non una chiusura (task 438).
      */
     public function revertTitle(): void
@@ -571,7 +571,7 @@ class IngredientModal extends Component
     }
 
     /**
-     * «Torna alla versione precedente»: rimette la nota com'era quando la modifica è cominciata.
+     * «Annulla»: rimette la nota com'era quando la modifica è cominciata.
      * L'editor resta aperto — è un passo indietro, non una chiusura (task 438).
      */
     public function revertNotes(): void

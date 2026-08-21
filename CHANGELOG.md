@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.81.1] - 2026-08-22
+
+### Changed
+- **The autosave undo button is now labelled «Cancel».** The shorter label replaces «Back to the previous
+  version» in title and notes editors while preserving the same one-step restore behaviour (task 480).
+
 ## [0.81.0] - 2026-08-21
 
 ### Added
