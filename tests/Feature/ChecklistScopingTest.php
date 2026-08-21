@@ -22,11 +22,20 @@ class ChecklistScopingTest extends TestCase
         $this->assertFalse(Checklist::mine()->where('name', 'Theirs')->exists());
     }
 
-    public function test_default_list_name_is_translated(): void
+    public function test_default_list_name_is_translated_when_the_config_is_empty(): void
     {
+        config(['griglia.default_list_name' => '']);
         app()->setLocale('it');
         $this->actingAsUser();
         $this->assertSame('La mia lista', Checklist::find(Checklist::currentId())->name);
+    }
+
+    public function test_default_list_name_config_wins_over_the_translation(): void
+    {
+        config(['griglia.default_list_name' => 'Cose da fare']);
+        app()->setLocale('it');
+        $this->actingAsUser();
+        $this->assertSame('Cose da fare', Checklist::find(Checklist::currentId())->name);
     }
 
     public function test_deleting_a_todo_is_soft_and_force_delete_removes_children(): void

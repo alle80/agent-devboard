@@ -47,6 +47,8 @@ return [
 
     // Toolbar
     'search_placeholder' => 'Search… (title, notes, sub-tasks, images)',
+    'search_all_lists' => 'All lists',
+    'search_all_lists_help' => 'Search across all your active lists',
     'search_label' => 'Search the list',
     'clear_search' => 'Clear search',
     'archived' => 'Archived',
@@ -389,8 +391,8 @@ return [
         'commit_after_task' => ['Commit after each completed task', 'When a task is closed the agent commits without asking. If off, the work stays uncommitted until you ask.'],
         'push_after_commit' => ['Automatic push to GitHub', 'After the automatic commit it also pushes. If off, you ask for the push.'],
         'autonomy' => ['Autonomy', 'How it behaves when a request is ambiguous.'],
-        'notify_on_done' => ['Push notification when a task is closed', 'Notification on your phone when a task is closed.'],
-        'notify_on_question' => ['Push notification for questions', 'Notification on your phone when the agent has a question.'],
+        'notify_on_done' => ['Notifications when a task is closed', 'One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when a task is closed, and the agent is told to notify you on its own channel too. Off = neither of them says anything.'],
+        'notify_on_question' => ['Notifications for questions', 'One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when the agent asks a question, and the agent is told to notify you on its own channel too. Off = neither of them says anything.'],
         'verify_before_close' => ['Verify before closing', 'Automatic mobile+desktop screenshots and Livewire tests before closing a task (slower, safer).'],
         'comment_detail' => ['Agent comment', 'How detailed the answer under the note is.'],
         'git_flow' => ['Git', 'Where the commits of each task go.'],

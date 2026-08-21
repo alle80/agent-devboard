@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Documentation: the `TodoChanged` payload** — the events reference described the channel, its
+  authorisation and `Event::listen()`, but not what actually reaches the client. It now lists every field sent
+  by `broadcastWith()` (`checklist_id`, `todo_id`, `title`, `state`, `source`, `deleted`, `state_changed`) with
+  the possible values of `state` (`done`, `question`, `working`, `otw`, `waiting`), and shows how to listen
+  with Echo in both modes and from a Livewire component via `Mode::echoListener()` (EN + IT, task 454).
+
+## [0.80.0] - 2026-08-21
+
+### Added
+- The board search can now span every active list owned by the user. The optional **All lists** scope keeps
+  the normal list-local search as the default and labels cross-list results with their source list (task 459).
+
+### Changed
+- Persistent workers now scope their duplicate-process lock by repository as well as agent, so the same agent
+  can serve several Griglia applications on one computer. The systemd template accepts project-specific env
+  overrides and the worker guide documents the required one-worker-per-application setup (task 458).
+
+### Fixed
+- **Documentation: the board is not a PWA** — the feature overview claimed the board was «installable as a
+  PWA», but the package ships no web app manifest and `/griglia-sw.js` only handles push and
+  `notificationclick`: no `fetch` handler, no offline cache. The Mobile row (EN + IT) now describes what is
+  really there — a layout made for a thumb, camera attachments, Web Push — and links straight to the
+  *Mobile* section of «Using the board» (task 453).
+- **Documentation: the desktop dashboard has prose** — `/dashboard` (`griglia.dashboard_route`), the
+  `DashboardTodoList` component, the slide-out side tab and its two settings (`show_dashboard_tab`,
+  `tab_side`) only existed in the generated reference tables, and the README's route list did not mention
+  the route at all. «Using the board» (EN + IT) now has a *Desktop: the dashboard* section describing the
+  wider view, the theme fallback, the resizable tab and how to switch it off; the feature overview and the
+  README route list link to it. A test pins the two tab settings (task 452).
+- **Documentation: `notify_on_done` / `notify_on_question` govern the board's notifications too** — they read
+  as instructions for the agent alone, while `Notify::todoCompleted()` / `Notify::questionAsked()` also use
+  them to decide whether the bell, the Web Push and the mail go out, and the notifications page claimed the
+  two layers were «independent». The help of the two settings (EN + IT, hence the generated settings
+  reference) now says it is one switch for both layers, and the tip of the notifications page (EN + IT) says
+  which code reads it. Behaviour unchanged; a test pins the question side of it (task 451).
+- **`griglia.default_list_name` is alive again** — the config key was documented but dead: the first list of a
+  new user always took its name from `griglia::t.default_list`, so changing the key did nothing.
+  `Checklist::defaultName()` now prefers the configured name and falls back to the translation when the key is
+  empty, which is the new default (`GRIGLIA_DEFAULT_LIST_NAME`): both behaviours keep working, and a fresh
+  installation can name its first list — the agent list, for instance — before the first visit. The config
+  comment, the generated config reference and the Quickstart (EN + IT) say so (task 450).
+- **Documentation: the Quickstart explains how to create the agent list** — it claimed the board hands you a
+  list already named `dev`. It does not: the first visit creates «My list» / «La mia lista», so
+  `griglia:check`, the very first command an agent runs, stops with `No list named "dev"`. Step 1 of the
+  Quickstart (EN + IT) now names the list you actually get and gives the two ways to get an agent list —
+  rename it from the lists menu, or point `GRIGLIA_AGENT_LIST` / `griglia.agent_list` at a list you already
+  have (plus `config:clear`). The installation page says the same thing and links to the step (task 449).
+- **Documentation: the user-model hooks are documented under their current names** — `canAccessGriglia()`
+  and `canManageGriglia()`. Since v0.34.0 the code looks for those first and only falls back to the
+  pre-rename `canAccessDevboard()` / `canManageDevboard()`, but README, `SECURITY.md`, the access,
+  installation, security and config-reference pages (EN + IT) still taught the old names, so a new
+  installation would write the wrong method. The `config/griglia.php` comments and the Italian reference
+  translations were corrected too (the generated reference pages come from there), and the example Gate
+  ability is now `'access-griglia'`. `AdminTest` and `ModeTest` now cover the current names, the fallback
+  and the precedence between them (task 448).
+
 ## [0.79.3] - 2026-08-21
 
 ### Fixed

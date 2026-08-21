@@ -15,18 +15,22 @@ Switching to local from the UI needs `APP_ENV=local` or `GRIGLIA_ALLOW_LOCAL_FRO
 
 The package replaces the plain `auth` middleware with its own gate. Restrict access with either:
 
-- `canAccessDevboard(): bool` on your user model, or
+- `canAccessGriglia(): bool` on your user model, or
 - `GRIGLIA_ACCESS_GATE=<ability>` (a Gate ability of your app).
+
+The pre-rename hook `canAccessDevboard()` is still honoured when `canAccessGriglia()` is absent, but new
+installations should use the current name.
 
 ## Who administers it
 
 Settings, the agent context and theme packs are **administrator-only**:
 
-- `canManageDevboard(): bool` on your user model, or
+- `canManageGriglia(): bool` on your user model, or
 - `GRIGLIA_ADMIN_GATE=<ability>`, or
 - `GRIGLIA_ADMINS="1,alice@example.com"` (ids or e-mails).
 
-By default only the **first registered user** is an administrator.
+By default only the **first registered user** is an administrator. As for access, the old
+`canManageDevboard()` is still honoured as a fallback.
 
 ## Theme packs are code
 

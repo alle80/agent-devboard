@@ -114,7 +114,36 @@ snippets), **inline code copies itself with one click**, and links open in a new
 ## Toolbar
 
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state filters, archive.
+Turn on **All lists** beside the search field to find matching tasks in every active list you own; each result
+shows its list name. Archived lists and other users’ lists stay outside the search.
 On a plan list the **Plan** bar shows progress and the start/pause buttons (see [Plans](../features/plans.md)).
+
+## Desktop: the dashboard
+
+On a big screen the board has a second home: **`/dashboard`**, the same list rendered in a wider, roomier
+container (`max-w-5xl` instead of `max-w-2xl`), so long titles and notes stop wrapping every few words. It is
+the same component and the same data — states, modal, filters, drag & drop all behave exactly as on `/` — only
+the width changes. The page wears the current theme when that theme is a generic one; from a dedicated style of
+the host app (which has no shared CSS variables) it falls back to the default theme.
+
+The path comes from the config key `dashboard_route` (`GRIGLIA_DASHBOARD_ROUTE`, default `/dashboard`); set it
+to `null` and the route disappears, together with the tab below.
+
+### The side tab
+
+Every page carries a **slide-out tab pinned to one edge of the window** — a handle, debugbar style, that opens
+a panel with the dashboard inside it. Click the handle and the panel slides out; drag its inner edge to resize
+it (from 300px up to 70% of the window); ⤢ opens the full dashboard in the tab you are on; ✕ closes the panel.
+Whether it is open and how wide it is are remembered in the browser (`localStorage`), so the panel comes back
+the way you left it on the next page. It never appears on the dashboard itself, and it is **desktop only**:
+below the `lg` breakpoint it is not rendered at all, on the principle that a phone has no room to spare.
+
+Two settings in `/settings` govern it:
+
+| Setting | What it does |
+|---|---|
+| **DASHBOARD side tab** (`show_dashboard_tab`) | Shows or hides the tab. Off, the dashboard stays reachable at its own address. |
+| **Dashboard tab side** (`tab_side`) | Which edge the tab lives on — `right` (default) or `left`. |
 
 ## Mobile
 

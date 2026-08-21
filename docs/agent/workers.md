@@ -34,6 +34,35 @@ systemctl --user enable --now griglia-agent-worker@codex.service
 systemctl --user enable --now griglia-agent-worker@claude.service
 ```
 
+### Multiple applications on the same computer
+
+Run **one worker per application and agent**: each worker polls one board and starts the agent in that
+project's directory. The lock automatically includes both repository and agent key, so two applications can
+both use `codex` without blocking each other.
+
+For each application, copy the template under a unique unit prefix and replace its project path. For example:
+
+```bash
+cp app-one/scripts/systemd/griglia-agent-worker@.service.example \
+  ~/.config/systemd/user/griglia-agent-worker-app-one@.service
+sed -i 's#/absolute/path/to/project#/srv/app-one#g' \
+  ~/.config/systemd/user/griglia-agent-worker-app-one@.service
+
+cp app-two/scripts/systemd/griglia-agent-worker@.service.example \
+  ~/.config/systemd/user/griglia-agent-worker-app-two@.service
+sed -i 's#/absolute/path/to/project#/srv/app-two#g' \
+  ~/.config/systemd/user/griglia-agent-worker-app-two@.service
+
+systemctl --user daemon-reload
+systemctl --user enable --now griglia-agent-worker-app-one@codex.service
+systemctl --user enable --now griglia-agent-worker-app-two@codex.service
+```
+
+Shared agent configuration remains in `~/.config/griglia-worker/codex.env`. Project-specific settings can
+override it in `~/.config/griglia-worker/griglia-agent-worker-app-one-codex.env` (the unit's `%p-%i.env`
+pattern). In particular, each Docker application needs a distinct `GRIGLIA_WORKER_CONTAINER`; for local
+transport set `GRIGLIA_WORKER_REPO` and, when needed, `GRIGLIA_WORKER_PHP` instead.
+
 `codex` invokes `codex exec --approve-for-me`; `claude` invokes
 `claude -p --permission-mode acceptEdits`. The unit adds `%h/.local/bin` to `PATH`, the usual location for
 user-installed launchers. If `command -v codex` or `command -v claude` reports another directory, put a
@@ -109,7 +138,7 @@ the workflow needs.
 ## Behaviour and testing
 
 The worker polls the current board state, so it also finds work that was already open before a restart. It
-prefers an already-working task, otherwise the first open task in board order. One `flock` per agent prevents
+prefers an already-working task, otherwise the first open task in board order. One `flock` per repository/agent pair prevents
 duplicate sessions. While an agent runs, the worker keeps polling; a board Stop terminates that child process.
 After the agent exits, the service returns to polling and systemd restarts the worker after failures.
 

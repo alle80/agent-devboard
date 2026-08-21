@@ -5,9 +5,23 @@ already [installed](installation.md).
 
 ## 1. Open the board
 
-Log in to your app and visit `/` (or your `route_prefix`). You get one list — the **agent list**, named
-`dev` by default (`config('griglia.agent_list')`). That list is the channel between you and the agent:
-everything you drop there is a request.
+Log in to your app and visit `/` (or your `route_prefix`). The first visit creates one list for you, named
+**My list** — not yet the agent list.
+
+The **agent list** is the one whose name matches `config('griglia.agent_list')`, `dev` by default: that list is
+the channel between you and the agent, and everything you drop there is a request. Until it exists,
+`griglia:check` stops with `No list named "dev" (config griglia.agent_list).` — so give the agent its list, in
+one of three ways:
+
+- **rename the list to `dev`** — open the lists menu (top left), click the pencil next to *My list*, type `dev`;
+  or create a new list with that name from the same menu;
+- **or point the config at a list you already have** — `GRIGLIA_AGENT_LIST=my-list` in `.env` (or `agent_list`
+  in `config/griglia.php` after publishing it), then `php artisan config:clear`;
+- **or, before that first visit**, name the list that will be created: `GRIGLIA_DEFAULT_LIST_NAME=dev` (config
+  `default_list_name`). Left empty — the default — the first list takes its name from the translations
+  (`griglia::t.default_list`), so it follows the user's locale.
+
+The other lists stay yours: the agent only reads the agent list (plus the [plans](../features/plans.md) you start).
 
 ## 2. Write a request
 

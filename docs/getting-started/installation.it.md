@@ -18,7 +18,12 @@ php artisan migrate                                 # tabelle + valori di defaul
 
 L'installazione è tutta qui: la board porta con sé il proprio CSS e JS **precompilati**, pubblicati in automatico
 da composer (Laravel ripubblica `laravel-assets` dopo ogni aggiornamento), quindi non c'è niente da compilare.
-Apri `/` e la board è lì.
+Apri `/` e la board è lì, con una lista che si chiama **La mia lista**.
+
+Manca ancora una cosa: la **lista dell'agente**, quella che legge `griglia:check`, che prende il nome da
+`config('griglia.agent_list')` (di default `dev`). Rinomina *La mia lista* in `dev` dal menu delle liste, oppure
+imposta `GRIGLIA_AGENT_LIST` col nome di una lista che hai già — i
+[Primi cinque minuti](quickstart.md#1-apri-la-board) lo spiegano passo passo.
 
 Facoltativi, quando ti servono:
 
@@ -58,7 +63,7 @@ dispositivi da **Impostazioni → Notifiche**.
 
 La registrazione è affare della tua applicazione. Per impostazione predefinita il **primo utente registrato** è
 l'amministratore della board (impostazioni, contesto dell'agente, pacchetti di temi); vedi
-[Sicurezza](../operations/security.md) per `GRIGLIA_ADMINS`, `canManageDevboard()` o un Gate.
+[Sicurezza](../operations/security.md) per `GRIGLIA_ADMINS`, `canManageGriglia()` o un Gate.
 
 ## E poi
 

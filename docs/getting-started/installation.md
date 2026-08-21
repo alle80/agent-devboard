@@ -18,7 +18,12 @@ php artisan migrate                                 # tables + settings defaults
 
 That is the whole installation: the board ships its **precompiled** CSS and JS, published automatically by
 composer (Laravel republishes `laravel-assets` after every update), so there is nothing to build. Open `/`
-and the board is there.
+and the board is there, with one list named **My list**.
+
+One thing is still missing: the **agent list**, the list `griglia:check` reads, named after
+`config('griglia.agent_list')` (`dev` by default). Rename *My list* to `dev` from the lists menu, or set
+`GRIGLIA_AGENT_LIST` to the name of a list you already have — the [Quickstart](quickstart.md#1-open-the-board)
+walks through it.
 
 Optional, when you want them:
 
@@ -56,7 +61,7 @@ Add `NotificationChannels\WebPush\HasPushSubscriptions` to your user model; user
 ## First user and administrators
 
 Registration is up to your app. By default the **first registered user** is the board administrator (settings,
-agent context, theme packs); see [Security](../operations/security.md) for `GRIGLIA_ADMINS`, `canManageDevboard()` or a Gate.
+agent context, theme packs); see [Security](../operations/security.md) for `GRIGLIA_ADMINS`, `canManageGriglia()` or a Gate.
 
 ## Next
 

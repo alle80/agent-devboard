@@ -73,10 +73,18 @@ class Checklist extends Model
         }
 
         $first = static::mine()->orderBy('id')->first()
-            ?? static::create(['name' => __('griglia::t.default_list'), 'user_id' => auth()->id()]);
+            ?? static::create(['name' => static::defaultName(), 'user_id' => auth()->id()]);
 
         session(['checklist_id' => $first->id]);
 
         return $first->id;
+    }
+
+    /** Nome della prima lista di un utente: la config `griglia.default_list_name`, se vuota la traduzione. */
+    public static function defaultName(): string
+    {
+        $configured = trim((string) config('griglia.default_list_name', ''));
+
+        return $configured !== '' ? $configured : __('griglia::t.default_list');
     }
 }

@@ -20,7 +20,7 @@ implementazione.
 
 | # | Chiave | Tipo / default | A cosa serve e perché ci sta | Prio | Implementazione |
 |---|---|---|---|---|---|
-| C1 | `admin_gate` / `canManageDevboard()` | string\|null | chi può modificare impostazioni globali, contesto, temi, skill (rimedio di sicurezza #1) | **P1** | middleware/controllo in SettingsPage, ContextPage, installazione temi; nascondere i link; test; README |
+| C1 | `admin_gate` / `canManageGriglia()` | string\|null | chi può modificare impostazioni globali, contesto, temi, skill (rimedio di sicurezza #1) | **P1** | middleware/controllo in SettingsPage, ContextPage, installazione temi; nascondere i link; test; README |
 | C2 | `mode_lock` | bool, `false` (`GRIGLIA_MODE_LOCK`) | vietare che l'interfaccia scavalchi `app.mode` (per esempio in produzione) | P1 | `Mode::current()` ignora l'impostazione quando è bloccata; nascondere la select; test |
 | C3 | `storage_path` (cartella base di `skills_file`, `agent_status_file`, cache dell'export del contesto) | percorso | un posto solo per i file a runtime del package | P3 | ricavare da lì i due percorsi esistenti, tenendo gli override |
 | C4 | default di `stats.price_list` | array | prezzi di default per modello, così `/stats` mostra i costi da subito | P3 | precaricare `cost_per_m_*` dalla config quando le impostazioni sono vuote |

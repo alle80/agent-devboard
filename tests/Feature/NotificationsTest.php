@@ -77,6 +77,22 @@ class NotificationsTest extends TestCase
         });
     }
 
+    public function test_notify_on_question_silences_the_board_too(): void
+    {
+        Notification::fake();
+        $agent = app(AgentSettings::class);
+        $agent->notify_on_question = false;
+        $agent->save();
+        $this->artisan('griglia:check', ['--ask' => $this->todo->id, '--q' => ['Which color?']])->assertSuccessful();
+        Notification::assertNothingSent();
+
+        $agent->notify_on_question = true;
+        $agent->save();
+        $this->todo->update(['question' => false, 'working' => true]);
+        $this->artisan('griglia:check', ['--ask' => $this->todo->id, '--q' => ['Which color?']])->assertSuccessful();
+        Notification::assertSentTo($this->user, QuestionAsked::class);
+    }
+
     public function test_bell_lists_unread_and_opens_the_todo(): void
     {
         $this->artisan('griglia:check', ['--done' => $this->todo->id, '--comment' => 'Done'])->assertSuccessful();

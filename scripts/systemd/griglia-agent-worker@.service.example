@@ -6,6 +6,8 @@ Type=simple
 Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 WorkingDirectory=/absolute/path/to/project
 EnvironmentFile=-%h/.config/griglia-worker/%i.env
+# A project-specific unit prefix can override the shared agent configuration.
+EnvironmentFile=-%h/.config/griglia-worker/%p-%i.env
 ExecStart=/absolute/path/to/project/scripts/griglia-agent-worker.py --agent=%i
 Restart=always
 RestartSec=10

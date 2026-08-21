@@ -37,11 +37,24 @@ class ModeTest extends TestCase
         $this->actingAs(User::create(['name' => 'Boss', 'email' => 'boss@example.com', 'password' => bcrypt('x')]));
         $this->get('/stats')->assertOk();
 
-        // canAccessDevboard() on the model wins over the gate
+        // canAccessGriglia() on the model wins over the gate
+        $this->actingAs(new class extends User {
+            public function canAccessGriglia(): bool { return false; }
+        });
+        $this->get('/stats')->assertForbidden();
+
+        // the pre-rename canAccessDevboard() is still honoured when the current name is absent
         $this->actingAs(new class extends User {
             public function canAccessDevboard(): bool { return false; }
         });
         $this->get('/stats')->assertForbidden();
+
+        // …but canAccessGriglia() wins when both are defined
+        $this->actingAs(new class extends User {
+            public function canAccessGriglia(): bool { return true; }
+            public function canAccessDevboard(): bool { return false; }
+        });
+        $this->get('/stats')->assertOk();
     }
 
     public function test_access_middleware_is_persistent_on_livewire_updates(): void

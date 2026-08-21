@@ -15,7 +15,7 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 - Agent workflow: _open to work → working → done_, with questions, stop and resume
 - Multiple lists per user · sub-tasks · notes
 - Image attachments (upload / camera / paste) with optional AI descriptions for search
-- Archive · state filters · free-text search
+- Archive · state filters · free-text search, optionally across every active list owned by the user
 - Live updates between devices (any Laravel broadcaster, e.g. Reverb)
 - A theme system (built-in **Slate** theme + installable zip packs) and a settings page
 - English base language with an Italian translation — UI **and** documentation site
@@ -46,8 +46,11 @@ That's it: the board ships its own precompiled CSS/JS (published by composer wit
 > install stops with a conflict. Existing apps usually need nothing.
 
 Routes register automatically — `/` (default theme), `/{theme}`, `/plans/new`, `/settings`, `/context`, `/stats`,
-`/agents` — behind `web` plus the package's access middleware (login in server mode, none in local mode;
-see [Access, administrators and modes](#access-administrators-and-modes)).
+`/agents`, `/dashboard` — behind `web` plus the package's access middleware (login in server mode, none in local
+mode; see [Access, administrators and modes](#access-administrators-and-modes)).
+`/dashboard` is the wider desktop view of the board: its path comes from `griglia.dashboard_route`
+(`GRIGLIA_DASHBOARD_ROUTE`), and setting that key to `null` removes both the route and the slide-out tab that
+opens it from every page.
 **In server mode the package needs an authenticated user** (lists belong to users), so plug it into your
 app's login — or use local mode on your own machine.
 
@@ -58,7 +61,9 @@ Then wire up the front-end assets (below) and you're ready to [connect an agent]
 ## Connect a coding agent
 
 One list — `config('griglia.agent_list')`, default **`dev`** — is the request channel between you
-and the agent. You add todos; the agent works them. Setup is meant to be minimal:
+and the agent. You add todos; the agent works them. That list is not there out of the box: rename the
+list you get on the first visit from the lists menu, or set `GRIGLIA_AGENT_LIST` to the name of one you
+already have. Setup is meant to be minimal:
 
 **1 — Launch the agent inside the project directory** (Claude Code, or any agent that reads a project
 `AGENTS.md`).
@@ -181,11 +186,13 @@ switched off.
   (no authentication, one global set of lists: **your own machine only** — bind to `127.0.0.1`; a banner
   reminds it on every page). Also switchable in `/settings`; enabling local from the UI needs
   `APP_ENV=local` or `GRIGLIA_ALLOW_LOCAL_FROM_UI=true`.
-- **Access** (server mode): restrict who uses the board with `canAccessDevboard(): bool` on your user model
+- **Access** (server mode): restrict who uses the board with `canAccessGriglia(): bool` on your user model
   or `GRIGLIA_ACCESS_GATE=<ability>`.
-- **Administrators**: settings, agent context and theme packs are admin-only — `canManageDevboard(): bool`,
+- **Administrators**: settings, agent context and theme packs are admin-only — `canManageGriglia(): bool`,
   or `GRIGLIA_ADMIN_GATE=<ability>`, or `GRIGLIA_ADMINS="1,alice@example.com"`; by default only the first
   registered user.
+- The pre-rename hooks `canAccessDevboard()` / `canManageDevboard()` are still honoured when the current
+  ones are absent.
 - **Theme packs** are code-like content: admin-only install, SVG refused, CSS sanitised (no
   `@import`/external urls), size caps (5 MB/file, 20 MB, 200 files), assets served sandboxed.
 

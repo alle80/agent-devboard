@@ -11,7 +11,7 @@ Everything the board does, in one page. Follow a link when you want the detail.
 | **Progress and phase** | A percentage and a short «what I am doing now» on every working task, updated by the agent as it goes. [The agent side](../agent/index.md) |
 | **Questions** | The agent can pause a task with questions; you answer in the modal and send it back to work. [The agent side](../agent/index.md) |
 | **Resume** | Reopen a finished task as a new one that carries the old context with it. [Using the board](../board/usage.md) |
-| **Lists, archive, search** | Several lists per user, state filters, free-text search (including AI descriptions of the images), automatic archiving of old tasks. [Using the board](../board/usage.md) |
+| **Lists, archive, search** | Several lists per user, state filters, free-text search within one list or across all active lists (including AI descriptions of the images), automatic archiving of old tasks. [Using the board](../board/usage.md) |
 
 ## Driving an agent
 
@@ -35,4 +35,5 @@ Everything the board does, in one page. Follow a link when you want the detail.
 | **Themes** | A theme system with CSS variables, the built-in Slate theme and installable zip packs. [Themes](themes.md) |
 | **AI, optional** | Image descriptions for search, speech to text on every field, the plan builder. [AI features](ai.md) |
 | **Modes** | `server` (login, lists per user) or `local` (no auth, your machine only). [Access & modes](../configuration/access.md) |
-| **Mobile** | Touch targets, camera attachments, Web Push, and the board installable as a PWA. [Using the board](../board/usage.md) |
+| **Desktop dashboard** | A wider view of the board on `/dashboard`, plus a slide-out tab that opens it from any page. [Using the board](../board/usage.md#desktop-the-dashboard) |
+| **Mobile** | A layout made for a thumb: touch targets, camera attachments, Web Push. [Using the board](../board/usage.md#mobile) |

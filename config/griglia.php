@@ -18,13 +18,15 @@ return [
     // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
     'mode' => env('GRIGLIA_MODE', 'server'),
 
-    // Server mode: who may open the board. If the user model has `canAccessDevboard(): bool` it decides;
-    // otherwise this Gate ability (e.g. 'access-devboard') if set; otherwise every authenticated user.
+    // Server mode: who may open the board. If the user model has `canAccessGriglia(): bool` it decides (the
+    // pre-rename `canAccessDevboard()` is still honoured); otherwise this Gate ability (e.g. 'access-griglia')
+    // if set; otherwise every authenticated user.
     'access_gate' => env('GRIGLIA_ACCESS_GATE'),
 
     // Server mode: who may ADMINISTER the board (settings, agent context, theme packs). Checked in this order:
-    // `canManageDevboard(): bool` on the user model if defined; else this Gate ability if set; else the ids/e-mails
-    // in `admins` (GRIGLIA_ADMINS="1,alice@example.com") if set; else the first registered user only.
+    // `canManageGriglia(): bool` on the user model if defined (the pre-rename `canManageDevboard()` is still
+    // honoured); else this Gate ability if set; else the ids/e-mails in `admins`
+    // (GRIGLIA_ADMINS="1,alice@example.com") if set; else the first registered user only.
     'admin_gate' => env('GRIGLIA_ADMIN_GATE'),
     'admins' => env('GRIGLIA_ADMINS'),
 
@@ -68,8 +70,8 @@ return [
     // Name of the list used as request channel between the user and the coding agent (griglia:check)
     'agent_list' => env('GRIGLIA_AGENT_LIST', 'dev'),
 
-    // Name of the default list created for a new user
-    'default_list_name' => 'My list',
+    // Name of the first list created for a new user. Empty = the translated name (griglia::t.default_list)
+    'default_list_name' => env('GRIGLIA_DEFAULT_LIST_NAME', ''),
 
     // Private broadcast channel per user for live updates ({id} = user id); requires a broadcaster
     'broadcast_channel' => 'App.Models.User.{id}',

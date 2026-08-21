@@ -37,6 +37,36 @@ systemctl --user enable --now griglia-agent-worker@codex.service
 systemctl --user enable --now griglia-agent-worker@claude.service
 ```
 
+### Più applicazioni sullo stesso PC
+
+Serve **un worker per applicazione e per agente**: ogni worker interroga una sola board e avvia l'agente nella
+directory del relativo progetto. Il lock include automaticamente repository e chiave agente, quindi due
+applicazioni possono usare entrambe `codex` senza bloccarsi tra loro.
+
+Per ogni applicazione copia il template con un prefisso unità univoco e sostituisci il percorso. Per esempio:
+
+```bash
+cp app-one/scripts/systemd/griglia-agent-worker@.service.example \
+  ~/.config/systemd/user/griglia-agent-worker-app-one@.service
+sed -i 's#/absolute/path/to/project#/srv/app-one#g' \
+  ~/.config/systemd/user/griglia-agent-worker-app-one@.service
+
+cp app-two/scripts/systemd/griglia-agent-worker@.service.example \
+  ~/.config/systemd/user/griglia-agent-worker-app-two@.service
+sed -i 's#/absolute/path/to/project#/srv/app-two#g' \
+  ~/.config/systemd/user/griglia-agent-worker-app-two@.service
+
+systemctl --user daemon-reload
+systemctl --user enable --now griglia-agent-worker-app-one@codex.service
+systemctl --user enable --now griglia-agent-worker-app-two@codex.service
+```
+
+La configurazione comune dell'agente resta in `~/.config/griglia-worker/codex.env`. Le impostazioni specifiche
+del progetto possono sovrascriverla in
+`~/.config/griglia-worker/griglia-agent-worker-app-one-codex.env` (schema `%p-%i.env` della unità). In
+particolare ogni applicazione Docker deve indicare un `GRIGLIA_WORKER_CONTAINER` diverso; per il trasporto
+locale imposta invece `GRIGLIA_WORKER_REPO` e, se serve, `GRIGLIA_WORKER_PHP`.
+
 `codex` invoca `codex exec --approve-for-me`; `claude` invoca `claude -p --permission-mode acceptEdits`.
 L'unit aggiunge `%h/.local/bin` al `PATH`, il posto solito dei launcher installati dall'utente. Se
 `command -v codex` o `command -v claude` indicano un'altra cartella, metti una riga `PATH=...` completa in
@@ -114,7 +144,7 @@ concedi solo i permessi sul progetto che servono al flusso di lavoro.
 
 Il worker interroga lo stato attuale della board, quindi trova anche il lavoro che era già aperto prima di un
 riavvio. Preferisce un task già in lavorazione, altrimenti il primo task aperto nell'ordine della board. Un
-`flock` per agente impedisce sessioni doppie. Mentre l'agente lavora il worker continua a interrogare la
+`flock` per coppia repository/agente impedisce sessioni doppie senza interferire con altre applicazioni. Mentre l'agente lavora il worker continua a interrogare la
 board; uno Stop dalla board termina quel processo figlio. Quando l'agente esce, il servizio torna a
 interrogare, e systemd riavvia il worker dopo un errore.
 

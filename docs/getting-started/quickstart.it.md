@@ -5,9 +5,23 @@ già [installato](installation.md).
 
 ## 1. Apri la board
 
-Entra nella tua applicazione e vai su `/` (o sul tuo `route_prefix`). Trovi una lista — la **lista dell'agente**,
-che di default si chiama `dev` (`config('griglia.agent_list')`). Quella lista è il canale fra te e l'agente:
-tutto quello che ci metti dentro è una richiesta.
+Entra nella tua applicazione e vai su `/` (o sul tuo `route_prefix`). Alla prima visita ti viene creata una lista,
+che si chiama **La mia lista**: non è ancora la lista dell'agente.
+
+La **lista dell'agente** è quella il cui nome corrisponde a `config('griglia.agent_list')`, di default `dev`: è il
+canale fra te e l'agente, e tutto quello che ci metti dentro è una richiesta. Finché non esiste, `griglia:check`
+si ferma con `No list named "dev" (config griglia.agent_list).` — quindi dai all'agente la sua lista, in uno dei
+tre modi:
+
+- **rinomina la lista in `dev`** — apri il menu delle liste (in alto a sinistra), clicca la matita accanto a
+  *La mia lista* e scrivi `dev`; oppure crea una lista nuova con quel nome dallo stesso menu;
+- **oppure punta la config a una lista che hai già** — `GRIGLIA_AGENT_LIST=la-mia-lista` nel `.env` (o `agent_list`
+  in `config/griglia.php`, dopo averlo pubblicato), poi `php artisan config:clear`;
+- **oppure, prima di quella prima visita**, decidi il nome della lista che verrà creata:
+  `GRIGLIA_DEFAULT_LIST_NAME=dev` (config `default_list_name`). Se resta vuota — il default — la prima lista
+  prende il nome dalle traduzioni (`griglia::t.default_list`), quindi segue la lingua dell'utente.
+
+Le altre liste restano tue: l'agente legge solo la lista dell'agente (più i [piani](../features/plans.md) che avvii).
 
 ## 2. Scrivi una richiesta
 

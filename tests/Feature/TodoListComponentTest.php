@@ -107,6 +107,28 @@ class TodoListComponentTest extends TestCase
         $this->assertSame(['Call mom'], $t->viewData('todos')->pluck('title')->all());
     }
 
+    public function test_search_can_include_all_owned_active_lists(): void
+    {
+        $this->add('Current needle');
+        $other = Checklist::create(['name' => 'Other project', 'user_id' => auth()->id()]);
+        Todo::create(['title' => 'Other needle', 'order' => 1, 'checklist_id' => $other->id]);
+        $archived = Checklist::create(['name' => 'Old project', 'user_id' => auth()->id(), 'archived_at' => now()]);
+        Todo::create(['title' => 'Archived needle', 'order' => 1, 'checklist_id' => $archived->id]);
+        $foreignUser = \Alle80\Griglia\Tests\Support\User::create(['name' => 'O', 'email' => 'other-search@example.com', 'password' => 'x']);
+        $foreign = Checklist::create(['name' => 'Foreign', 'user_id' => $foreignUser->id]);
+        Todo::create(['title' => 'Foreign needle', 'order' => 1, 'checklist_id' => $foreign->id]);
+
+        $component = Livewire::test(TodoList::class)->set('search', 'needle');
+        $this->assertSame(['Current needle'], $component->viewData('todos')->pluck('title')->all());
+
+        $component->call('toggleSearchScope');
+        $this->assertEqualsCanonicalizing(
+            ['Current needle', 'Other needle'],
+            $component->viewData('todos')->pluck('title')->all(),
+        );
+        $component->assertSee('Other project');
+    }
+
     public function test_open_to_work_stop_and_resume(): void
     {
         $todo = $this->add('Task');

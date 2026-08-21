@@ -115,6 +115,9 @@
                         >
                             <span class="tl-item-title break-words underline decoration-dotted underline-offset-4 {{ $todo->completed ? 'line-through' : '' }}">
                                 {{ $todo->title }}
+                                @if ($searchAllLists && trim($search) !== '')
+                                    <span class="ml-1 text-[.7em] font-normal opacity-60">{{ $todo->checklist->name }}</span>
+                                @endif
                             </span>
                             @if ($todo->ingredients->isNotEmpty())
                                 <span class="tl-mini shrink-0">

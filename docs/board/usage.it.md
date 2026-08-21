@@ -121,8 +121,38 @@ link si aprono in una nuova scheda.
 ## Barra degli strumenti
 
 Ricerca a testo libero (titolo, note, commento, sotto-task, domande, descrizioni delle immagini), filtri di
-stato, archivio. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
+stato, archivio. Attiva **Tutte le liste** accanto alla ricerca per trovare i task in tutte le tue liste attive;
+ogni risultato mostra la lista di origine. Le liste archiviate e quelle di altri utenti restano escluse. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
 [Piani](../features/plans.md)).
+
+## Desktop: la dashboard
+
+Su uno schermo grande la board ha una seconda casa: **`/dashboard`**, la stessa lista in un contenitore più
+largo e arioso (`max-w-5xl` invece di `max-w-2xl`), così titoli e note lunghe smettono di andare a capo ogni
+tre parole. Sono lo stesso componente e gli stessi dati — stati, modale, filtri, trascinamento si comportano
+esattamente come su `/` — cambia solo la larghezza. La pagina veste il tema corrente quando quel tema è uno dei
+generici; da uno stile dedicato dell'applicazione ospite (che non ha le variabili CSS condivise) ripiega sul
+tema predefinito.
+
+Il percorso viene dalla chiave di configurazione `dashboard_route` (`GRIGLIA_DASHBOARD_ROUTE`, default
+`/dashboard`): mettila a `null` e la rotta sparisce, insieme alla linguetta qui sotto.
+
+### La linguetta laterale
+
+Ogni pagina si porta dietro una **linguetta a scomparsa attaccata a un bordo della finestra** — una maniglia,
+in stile debugbar, che apre un pannello con dentro la dashboard. Clic sulla maniglia e il pannello esce;
+trascina il suo bordo interno per ridimensionarlo (da 300px fino al 70% della finestra); ⤢ apre la dashboard
+intera nella scheda in cui sei; ✕ chiude il pannello. Se è aperto e quanto è largo se li ricorda il browser
+(`localStorage`), quindi il pannello torna come l'hai lasciato anche nella pagina successiva. Sulla dashboard
+stessa non compare, ed è **solo desktop**: sotto il breakpoint `lg` non viene proprio disegnata, perché su un
+telefono non c'è spazio da regalare.
+
+Due impostazioni in `/settings` la governano:
+
+| Impostazione | Cosa fa |
+|---|---|
+| **Linguetta laterale DASHBOARD** (`show_dashboard_tab`) | Mostra o nasconde la linguetta. Spenta, la dashboard resta raggiungibile al suo indirizzo. |
+| **Lato del pannello dashboard** (`tab_side`) | Su quale bordo sta la linguetta — `right` (default) o `left`. |
 
 ## Mobile
 

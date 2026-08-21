@@ -18,7 +18,7 @@ implementation notes.
 
 | # | Key | Type / default | Purpose & why it fits | Prio | Implementation |
 |---|---|---|---|---|---|
-| C1 | `admin_gate` / `canManageDevboard()` | string\|null | who may edit global settings, context, themes, skills (security remediation #1) | **P1** | middleware/check in SettingsPage, ContextPage, theme install; hide links; tests; README |
+| C1 | `admin_gate` / `canManageGriglia()` | string\|null | who may edit global settings, context, themes, skills (security remediation #1) | **P1** | middleware/check in SettingsPage, ContextPage, theme install; hide links; tests; README |
 | C2 | `mode_lock` | bool, `false` (`GRIGLIA_MODE_LOCK`) | forbid the `app.mode` override from the UI (e.g. production) | P1 | `Mode::current()` ignores the setting when locked; hide the select; test |
 | C3 | `storage_path` (base dir for `skills_file`, `agent_status_file`, context export cache) | path | one place for package runtime files | P3 | derive the two existing paths from it, keep overrides |
 | C4 | `stats.price_list` defaults | array | ship default prices per model so `/stats` shows costs out of the box | P3 | seed `cost_per_m_*` from config when settings are empty |

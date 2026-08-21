@@ -21,6 +21,24 @@ class DashboardTest extends TestCase
             ->assertSee('max-w-5xl', false); // wider desktop container
     }
 
+    public function test_side_tab_follows_its_settings(): void
+    {
+        $user = $this->actingAsUser();
+        Checklist::create(['name' => 'dev', 'user_id' => $user->id]);
+
+        $settings = app(AppSettings::class);
+        $settings->show_dashboard_tab = true;
+        $settings->tab_side = 'left';
+        $settings->save();
+
+        $this->get('/')->assertOk()->assertSee('db-tab-left', false);
+
+        $settings->show_dashboard_tab = false;
+        $settings->save();
+
+        $this->get('/')->assertOk()->assertDontSee('db-tab-handle', false);
+    }
+
     public function test_tab_side_setting_exists_with_default(): void
     {
         $this->assertContains(app(AppSettings::class)->tab_side, ['right', 'left']);

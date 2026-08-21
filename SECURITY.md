@@ -10,11 +10,12 @@ and noted in the `CHANGELOG.md` under **Security**.
 ## Security model (what the package does for you)
 
 - **Access**: in server mode every board route requires an authenticated user (`GrigliaAccess`, also on Livewire
-  update requests) and, optionally, `canAccessDevboard()` / `griglia.access_gate`. Lists, tasks, attachments and
+  update requests) and, optionally, `canAccessGriglia()` / `griglia.access_gate`. Lists, tasks, attachments and
   notifications are always scoped to the owner.
 - **Administration**: global settings, the agent context and theme packs are admin-only (`Alle80\Griglia\Admin`:
-  `canManageDevboard()`, `griglia.admin_gate`, `GRIGLIA_ADMINS`, or the first user). Switching to local mode from
-  the UI is refused outside `APP_ENV=local`.
+  `canManageGriglia()`, `griglia.admin_gate`, `GRIGLIA_ADMINS`, or the first user). The pre-rename hooks
+  `canAccessDevboard()` / `canManageDevboard()` are still honoured when the current ones are absent.
+  Switching to local mode from the UI is refused outside `APP_ENV=local`.
 - **Local mode** has no authentication by design: use it only on a machine that is not exposed (banner on every page).
 - **Theme packs** (zip) are treated as untrusted: no SVG, sanitised CSS (no `@import`/external urls), size and entry
   limits, assets served with `nosniff` + a sandbox CSP.

@@ -49,8 +49,18 @@ class AdminTest extends TestCase
         $this->assertTrue(Admin::allows($second));
         $this->assertFalse(Admin::allows(User::first()));
 
-        $custom = new class extends User { public function canManageDevboard(): bool { return true; } };
+        $custom = new class extends User { public function canManageGriglia(): bool { return true; } };
         $this->assertTrue(Admin::allows($custom), 'model method wins');
+
+        $legacy = new class extends User { public function canManageDevboard(): bool { return true; } };
+        $this->assertTrue(Admin::allows($legacy), 'the pre-rename hook is still honoured');
+
+        $both = new class extends User {
+            public function canManageGriglia(): bool { return false; }
+            public function canManageDevboard(): bool { return true; }
+        };
+        $this->assertFalse(Admin::allows($both), 'canManageGriglia() wins over the pre-rename hook');
+
         $this->assertFalse(Admin::allows(null));
     }
 

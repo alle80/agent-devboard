@@ -11,8 +11,8 @@ The options of the `/settings` page: stored in the database, changed at run time
 | **Commit after each completed task** (`commit_after_task`) | bool | When a task is closed the agent commits without asking. If off, the work stays uncommitted until you ask. |
 | **Automatic push to GitHub** (`push_after_commit`) | bool | After the automatic commit it also pushes. If off, you ask for the push. |
 | **Autonomy** (`autonomy`) | select: `ask`, `decide` | How it behaves when a request is ambiguous. |
-| **Push notification when a task is closed** (`notify_on_done`) | bool | Notification on your phone when a task is closed. |
-| **Push notification for questions** (`notify_on_question`) | bool | Notification on your phone when the agent has a question. |
+| **Notifications when a task is closed** (`notify_on_done`) | bool | One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when a task is closed, and the agent is told to notify you on its own channel too. Off = neither of them says anything. |
+| **Notifications for questions** (`notify_on_question`) | bool | One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when the agent asks a question, and the agent is told to notify you on its own channel too. Off = neither of them says anything. |
 | **Verify before closing** (`verify_before_close`) | bool | Automatic mobile+desktop screenshots and Livewire tests before closing a task (slower, safer). |
 | **Agent comment** (`comment_detail`) | select: `short`, `detailed` | How detailed the answer under the note is. |
 | **Git** (`git_flow`) | select: `main`, `branch_pr` | Where the commits of each task go. |

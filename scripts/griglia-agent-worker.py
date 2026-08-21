@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -86,6 +87,12 @@ def stop_requested(args: argparse.Namespace, task_id: int) -> bool:
     return item is None or bool(item.get("stopped_at"))
 
 
+def lock_path(repo: Path, agent: str) -> Path:
+    """Keep one worker per agent and repository, without cross-project collisions."""
+    repo_key = hashlib.sha256(str(repo).encode()).hexdigest()[:12]
+    return Path("/tmp") / f"griglia-agent-worker-{repo_key}-{agent}.lock"
+
+
 def run_agent(args: argparse.Namespace, task: dict) -> int:
     command = driver_command(args, prompt(args.agent, task))
     print(f"dispatching task {task['id']} to {args.driver or args.agent}", flush=True)
@@ -112,12 +119,11 @@ def run_agent(args: argparse.Namespace, task: dict) -> int:
 def main() -> int:
     args = parse_args()
     args.repo = args.repo.resolve()
-    lock_path = Path("/tmp") / f"griglia-agent-worker-{args.agent}.lock"
-    with lock_path.open("w") as lock:
+    with lock_path(args.repo, args.agent).open("w") as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print(f"worker for {args.agent} is already running", file=sys.stderr)
+            print(f"worker for {args.agent} in {args.repo} is already running", file=sys.stderr)
             return 2
         while True:
             try:

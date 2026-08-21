@@ -48,7 +48,8 @@
         </div>
     @endif
     {{-- Ricerca --}}
-    <div class="relative">
+    <div class="flex items-center gap-1.5">
+      <div class="relative min-w-0 flex-1">
         <input
             type="search"
             wire:model.live.debounce.300ms="search"
@@ -66,6 +67,11 @@
                 class="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-lg opacity-50 hover:opacity-100"
             ><x-griglia::icon name="close" /></button>
         @endif
+      </div>
+      <button type="button" wire:click="toggleSearchScope"
+          class="{{ $searchAllLists ? $chipOnClass : $btnClass }} shrink-0 cursor-pointer px-2.5 py-1 text-xs leading-none"
+          aria-pressed="{{ $searchAllLists ? 'true' : 'false' }}" title="{{ __('griglia::t.search_all_lists_help') }}"
+      ><x-griglia::icon name="list" /> {{ __('griglia::t.search_all_lists') }}</button>
     </div>
 
     {{-- Filtri di stato + archivio --}}

@@ -42,6 +42,8 @@ class ScriptsTest extends TestCase
         $this->assertStringContainsString('GRIGLIA_WORKER_PHP', $worker);
         $this->assertStringContainsString('["docker", "exec", args.container, "php", *artisan]', $worker);
         $this->assertStringContainsString('[args.php, *artisan]', $worker);
+        $this->assertStringContainsString('hashlib.sha256(str(repo).encode()).hexdigest()[:12]', $worker);
+        $this->assertStringContainsString('lock_path(args.repo, args.agent)', $worker);
         // Per-instance variables win, but the shared ones configure the whole machine at once
         foreach (['GRIGLIA_TRANSPORT', 'GRIGLIA_PHP', 'GRIGLIA_CONTAINER'] as $shared) {
             $this->assertStringContainsString('os.getenv("'.$shared.'"', $worker, "the worker must fall back to $shared");
@@ -49,6 +51,7 @@ class ScriptsTest extends TestCase
         $unit = (string) file_get_contents($dir.'/systemd/griglia-agent-worker@.service.example');
         $this->assertStringContainsString('%h/.local/bin', $unit);
         $this->assertStringContainsString('/absolute/path/to/project', $unit);
+        $this->assertStringContainsString('%p-%i.env', $unit);
 
         $paths = ServiceProvider::pathsToPublish(GrigliaServiceProvider::class, 'griglia-scripts');
         $this->assertCount(1, $paths);
