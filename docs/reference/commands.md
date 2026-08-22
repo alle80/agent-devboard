@@ -46,7 +46,7 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--pa
 | `--json` | Machine-readable output | flag |
 | `--worker-json` | Machine-readable tasks plus worker scheduling settings | flag |
 | `--take` | Id of the todo to mark as working (take in charge) | — |
-| `--pause` | Id of the working todo to pause until it is reopened on the board | — |
+| `--pause` | Id of the working todo to pause until its agent worker can resume it | — |
 | `--done` | Id of the todo to mark as completed | — |
 | `--approve` | Id of a working review attempt to approve | — |
 | `--request-changes` | Id of a working review attempt that must return to its executor | — |

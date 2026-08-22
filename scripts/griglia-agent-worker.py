@@ -330,7 +330,9 @@ def main() -> int:
                     del running[task_id]
 
             limit = max(1, args.max_parallel) if state.get("task_mode") == "multitasking" else 1
-            eligible = [] if drain.requested else [item for item in items if item.get("id") not in running and not item.get("completed") and not item.get("question") and (item.get("working") or item.get("open_to_work"))]
+            # A pause belongs to the agent, not to the human workflow: once a session slot is available the
+            # worker claims it again, and --take atomically clears `paused` while preserving progress/phase.
+            eligible = [] if drain.requested else [item for item in items if item.get("id") not in running and not item.get("completed") and not item.get("question") and (item.get("working") or item.get("open_to_work") or item.get("paused"))]
             for task in eligible[:max(0, limit - len(running))]:
                 session = start_agent(args, task)
                 if session is not None:

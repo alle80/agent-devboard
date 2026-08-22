@@ -153,6 +153,19 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertSame($this->todo->id, $payload['items'][0]['id']);
     }
 
+    public function test_worker_json_all_exposes_paused_tasks_for_automatic_resume(): void
+    {
+        $this->todo->update(['open_to_work' => false, 'paused' => true, 'progress' => 40, 'phase' => 'waiting for quota']);
+
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
+
+        $payload = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
+        $item = collect($payload['items'])->firstWhere('id', $this->todo->id);
+        $this->assertTrue($item['paused']);
+        $this->assertSame(40, $item['progress']);
+        $this->assertSame('waiting for quota', $item['phase']);
+    }
+
     public function test_worker_json_stays_machine_readable_with_a_stuck_plan(): void
     {
         // The persistent worker parses --worker-json --all: the dead-end plan warning printed after the document

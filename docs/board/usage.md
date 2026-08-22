@@ -15,7 +15,7 @@ Every row has a state dot:
 | ![waiting](../images/state-waiting.svg){ width="18" } | waiting | you — the agent must not touch it |
 | ![open to work](../images/state-open.svg){ width="18" } | open to work | you — ready for the agent |
 | ![working](../images/state-working.svg){ width="18" } | working | the agent (`--take`) — icon animated, progress % and phase next to the title |
-| ![paused](../images/state-paused.svg){ width="18" } | paused | the agent (`--pause`) — progress is preserved; tap to reopen |
+| ![paused](../images/state-paused.svg){ width="18" } | paused | the agent (`--pause`) — progress is preserved; the agent worker resumes it automatically |
 | ![question](../images/state-question.svg){ width="18" } | question | the agent asked something; answer in the modal and restart |
 | ![stopped](../images/state-stop.svg){ width="18" } | stopped | you tapped the working badge — the agent stops at once |
 | ![done](../images/state-done.svg){ width="18" } | done | the agent (`--done`) or you (checkbox) |

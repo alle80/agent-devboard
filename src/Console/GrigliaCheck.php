@@ -25,7 +25,7 @@ class GrigliaCheck extends Command
         {--json : Machine-readable output}
         {--worker-json : Machine-readable tasks plus worker scheduling settings}
         {--take= : Id of the todo to mark as working (take in charge)}
-        {--pause= : Id of the working todo to pause until it is reopened on the board}
+        {--pause= : Id of the working todo to pause until its agent worker can resume it}
         {--done= : Id of the todo to mark as completed}
         {--approve= : Id of a working review attempt to approve}
         {--request-changes= : Id of a working review attempt that must return to its executor}
@@ -115,7 +115,7 @@ class GrigliaCheck extends Command
                 return self::FAILURE;
             }
             $t->update(['paused' => true, 'working' => false, 'open_to_work' => false, 'question' => false] + $this->tokenAttrs($t));
-            $this->info(sprintf('⏸ paused: «%s» (id:%d) — reopen it on the board to resume', $t->title, $t->id));
+            $this->info(sprintf('⏸ paused: «%s» (id:%d) — its persistent worker will resume it automatically', $t->title, $t->id));
         }
 
         // Questions: pause the work until the user answers and restarts the item

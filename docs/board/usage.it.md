@@ -16,7 +16,7 @@ Ogni riga ha il pallino dello stato:
 | ![in attesa](../images/state-waiting.svg){ width="18" } | in attesa | tu — l'agente non deve toccarlo |
 | ![open to work](../images/state-open.svg){ width="18" } | open to work | tu — pronto per l'agente |
 | ![working](../images/state-working.svg){ width="18" } | working | l'agente (`--take`) — icona animata, percentuale e fase accanto al titolo |
-| ![in pausa](../images/state-paused.svg){ width="18" } | in pausa | l'agente (`--pause`) — conserva l'avanzamento; tocca per riaprire |
+| ![in pausa](../images/state-paused.svg){ width="18" } | in pausa | l'agente (`--pause`) — conserva l'avanzamento; il worker dell'agente lo riprende da solo |
 | ![domanda](../images/state-question.svg){ width="18" } | domanda | l'agente ha chiesto qualcosa; rispondi nel modale e fallo ripartire |
 | ![fermato](../images/state-stop.svg){ width="18" } | fermato | hai toccato il badge «working» — l'agente si ferma subito |
 | ![fatto](../images/state-done.svg){ width="18" } | fatto | l'agente (`--done`) o tu (spunta) |

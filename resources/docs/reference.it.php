@@ -57,7 +57,7 @@ return [
         'Machine-readable tasks plus worker scheduling settings' => 'Task e impostazioni di pianificazione del worker in formato leggibile da un programma',
         'Id of the todo to mark as working (take in charge)' => 'Id del todo da mettere in lavorazione (presa in carico)',
         'Id of the todo to mark as completed' => 'Id del todo da segnare come completato',
-        'Id of the working todo to pause until it is reopened on the board' => 'Id del todo in lavorazione da mettere in pausa finché non viene riaperto sulla board',
+        'Id of the working todo to pause until its agent worker can resume it' => 'Id del todo in lavorazione da mettere in pausa finché il worker del suo agente può riprenderlo',
         'Id of a working review attempt to approve' => 'Id del tentativo di revisione in lavorazione da approvare',
         'Id of a working review attempt that must return to its executor' => 'Id del tentativo di revisione in lavorazione da restituire al suo esecutore',
         'Agent comment saved on the todo of --take/--done (claude_comment)' => "Commento dell'agente salvato sul todo di --take/--done (claude_comment)",

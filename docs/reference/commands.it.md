@@ -46,7 +46,7 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--pa
 | `--json` | Output leggibile da un programma | flag |
 | `--worker-json` | Task e impostazioni di pianificazione del worker in formato leggibile da un programma | flag |
 | `--take` | Id del todo da mettere in lavorazione (presa in carico) | — |
-| `--pause` | Id del todo in lavorazione da mettere in pausa finché non viene riaperto sulla board | — |
+| `--pause` | Id del todo in lavorazione da mettere in pausa finché il worker del suo agente può riprenderlo | — |
 | `--done` | Id del todo da segnare come completato | — |
 | `--approve` | Id del tentativo di revisione in lavorazione da approvare | — |
 | `--request-changes` | Id del tentativo di revisione in lavorazione da restituire al suo esecutore | — |

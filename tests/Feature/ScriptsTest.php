@@ -47,6 +47,7 @@ class ScriptsTest extends TestCase
         $this->assertStringContainsString('GRIGLIA_WORKER_MAX_PARALLEL', $worker);
         $this->assertStringContainsString('state.get("task_mode") == "multitasking"', $worker);
         $this->assertStringContainsString('running: dict[int, Session]', $worker);
+        $this->assertStringContainsString('item.get("working") or item.get("open_to_work") or item.get("paused")', $worker, 'a paused task must be automatically eligible when the worker has a free slot');
         // Task 507: the board JSON is read even when a warning follows it; the script reloads itself in place
         // (same PID, sessions handed over) when it changes on disk; SIGHUP drains it instead of killing sessions
         $this->assertStringContainsString('json.JSONDecoder().raw_decode(text, start)', $worker);

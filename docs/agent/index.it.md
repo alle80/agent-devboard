@@ -58,8 +58,10 @@ ordinata dal passo più vicino al più vecchio.
 
 Statistiche: ogni intervallo *working* viene cronometrato da solo; i token sono quelli che riporta l'agente.
 Quando l'agente deve fermarsi temporaneamente (per esempio per il limite di utilizzo), `--pause=ID` chiude
-l'intervallo cronometrato e mostra il badge di pausa senza perdere percentuale o fase. Il worker persistente non
-riceve il task in pausa; toccando il badge lo si riapre e il successivo `--take` riprende il lavoro.
+l'intervallo cronometrato e mostra il badge di pausa senza perdere percentuale o fase. Il task non viene offerto
+ad altri agenti. Il worker persistente lo riprende automaticamente appena quell'agente ha uno slot di sessione
+disponibile; un agente manuale può riprenderlo con `--take=ID`. Il badge resta utilizzabile quando l'utente
+vuole farlo ripartire subito.
 
 **Una sessione pesante costa a ogni passo**, perché il contesto viene riletto a ogni turno. L'impostazione
 «suggerisci di ripulire la sessione» (⚡ ottimizzazione, in migliaia di token) è la soglia oltre la quale

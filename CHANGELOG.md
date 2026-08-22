@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.87.13] - 2026-08-22
+
+### Fixed
+- Persistent agent workers now automatically reclaim their paused tasks when a session slot becomes available,
+  while preserving the pause state for work-time accounting and progress visibility (task 584).
 ## [0.87.12] - 2026-08-22
 
 ### Fixed

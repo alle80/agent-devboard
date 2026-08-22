@@ -56,7 +56,9 @@ ordered from the closest step to the oldest one.
 Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
 When an agent must stop temporarily (for example because its usage limit was reached), `--pause=ID` closes the
 current timed interval and shows the pause badge without losing progress or phase. The paused task is not offered
-to persistent workers; tapping its badge reopens it, and the next `--take` resumes work.
+to other agents. The persistent worker automatically claims it again as soon as that agent has an available
+session slot; a manual agent can resume it with `--take=ID`. Tapping the badge remains available when the user
+wants to resume it immediately.
 
 **A heavy session costs on every step**, because the context is re-read at every turn. The setting «suggest
 clearing the session» (⚡ optimization, in thousands of tokens) is the threshold past which the agent tells
