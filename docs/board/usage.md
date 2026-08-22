@@ -97,8 +97,9 @@ every screen, with ‹ `3/7` › and the task id (`id:510`, tap to copy the numb
 commands: the agent that owns the task, **move to another list**, archive, delete, close, plus **resume with
 changes** (a new linked task) on a completed one.
 
-When several agents are configured, the selected agent is shown on its own line below the task title. The chip expands
-to show the complete agent name, up to the available width of the row.
+When several agents are configured, the selected agent is shown on its own line below the task title. The native
+selector sizes itself from the selected agent name and never replaces it with an ellipsis; only the row's available
+width limits it.
 
 ### Saving happens by itself
 

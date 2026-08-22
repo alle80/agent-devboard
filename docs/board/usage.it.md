@@ -99,7 +99,8 @@ modifiche** (un nuovo
 task collegato).
 
 Quando sono configurati più agenti, l’agente selezionato compare su una riga propria sotto il titolo del task. La
-targhetta si allarga fino a mostrare il nome completo, entro la larghezza disponibile della riga.
+select nativa si dimensiona sul nome dell’agente selezionato e non lo sostituisce mai con i puntini di sospensione;
+l’unico limite resta la larghezza disponibile della riga.
 
 Un task è in sola lettura mentre è **in lavorazione**, così la richiesta non cambia sotto i piedi
 dell’agente. Tocca il badge working per fermarlo e riportarlo in attesa prima di modificarlo; poi potrai

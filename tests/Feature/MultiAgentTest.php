@@ -73,8 +73,10 @@ class MultiAgentTest extends TestCase
             ->assertSeeHtml('db-agent-row');
 
         $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
-        $this->assertStringContainsString('.db-agent-row .db-agent-chip { width: max-content; max-width: 100%; }', $css);
-        $this->assertStringNotContainsString('.db-agent-row .db-agent-chip { max-width: 12rem; }', $css, 'the selected agent label must not be clipped');
+        $this->assertStringContainsString('field-sizing: content;', $css, 'the native select must size itself from its selected label');
+        $this->assertStringContainsString('text-overflow: clip;', $css, 'the selected agent label must never be replaced by an ellipsis');
+        $this->assertStringNotContainsString('.db-agent-chip { appearance: none; -webkit-appearance: none; max-width:', $css, 'the chip must not keep a fixed width');
+        $this->assertStringNotContainsString('.db-agent-chip { appearance: none; -webkit-appearance: none; text-overflow: ellipsis;', $css, 'the chip must not request an ellipsis');
 
         Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, 'codex')->assertDispatched('toast');
         $this->assertSame('codex', $todo->fresh()->agent);

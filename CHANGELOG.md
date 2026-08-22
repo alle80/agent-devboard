@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.14] - 2026-08-22
+
+### Fixed
+- Task-row agent selectors now size the native control from the selected label and explicitly disable ellipsis,
+  so the complete agent name remains visible (task 585).
+
 ## [0.87.13] - 2026-08-22
 
 ### Fixed
