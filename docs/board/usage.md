@@ -81,6 +81,8 @@ questions can be taken back without answering — tap its badge in the modal: th
 the task goes back to waiting.
 
 ## The task modal
+The board row and modal header prefix every task title with its list name (`List · Task`), so its context stays visible even when a search spans several lists. Renaming still edits only the task title.
+
 
 Title, **Task** note (Markdown editor, with a microphone for [speech to text](../features/ai.md#speech-to-text)), the agent's answer box, statistics (working time,
 tokens, cost), the agent's **skills** accordion, images (upload, camera, paste; AI description when enabled),

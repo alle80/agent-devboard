@@ -39,6 +39,14 @@ class TodoListComponentTest extends TestCase
         $this->assertSame(0, Todo::count(), 'gone from the board scope');
     }
 
+    public function test_task_title_is_prefixed_with_its_list_name(): void
+    {
+        Checklist::findOrFail(Checklist::currentId())->update(['name' => 'Work']);
+        $this->add('Ship release');
+
+        Livewire::test(TodoList::class)->assertSeeHtml('<span class="font-normal opacity-60">Work ·</span> Ship release');
+    }
+
     public function test_result_summary_is_shown_below_the_title(): void
     {
         $todo = $this->add('Repeated task');

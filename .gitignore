@@ -4,3 +4,4 @@ composer.lock
 /node_modules/
 /site/
 __pycache__/
+*.py[cod]

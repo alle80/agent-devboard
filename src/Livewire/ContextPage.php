@@ -36,7 +36,7 @@ class ContextPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Griglia\Admin::check(), 403, 'Administrators only.');
+        abort_unless(\Alle80\Griglia\Admin::check(), 403, __('griglia::t.errors.admin_only'));
     }
 
     /** Switch «generate the instruction files from the board» (host sync honours it). */

@@ -42,7 +42,7 @@ class PlanPage extends Component
         $this->returnTo = $this->backUrl();
 
         if ($list?->exists) {
-            abort_unless(Checklist::mine()->whereKey($list->id)->exists(), 404);
+            abort_unless(Checklist::mine()->whereKey($list->id)->exists(), 404, __('griglia::t.errors.not_found'));
 
             $this->listId = $list->id;
             $this->prompt = (string) $list->plan_prompt;
@@ -174,7 +174,7 @@ class PlanPage extends Component
     protected function editedList(): Checklist
     {
         $list = Checklist::mine()->whereKey($this->listId)->first();
-        abort_unless($list !== null, 404);
+        abort_unless($list !== null, 404, __('griglia::t.errors.not_found'));
 
         return $list;
     }

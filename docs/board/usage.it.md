@@ -80,10 +80,13 @@ di un piano.
 
 Nient'altro è una porta a senso unico: un task che esce dalla board (archiviato o cancellato) passa la sua
 catena al task che lo precede, così un piano non resta mai in attesa di qualcosa che non arriverà, e un task
+
 con domande aperte può essere ritirato senza rispondere — tocca il suo badge nel modale: le domande restano
 registrate e il task torna in attesa.
 
 ## Il modale del task
+La riga nella board e l’intestazione del modale antepongono al titolo il nome della lista (`Lista · Task`), così il contesto resta visibile anche nelle ricerche su più liste. La rinomina modifica comunque solo il titolo del task.
+
 
 Titolo, nota **Task** (editor Markdown, con un microfono per la
 [dettatura](../features/ai.md#dettatura-vocale-speech-to-text)), il riquadro con la risposta dell'agente, le

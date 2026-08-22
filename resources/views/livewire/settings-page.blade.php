@@ -169,9 +169,9 @@
             st: 'checking', busy: false, sent: false, diag: null, log: [],
             async refresh() { this.st = window.grigliaPush ? await window.grigliaPush.status() : 'unsupported'; this.diag = window.grigliaPush ? await window.grigliaPush.diagnose() : null; window.grigliaPush && window.grigliaPush.onPush((d) => { this.log.unshift(@js(__('griglia::t.notif.diag_received')) + ' «' + d.title + '»'); }); },
             async localTest() { this.busy = true; try { await window.grigliaPush.localTest(@js(__('griglia::t.notif.diag_local_title')), @js(__('griglia::t.notif.diag_local_body'))); this.log.unshift(@js(__('griglia::t.notif.diag_local_sent'))); } catch (e) { this.log.unshift('✗ ' + e.message); } this.busy = false; },
-            async enable() { this.busy = true; try { this.st = await window.grigliaPush.enable(); } catch (e) { console.error(e); } this.busy = false; },
-            async disable() { this.busy = true; try { this.st = await window.grigliaPush.disable(); } catch (e) { console.error(e); } this.busy = false; },
-            async test() { this.busy = true; this.sent = false; try { this.sent = await window.grigliaPush.test(); this.log.unshift(@js(__('griglia::t.notif.diag_server_sent'))); } catch (e) { console.error(e); } this.busy = false; },
+            async enable() { this.busy = true; try { this.st = await window.grigliaPush.enable(); } catch (e) { if (window.GRIGLIA_DEBUG) console.error(e); } this.busy = false; },
+            async disable() { this.busy = true; try { this.st = await window.grigliaPush.disable(); } catch (e) { if (window.GRIGLIA_DEBUG) console.error(e); } this.busy = false; },
+            async test() { this.busy = true; this.sent = false; try { this.sent = await window.grigliaPush.test(); this.log.unshift(@js(__('griglia::t.notif.diag_server_sent'))); } catch (e) { if (window.GRIGLIA_DEBUG) console.error(e); } this.busy = false; },
         }"
         x-init="refresh()"
     >

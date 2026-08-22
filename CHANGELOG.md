@@ -6,10 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.87.8] - 2026-08-22
+
+### Fixed
+- Package hygiene now matches the code it ships: all directly used Illuminate components and PHP extensions
+  are declared, the nonexistent class-component namespace is gone, audio uploads enforce an audio MIME allow-list,
+  abort responses are translated, image thumbnails have descriptive alternative text, and production JavaScript
+  reports diagnostics only when `GRIGLIA_DEBUG` is enabled (task 517).
+- Task titles in board rows and modal headers are prefixed with their list name, while rename fields continue
+  to edit only the task title (task 565).
+- Nightly automatic archiving prevents overlapping executions and has command/schedule regression coverage (task 517).
+- Theme-pack tests now clear the installed-theme snapshot with their temporary storage, preventing state from
+  leaking into later tests in the full suite (task 517).
+
+### Changed
+- Distribution archives exclude development-only docs, tests, CI and front-end build inputs; published scripts ignore
+  Python bytecode. Internal backlog and dated security-assessment documents are no longer in the public site navigation,
+  and installation docs clarify that Tailwind is required only for Vite mode (task 517).
+
 ## [0.87.7] - 2026-08-22
 
 ### Changed
-- The active generic theme is selected in Settings and renders at the board home; per-theme `/<slug>` routes are removed, so `/dashboard` is the dashboard’s only route (task 564).
+- The active generic theme is selected in Settings and renders at the board home; per-theme `/<slug>` routes are
+  removed, so `/dashboard` is the dashboard’s only route (task 564).
 
 ## [0.87.6] - 2026-08-22
 

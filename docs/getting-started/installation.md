@@ -4,7 +4,7 @@ The package is on Packagist as [`alle80/griglia`](https://packagist.org/packages
 
 ## Requirements
 
-- PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 (for the `vite` asset mode), `ext-gd`.
+- PHP 8.3+, Laravel 12 or 13, Livewire 4, `ext-gd`, `ext-fileinfo`, and `ext-zip`. Tailwind CSS 4 is required only for the `vite` asset mode; the default standalone assets already include it.
 - A database (MariaDB/MySQL/SQLite), a user model with `Notifiable` (and `HasPushSubscriptions` for Web Push).
 - Optional: Laravel Reverb (live updates), `laravel/ai` (image descriptions, plan builder, speech to text),
   a mailer (mail notifications).

@@ -35,7 +35,7 @@ class SettingsPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Griglia\Admin::check(), 403, 'Administrators only.');
+        abort_unless(\Alle80\Griglia\Admin::check(), 403, __('griglia::t.errors.admin_only'));
     }
 
     public function mount(): void
@@ -51,7 +51,7 @@ class SettingsPage extends Component
     public function toggle(string $group, string $key): void
     {
         [$class, $field] = $this->field($group, $key);
-        abort_unless($field[2] === 'bool', 422);
+        abort_unless($field[2] === 'bool', 422, __('griglia::t.errors.invalid_request'));
 
         $settings = app($class);
         $settings->{$key} = ! $settings->{$key};
@@ -155,9 +155,9 @@ class SettingsPage extends Component
 
     protected function field(string $group, string $key): array
     {
-        $class = $this->groups()[$group] ?? abort(404);
+        $class = $this->groups()[$group] ?? abort(404, __('griglia::t.errors.not_found'));
         $fields = $class::fields();
-        abort_unless(isset($fields[$key]), 404);
+        abort_unless(isset($fields[$key]), 404, __('griglia::t.errors.not_found'));
 
         return [$class, $fields[$key]];
     }

@@ -67,7 +67,7 @@
             @foreach ($todo->attachments as $img)
                 <div wire:key="att-{{ $img->id }}" class="group relative">
                     <button type="button" x-on:click="zoom = @js($img->url()); caption = @js((string) $img->description); name = @js($img->original_name)" class="{{ $thumbClass }} block aspect-square w-full cursor-zoom-in overflow-hidden" title="{{ $img->description ? \Illuminate\Support\Str::limit($img->description, 140) : $img->original_name }}">
-                        <img src="{{ $img->url() }}" alt="{{ $img->original_name }}" width="{{ $img->width ?? 400 }}" height="{{ $img->height ?? 400 }}" loading="lazy" class="size-full object-cover">
+                        <img src="{{ $img->url() }}" alt="{{ $img->description ?: $img->original_name }}" width="{{ $img->width ?? 400 }}" height="{{ $img->height ?? 400 }}" loading="lazy" class="size-full object-cover">
                     </button>
                     <button
                         type="button"

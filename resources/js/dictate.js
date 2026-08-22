@@ -16,6 +16,7 @@ const cfg = () => window.GRIGLIA_SPEECH || {};
 const canRecord = () => typeof window !== 'undefined' && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
 const msg = (key, fallback) => cfg()[key] || fallback;
 const toast = (text, type) => { if (text) window.dispatchEvent(new CustomEvent('toast', { detail: { message: text, type: type || 'error', duration: 6000 } })); };
+const report = (...args) => { if (window.GRIGLIA_DEBUG) console.error(...args); };
 
 const SILENCE_MS = 12000;   // no sound for this long → warn, instead of recording twelve minutes of nothing
 const MAX_RETRIES = 3;      // automatic retries of a failed upload (the audio is kept in memory)
@@ -146,7 +147,7 @@ async function startRecording() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch (e) {
-    console.error('griglia speech:', e);
+    report('griglia speech:', e);
     S.on = false; S.starting = false;
     fail(msg('denied', 'Microphone not available'));
     return;
@@ -156,7 +157,7 @@ async function startRecording() {
   try {
     mr = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
   } catch (e) {
-    console.error('griglia speech:', e);
+    report('griglia speech:', e);
     stream.getTracks().forEach((t) => t.stop());
     S.on = false; S.starting = false;
     fail(msg('denied', 'Microphone not available'));
@@ -164,7 +165,7 @@ async function startRecording() {
   }
   S.chunks = [];
   mr.ondataavailable = (e) => { if (e.data && e.data.size) S.chunks.push(e.data); };
-  mr.onerror = (e) => { console.error('griglia speech:', e); };
+  mr.onerror = (e) => { report('griglia speech:', e); };
   mr.onstop = () => {
     stopStream();
     stopLevel();
@@ -226,7 +227,7 @@ async function upload() {
     S.tries = 0;
     deliver(j.text);
   } catch (e) {
-    console.error('griglia speech:', e);
+    report('griglia speech:', e);
     S.retry = true;   // the audio stays in S.blob: tapping the mic (or coming back to the tab) tries again
     fail(e && e.expired
       ? msg('expired', 'Session expired: reload the page, the recording is still here')
@@ -300,7 +301,7 @@ function startRecognition() {
     startTicking();
     el.focus();
   } catch (e) {
-    console.error('griglia speech:', e);
+    report('griglia speech:', e);
     S.on = false;
     fail(msg('denied', 'Microphone not available'));
   }

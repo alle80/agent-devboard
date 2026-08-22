@@ -14,9 +14,9 @@ class AttachmentController
     {
         $a = Attachment::findOrFail($attachment);
         $list = $a->todo?->checklist;
-        abort_unless($list && Checklist::mine()->whereKey($list->id)->exists(), 404);
+        abort_unless($list && Checklist::mine()->whereKey($list->id)->exists(), 404, __('griglia::t.errors.not_found'));
         $disk = Storage::disk(config('griglia.attachments_disk', 'local'));
-        abort_unless($disk->exists($a->path), 404);
+        abort_unless($disk->exists($a->path), 404, __('griglia::t.errors.not_found'));
 
         return $disk->response($a->path, null, [
             'Content-Type' => $a->mime ?: 'application/octet-stream',

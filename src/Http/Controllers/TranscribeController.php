@@ -16,7 +16,7 @@ class TranscribeController
             return response()->json(['ok' => false, 'error' => 'transcription not configured'], 422);
         }
         $request->validate([
-            'audio' => ['required', 'file', 'max:25600'], // 25 MB (provider limit)
+            'audio' => ['required', 'file', 'mimetypes:audio/webm,video/webm,audio/ogg,audio/mp4,audio/mpeg,audio/wav,audio/x-wav,application/ogg', 'max:25600'], // 25 MB (provider limit)
             'lang' => ['nullable', 'string', 'max:8'],
         ]);
         $file = $request->file('audio');

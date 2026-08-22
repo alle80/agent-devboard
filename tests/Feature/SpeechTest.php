@@ -104,4 +104,11 @@ class SpeechTest extends TestCase
         $this->post(route('griglia.transcribe'), ['audio' => UploadedFile::fake()->create('speech.webm', 10, 'audio/webm')])
             ->assertStatus(422)->assertJson(['ok' => false]);
     }
+
+    public function test_transcription_upload_declares_an_audio_mime_allow_list(): void
+    {
+        $controller = file_get_contents(__DIR__.'/../../src/Http/Controllers/TranscribeController.php');
+
+        $this->assertStringContainsString('mimetypes:audio/webm,video/webm,audio/ogg,audio/mp4,audio/mpeg,audio/wav,audio/x-wav,application/ogg', $controller);
+    }
 }

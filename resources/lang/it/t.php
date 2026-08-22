@@ -11,6 +11,12 @@ return [
     'settings_title' => 'Impostazioni',
     'logout' => 'Esci',
     'back_to_list' => 'Lista',
+    'errors' => [
+        'admin_only' => 'Accesso riservato agli amministratori.',
+        'forbidden' => 'Non hai il permesso di accedere alla board.',
+        'not_found' => 'La risorsa richiesta non è stata trovata.',
+        'invalid_request' => 'La richiesta non è valida.',
+    ],
 
     'insert_here' => 'Inserisci qui',
     'drag_to_reorder' => 'Trascina per riordinare',

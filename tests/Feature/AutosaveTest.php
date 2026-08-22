@@ -58,6 +58,17 @@ class AutosaveTest extends TestCase
         $this->assertSame('Live title', $this->todo->fresh()->title);
     }
 
+    public function test_modal_title_is_prefixed_without_changing_the_edit_value(): void
+    {
+        $this->todo->checklist->update(['name' => 'Personal']);
+
+        Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id)
+            ->assertSee('Personal ·')
+            ->call('editTitle')
+            ->assertSee('Personal ·')
+            ->assertSet('titleDraft', 'Task');
+    }
+
     public function test_revert_puts_back_the_starting_value_without_closing(): void
     {
         $this->assertSame('Cancel', trans('griglia::t.revert', locale: 'en'));

@@ -1,0 +1,9 @@
+/docs export-ignore
+/tests export-ignore
+/.github export-ignore
+/mkdocs.yml export-ignore
+/docs_hooks.py export-ignore
+/overrides export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/vite.config.js export-ignore

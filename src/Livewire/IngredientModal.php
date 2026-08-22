@@ -59,7 +59,7 @@ class IngredientModal extends Component
     /** Il todo aperto nel modale (null se chiuso o non più raggiungibile). */
     protected function todo(): ?Todo
     {
-        return $this->todoId ? $this->reachable()->with(['ingredients', 'attachments', 'questions', 'parent.ingredients'])->find($this->todoId) : null;
+        return $this->todoId ? $this->reachable()->with(['checklist:id,name', 'ingredients', 'attachments', 'questions', 'parent.ingredients'])->find($this->todoId) : null;
     }
 
     /**
@@ -278,7 +278,7 @@ class IngredientModal extends Component
         }
 
         $q = Question::where('todo_id', $this->todoId)->findOrFail($questionId);
-        abort_unless(in_array($answer, $q->choices ?? [], true), 422);
+        abort_unless(in_array($answer, $q->choices ?? [], true), 422, __('griglia::t.errors.invalid_request'));
         $this->answers[$questionId] = $answer;
         $this->saveAnswer($questionId);
     }

@@ -4,7 +4,7 @@ Il package sta su Packagist come [`alle80/griglia`](https://packagist.org/packag
 
 ## Requisiti
 
-- PHP 8.3+, Laravel 12 o 13, Livewire 4, Tailwind CSS 4 (per la modalità asset `vite`), `ext-gd`.
+- PHP 8.3+, Laravel 12 o 13, Livewire 4, `ext-gd`, `ext-fileinfo` ed `ext-zip`. Tailwind CSS 4 serve solo con la modalità asset `vite`; gli asset standalone predefiniti lo includono già.
 - Un database (MariaDB/MySQL/SQLite), un modello utente con `Notifiable` (e `HasPushSubscriptions` per il Web Push).
 - Facoltativi: Laravel Reverb (aggiornamenti dal vivo), `laravel/ai` (descrizione delle immagini, costruttore
   di piani, dettatura vocale), un mailer (notifiche via mail).

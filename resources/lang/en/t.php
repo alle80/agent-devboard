@@ -11,6 +11,12 @@ return [
     'settings_title' => 'Settings',
     'logout' => 'Log out',
     'back_to_list' => 'List',
+    'errors' => [
+        'admin_only' => 'Administrators only.',
+        'forbidden' => 'You are not allowed to access the board.',
+        'not_found' => 'The requested resource was not found.',
+        'invalid_request' => 'The request is not valid.',
+    ],
 
     // List
     'insert_here' => 'Insert here',

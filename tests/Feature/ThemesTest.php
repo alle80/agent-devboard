@@ -19,12 +19,14 @@ class ThemesTest extends TestCase
     {
         parent::setUp();
         File::deleteDirectory(ThemeStore::root());
+        ThemeStore::clearCache();
         $this->actingAsUser();
     }
 
     protected function tearDown(): void
     {
         File::deleteDirectory(ThemeStore::root());
+        ThemeStore::clearCache();
         parent::tearDown();
     }
 

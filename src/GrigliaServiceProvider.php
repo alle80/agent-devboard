@@ -18,7 +18,6 @@ use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Settings\OptimizationSettings;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -41,8 +40,7 @@ class GrigliaServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'griglia');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'griglia');
-        Blade::componentNamespace('Alle80\\Griglia\\View\\Components', 'griglia');
-        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'griglia');
+        \Illuminate\Support\Facades\Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'griglia');
 
         // <livewire:griglia::todo-list />, griglia::ingredient-modal, griglia::themed-todo-list,
         // griglia::themed-ingredient-modal, griglia::checklist-switcher, griglia::settings-page
@@ -52,7 +50,7 @@ class GrigliaServiceProvider extends ServiceProvider
         Livewire::addPersistentMiddleware([\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Alle80\Griglia\Http\Middleware\GrigliaAdmin::class, \Alle80\Griglia\Http\Middleware\SetLocale::class]);
 
         if (config('griglia.register_routes', true)) {
-            // After the host app's routes, so its own routes (e.g. dedicated styles) win over /{theme}
+            // After the host app's routes, so host routes keep precedence over package pages
             $this->app->booted(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/web.php'));
         }
 
@@ -71,7 +69,7 @@ class GrigliaServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../public' => public_path('vendor/griglia')], ['griglia-assets', 'laravel-assets']);
 
             $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
-                $schedule->command('griglia:auto-archive')->dailyAt('03:30');
+                $schedule->command('griglia:auto-archive')->dailyAt('03:30')->withoutOverlapping();
             });
         }
     }

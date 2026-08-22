@@ -6,6 +6,7 @@
     finché il testo è cambiato compare il passo indietro alla versione di partenza.
 --}}
 @if ($titleDraft !== null && ! $readonly)
+    <span class="shrink-0 font-normal opacity-60">{{ $todo->checklist->name }} ·</span>
     <form
         wire:submit="finishTitle"
         x-data="{ len: {{ mb_strlen($titleDraft) }} }"
@@ -33,7 +34,7 @@
         @endif
     </form>
 @elseif ($readonly)
-    <span class="break-words">{{ $todo->title }}</span>
+    <span class="break-words"><span class="font-normal opacity-60">{{ $todo->checklist->name }} ·</span> {{ $todo->title }}</span>
 @else
     <button
         type="button"
@@ -42,5 +43,5 @@
         aria-label="{{ __('griglia::t.title_rename', ['title' => $todo->title]) }}"
         class="group inline min-w-0 cursor-text break-words text-left"
         style="font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit"
-    >{{ $todo->title }} <span class="ml-1 inline-block text-[0.55em] align-middle opacity-40 transition group-hover:opacity-100" aria-hidden="true"><x-griglia::icon name="edit" /></span></button>
+    ><span class="font-normal opacity-60">{{ $todo->checklist->name }} ·</span> {{ $todo->title }} <span class="ml-1 inline-block text-[0.55em] align-middle opacity-40 transition group-hover:opacity-100" aria-hidden="true"><x-griglia::icon name="edit" /></span></button>
 @endif

@@ -26,8 +26,8 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 
 ## Requirements
 
-- PHP 8.3+ · Laravel 12 or 13 · Livewire 4 · Tailwind CSS 4 (Vite) in the host app
-- `ext-gd` (image resizing) · `spatie/laravel-settings` (installed automatically)
+- PHP 8.3+ · Laravel 12 or 13 · Livewire 4; Tailwind CSS 4 is required only when using the `vite` asset mode
+- `ext-gd` (image resizing) · `ext-fileinfo` (uploads) · `ext-zip` (theme packs); PHP packages are installed automatically
 - Optional: `laravel/ai` (AI image descriptions) · a broadcaster like `laravel/reverb` (live updates)
 
 ## Install
@@ -301,7 +301,8 @@ the default theme, and the **agent list** name (`agent_list`).
 The package ships a generic theme system (shared views + CSS variables per `.theme-<slug>`) with the
 built-in **Slate** theme. Add more with `config('griglia.themes')` or
 `Alle80\Griglia\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
-\nGeneric themes are selected in **/settings → App → Theme** and the board always remains at `/`; theme slugs are not public board routes. The desktop dashboard is available only at `/dashboard` (or the configured `dashboard_route`).
+
+Generic themes are selected in **/settings → App → Theme** and the board always remains at `/`; theme slugs are not public board routes. The desktop dashboard is available only at `/dashboard` (or the configured `dashboard_route`).
 
 Fully custom styles (own components/views) plug in via `Themes::registerStyle()` /
 `Themes::registerSkin()`.

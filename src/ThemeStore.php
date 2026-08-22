@@ -33,6 +33,12 @@ class ThemeStore
 
     protected static ?array $cache = null;
 
+    /** Forget the installed-pack snapshot after external storage cleanup (notably isolated test runs). */
+    public static function clearCache(): void
+    {
+        static::$cache = null;
+    }
+
     /**
      * Theme CSS is linked on every page of the theme: strip what can call home or run code —
      * `@import` of anything, `url()` / `src()` / `image-set()` pointing outside the pack (http(s)://, //, data:

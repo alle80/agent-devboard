@@ -11,7 +11,7 @@ class GrigliaAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        abort_unless(Admin::allows($request->user()), 403, 'Administrators only.');
+        abort_unless(Admin::allows($request->user()), 403, __('griglia::t.errors.admin_only'));
 
         return $next($request);
     }
