@@ -128,8 +128,8 @@
                 </button>
             </div>
             {{-- Un piano si scrive in una pagina sua: qui non c'è spazio (task 342) --}}
-            <a href="{{ route('griglia.plans.create') }}" class="tl-btn tl-btn-sm mt-1.5 w-full justify-start">
-                <x-griglia::icon name="ruler" /> {{ __('griglia::t.plan.new_menu') }}
+            <a href="{{ route('griglia.plans.index') }}" class="tl-btn tl-btn-sm mt-1.5 w-full justify-start">
+                <x-griglia::icon name="ruler" /> {{ __('griglia::t.plan.index_menu') }}
             </a>
 
         </form>

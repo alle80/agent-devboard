@@ -1,7 +1,8 @@
 # Piani
 
-Un **piano** è una lista costruita a partire da un prompt. Dal menu delle liste, **Nuovo piano…** apre una
-pagina tutta sua — `/plans/new` — perché descrivere un obiettivo richiede un paragrafo, non una riga:
+Un **piano** è una lista costruita a partire da un prompt. Dal menu delle liste, **Piani** apre `/plans`, una
+pagina dedicata da cui aprire, modificare, avviare, mettere in pausa o riprendere tutti i piani. **Nuovo piano**
+apre `/plans/new`, perché descrivere un obiettivo richiede un paragrafo, non una riga:
 
 - **l'obiettivo** è il campo che conta: un riquadro grande, con il microfono per la dettatura e il conteggio
   dei caratteri. Ctrl/⌘+Invio costruisce il piano senza staccare le mani dalla tastiera;
@@ -26,7 +27,7 @@ Da lì puoi:
 
 ## Far girare un piano
 
-- **Avvia il piano** (il bottone di avvio nella barra Piano o nel menu delle liste): il primo task non ancora
+- **Avvia il piano** (il bottone di avvio nella barra Piano o nella pagina Piani): il primo task non ancora
   iniziato diventa *open to work*; quando è completato si apre da solo il successivo.
 - **Pausa**: i task aperti tornano *in attesa* e la catena si ferma; **Riprendi** toglie la pausa e apre il
   successivo.

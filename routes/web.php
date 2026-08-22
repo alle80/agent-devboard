@@ -22,6 +22,7 @@ Route::middleware(array_merge(array_values(array_diff((array) config('griglia.mi
 
         Route::get('/settings', SettingsPage::class)->middleware(GrigliaAdmin::class)->name('griglia.settings');
         Route::get('/context', \Alle80\Griglia\Livewire\ContextPage::class)->middleware(GrigliaAdmin::class)->name('griglia.context');
+        Route::get('/plans', \Alle80\Griglia\Livewire\PlansPage::class)->name('griglia.plans.index');
         Route::get('/plans/new', \Alle80\Griglia\Livewire\PlanPage::class)->name('griglia.plans.create');
         Route::get('/plans/{list}/edit', \Alle80\Griglia\Livewire\PlanPage::class)->whereNumber('list')->name('griglia.plans.edit');
         Route::get('/stats', \Alle80\Griglia\Livewire\StatsPage::class)->name('griglia.stats');

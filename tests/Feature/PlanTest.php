@@ -209,7 +209,7 @@ class PlanTest extends TestCase
         $this->assertNull($list->plan_prompt);
         $this->assertSame($list->id, session('checklist_id'));
 
-        $this->get(route('griglia.home'))->assertOk()->assertSee(route('griglia.plans.create'), false);
+        $this->get(route('griglia.home'))->assertOk()->assertSee(route('griglia.plans.index'), false);
     }
 
     public function test_the_plan_page_opens_and_builds_a_plan(): void
@@ -372,4 +372,39 @@ class PlanTest extends TestCase
         \Illuminate\Support\Facades\Artisan::call('griglia:check');
         $this->assertStringContainsString('Stuck halfway', \Illuminate\Support\Facades\Artisan::output());
     }
+    public function test_plans_page_lists_only_plans_and_is_linked_from_the_lists_menu(): void
+    {
+        Checklist::create(['name' => 'Plain list', 'user_id' => auth()->id()]);
+        $plan = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::$resolver = fn () => [['title' => 'First'], ['title' => 'Second']];
+        Plan::build($plan, 'Build the roadmap');
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)->assertSee('Roadmap')->assertDontSee('Plain list');
+        $this->get(route('griglia.home'))->assertOk()->assertSee(route('griglia.plans.index'), false);
+    }
+
+    public function test_plans_page_starts_pauses_and_opens_a_plan(): void
+    {
+        $plan = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
+        Plan::$resolver = fn () => [['title' => 'First'], ['title' => 'Second']];
+        Plan::build($plan, 'Build the roadmap');
+        $first = $plan->todos()->orderBy('order')->first();
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+            ->call('start', $plan->id)
+            ->assertDispatched('toast');
+        $this->assertTrue($first->fresh()->open_to_work);
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+            ->call('pause', $plan->id)
+            ->assertDispatched('toast');
+        $this->assertTrue($plan->fresh()->plan_paused);
+        $this->assertFalse($first->fresh()->open_to_work);
+
+        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+            ->call('open', $plan->id)
+            ->assertRedirect();
+        $this->assertSame($plan->id, session('checklist_id'));
+    }
+
 }

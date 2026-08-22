@@ -45,7 +45,7 @@ That's it: the board ships its own precompiled CSS/JS (published by composer wit
 > new Laravel app ships `0.18`. `-W` lets composer downgrade that one transitive dependency; without it the
 > install stops with a conflict. Existing apps usually need nothing.
 
-Routes register automatically — `/` (theme selected in settings), `/plans/new`, `/settings`, `/context`, `/stats`,
+Routes register automatically — `/` (theme selected in settings), `/plans`, `/plans/new`, `/settings`, `/context`, `/stats`,
 `/agents`, `/dashboard` — behind `web` plus the package's access middleware (login in server mode, none in local
 mode; see [Access, administrators and modes](#access-administrators-and-modes)).
 `/dashboard` is the wider desktop view of the board: its path comes from `griglia.dashboard_route`
@@ -147,7 +147,8 @@ published host script, so Docker is never required.
 
 ### Plan mode
 
-**New plan…** in the lists menu opens `/plans/new`, a page with room to write: the goal (with dictation),
+**Plans** in the lists menu opens `/plans`, the overview used to start, pause, open and edit every plan.
+From there, **New plan** opens `/plans/new`, a page with room to write: the goal (with dictation),
 an optional name and, with several agents, the one for this plan. The AI SDK splits the goal into chained
 tasks (`depends_on_id`) and completing one opens the next; the chain follows the visible order (drag &
 drop). The Plan bar links `/plans/{list}/edit`, where the goal can be changed and the tasks nobody has

@@ -1,6 +1,7 @@
 # Plans
 
-A **plan** is a list built from a prompt. From the lists menu, **New plan…** opens its own page — `/plans/new` —
+A **plan** is a list built from a prompt. From the lists menu, **Plans** opens `/plans`, a dedicated overview
+where every plan can be opened, edited, started, paused or resumed. **New plan** opens `/plans/new` —
 because describing a goal takes a paragraph, not a line:
 
 - **the goal** is the field that matters: a large box, with the microphone for dictation and a character
@@ -25,7 +26,7 @@ there you can:
 
 ## Running a plan
 
-- **Start the plan** (the start button in the Plan bar or in the lists menu): the first not-started task becomes *open to work*; when it is
+- **Start the plan** (the start button in the Plan bar or on the Plans page): the first not-started task becomes *open to work*; when it is
   completed the next one opens automatically.
 - **Pause**: open tasks go back to *waiting* and the chain stops; **Resume** clears the pause and opens the next one.
 - New tasks added to a plan list join the chain automatically; after completion you can add tasks and resume.

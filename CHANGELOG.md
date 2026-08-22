@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.88.0] - 2026-08-22
+
+### Added
+- Added a dedicated `/plans` page to browse, open, edit, start, pause and resume plans without crowding the lists menu.
 ## [0.87.18] - 2026-08-22
 
 ### Fixed
