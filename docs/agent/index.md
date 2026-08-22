@@ -19,7 +19,7 @@ When an original task has an optional reviewer configured, the executor's `--don
 completion. Griglia atomically leaves the original incomplete and creates a linked, open review attempt assigned to
 that reviewer. Without a reviewer, `--done` keeps its existing meaning. Review attempts have immutable round numbers,
 cannot review themselves or participate in plan/resume chains, and never release the original's plan dependants.
-Reviewer decisions are explicit operations rather than an ordinary `--done`, so an outcome cannot be omitted.
+Reviewer decisions are explicit operations rather than an ordinary `--done`, so an outcome cannot be omitted. The task modal lets users choose an optional reviewer before work starts, then shows review ownership and the in-progress, in-review, approved or changes-requested state; links connect each original task to its review attempt.
 
 Agent wrappers may pass multiline comments with escaped `\n` sequences: `griglia:check` normalizes them to
 real Markdown line breaks when saving the answer. The compact result summary always remains on one line.

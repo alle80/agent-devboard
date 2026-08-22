@@ -59,7 +59,11 @@ class IngredientModal extends Component
     /** Il todo aperto nel modale (null se chiuso o non più raggiungibile). */
     protected function todo(): ?Todo
     {
-        return $this->todoId ? $this->reachable()->with(['checklist:id,name', 'ingredients', 'attachments', 'questions', 'parent.ingredients'])->find($this->todoId) : null;
+        return $this->todoId ? $this->reachable()->with([
+            'checklist:id,name,agent', 'ingredients', 'attachments', 'questions', 'parent.ingredients',
+            'reviewOf:id,title,agent,reviewer_agent,review_status',
+            'reviewAttempts:id,title,agent,review_of_id,review_round,review_outcome,completed',
+        ])->find($this->todoId) : null;
     }
 
     /**
@@ -445,7 +449,15 @@ class IngredientModal extends Component
         $todo->update(['agent' => $agent ?: null]);
         $this->dispatch('ingredients-updated');
     }
-
+    public function setReviewer(string $agent): void
+    {
+        $todo = $this->todo();
+        if (! $todo || $todo->working || $todo->completed || $todo->review_status || $todo->isReviewAttempt()) { return; }
+        $agent = trim($agent);
+        if ($agent !== "" && (! array_key_exists($agent, \Alle80\Griglia\Agent::all()) || $agent === \Alle80\Griglia\Agent::effective($todo))) { return; }
+        $todo->update(["reviewer_agent" => $agent ?: null]);
+        $this->dispatch("ingredients-updated");
+    }
     /** Move the todo to another list of the user (appended at the end of the active items there). */
     public function moveTo(int $checklistId): void
     {

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.10] - 2026-08-22
+
+### Added
+- The task modal now offers an optional reviewer and shows review ownership, workflow status and links between original and review tasks (task 569).
+
 ## [0.87.9] - 2026-08-22
 
 ### Fixed

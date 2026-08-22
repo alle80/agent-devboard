@@ -228,6 +228,7 @@ return [
     'agent_default' => 'Default (:agent)',
     'agent_set' => 'Agent of the list: :agent',
     'agent_set_task' => '«:title» → :agent',
+    'review' => ['title' => 'Review', 'reviewer' => 'Optional reviewer', 'none' => 'No reviewer', 'help' => 'When the executor finishes, the work passes to this agent for approval.', 'owned_by' => 'Review assigned to :agent', 'round' => 'Review #:round', 'original' => 'Original task: :title', 'open_attempt' => 'Open review #:round', 'status' => ['assigned' => 'In progress', 'in_review' => 'In review', 'approved' => 'Approved', 'changes_requested' => 'Changes requested']],
     'local_mode' => 'local mode',
     'settings_saves' => 'Every change is saved immediately.',
     'settings_footer' => 'To add settings: leave a request in the agent list.',

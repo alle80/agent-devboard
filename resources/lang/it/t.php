@@ -222,6 +222,7 @@ return [
     'agent_default' => 'Predefinito (:agent)',
     'agent_set' => 'Agente della lista: :agent',
     'agent_set_task' => '«:title» → :agent',
+    'review' => ['title' => 'Revisione', 'reviewer' => 'Revisore opzionale', 'none' => 'Nessun revisore', 'help' => 'Quando l’esecutore termina, il lavoro passa a questo agente per l’approvazione.', 'owned_by' => 'Revisione assegnata a :agent', 'round' => 'Revisione n. :round', 'original' => 'Task originale: :title', 'open_attempt' => 'Apri revisione n. :round', 'status' => ['assigned' => 'In lavorazione', 'in_review' => 'In revisione', 'approved' => 'Approvato', 'changes_requested' => 'Da rilavorare']],
     'local_mode' => 'modalità locale',
     'settings_saves' => 'Ogni modifica salva subito.',
     'settings_footer' => 'Per aggiungere impostazioni: metti la richiesta nella lista «sviluppo».',

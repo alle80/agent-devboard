@@ -40,6 +40,8 @@
                         <p class="db-chain-line inline-flex items-center gap-1 text-xs opacity-75"><x-griglia::icon name="link" /> {{ __('griglia::t.plan.after', ['title' => $todo->dependsOn->title]) }} — {{ $todo->dependsOn->completed ? __('griglia::t.plan.prev_done') : __('griglia::t.plan.prev_pending') }}</p>
                     @endif
 
+                    @include('griglia::livewire.partials.modal-review')
+
                     {{-- Domande dell'assistente (in cima: se ci sono, sono la prima cosa da vedere) --}}
                     @include('griglia::livewire.partials.modal-questions', [
                         'boxClass' => 'tl-card relative px-4 py-3',
