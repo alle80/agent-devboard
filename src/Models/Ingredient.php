@@ -2,12 +2,22 @@
 
 namespace Alle80\Griglia\Models;
 
+use Alle80\Griglia\Database\Factories\IngredientFactory;
 use Alle80\Griglia\Support\Live;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ingredient extends Model
 {
+    /** @use HasFactory<IngredientFactory> */
+    use HasFactory;
+
+    protected static function newFactory(): IngredientFactory
+    {
+        return IngredientFactory::new();
+    }
+
     protected $fillable = ['todo_id', 'name', 'checked', 'order'];
 
     protected function casts(): array

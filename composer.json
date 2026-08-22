@@ -43,7 +43,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Alle80\\Griglia\\": "src/"
+            "Alle80\\Griglia\\": "src/",
+            "Alle80\\Griglia\\Database\\Factories\\": "database/factories/"
         }
     },
     "extra": {

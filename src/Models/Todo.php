@@ -3,11 +3,13 @@
 namespace Alle80\Griglia\Models;
 
 use Alle80\Griglia\Agent;
+use Alle80\Griglia\Database\Factories\TodoFactory;
 use Alle80\Griglia\Domain\ReviewOutcome;
 use Alle80\Griglia\Domain\ReviewStatus;
 use Alle80\Griglia\Support\Live;
 use Alle80\Griglia\Support\Stats;
 use DomainException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +18,13 @@ use Illuminate\Support\Collection;
 
 class Todo extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<TodoFactory> */
+    use HasFactory, SoftDeletes;
+
+    protected static function newFactory(): TodoFactory
+    {
+        return TodoFactory::new();
+    }
 
     protected $fillable = ['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'paused', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 

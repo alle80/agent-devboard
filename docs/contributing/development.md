@@ -31,6 +31,18 @@ The suite covers migrations, per-user scoping, the Livewire components, `griglia
 the theme registry and zip packs, translation parity between `en` and `it`, and the broadcast event.
 GitHub Actions runs it on PHP 8.3 and 8.4.
 
+The `Todo`, `Checklist`, `Ingredient`, and `Question` models include package factories for focused tests:
+
+```php
+$list = Checklist::factory()->create();
+$todo = Todo::factory()->for($list)->create();
+$ingredient = Ingredient::factory()->for($todo)->create();
+$question = Question::factory()->for($todo)->create();
+```
+
+The models resolve their package factory namespace directly, so no factory-name resolver is required in the host
+application or in Testbench.
+
 `composer lint` runs formatting checks first and then `vendor/bin/phpstan analyse` on `src/`. Larastan is configured
 at level 5 without a baseline. The small, counted exception list in `phpstan-ignores.neon` documents framework
 inference gaps individually; unmatched exceptions fail the analysis instead of silently becoming permanent debt.

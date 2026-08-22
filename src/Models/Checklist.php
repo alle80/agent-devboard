@@ -2,8 +2,10 @@
 
 namespace Alle80\Griglia\Models;
 
+use Alle80\Griglia\Database\Factories\ChecklistFactory;
 use Alle80\Griglia\Mode;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Checklist extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<ChecklistFactory> */
+    use HasFactory, SoftDeletes;
+
+    protected static function newFactory(): ChecklistFactory
+    {
+        return ChecklistFactory::new();
+    }
 
     protected $fillable = ['name', 'user_id', 'plan_prompt', 'plan_paused', 'agent', 'archived_at'];
 
