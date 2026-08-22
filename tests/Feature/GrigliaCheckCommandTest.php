@@ -60,6 +60,19 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertTrue($this->todo->ingredients()->first()->checked, 'sub-tasks ticked on done');
     }
 
+    public function test_done_normalizes_escaped_newlines_from_agent_wrappers(): void
+    {
+        $this->artisan('griglia:check', [
+            '--done' => $this->todo->id,
+            '--comment' => 'Implemented\\n\\n- package tests pass\\r\\n- docs build passes',
+            '--summary' => 'Implemented\\nwith tests',
+        ])->assertSuccessful();
+
+        $this->todo->refresh();
+        $this->assertSame("Implemented\n\n- package tests pass\n- docs build passes", $this->todo->claude_comment);
+        $this->assertSame('Implemented with tests', $this->todo->result_summary);
+    }
+
     public function test_progress_starts_at_zero_on_take_and_updates(): void
     {
         $this->artisan('griglia:check', ['--take' => $this->todo->id])->expectsOutputToContain('— 0%')->assertSuccessful();

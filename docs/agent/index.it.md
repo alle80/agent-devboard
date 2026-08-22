@@ -16,6 +16,9 @@ php artisan griglia:check --done=ID --comment="…" --outcome=alert   # fatto, m
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # c'è qualcosa che blocca (riga rossa)
 ```
 
+I wrapper degli agenti possono passare commenti multilinea con sequenze `\n`: al salvataggio `griglia:check`
+le converte in veri a capo Markdown. Il riepilogo compatto del risultato resta sempre su una sola riga.
+
 Quando possibile, l’agente propone scelte chiuse brevi con `--choices` (ripetuto nello stesso ordine di `--q`). Nel modale diventano risposte selezionabili con un tocco, ma restano sempre disponibili il campo di testo libero e il microfono speech-to-text. Senza opzioni si omette il `--choices` corrispondente.
 
 `check` stampa in testa le **impostazioni** dei gruppi `agent` e `optimization` (politica dei commit,

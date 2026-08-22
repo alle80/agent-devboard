@@ -15,6 +15,9 @@ php artisan griglia:check --done=ID --comment="…" --outcome=alert   # done, bu
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # something is in the way (red row)
 ```
 
+Agent wrappers may pass multiline comments with escaped `\n` sequences: `griglia:check` normalizes them to
+real Markdown line breaks when saving the answer. The compact result summary always remains on one line.
+
 `check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, question
 level, notifications, task mode, terse mode, …) that the agent is expected to follow, then the rules of the chosen
 **question level** (`❓ question level: …` — how many questions to ask before starting; the same block the board

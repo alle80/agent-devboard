@@ -131,14 +131,15 @@ class GrigliaCheck extends Command
 
                     return self::FAILURE;
                 }
-                if ($c = $this->option('comment')) {
+                if ($c = $this->normalizeAgentText($this->option('comment'))) {
                     $attrs['claude_comment'] = $c;
                     if ($opt === 'done' && $this->option('summary') === null) {
                         $attrs['result_summary'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($c))), 0, 120) ?: null;
                     }
                 }
                 if ($opt === 'done' && $this->option('summary') !== null) {
-                    $attrs['result_summary'] = mb_substr(trim((string) $this->option('summary')), 0, 120) ?: null;
+                    $summary = preg_replace('/\s+/', ' ', $this->normalizeAgentText($this->option('summary')));
+                    $attrs['result_summary'] = mb_substr(trim((string) $summary), 0, 120) ?: null;
                 }
                 if ($opt === 'take') {
                     // Always show a percentage on a working todo: explicit value, else keep the current one, else start at 0%
@@ -331,6 +332,12 @@ class GrigliaCheck extends Command
         file_put_contents($marker, (string) now()->timestamp);
 
         return self::SUCCESS;
+    }
+
+    /** Turn newline escapes emitted by agent CLI wrappers into Markdown line breaks. */
+    private function normalizeAgentText(mixed $text): string
+    {
+        return str_replace(["\\r\\n", "\\n", "\\r"], ["\n", "\n", "\n"], (string) $text);
     }
 
     /** Short marker printed next to a closed task: nothing when the result is plain «ok». */
