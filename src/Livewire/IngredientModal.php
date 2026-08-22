@@ -271,6 +271,18 @@ class IngredientModal extends Component
         $this->dispatch('toast', message: __($q->answer ? 'griglia::t.msg.answer_saved' : 'griglia::t.msg.answer_removed'), type: $q->answer ? 'success' : 'info');
     }
 
+    public function selectAnswer(int $questionId, string $answer): void
+    {
+        if (! $this->editable()) {
+            return;
+        }
+
+        $q = Question::where('todo_id', $this->todoId)->findOrFail($questionId);
+        abort_unless(in_array($answer, $q->choices ?? [], true), 422);
+        $this->answers[$questionId] = $answer;
+        $this->saveAnswer($questionId);
+    }
+
     /** Ultimo passo: tutte le domande hanno risposta → l'elemento torna "open to work". */
     public function resumeWork(): void
     {

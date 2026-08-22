@@ -37,7 +37,7 @@ Elenca le richieste aperte della lista dell'agente (vedi la config griglia.agent
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argomento / opzione | Cosa fa | Default |
@@ -54,6 +54,7 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--outcome` | Con --done: come è andata — ok (default, niente da controllare), alert (fatto, ma qualcosa va guardato) oppure blocked (c'è qualcosa che blocca). Colora la riga finché l'utente non la apre | — |
 | `--ask` | Id del todo su cui fare domande (il task si mette in pausa nello stato «domanda») | — |
 | `--q` | Testo di ogni domanda, ripetibile | _array_ |
+| `--choices` | Scelte chiuse separate da \| per il --q corrispondente, ripetibile; il testo libero resta disponibile | _array_ |
 | `--tokens-in` | Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
 | `--tokens-out` | Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
 | `--agent` | Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo) | — |

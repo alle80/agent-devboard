@@ -67,8 +67,9 @@ on stderr past the threshold (it runs anyway when you count the tokens of a task
    (The catalogue comes from `griglia:skills-import`; keep it fresh from your host with a JSON list.)
    Keep the user posted: `griglia:check --take=ID --progress=N --phase="testing"` updates the percentage
    and the short «what I'm doing» text on the row (it starts at 0% when you take it).
-4. **If unclear, ask:** `griglia:check --ask=ID --q="…" --q="…"` — pauses the item (❓) until the
-   user answers in the app and restarts it (it comes back 🟢). Ask *after* taking.
+4. **If unclear, ask:** `griglia:check --ask=ID --q="Which one?" --choices="First|Second"` — pauses the
+   item (❓) until the user answers and restarts it. Prefer short closed choices where possible; repeat
+   `--choices` in the same order as `--q`. The modal always also offers free text and speech to text. Ask *after* taking.
 5. **Close it:** `griglia:check --done=ID --comment="what you did / how to try it"`. The comment
    is shown to the user; never write into the user's note. If you know how many tokens you spent on
    it, add `--tokens-in=N --tokens-out=N` (also allowed on `--take`/`--ask`): the board keeps per-todo

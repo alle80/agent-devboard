@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Question extends Model
 {
-    protected $fillable = ['todo_id', 'question', 'answer', 'order'];
+    protected $fillable = ['todo_id', 'question', 'choices', 'answer', 'order'];
+
+    protected function casts(): array
+    {
+        return ['choices' => 'array'];
+    }
 
     public function todo(): BelongsTo
     {

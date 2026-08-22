@@ -64,6 +64,7 @@ return [
         'With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it' => 'Con --done: come è andata — ok (default, niente da controllare), alert (fatto, ma qualcosa va guardato) oppure blocked (c\'è qualcosa che blocca). Colora la riga finché l\'utente non la apre',
         'Id of the todo to ask questions about (the task pauses in the question state)' => 'Id del todo su cui fare domande (il task si mette in pausa nello stato «domanda»)',
         'Text of each question, repeatable' => 'Testo di ogni domanda, ripetibile',
+        'Pipe-separated closed choices for the corresponding --q, repeatable; free text remains available' => 'Scelte chiuse separate da | per il --q corrispondente, ripetibile; il testo libero resta disponibile',
         'Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)' => "Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo)",

@@ -119,6 +119,7 @@ return [
     'delete_image_confirm' => 'Eliminare l\'immagine «:name»?',
     'zoomed_image' => 'Immagine ingrandita',
     'questions_title' => 'Domande dell\'agente',
+    'closed_choices' => 'Risposte suggerite alla domanda :n',
     'answers_count' => ':answered/:total risposte',
     'your_answer' => 'La tua risposta…',
     'answer_label' => 'Risposta alla domanda :n',

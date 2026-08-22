@@ -61,8 +61,10 @@ closing comment shows up under the note as the agent's answer. If the request is
 pauses it with questions:
 
 ```bash
-php artisan griglia:check --ask=12 --q="Which of the two layouts?" --q="Italian or English?"
+php artisan griglia:check --ask=12 --q="Which layout?" --choices="Compact|Spacious" --q="Language?" --choices="Italian|English"
 ```
+
+Closed choices appear as quick buttons. A free-text answer and the speech-to-text microphone remain available for every question.
 
 Answer them in the task modal and press **restart**: the task goes back to *open to work*.
 

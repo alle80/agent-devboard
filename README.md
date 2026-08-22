@@ -107,7 +107,7 @@ The badge on each row uses the package's SVG icon set (no emoji in the UI):
 php artisan griglia:check                # what to work on (open/working), in order; --all for everything
 php artisan griglia:check --take=ID      # take it in charge → working (starts at 0%)
 php artisan griglia:check --take=ID --progress=60 --phase="writing code"   # update % and phase as you go
-php artisan griglia:check --ask=ID --q="…" --q="…"                         # ask, pausing it → question
+php artisan griglia:check --ask=ID --q="Which one?" --choices="First|Second"                         # ask, pausing it → question
 php artisan griglia:check --done=ID --comment="…" --summary="Brief result"              # close it, with a note back → done
 php artisan griglia:check --done=ID --comment="…" --tokens-in=N --tokens-out=N  # …recording the tokens spent
 php artisan griglia:check --done=ID --comment="…" --outcome=alert|blocked   # …flagging a result that needs a look

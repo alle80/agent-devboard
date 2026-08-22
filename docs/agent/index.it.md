@@ -10,11 +10,13 @@ php artisan griglia:watch --agent=codex         # solo gli eventi assegnati a un
 php artisan griglia:check                       # cosa è open to work o già preso, impostazioni, piani
 php artisan griglia:check --take=ID             # presa in carico: il task passa a working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testando"
-php artisan griglia:check --ask=ID --q="…" --q="…"     # mette il task in pausa con delle domande
+php artisan griglia:check --ask=ID --q="Quale?" --choices="Prima|Seconda"     # mette il task in pausa con delle domande
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
 php artisan griglia:check --done=ID --comment="…" --outcome=alert   # fatto, ma va guardato (riga gialla)
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # c'è qualcosa che blocca (riga rossa)
 ```
+
+Quando possibile, l’agente propone scelte chiuse brevi con `--choices` (ripetuto nello stesso ordine di `--q`). Nel modale diventano risposte selezionabili con un tocco, ma restano sempre disponibili il campo di testo libero e il microfono speech-to-text. Senza opzioni si omette il `--choices` corrispondente.
 
 `check` stampa in testa le **impostazioni** dei gruppi `agent` e `optimization` (politica dei commit,
 autonomia, notifiche, modalità di lavoro, modalità stringata, …) che l'agente deve rispettare, poi i task

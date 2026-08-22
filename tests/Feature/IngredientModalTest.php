@@ -62,15 +62,18 @@ class IngredientModalTest extends TestCase
 
     public function test_questions_flow(): void
     {
-        $q = $this->todo->questions()->create(['question' => 'Which colour?', 'order' => 1]);
+        $q = $this->todo->questions()->create(['question' => 'Which colour?', 'choices' => ['Blue', 'Green'], 'order' => 1]);
         $this->todo->update(['question' => true]);
 
         $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
+        $m->assertSee("Blue")->assertSee("Green")->assertSeeHtml("db-mic");
         $m->call('resumeWork'); // blocked: unanswered
         $this->assertTrue($this->todo->fresh()->question);
 
         $m->set("answers.{$q->id}", 'Blue')->call('saveAnswer', $q->id);
         $this->assertSame('Blue', $q->fresh()->answer);
+        $m->call("selectAnswer", $q->id, "Green");
+        $this->assertSame("Green", $q->fresh()->answer);
 
         $m->call('resumeWork');
         $this->todo->refresh();

@@ -31,6 +31,7 @@ class GrigliaCheck extends Command
         {--outcome= : With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it}
         {--ask= : Id of the todo to ask questions about (the task pauses in the question state)}
         {--q=* : Text of each question, repeatable}
+        {--choices=* : Pipe-separated closed choices for the corresponding --q, repeatable; free text remains available}
         {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
         {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
         {--agent= : Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)}
@@ -98,8 +99,10 @@ class GrigliaCheck extends Command
                 return self::FAILURE;
             }
             $next = ((int) $t->questions()->max('order')) + 1;
-            foreach ($qs as $q) {
-                $t->questions()->create(['question' => $q, 'order' => $next++]);
+            $choiceGroups = array_values((array) $this->option('choices'));
+            foreach ($qs as $index => $q) {
+                $choices = array_values(array_unique(array_filter(array_map('trim', explode('|', $choiceGroups[$index] ?? '')))));
+                $t->questions()->create(['question' => $q, 'choices' => $choices ?: null, 'order' => $next++]);
             }
             $t->update(['question' => true, 'working' => false, 'open_to_work' => false, 'phase' => null] + $this->tokenAttrs($t));
             Notify::questionAsked($t, $qs); // the app notifies the user (bell / web push / mail)

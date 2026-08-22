@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.84.0] - 2026-08-22
+
+### Added
+- **Questions can offer one-tap closed answers without losing open input.** Agents pair repeated `--q` and
+  `--choices="First|Second"` options; the modal shows selectable answers and always keeps free text plus
+  speech-to-text available (task 481).
+
 ## [0.83.1] - 2026-08-22
 
 ### Fixed

@@ -9,7 +9,7 @@ php artisan griglia:watch --agent=codex         # only events assigned to one ag
 php artisan griglia:check                       # what is open to work or already taken, settings, plans
 php artisan griglia:check --take=ID             # take in charge: the task turns to working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testing"
-php artisan griglia:check --ask=ID --q="…" --q="…"     # pause the task with questions
+php artisan griglia:check --ask=ID --q="Which one?" --choices="First|Second" # choices align with questions
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
 php artisan griglia:check --done=ID --comment="…" --outcome=alert   # done, but it needs a look (yellow row)
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # something is in the way (red row)
@@ -18,6 +18,8 @@ php artisan griglia:check --done=ID --comment="…" --outcome=blocked # somethin
 `check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, autonomy,
 notifications, task mode, terse mode, …) that the agent is expected to follow, then the open tasks of the agent
 list and, after them, the open tasks of the started **plans** (under a `Plan «name»` heading).
+
+When possible, agents should offer short closed choices with `--choices` (repeat it in the same order as `--q`). The modal renders them as one-tap answers, while always retaining the free-text field and speech-to-text microphone. Omit or leave the corresponding `--choices` value empty for an open-only question.
 
 Rules worth knowing: take the task **first** (before reading/analysing), one task at a time in list order
 (`task_mode=ordered`) or several independent ones (`multitasking`), never touch *waiting* items, drop a

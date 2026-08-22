@@ -26,6 +26,13 @@
                             <p class="{{ $textClass }} break-words pl-4 text-[0.95em] opacity-80">{{ __('griglia::t.no_answer') }}</p>
                         @endif
                     @else
+                    @if ($q->choices)
+                        <div class="mb-2 flex flex-wrap gap-2 pl-4" role="group" aria-label="{{ __('griglia::t.closed_choices', ['n' => $loop->iteration]) }}">
+                            @foreach ($q->choices as $choice)
+                                <button type="button" wire:click="selectAnswer({{ $q->id }}, @js($choice))" class="{{ $okClass }} text-sm" @if (($answers[$q->id] ?? '') === $choice) aria-pressed="true" @endif>{{ $choice }}</button>
+                            @endforeach
+                        </div>
+                    @endif
                     <form wire:submit="saveAnswer({{ $q->id }})" class="flex items-start gap-2">
                         <textarea
                             wire:model="answers.{{ $q->id }}"
@@ -34,6 +41,7 @@
                             aria-label="{{ __('griglia::t.answer_label', ['n' => $loop->iteration]) }}"
                             class="{{ $inputClass }} block w-full min-w-0 flex-1 resize-y text-base"
                         ></textarea>
+                        <x-griglia::mic target="textarea" class="shrink-0" />
                         <button type="submit" class="{{ $okClass }} shrink-0" title="{{ __('griglia::t.save_answer') }}" aria-label="{{ __('griglia::t.save_answer') }}">
                             @if ($q->answer)<x-griglia::icon name="check" :stroke="2.5" />@else{{ __('griglia::t.save') }}@endif
                         </button>

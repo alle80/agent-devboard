@@ -38,12 +38,14 @@ class GrigliaCheckCommandTest extends TestCase
         $this->artisan('griglia:check', ['--take' => $this->todo->id])->expectsOutputToContain('taken in charge')->assertSuccessful();
         $this->assertTrue($this->todo->fresh()->working);
 
-        $this->artisan('griglia:check', ['--ask' => $this->todo->id, '--q' => ['Which shade?', 'Also for the login?']])->assertSuccessful();
+        $this->artisan("griglia:check", ["--ask" => $this->todo->id, "--q" => ["Which shade?", "Also for the login?"], "--choices" => ["Blue|Green", "Yes|No"]])->assertSuccessful();
         $this->todo->refresh();
         $this->assertTrue($this->todo->question);
         $this->assertFalse($this->todo->working);
         $this->assertSame(2, $this->todo->questions()->count());
         // items with open questions are not listed as workable
+        $this->assertSame(["Blue", "Green"], $this->todo->questions()->first()->choices);
+        $this->assertSame(["Yes", "No"], $this->todo->questions()->skip(1)->first()->choices);
         $this->artisan('griglia:check')->doesntExpectOutputToContain('Add dark mode')->assertSuccessful();
 
         $this->todo->update(['question' => false, 'open_to_work' => true]);

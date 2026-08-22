@@ -125,6 +125,7 @@ return [
     'answers_count' => ':answered/:total answered',
     'your_answer' => 'Your answer…',
     'answer_label' => 'Answer to question :n',
+    'closed_choices' => 'Suggested answers to question :n',
     'save_answer' => 'Save answer',
     'no_answer' => '— (no answer)',
     'all_answered' => 'All questions have an answer. Restart the work?',

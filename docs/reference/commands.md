@@ -37,7 +37,7 @@ Lists the open requests of the agent list (see config griglia.agent_list)
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argument / option | What it does | Default |
@@ -54,6 +54,7 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--outcome` | With --done: how the result feels — ok (default, nothing to check), alert (done, but something needs a look) or blocked (something is in the way). It colours the row until the user opens it | — |
 | `--ask` | Id of the todo to ask questions about (the task pauses in the question state) | — |
 | `--q` | Text of each question, repeatable | _array_ |
+| `--choices` | Pipe-separated closed choices for the corresponding --q, repeatable; free text remains available | _array_ |
 | `--tokens-in` | Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--tokens-out` | Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
 | `--agent` | Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent) | — |
