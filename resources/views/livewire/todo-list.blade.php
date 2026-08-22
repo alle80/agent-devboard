@@ -1,4 +1,14 @@
-<div class="tl-page relative mx-auto {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }} px-4 pt-20 pb-10 sm:pt-24">
+<div
+    class="tl-page relative mx-auto px-4 pt-20 pb-10 sm:pt-24"
+    x-data="{
+        view: localStorage.getItem('griglia.board.view') === 'grid' ? 'grid' : 'list',
+        setView(value) {
+            this.view = value;
+            localStorage.setItem('griglia.board.view', value);
+        },
+    }"
+    :class="view === 'grid' ? 'max-w-6xl' : '{{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-2xl' }}'"
+>
 
     {{-- ===== HEADER ===== --}}
     @php($done = $todos->where('completed', true)->count())
@@ -33,7 +43,7 @@
 
     {{-- ===== LISTA (riordinabile con drag & drop sulla maniglia) ===== --}}
     <div
-        class="space-y-0"
+        :class="view === 'grid' ? 'todo-grid grid grid-cols-1 gap-x-4 sm:grid-cols-2 lg:grid-cols-3' : 'space-y-0'"
         x-data
         x-init="
             Sortable.create($el, {

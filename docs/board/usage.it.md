@@ -150,6 +150,9 @@ L'ambito vale per la lista senza filtri e anche per ricerca, stato e agente; ogn
 Le liste archiviate e quelle di altri utenti restano escluse. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
 [Piani](../features/plans.md)).
 
+I due bottoni della visuale cambiano l'area dei task fra l'**elenco** originale e una **griglia** di card verticali.
+La griglia usa una colonna su telefono, due su tablet e tre su desktop; il browser ricorda la scelta per la visita successiva.
+
 ## Desktop: la dashboard
 
 Su uno schermo grande la board ha una seconda casa: **`/dashboard`**, la stessa lista in un contenitore più

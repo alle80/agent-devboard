@@ -104,6 +104,19 @@
 
         <span class="flex-1"></span>
 
+        <div class="inline-flex shrink-0" role="group" aria-label="{{ __('griglia::t.view_mode') }}">
+            <button type="button" @click="setView('list')"
+                :class="view === 'list' ? '{{ $chipOnClass }}' : '{{ $btnClass }}'"
+                :aria-pressed="view === 'list'" class="cursor-pointer px-2 py-1 text-xs leading-none"
+                title="{{ __('griglia::t.view_list') }}" aria-label="{{ __('griglia::t.view_list') }}"
+            ><x-griglia::icon name="list" /></button>
+            <button type="button" @click="setView('grid')"
+                :class="view === 'grid' ? '{{ $chipOnClass }}' : '{{ $btnClass }}'"
+                :aria-pressed="view === 'grid'" class="cursor-pointer px-2 py-1 text-xs leading-none"
+                title="{{ __('griglia::t.view_grid') }}" aria-label="{{ __('griglia::t.view_grid') }}"
+            ><x-griglia::icon name="grid" /></button>
+        </div>
+
         <button
             type="button"
             wire:click="toggleArchived"

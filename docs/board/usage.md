@@ -143,6 +143,9 @@ unfiltered board as well as text, state and agent filters, and each result shows
 other users’ lists stay outside the board.
 On a plan list the **Plan** bar shows progress and the start/pause buttons (see [Plans](../features/plans.md)).
 
+The two view buttons switch the task area between the original **list** and a **grid** of vertical cards. The grid
+uses one column on phones, two on tablets and three on desktop; the browser remembers the choice for the next visit.
+
 ## Desktop: the dashboard
 
 On a big screen the board has a second home: **`/dashboard`**, the same list rendered in a wider, roomier

@@ -41,6 +41,12 @@ body { -webkit-tap-highlight-color: transparent; }
 .todo-row > .hanko,
 .todo-row > .jac-slurp { top: 0.35rem; right: 4.5rem; transform: translateY(0) rotate(-12deg) scale(0.8); }
 
+/* Vista a card: ogni wrapper resta un singolo elemento Sortable e la card occupa tutta l'altezza. */
+.todo-grid > [data-todo-id] { display: flex; min-width: 0; flex-direction: column; }
+.todo-grid > [data-todo-id] > .todo-row { flex: 1 1 auto; align-content: flex-start; }
+.todo-grid > [data-todo-id] > div:first-child { flex: 0 0 auto; }
+.todo-grid > [wire\:key="gap-end"] { grid-column: 1 / -1; }
+
 /* ==================== Layout mobile condiviso (< 640px) ==================== */
 @media (max-width: 639px) {
     /* target touch più generosi */

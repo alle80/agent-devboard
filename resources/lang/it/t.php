@@ -75,6 +75,9 @@ return [
     'filters' => ['all' => 'Tutti', 'todo' => 'Da fare', 'done' => 'Fatti', 'otw' => 'Open to work', 'working' => 'Working', 'paused' => 'In pausa', 'question' => 'Domande'],
     'agent_filter' => 'Filtra per agente',
     'all_agents' => 'Tutti gli agenti',
+    'view_mode' => 'Visuale task',
+    'view_list' => 'Visuale elenco',
+    'view_grid' => 'Visuale griglia',
 
     'note' => 'Task',
     'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'paused' => 'In pausa', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],

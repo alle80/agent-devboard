@@ -77,6 +77,9 @@ return [
     'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => 'Open to work', 'working' => 'Working', 'paused' => 'Paused', 'question' => 'Questions'],
     'agent_filter' => 'Filter by agent',
     'all_agents' => 'All agents',
+    'view_mode' => 'Task view',
+    'view_list' => 'List view',
+    'view_grid' => 'Grid view',
 
     // Modal
     'note' => 'Task',

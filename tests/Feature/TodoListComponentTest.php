@@ -151,6 +151,18 @@ class TodoListComponentTest extends TestCase
         $this->assertSame(['Call mom'], $t->viewData('todos')->pluck('title')->all());
     }
 
+    public function test_board_offers_persistent_list_and_responsive_grid_views(): void
+    {
+        $this->add('Grid card');
+
+        Livewire::test(TodoList::class)
+            ->assertSeeHtml("localStorage.getItem('griglia.board.view')")
+            ->assertSeeHtml("localStorage.setItem('griglia.board.view', value)")
+            ->assertSeeHtml('grid-cols-1 gap-x-4 sm:grid-cols-2 lg:grid-cols-3')
+            ->assertSee(__('griglia::t.view_list'))
+            ->assertSee(__('griglia::t.view_grid'));
+    }
+
     public function test_all_lists_scope_applies_without_search_and_with_state_filters(): void
     {
         $current = $this->add('Current needle');

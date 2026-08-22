@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.17] - 2026-08-22
+
+### Added
+- The task board can switch between the existing list and a persistent responsive card grid with one column on
+  phones, two on tablets and three on desktop (task 577).
+
 ## [0.87.16] - 2026-08-22
 
 ### Fixed
