@@ -164,6 +164,14 @@
                     @endif
                 </div>
 
+                {{-- Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check. Sta sul primo livello
+                     della riga, accanto al pallino: è il «.todo-title + *» del CSS, quindi margin-left:auto lo spinge a
+                     destra. Un tocco copia il numero (copy.js, data-copy): è un bottone a sé, non sta dentro il titolo. --}}
+                <button type="button" class="db-id shrink-0" data-copy="{{ $todo->id }}"
+                    title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}"
+                    aria-label="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}"
+                >id:{{ $todo->id }}</button>
+
                     @if ($editingId !== $todo->id)
                     @php($st = $todo->completed ? 'done' : ($todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting'))))
                     <button

@@ -1,6 +1,7 @@
 // alle80/griglia — «copiabile»: ogni blocco di codice nelle note e nei commenti dell'agente ha un pulsante
 // che lo copia, e il codice inline si copia con un clic. Serve perché quei riquadri contengono comandi e
-// prompt da incollare altrove (task 367).
+// prompt da incollare altrove (task 367). Qualunque elemento con data-copy (la targhetta «id:N» del task nella
+// riga e nel modale, task 510) copia quel valore con un tocco e per un attimo dice «copiato».
 const t = () => window.GRIGLIA_I18N || {};
 
 async function copyText(text) {
@@ -66,6 +67,20 @@ document.addEventListener('click', async (e) => {
     const code = pre?.querySelector('code') || pre;
     const text = (code.cloneNode(true).textContent || '').replace(/\s*\n?$/, '');
     flash(btn, await copyText(text));
+    return;
+  }
+
+  // Anything with data-copy (the task id chip, task 510): one tap copies the value; the label says «copied»
+  // (or «not copied») for a moment, then goes back to what it was.
+  const chip = e.target.closest('[data-copy]');
+  if (chip) {
+    e.preventDefault();
+    e.stopPropagation();
+    const ok = await copyText(chip.dataset.copy || '');
+    const original = chip.dataset.copyLabel ?? (chip.dataset.copyLabel = chip.textContent);
+    chip.textContent = ok ? (t().copied || 'copied') : (t().copy_failed || 'error');
+    chip.classList.add(ok ? 'is-copied' : 'is-failed');
+    setTimeout(() => { chip.textContent = original; chip.classList.remove('is-copied', 'is-failed'); }, 1200);
     return;
   }
 

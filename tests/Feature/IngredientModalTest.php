@@ -120,4 +120,12 @@ class IngredientModalTest extends TestCase
         $m->assertSee('+1 earlier', false);
         $m->assertSee('Before that: «Dark mode»', false);
     }
+
+    public function test_the_modal_shows_the_task_id_to_copy(): void
+    {
+        // Same «id:N» as in the row and in griglia:check, in the title bar next to the state badge (task 510).
+        Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id)
+            ->assertSeeHtml('data-copy="'.$this->todo->id.'"')
+            ->assertSeeHtml('>id:'.$this->todo->id.'</button>');
+    }
 }

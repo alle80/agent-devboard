@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.0] - 2026-08-22
+### Added
+- The task id is visible on the board: an `id:N` chip on the first level of every row, next to the state dot,
+  and in the modal title bar beside ‹ 3/7 › — the same notation `griglia:check` prints and `--take`/`--done`
+  expect. One tap copies the number (`data-copy`, handled by `copy.js`) (task 510).
+
+### Fixed
+- Board guide (English): the paragraph about the result summary under the title was missing — a duplicated
+  sentence stood in its place.
+
 ## [0.86.0] - 2026-08-22
 
 ### Added
@@ -1692,7 +1702,7 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.85.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.87.0...HEAD
 [0.85.0]: https://github.com/alle80/griglia/compare/v0.84.0...v0.85.0
 [0.82.0]: https://github.com/alle80/griglia/compare/v0.81.4...v0.82.0
 [0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3

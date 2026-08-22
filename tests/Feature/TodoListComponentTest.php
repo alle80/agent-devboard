@@ -239,4 +239,14 @@ class TodoListComponentTest extends TestCase
         $this->assertSame($first->id, $third->fresh()->parent_id, 'the chain skips the deleted step instead of breaking');
         $this->assertSame([$first->id], $third->fresh()->resumeChain()->pluck('id')->all());
     }
+
+    public function test_the_row_shows_the_task_id_to_copy(): void
+    {
+        // The same «id:N» the agent prints in griglia:check, next to the state dot; one tap copies the number (task 510).
+        $todo = $this->add('Find me by id');
+
+        Livewire::test(TodoList::class)
+            ->assertSeeHtml('data-copy="'.$todo->id.'"')
+            ->assertSeeHtml('>id:'.$todo->id.'</button>');
+    }
 }

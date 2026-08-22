@@ -39,6 +39,7 @@ return [
     'copied' => 'copiato',
     'copy_failed' => 'non copiato',
     'copy_block' => 'Copia il blocco di codice',
+    'task_id_copy' => 'Id del task :id — tocca per copiare il numero',
     'cancel' => 'Annulla',
     'revert' => 'Annulla',
     'new_title' => 'Nuovo titolo',

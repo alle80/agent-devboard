@@ -40,6 +40,7 @@ return [
     'copied' => 'copied',
     'copy_failed' => 'not copied',
     'copy_block' => 'Copy the code block',
+    'task_id_copy' => 'Task id :id — tap to copy the number',
     'cancel' => 'Cancel',
     'revert' => 'Cancel',
     'new_title' => 'New title',

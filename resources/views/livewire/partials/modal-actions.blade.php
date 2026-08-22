@@ -44,6 +44,12 @@
                 <x-griglia::icon name="arrow-right" />
             </button>
         @endif
+
+        {{-- Task id (task 510): the same «id:N» the agent prints in griglia:check and that --take/--done expect;
+             one tap copies the number (copy.js, data-copy). --}}
+        <span class="db-sep mx-0.5 opacity-20" aria-hidden="true">|</span>
+        <button type="button" class="db-id shrink-0" data-copy="{{ $todo->id }}"
+                title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}" aria-label="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}">id:{{ $todo->id }}</button>
     </div>
 
     <div class="modal-cmds-tools flex min-w-0 items-center gap-1.5">

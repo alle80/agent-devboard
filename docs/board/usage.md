@@ -22,7 +22,14 @@ Every row has a state dot:
 Tap the dot to move between *waiting* and *open to work* (or to stop the agent). A completed row always
 shows the *done* icon, even if it was open to work before completion.
 
-Tap the dot to move between *waiting* and *open to work* (or to stop the agent).
+When the agent has left a result, a very short automatic summary appears under the title. Agents can give a
+more precise one with `griglia:check --done --summary="…"`; otherwise Griglia derives it from the closing
+comment. It tells apart a sequence of resumed tasks that all share the same title.
+
+Next to the dot every row shows the task **id** (`id:510`): the same `id:N` the agent prints in
+`griglia:check`, and the number you use with `--take` / `--done` or when you talk about a task. Tap it to copy
+the number (the chip says *copied* for a moment). The big number at the left of the row is the position in
+the list, which changes when you reorder or archive; the id never changes.
 
 ### The colour of the row
 
@@ -83,8 +90,9 @@ A task is read-only while it is **working**, so the request cannot change under 
 working badge to stop it and return it to waiting before editing; it can then be marked open to work again.
 
 The header uses the whole bar: on the left the **state badge**, whose text label stays beside its icon on
-every screen, with ‹ `3/7` › — and on the right the commands: the agent that owns the task, **move to another list**,
-archive, delete, close, plus **resume with changes** (a new linked task) on a completed one.
+every screen, with ‹ `3/7` › and the task id (`id:510`, tap to copy the number) — and on the right the
+commands: the agent that owns the task, **move to another list**, archive, delete, close, plus **resume with
+changes** (a new linked task) on a completed one.
 
 ### Saving happens by itself
 

@@ -26,6 +26,11 @@ commento di chiusura. Serve a distinguere una sequenza di task ripresi che hanno
 
 Tocca il pallino per passare fra *in attesa* e *open to work* (o per fermare l'agente).
 
+Accanto al pallino ogni riga mostra l'**id** del task (`id:510`): lo stesso `id:N` che l'agente stampa in
+`griglia:check`, e il numero che usi con `--take` / `--done` o quando parli di un task. Toccalo per copiare il
+numero (la targhetta dice *copiato* per un attimo). Il numero grande a sinistra della riga è la posizione in
+lista, che cambia riordinando o archiviando; l'id non cambia mai.
+
 ### Il colore della riga
 
 Una riga che non hai ancora letto è disegnata con un **bordo colorato attorno alla scheda**, e il colore dice
@@ -85,8 +90,9 @@ Titolo, nota **Task** (editor Markdown, con un microfono per la
 statistiche (tempo di lavoro, token, costo), l'accordion delle **skill** dell'agente, le immagini (upload,
 fotocamera, incolla; descrizione AI quando è attiva), i sotto-task (Markdown, riordinabili), domande e
 risposte, il contesto del task ripreso. Nell'intestazione: badge di stato con etichetta testuale sempre
-visibile accanto all'icona (si tocca per cambiarlo),
-**sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con modifiche** (un nuovo
+visibile accanto all'icona (si tocca per cambiarlo), ‹ `3/7` › e l'id del task (`id:510`, si tocca per
+copiare il numero), **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con
+modifiche** (un nuovo
 task collegato).
 
 Un task è in sola lettura mentre è **in lavorazione**, così la richiesta non cambia sotto i piedi
