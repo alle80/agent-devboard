@@ -71,7 +71,7 @@
     @if ($todo->claude_comment)
         <div class="mt-3 border-t-2 border-dashed border-current/30 pt-2">
             <span class="{{ $labelClass }} inline-flex items-center gap-1"><x-griglia::icon name="bot" /> {{ __('griglia::t.agent_box', ['agent' => \Alle80\Griglia\Agent::name()]) }}</span>
-            <div class="{{ $textClass }} db-prose break-words text-[0.95em] opacity-90">{!! \Alle80\Griglia\Support\Markdown::render($todo->claude_comment) !!}</div>
+            <div class="{{ $textClass }} db-prose break-words text-[0.95em] opacity-90">{!! \Alle80\Griglia\Support\Markdown::renderAgentResponse($todo->claude_comment) !!}</div>
         </div>
     @endif
 

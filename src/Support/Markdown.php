@@ -25,6 +25,18 @@ class Markdown
         ]);
     }
 
+    /** Normalize escaped line breaks produced by agent CLI wrappers, including legacy answers. */
+    public static function normalizeAgentResponse(?string $text): string
+    {
+        return str_replace(["\\r\\n", "\\n", "\\r"], ["\n", "\n", "\n"], (string) $text);
+    }
+
+    /** Render an agent answer, normalizing escaped line breaks saved by older wrappers. */
+    public static function renderAgentResponse(?string $text): string
+    {
+        return self::render(self::normalizeAgentResponse($text));
+    }
+
     /** Full block render (paragraphs, tables, code blocks, …). */
     public static function render(?string $text): string
     {

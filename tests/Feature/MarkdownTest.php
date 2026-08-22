@@ -20,6 +20,12 @@ class MarkdownTest extends TestCase
         $this->assertStringContainsString("first<br>\nsecond", Markdown::render("first\nsecond"));
     }
 
+    public function test_agent_response_normalizes_legacy_escaped_newlines(): void
+    {
+        $this->assertStringContainsString("first<br>\nsecond", Markdown::renderAgentResponse('first\\nsecond'));
+        $this->assertSame("first\nsecond", Markdown::normalizeAgentResponse('first\\r\\nsecond'));
+    }
+
     public function test_renders_tables(): void
     {
         $this->assertStringContainsString('<table>', Markdown::render("| a | b |\n| --- | --- |\n| 1 | 2 |"));

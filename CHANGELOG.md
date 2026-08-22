@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.87.6] - 2026-08-22
+
+### Fixed
+- Legacy agent answers and compact summaries that already contain escaped `\n` sequences are normalized at
+  render time, while user-authored notes and code examples remain untouched (task 563).
+
 ## [0.87.5] - 2026-08-22
 
 ### Fixed

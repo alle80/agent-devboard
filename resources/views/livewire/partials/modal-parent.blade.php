@@ -28,7 +28,7 @@
                 @endif
                 @if ($previous->claude_comment)
                     <div class="{{ $textClass }} break-words opacity-80"><span class="font-bold"><x-griglia::icon name="bot" /> {{ __('griglia::t.agent_box', ['agent' => \Alle80\Griglia\Agent::name()]) }}:</span>
-                        <div class="db-prose">{!! \Alle80\Griglia\Support\Markdown::render($previous->claude_comment) !!}</div>
+                        <div class="db-prose">{!! \Alle80\Griglia\Support\Markdown::renderAgentResponse($previous->claude_comment) !!}</div>
                     </div>
                 @endif
                 @if ($previous->ingredients->isNotEmpty())

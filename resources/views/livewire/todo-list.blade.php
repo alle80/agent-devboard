@@ -151,7 +151,7 @@
                             <span class="db-id ml-auto shrink-0" data-copy="{{ $todo->id }}" title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}">id:{{ $todo->id }}</span>
                     </button>
                     @if ($todo->claude_comment && $todo->result_summary)
-                        <p class="mt-0.5 truncate text-xs opacity-60" title="{{ $todo->result_summary }}">{{ $todo->result_summary }}</p>
+                        <p class="mt-0.5 truncate text-xs opacity-60" title="{{ \Alle80\Griglia\Support\Markdown::normalizeAgentResponse($todo->result_summary) }}">{{ \Alle80\Griglia\Support\Markdown::normalizeAgentResponse($todo->result_summary) }}</p>
                     @endif
                     {{-- Multi-agente: chi lavora questo task. La targhetta sta su una riga sua, SOTTO il titolo
                          (task 427): in mezzo ai comandi era schiacciata fra le icone. Il nome si vede SEMPRE,
