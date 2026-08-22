@@ -2,7 +2,7 @@
 
 return [
 
-    // URL prefix of the package pages ('' = site root: /, /<theme>, /settings)
+    // URL prefix of the package pages ('' = site root: /, /settings, /dashboard)
     'route_prefix' => env('GRIGLIA_ROUTE_PREFIX', ''),
 
     // How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «Claude's answer», «Claude's skills»
@@ -48,7 +48,7 @@ return [
     // Register the package routes at all (set false to define your own routes with the components)
     'register_routes' => true,
 
-    // Register a home route (route_prefix + '/') showing the default theme
+    // Register a home route (route_prefix + '/') showing the theme selected in /settings
     'home_route' => true,
 
     // Desktop dashboard: a wider, more readable view of the board on its own route.

@@ -19,10 +19,9 @@ class RememberStyle
         if ($prefix !== '' && str_starts_with($slug, $prefix)) {
             $slug = trim(substr($slug, strlen($prefix)), '/');
         }
-        $style = $slug === '' ? Themes::default() : $slug;
-
-        if (Themes::known($style)) {
-            session(['style' => $style]);
+        if ($slug === '') {
+            $configured = app(\Alle80\Griglia\Settings\AppSettings::class)->default_style;
+            session(['style' => Themes::has($configured) ? $configured : Themes::default()]);
         }
 
         return $next($request);

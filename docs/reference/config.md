@@ -7,7 +7,7 @@ Decided by whoever installs the package; the run-time options live in [Settings]
 
 | Key | Environment variable | Default | What it is |
 |---|---|---|---|
-| `route_prefix` | `GRIGLIA_ROUTE_PREFIX` | `''` | URL prefix of the package pages ('' = site root: /, /<theme>, /settings) |
+| `route_prefix` | `GRIGLIA_ROUTE_PREFIX` | `''` | URL prefix of the package pages ('' = site root: /, /settings, /dashboard) |
 | `agent_name` | `GRIGLIA_AGENT_NAME` | `'Agent'` | How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «Claude's answer», «Claude's skills» |
 | `agents` | `GRIGLIA_AGENTS` | — | Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list (project) chooses its default agent, a task may override it. Empty = a single agent named `agent_name`. |
 | `agent_key` | `GRIGLIA_AGENT_KEY` | — | Which of those agents is running here: the key `griglia:check` assumes when `--agent=<key>` is omitted, so that this installation sees only its own tasks. Empty = the agent must pass `--agent=` itself. |
@@ -19,7 +19,7 @@ Decided by whoever installs the package; the run-time options live in [Settings]
 | `middleware` | — | _array_ | Middleware of the package routes. Authentication is enforced by the package itself according to the mode (Alle80\Griglia\Http\Middleware\GrigliaAccess), so 'auth' is not needed here (and is ignored). |
 | `local_channel` | — | `'griglia.local'` | Public broadcast channel used for live updates in local mode |
 | `register_routes` | — | `true` | Register the package routes at all (set false to define your own routes with the components) |
-| `home_route` | — | `true` | Register a home route (route_prefix + '/') showing the default theme |
+| `home_route` | — | `true` | Register a home route (route_prefix + '/') showing the theme selected in /settings |
 | `dashboard_route` | `GRIGLIA_DASHBOARD_ROUTE` | `'/dashboard'` | Desktop dashboard: a wider, more readable view of the board on its own route. Set to null/false to disable the route and the slide-out board tab. |
 | `default_theme` | — | `'slate'` | Generic theme used by the home route and as fallback |
 | `themes` | — | _array_ | Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin()) |

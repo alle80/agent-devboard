@@ -7,7 +7,7 @@ La decide chi installa il package; le opzioni che si cambiano a runtime stanno n
 
 | Chiave | Variabile d'ambiente | Default | Cos'è |
 |---|---|---|---|
-| `route_prefix` | `GRIGLIA_ROUTE_PREFIX` | `''` | Prefisso URL delle pagine del package ('' = radice del sito: /, /<theme>, /settings) |
+| `route_prefix` | `GRIGLIA_ROUTE_PREFIX` | `''` | Prefisso URL delle pagine del package ('' = radice del sito: /, /settings, /dashboard) |
 | `agent_name` | `GRIGLIA_AGENT_NAME` | `'Agent'` | Come l'interfaccia chiama l'agente (Claude, Codex, Gemini, …): etichette come «la risposta di Claude», «le skill di Claude» |
 | `agents` | `GRIGLIA_AGENTS` | — | Più agenti insieme (chiave => etichetta), per esempio GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". Una lista (progetto) sceglie il proprio agente di default, un task può cambiarlo. Vuoto = un agente solo, chiamato `agent_name`. |
 | `agent_key` | `GRIGLIA_AGENT_KEY` | — | Quale di quegli agenti gira qui: la chiave che `griglia:check` assume quando `--agent=<chiave>` non è indicato, così questa installazione vede solo i propri task. Vuoto = l'agente deve passare `--agent=` da sé. |
@@ -19,7 +19,7 @@ La decide chi installa il package; le opzioni che si cambiano a runtime stanno n
 | `middleware` | — | _array_ | Middleware delle rotte del package. L'autenticazione la impone il package stesso a seconda della modalità (Alle80\Griglia\Http\Middleware\GrigliaAccess), quindi 'auth' qui non serve (e viene ignorato). |
 | `local_channel` | — | `'griglia.local'` | Canale di broadcast pubblico usato per gli aggiornamenti dal vivo in modalità locale |
 | `register_routes` | — | `true` | Registrare o no le rotte del package (metti false per definire rotte tue con i componenti) |
-| `home_route` | — | `true` | Registra una rotta home (route_prefix + '/') che mostra il tema di default |
+| `home_route` | — | `true` | Registra una rotta home (route_prefix + '/') che mostra il tema selezionato nelle impostazioni |
 | `dashboard_route` | `GRIGLIA_DASHBOARD_ROUTE` | `'/dashboard'` | Dashboard da scrivania: una vista della board più larga e più leggibile, su una rotta sua. Metti null/false per disattivare la rotta e la linguetta laterale. |
 | `default_theme` | — | `'slate'` | Tema generico usato dalla rotta home e come ripiego |
 | `themes` | — | _array_ | Temi generici aggiuntivi (slug => definizione, stesse chiavi di Alle80\Griglia\Themes::builtin()) |

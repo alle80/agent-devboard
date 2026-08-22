@@ -4,6 +4,7 @@ namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Livewire\SettingsPage;
 use Alle80\Griglia\Livewire\ThemedTodoList;
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Themes;
 use Alle80\Griglia\ThemeStore;
 use Alle80\Griglia\Tests\TestCase;
@@ -55,7 +56,7 @@ class ThemesTest extends TestCase
 
         $switcher = Themes::switcher();
         $this->assertSame('/?stay=1', $switcher['manga']['url']);
-        $this->assertSame('/candy', $switcher['candy']['url']);
+        $this->assertSame('/', $switcher['candy']['url']);
         $this->assertTrue(Themes::known('night'));
         $this->assertFalse(Themes::known('nope'));
 
@@ -79,9 +80,13 @@ class ThemesTest extends TestCase
         $this->get('/griglia-themes/ocean/images/wave.png')->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff')->assertHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; sandbox");
         $this->get('/griglia-themes/ocean/images/bad.svg')->assertNotFound();
 
-        // The themed page works with the pack (css link + texts)
-        $this->get('/ocean')->assertOk()->assertSee('deep blue')->assertSee('griglia-themes/ocean/theme.css', false);
-        Livewire::test(ThemedTodoList::class, ['theme' => 'ocean'])->assertSee('deep blue');
+        // The selected theme renders at home; slug-specific pages no longer exist.
+        $settings = app(AppSettings::class);
+        $settings->default_style = 'ocean';
+        $settings->save();
+        $this->get('/')->assertOk()->assertSee('deep blue')->assertSee('griglia-themes/ocean/theme.css', false);
+        $this->get('/ocean')->assertNotFound();
+        Livewire::test(ThemedTodoList::class)->assertSee('deep blue');
 
         $this->assertTrue(ThemeStore::uninstall('ocean'));
         $this->assertFalse(Themes::has('ocean'));

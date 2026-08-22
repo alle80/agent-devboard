@@ -109,10 +109,10 @@ class Themes
         return $all;
     }
 
-    /** URL of a generic theme page (honours the route prefix). */
+    /** URL of the board (generic themes no longer have a slug-specific page). */
     public static function url(string $slug): string
     {
-        return '/'.trim(config('griglia.route_prefix', '').'/'.$slug, '/');
+        return '/'.trim((string) config('griglia.route_prefix', ''), '/');
     }
 
     /** Is this slug a known style (generic theme or dedicated)? */

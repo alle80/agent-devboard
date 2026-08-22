@@ -45,7 +45,7 @@ That's it: the board ships its own precompiled CSS/JS (published by composer wit
 > new Laravel app ships `0.18`. `-W` lets composer downgrade that one transitive dependency; without it the
 > install stops with a conflict. Existing apps usually need nothing.
 
-Routes register automatically — `/` (default theme), `/{theme}`, `/plans/new`, `/settings`, `/context`, `/stats`,
+Routes register automatically — `/` (theme selected in settings), `/plans/new`, `/settings`, `/context`, `/stats`,
 `/agents`, `/dashboard` — behind `web` plus the package's access middleware (login in server mode, none in local
 mode; see [Access, administrators and modes](#access-administrators-and-modes)).
 `/dashboard` is the wider desktop view of the board: its path comes from `griglia.dashboard_route`
@@ -301,6 +301,8 @@ the default theme, and the **agent list** name (`agent_list`).
 The package ships a generic theme system (shared views + CSS variables per `.theme-<slug>`) with the
 built-in **Slate** theme. Add more with `config('griglia.themes')` or
 `Alle80\Griglia\Themes::registerTheme($slug, [...])` plus a `.theme-<slug> { --tl-… }` CSS block.
+\nGeneric themes are selected in **/settings → App → Theme** and the board always remains at `/`; theme slugs are not public board routes. The desktop dashboard is available only at `/dashboard` (or the configured `dashboard_route`).
+
 Fully custom styles (own components/views) plug in via `Themes::registerStyle()` /
 `Themes::registerSkin()`.
 

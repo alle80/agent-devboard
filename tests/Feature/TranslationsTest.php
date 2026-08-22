@@ -33,9 +33,9 @@ class TranslationsTest extends TestCase
     public function test_translations_are_used_by_the_ui(): void
     {
         $this->actingAsUser();
-        $this->get('/slate')->assertOk()->assertSee('Search…');
+        $this->get('/')->assertOk()->assertSee('Search…');
 
         app()->setLocale('it');
-        $this->get('/slate')->assertOk()->assertSee('Cerca…');
+        $this->get('/')->assertOk()->assertSee('Cerca…');
     }
 }

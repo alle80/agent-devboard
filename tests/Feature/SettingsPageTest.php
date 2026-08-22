@@ -6,6 +6,7 @@ use Alle80\Griglia\Livewire\SettingsPage;
 use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Themes;
 use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
@@ -73,13 +74,16 @@ class SettingsPageTest extends TestCase
         $this->assertStringNotContainsString("toggle('agent', 'commit_after_task')", $notificationPanel);
     }
 
-    public function test_default_style_redirects_home(): void
+    public function test_theme_setting_renders_home_without_a_slug_route(): void
     {
-        $this->get('/')->assertOk();
-        $s = app(AppSettings::class);
-        $s->default_style = 'slate';
-        $s->save();
-        $this->get('/')->assertRedirect('/slate');
-        $this->get('/?stay=1')->assertOk();
+        config(['griglia.themes' => ['ocean' => array_replace(Themes::builtin()['slate'], ['label' => 'Ocean', 'icon' => '🌊', 'claim' => 'deep blue'])]]);
+        Livewire::test(SettingsPage::class)
+            ->set('values.app.default_style', 'ocean');
+        $this->assertSame('ocean', app(AppSettings::class)->refresh()->default_style);
+
+        $this->get('/')->assertOk()->assertSee('deep blue');
+        $this->get('/ocean')->assertNotFound();
+        $this->get('/slate')->assertNotFound();
+        $this->get('/dashboard')->assertOk();
     }
 }

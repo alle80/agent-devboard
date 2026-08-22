@@ -4,6 +4,8 @@ Generic themes are CSS-variable skins (`.theme-<slug>`); the built-in one is `sl
 config (`themes`) or in code (`Themes::registerTheme`). **Theme packs** are zips (`theme.json` + `theme.css` +
 images/fonts) installed from Settings → Themes (administrators only) or with:
 
+Select the active theme in **Settings → App → Theme**. The main board stays at `/` (under the configured route prefix); themes do not create `/<slug>` board routes. The wider desktop board remains exclusively at `/dashboard` (or `dashboard_route`).
+
 ```bash
 php artisan griglia:theme-import pack.zip
 php artisan griglia:theme-export slug --css-from=…

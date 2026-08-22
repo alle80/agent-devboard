@@ -13,7 +13,7 @@ class AppSettings extends Settings
     /** Lingua dell'interfaccia: '' = come il config dell'applicazione (APP_LOCALE), altrimenti 'en', 'it'… */
     public string $locale;
 
-    /** Stile aperto da «/»: '' = manga (nessun redirect), altrimenti slug (jack, c64, slate…). */
+    /** Tema mostrato su «/»: vuoto o slug non valido = tema di fallback configurato. */
     public string $default_style;
 
     /** Lunghezza massima del titolo di un todo. */
@@ -75,7 +75,7 @@ class AppSettings extends Settings
     public static function fields(): array
     {
         $styles = ['' => __('griglia::t.settings_options.default_style_none')];
-        foreach (Themes::switcher() as $slug => $s) {
+        foreach (Themes::all() as $slug => $s) {
             $styles[$slug] = ($s['icon'] ?? '').' '.$s['label'];
         }
 

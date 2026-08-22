@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Themes;
 use Livewire\Attributes\Layout;
 
@@ -10,10 +11,10 @@ class ThemedTodoList extends TodoList
 {
     public string $theme;
 
-    public function mount(string $theme): void
+    public function mount(): void
     {
-        abort_unless(Themes::has($theme), 404);
-        $this->theme = $theme;
+        $configured = app(AppSettings::class)->default_style;
+        $this->theme = Themes::has($configured) ? $configured : Themes::default();
     }
 
     public function render()

@@ -118,7 +118,7 @@ return [
         'Do not list the items already open to work when starting' => 'Non elencare, alla partenza, gli elementi già open to work',
 
         // ----- config/griglia.php
-        "URL prefix of the package pages ('' = site root: /, /<theme>, /settings)" => "Prefisso URL delle pagine del package ('' = radice del sito: /, /<theme>, /settings)",
+        "URL prefix of the package pages ('' = site root: /, /settings, /dashboard)" => "Prefisso URL delle pagine del package ('' = radice del sito: /, /settings, /dashboard)",
         'How the UI calls the coding agent (Claude, Codex, Gemini, …): labels like «Claude\'s answer», «Claude\'s skills»' => "Come l'interfaccia chiama l'agente (Claude, Codex, Gemini, …): etichette come «la risposta di Claude», «le skill di Claude»",
         'Several agents at once (key => label), e.g. GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". A list (project) chooses its default agent, a task may override it. Empty = a single agent named `agent_name`.' => 'Più agenti insieme (chiave => etichetta), per esempio GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI". Una lista (progetto) sceglie il proprio agente di default, un task può cambiarlo. Vuoto = un agente solo, chiamato `agent_name`.',
         'Which of those agents is running here: the key `griglia:check` assumes when `--agent=<key>` is omitted, so that this installation sees only its own tasks. Empty = the agent must pass `--agent=` itself.' => 'Quale di quegli agenti gira qui: la chiave che `griglia:check` assume quando `--agent=<chiave>` non è indicato, così questa installazione vede solo i propri task. Vuoto = l\'agente deve passare `--agent=` da sé.',
@@ -130,7 +130,7 @@ return [
         "Middleware of the package routes. Authentication is enforced by the package itself according to the mode (Alle80\\Griglia\\Http\\Middleware\\GrigliaAccess), so 'auth' is not needed here (and is ignored)." => "Middleware delle rotte del package. L'autenticazione la impone il package stesso a seconda della modalità (Alle80\\Griglia\\Http\\Middleware\\GrigliaAccess), quindi 'auth' qui non serve (e viene ignorato).",
         'Public broadcast channel used for live updates in local mode' => 'Canale di broadcast pubblico usato per gli aggiornamenti dal vivo in modalità locale',
         'Register the package routes at all (set false to define your own routes with the components)' => 'Registrare o no le rotte del package (metti false per definire rotte tue con i componenti)',
-        "Register a home route (route_prefix + '/') showing the default theme" => "Registra una rotta home (route_prefix + '/') che mostra il tema di default",
+        "Register a home route (route_prefix + '/') showing the theme selected in /settings" => "Registra una rotta home (route_prefix + '/') che mostra il tema selezionato nelle impostazioni",
         'Desktop dashboard: a wider, more readable view of the board on its own route. Set to null/false to disable the route and the slide-out board tab.' => 'Dashboard da scrivania: una vista della board più larga e più leggibile, su una rotta sua. Metti null/false per disattivare la rotta e la linguetta laterale.',
         'Generic theme used by the home route and as fallback' => 'Tema generico usato dalla rotta home e come ripiego',
         'Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin())' => 'Temi generici aggiuntivi (slug => definizione, stesse chiavi di Alle80\Griglia\Themes::builtin())',

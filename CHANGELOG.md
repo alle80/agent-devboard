@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.87.7] - 2026-08-22
+
+### Changed
+- The active generic theme is selected in Settings and renders at the board home; per-theme `/<slug>` routes are removed, so `/dashboard` is the dashboard’s only route (task 564).
+
 ## [0.87.6] - 2026-08-22
 
 ### Fixed

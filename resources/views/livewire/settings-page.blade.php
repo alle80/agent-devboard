@@ -216,7 +216,7 @@
             @forelse ($installedThemes as $slug => $th)
                 <li class="flex items-center justify-between gap-3 py-2" wire:key="theme-{{ $slug }}">
                     <div class="min-w-0 flex-1">
-                        <a href="{{ \Alle80\Griglia\Themes::url($slug) }}" class="{{ $skin['label'] }} hover:underline"><x-griglia::theme-icon :theme="$th" /> {{ $th['label'] }}</a>
+                        <span class="{{ $skin['label'] }}"><x-griglia::theme-icon :theme="$th" /> {{ $th['label'] }}</span>
                         <p class="{{ $skin['help'] }}">{{ $slug }}{{ ! empty($th['version']) ? ' · v'.$th['version'] : '' }}{{ ! empty($th['author']) ? ' · '.$th['author'] : '' }}</p>
                     </div>
                     <button

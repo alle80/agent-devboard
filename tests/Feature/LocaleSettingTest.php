@@ -45,7 +45,7 @@ class LocaleSettingTest extends TestCase
         $settings->locale = 'it';
         $settings->save();
 
-        $this->get('/slate')->assertOk()->assertSee('Cerca…');
+        $this->get('/')->assertOk()->assertSee('Cerca…');
         $this->get('/settings')->assertOk()->assertSee('Lingua della board');
     }
 
@@ -56,7 +56,7 @@ class LocaleSettingTest extends TestCase
         $settings->save();
 
         $this->assertSame('', Locale::chosen());
-        $this->get('/slate')->assertOk()->assertSee('Search…');
+        $this->get('/')->assertOk()->assertSee('Search…');
     }
 
     public function test_the_settings_page_switches_language_and_refuses_unknown_ones(): void

@@ -39,7 +39,7 @@ The options of the `/settings` page: stored in the database, changed at run time
 | Setting | Type | What it does |
 |---|---|---|
 | **Board language** (`locale`) | select | Language of the board interface (menus, buttons, settings). Empty = the language of the application (APP_LOCALE). |
-| **Default style** (`default_style`) | select | Opening the site takes you straight to this style. |
+| **Theme** (`default_style`) | select | Theme used by the board at its main address. |
 | **Maximum title length** (`title_max_length`) | int | Maximum characters for the title of an item (10–200). |
 | **Automatic archiving (days)** (`auto_archive_days`) | int | Items completed more than N days ago are archived automatically every night. 0 = never. |
 | **AI description of images** (`ai_describe_images`) | bool | Every uploaded image is described by an AI model for the search (needs an API key in .env). |

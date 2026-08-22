@@ -1,10 +1,8 @@
 <?php
 
-use Alle80\Griglia\Http\Middleware\RedirectToDefaultStyle;
 use Alle80\Griglia\Http\Middleware\RememberStyle;
 use Alle80\Griglia\Livewire\SettingsPage;
 use Alle80\Griglia\Livewire\ThemedTodoList;
-use Alle80\Griglia\Themes;
 use Alle80\Griglia\Http\Controllers\ThemeAssetController;
 use Alle80\Griglia\Http\Controllers\PushSubscriptionController;
 use Alle80\Griglia\Http\Controllers\ServiceWorkerController;
@@ -19,8 +17,6 @@ Route::middleware(array_merge(array_values(array_diff((array) config('griglia.mi
     ->group(function () {
         if (config('griglia.home_route', true)) {
             Route::get('/', ThemedTodoList::class)
-                ->defaults('theme', Themes::default())
-                ->middleware(RedirectToDefaultStyle::class)
                 ->name('griglia.home');
         }
 
@@ -45,11 +41,6 @@ Route::middleware(array_merge(array_values(array_diff((array) config('griglia.mi
             Route::get($dash, \Alle80\Griglia\Livewire\DashboardTodoList::class)->name('griglia.dashboard');
         }
 
-        // Generic themes (built-in, config, registered and installed packs); unknown slugs → 404 in mount().
-        // Registered after the host app's routes, so its own paths always win.
-        Route::get('/{theme}', ThemedTodoList::class)
-            ->where('theme', '[a-z0-9][a-z0-9-]*')
-            ->name('griglia.theme');
     });
 
 // Web Push service worker (root scope)
