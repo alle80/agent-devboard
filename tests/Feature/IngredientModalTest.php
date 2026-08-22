@@ -123,8 +123,10 @@ class IngredientModalTest extends TestCase
 
     public function test_the_modal_shows_the_task_id_to_copy(): void
     {
-        // Same «id:N» as in the row and in griglia:check, in the title bar next to the state badge (task 510).
+        // Same «id:N» as in the row and in griglia:check, in the title bar next to the state badge (task 510):
+        // a group of its own (.modal-cmds-id), so the phone layout can move it to the commands line.
         Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id)
+            ->assertSeeHtml('class="modal-cmds-id')
             ->assertSeeHtml('data-copy="'.$this->todo->id.'"')
             ->assertSeeHtml('>id:'.$this->todo->id.'</button>');
     }

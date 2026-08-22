@@ -94,7 +94,7 @@ statistiche (tempo di lavoro, token, costo), l'accordion delle **skill** dell'ag
 fotocamera, incolla; descrizione AI quando è attiva), i sotto-task (Markdown, riordinabili), domande e
 risposte, il contesto del task ripreso. Nell'intestazione: badge di stato con etichetta testuale sempre
 visibile accanto all'icona (si tocca per cambiarlo), ‹ `3/7` › e l'id del task (`id:510`, si tocca per
-copiare il numero), **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con
+copiare il numero; sul telefono scende sulla riga dei comandi), **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con
 modifiche** (un nuovo
 task collegato).
 
@@ -188,7 +188,8 @@ L'intestazione del modale si impila su uno schermo stretto: il badge di stato co
 accanto all'icona e con ‹ `3/7` › resta sulla prima riga accanto al bottone di chiusura — sempre comprensibile
 e raggiungibile, qualunque cosa contenga la lista —, la tendina
 dell'agente prende la riga sotto, allineata a sinistra, e gli altri comandi (sposta, archivia, elimina) stanno
-sull'ultima riga, con bersagli abbastanza grandi per un pollice. La tendina ha una riga tutta sua su qualsiasi
+sull'ultima riga, aperta a sinistra dalla targhetta dell'id (`id:510`), che lascia la prima riga così il bottone di
+chiusura non va mai a capo; bersagli abbastanza grandi per un pollice. La tendina ha una riga tutta sua su qualsiasi
 schermo: in mezzo alle icone la sua etichetta («Predefinito (Claude Code)») finiva tagliata. Niente è nascosto
 dietro un menu, e niente esce dal bordo dello schermo.
 

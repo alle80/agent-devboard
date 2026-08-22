@@ -93,8 +93,8 @@ A task is read-only while it is **working**, so the request cannot change under 
 working badge to stop it and return it to waiting before editing; it can then be marked open to work again.
 
 The header uses the whole bar: on the left the **state badge**, whose text label stays beside its icon on
-every screen, with ‹ `3/7` › and the task id (`id:510`, tap to copy the number) — and on the right the
-commands: the agent that owns the task, **move to another list**, archive, delete, close, plus **resume with
+every screen, with ‹ `3/7` › and the task id (`id:510`, tap to copy the number; on a phone it moves down to
+the commands line) — and on the right the commands: the agent that owns the task, **move to another list**, archive, delete, close, plus **resume with
 changes** (a new linked task) on a completed one.
 
 When several agents are configured, the selected agent is shown on its own line below the task title. The native
@@ -177,7 +177,8 @@ Everything is designed for phones: rows on two levels, full-screen modal, full-w
 The modal header stacks on a narrow screen: the state badge keeps its text label beside the icon and,
 with ‹ `3/7` ›, stays on the first line next to the close button — always understandable and reachable, whatever the list
 holds — the agent selector takes the line below, aligned left, and the remaining commands (move, archive,
-delete) sit on the last line, with touch targets big enough for a thumb. The selector has a line of its
+delete) sit on the last line, led on the left by the task id chip (`id:510`), which leaves the first line so
+the close button never wraps; touch targets big enough for a thumb. The selector has a line of its
 own on every screen: among the icons its label («Default (Claude Code)») ended up clipped. Nothing is
 hidden behind a menu, and nothing runs off the edge of the screen.
 

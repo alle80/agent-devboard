@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.16] - 2026-08-22
+
+### Fixed
+- Modal title bar on phones: the task id chip (task 510) left no room for the close button, which wrapped onto a
+  second line. The chip is now a group of its own after the state and ‹ 3/7 ›: still beside them on wide screens,
+  while on a phone it leads the commands line (left of move/archive/delete) and the × stays on the first line.
+
 ## [0.87.15] - 2026-08-22
 
 ### Fixed

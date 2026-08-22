@@ -3,11 +3,12 @@
     Uses the modal component methods: stateKey(), toggleOpenToWork(), resumeTodo(), archiveTodo(), deleteTodo().
     Vars available from the modal: $todo, $readonly.
 
-    Two groups: «nav» (state + previous/next) pinned to the left edge of the title bar and «tools» (move,
-    archive, delete) pinned to the right, next to the close button — the bar spans the whole width instead
-    of piling up on the right (task 421). Below md the state name steps aside (the icon says it) and on a
-    phone «tools» drops to its own line — see .modal-cmds in griglia.css (task 399). The agent select is a
-    row of its own under the bar, left aligned, so its label is never clipped (task 440).
+    Three groups: «nav» (state + previous/next) pinned to the left edge of the title bar, «id» (the task id
+    chip, task 510) right after it, and «tools» (move, archive, delete) pinned to the right, next to the close
+    button — the bar spans the whole width instead of piling up on the right (task 421). On a phone «tools»
+    drops to its own line, led by the id chip, so the close button always stays on the first line — see
+    .modal-cmds in griglia.css (task 399, 510). The agent select is a row of its own under the bar, left
+    aligned, so its label is never clipped (task 440).
 --}}
 @php($state = $this->stateKey())
 <div class="modal-cmds flex min-w-0 items-center gap-1.5" style="font-size: 1rem; font-weight: 400; letter-spacing: normal; text-transform: none;">
@@ -45,8 +46,13 @@
             </button>
         @endif
 
-        {{-- Task id (task 510): the same «id:N» the agent prints in griglia:check and that --take/--done expect;
-             one tap copies the number (copy.js, data-copy). --}}
+    </div>
+
+    {{-- Task id (task 510): the same «id:N» the agent prints in griglia:check and that --take/--done expect;
+         one tap copies the number (copy.js, data-copy). A group of its own right after «nav»: beside ‹ 3/7 ›
+         on wide screens (margin-right: auto keeps it on the left), while on a phone it leads the commands
+         line instead of pushing the close button onto a second line — see .modal-cmds-id in griglia.css. --}}
+    <div class="modal-cmds-id flex shrink-0 items-center gap-1.5">
         <span class="db-sep mx-0.5 opacity-20" aria-hidden="true">|</span>
         <button type="button" class="db-id shrink-0" data-copy="{{ $todo->id }}"
                 title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}" aria-label="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}">id:{{ $todo->id }}</button>

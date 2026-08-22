@@ -61,9 +61,16 @@ body { -webkit-tap-highlight-color: transparent; }
        ‹ 3/7 › e la X, poi la tendina dell'agente (task 440) e infine gli altri comandi, bersagli da 36px. */
     .modal-head { flex-wrap: wrap; row-gap: 0.4rem !important; column-gap: 0.5rem !important; }
     .modal-cmds { display: contents; }
-    .modal-cmds-nav { order: 1; margin-right: auto; }
+    /* La prima riga è tutta di «nav» + X: la base di «nav» vale la larghezza meno la X, così la targhetta
+       dell'id (task 510) non ci sta mai e va a capo — senza, «In lavorazione | ‹ 2/4 › | id:551» spingeva la X
+       su una seconda riga. Se il contenuto è più largo della base (telefoni da 320px) vince il contenuto e la X
+       va a capo come prima. */
+    .modal-cmds-nav { order: 1; margin-right: auto; flex-basis: calc(100% - 3.25rem); }
     .modal-head > .modal-close { order: 2; }
-    .modal-cmds-tools { order: 4; flex-basis: 100%; justify-content: flex-end; gap: 0.15rem; }
+    /* Ultima riga: targhetta dell'id a sinistra (senza il separatore «|»), comandi a destra. */
+    .modal-cmds-id { order: 4; }
+    .modal-cmds-id .db-sep { display: none; }
+    .modal-cmds-tools { order: 5; flex: 1 1 auto; justify-content: flex-end; gap: 0.15rem; }
     .modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem; padding: 6px; }
     /* decorazioni sporgenti (fiammelle, salami, sigilli) fuori dal pannello a schermo intero */
     .modal-panel > .pointer-events-none.absolute { display: none; }
@@ -462,6 +469,9 @@ select.setting-input { appearance: auto; }
    in due — stato e navigazione ‹ 3/7 › sul bordo sinistro, comandi e chiusura sul destro — invece di
    ammassare tutto a destra lasciando vuota mezza riga. Su telefono vince .modal-cmds { display: contents }. */
 .modal-cmds { flex: 1 1 auto; justify-content: space-between; }
+/* La targhetta dell'id (task 510) sta accanto a ‹ 3/7 ›, non al centro della barra: il suo margine automatico
+   prende tutto lo spazio libero e spinge «tools» a destra. */
+.modal-cmds-id { margin-right: auto; }
 .db-state-trigger { gap: 0.4rem; }
 
 /* La tendina dell'agente ha una riga tutta sua sotto i comandi, allineata a sinistra (task 440): stretta
@@ -490,7 +500,8 @@ select.setting-input { appearance: auto; }
 .db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
 
 /* Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check, ultima targhetta della riga del titolo
-   (a destra) e nella testata del modale accanto a ‹ 3/7 ›. Un tocco copia il numero (copy.js, data-copy) e per
+   (a destra) e nella testata del modale accanto a ‹ 3/7 › (sul telefono in testa alla riga dei comandi, .modal-cmds-id).
+   Un tocco copia il numero (copy.js, data-copy) e per
    un attimo la targhetta dice «copiato». Il bersaglio del dito è più largo di quel che si vede (::before). */
 .db-id {
     position: relative; display: inline-flex; align-items: center;

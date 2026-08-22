@@ -179,25 +179,33 @@ class ModalCommandsTest extends TestCase
     public function test_the_modal_header_keeps_every_command_on_screen_on_a_phone(): void
     {
         // Task 399: at 360px the command row was clipped — the close button included. The header is now
-        // two groups: nav (state + ‹ 3/7 ›) stays beside the close button, the tools drop to a second line.
+        // three groups: nav (state + ‹ 3/7 ›) stays beside the close button, the task id chip (task 510) and
+        // the tools share the last line — the chip used to sit inside nav, where it pushed the close button
+        // onto a second line; nav's flex-basis now fills the first line so the chip always wraps.
         $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
         Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
 
         $html = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
 
         $nav = strpos($html, 'modal-cmds-nav');
+        $id = strpos($html, 'modal-cmds-id');
         $tools = strpos($html, 'modal-cmds-tools');
         $close = strpos($html, 'modal-close');
         $this->assertNotFalse($nav, 'the state badge and the prev/next arrows are their own group');
+        $this->assertNotFalse($id, 'the task id chip is its own group');
         $this->assertNotFalse($tools, 'move, archive and delete are their own group');
         $this->assertNotFalse($close, 'the close button carries the hook the mobile layout orders');
-        $this->assertTrue($nav < $tools && $tools < $close, 'DOM order: nav, tools, close');
+        $this->assertTrue($nav < $id && $id < $tools && $tools < $close, 'DOM order: nav, id, tools, close');
         $this->assertStringContainsString('aria-label="Close"', $html);
 
         $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
         $this->assertStringContainsString('.modal-cmds { display: contents; }', $css);
-        $this->assertStringContainsString('.modal-cmds-tools { order: 4; flex-basis: 100%;', $css);
+        $this->assertStringContainsString('.modal-cmds-nav { order: 1; margin-right: auto; flex-basis: calc(100% - 3.25rem); }', $css, 'nav fills the first line: the id chip cannot share it');
         $this->assertStringContainsString('.modal-head > .modal-close { order: 2; }', $css);
+        $this->assertStringContainsString('.modal-cmds-id { order: 4; }', $css);
+        $this->assertStringContainsString('.modal-cmds-id .db-sep { display: none; }', $css);
+        $this->assertStringContainsString('.modal-cmds-tools { order: 5; flex: 1 1 auto; justify-content: flex-end;', $css, 'the tools share the last line with the id chip');
+        $this->assertStringContainsString('.modal-cmds-id { margin-right: auto; }', $css, 'on wide screens the chip stays beside ‹ 3/7 ›');
         $this->assertStringContainsString('.modal-head .db-cmd { min-width: 2.25rem; min-height: 2.25rem;', $css);
     }
 
