@@ -61,6 +61,18 @@ class SettingsPageTest extends TestCase
         $this->assertStringContainsString('wire:model.live.change="values.app.title_max_length"', $html);
     }
 
+    public function test_notification_settings_are_grouped_in_the_notifications_tab(): void
+    {
+        $html = Livewire::test(SettingsPage::class)->html();
+        $notificationPanel = substr($html, strpos($html, 'id="panel-notif"'));
+        $notificationPanel = substr($notificationPanel, 0, strpos($notificationPanel, 'id="panel-themes"'));
+
+        $this->assertStringContainsString("toggle('agent', 'notify_on_done')", $notificationPanel);
+        $this->assertStringContainsString('values.agent.daily_summary_time', $notificationPanel);
+        $this->assertStringContainsString("toggle('app', 'notify_in_app')", $notificationPanel);
+        $this->assertStringNotContainsString("toggle('agent', 'commit_after_task')", $notificationPanel);
+    }
+
     public function test_default_style_redirects_home(): void
     {
         $this->get('/')->assertOk();

@@ -212,6 +212,7 @@ return [
     'settings_optimization_intro' => 'Ways to make the agent spend fewer tokens (most of the cost is the chat context re-read at every step: fewer steps and shorter outputs = fewer tokens).',
     'settings_app_title' => 'App',
     'settings_app_intro' => 'Behaviour of the board.',
+    'settings_notifications_intro' => 'Choose which events notify you, through which channels, and when to receive a summary.',
     'local_banner' => 'Local mode: no authentication — anyone reaching this address can use the board. Bind it to localhost.',
     'agent_of_list' => 'Agent for this list',
     'agent_of_task' => 'Agent for this task',

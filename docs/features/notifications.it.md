@@ -2,7 +2,7 @@
 
 La board avvisa da sola il proprietario della lista quando l'agente **chiude un task** o **fa una domanda**.
 Entrambi gli eventi seguono le impostazioni `agent` `notify_on_done` / `notify_on_question`: se le spegni,
-tace anche la board. Canali (Impostazioni → App):
+tace anche la board. Tutte le impostazioni di eventi, riepilogo e canali sono raccolte in **Impostazioni → Notifiche**:
 
 - **Campanella in-app** — pallino dei non letti, elenco, il clic apre il task (cambiando lista se serve),
   «segna tutto come letto»; dal vivo.
@@ -17,7 +17,7 @@ I link diretti `?list=ID&open=ID` aprono un task partendo da una notifica.
 !!! tip "Due strati, un interruttore solo"
     Gli strati sono due: la board ti avvisa per conto suo (campanella, Web Push, mail) e il tuo agente può
     avvisarti *anche* dal suo canale quando chiude un task o chiede qualcosa. Viaggiano su strade diverse ma
-    condividono gli interruttori: `notify_on_done` e `notify_on_question` (Impostazioni → Agente) li leggono
+    condividono gli interruttori: `notify_on_done` e `notify_on_question` (Impostazioni → Notifiche) li leggono
     sia la board — vedi `Notify::todoCompleted()` / `Notify::questionAsked()` — sia l'agente, quindi
     spegnerne uno zittisce quell'evento su entrambi gli strati.
 

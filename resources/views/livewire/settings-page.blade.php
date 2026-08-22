@@ -6,14 +6,11 @@
         <a href="{{ $skin['home'] }}" class="{{ $skin['back'] }} inline-flex items-center gap-1"><x-griglia::icon name="arrow-left" /> {{ __('griglia::t.back_to_list') }}</a>
     </div>
 
-    @php($icons = ['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'])
+    @php($icons = ['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board', 'notif' => 'bell'])
     @php($tabs = [])
     @foreach ($sections as $group => [$title, $intro, $fields])
         @php($tabs[] = ['key' => $group, 'label' => $title, 'icon' => $icons[$group] ?? 'board', 'count' => count($fields)])
     @endforeach
-    @unless (\Alle80\Griglia\Mode::isLocal())
-        @php($tabs[] = ['key' => 'notif', 'label' => __('griglia::t.notif.title'), 'icon' => 'bell', 'count' => null])
-    @endunless
     @php($tabs[] = ['key' => 'themes', 'label' => __('griglia::t.themes.title'), 'icon' => 'palette', 'count' => null])
 
     {{-- Un gruppo alla volta a ogni larghezza (task 329): su desktop l'indice sta a sinistra,
@@ -65,15 +62,17 @@
 
     @foreach ($sections as $group => [$title, $intro, $fields])
         <section id="panel-{{ $group }}" class="{{ $skin['card'] }} mb-6" aria-labelledby="sec-{{ $group }}" x-bind:class="tab === '{{ $group }}' ? '' : 'hidden'">
-            <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
+            <h2 id="sec-{{ $group }}" class="{{ $skin['h2'] }} inline-flex items-center gap-2"><x-griglia::icon :name="['agent' => 'bot', 'optimization' => 'bolt', 'app' => 'board', 'notif' => 'bell'][$group] ?? 'board'" size="1em" /> {{ $title }}</h2>
             <p class="{{ $skin['sub'] }} mb-3">{{ $intro }} {{ __('griglia::t.settings_saves') }}</p>
 
             <ul class="{{ $skin['divide'] }}">
-                @foreach ($fields as $key => $f)
+                @foreach ($fields as $fieldId => $f)
                     @php([$label, $help, $type] = $f)
                     @php($opts = $f[3] ?? [])
-                    @php($id = "s-{$group}-{$key}")
-                    <li class="flex gap-3 py-3 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $group }}-{{ $key }}">
+                    @php($fieldGroup = $f[4] ?? $group)
+                    @php($key = $f[5] ?? $fieldId)
+                    @php($id = "s-{$fieldGroup}-{$key}")
+                    <li class="flex gap-3 py-3 {{ $type === 'bool' ? 'flex-row items-start justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4' }}" wire:key="setting-{{ $fieldGroup }}-{{ $key }}">
                         <div class="min-w-0 flex-1">
                             <label for="{{ $id }}" class="{{ $skin['label'] }}">{{ $label }}</label>
                             <p class="{{ $skin['help'] }}">{{ $help }}</p>
@@ -87,18 +86,18 @@
                                 type="button"
                                 id="{{ $id }}"
                                 role="switch"
-                                aria-checked="{{ $values[$group][$key] ? 'true' : 'false' }}"
+                                aria-checked="{{ $values[$fieldGroup][$key] ? 'true' : 'false' }}"
                                 aria-label="{{ $label }}"
-                                wire:click="toggle('{{ $group }}', '{{ $key }}')"
-                                class="setting-switch mt-1 {{ $values[$group][$key] ? 'is-on' : '' }}"
+                                wire:click="toggle('{{ $fieldGroup }}', '{{ $key }}')"
+                                class="setting-switch mt-1 {{ $values[$fieldGroup][$key] ? 'is-on' : '' }}"
                             >
                                 <span class="setting-knob"></span>
-                                <span class="sr-only">{{ $values[$group][$key] ? __('griglia::t.yes') : __('griglia::t.no') }}</span>
+                                <span class="sr-only">{{ $values[$fieldGroup][$key] ? __('griglia::t.yes') : __('griglia::t.no') }}</span>
                             </button>
                         @elseif ($type === 'select')
                             <select
                                 id="{{ $id }}"
-                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $fieldGroup }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-auto sm:max-w-[55%] sm:min-w-[10rem] lg:max-w-[60%]"
                             >
                                 @foreach ($opts as $v => $lbl)
@@ -111,21 +110,21 @@
                                 type="number"
                                 inputmode="numeric"
                                 min="{{ $opts['min'] ?? 0 }}" max="{{ $opts['max'] ?? 9999 }}"
-                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $fieldGroup }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-28 text-right sm:mt-1"
                             >
                         @elseif ($type === 'time')
                             <input
                                 id="{{ $id }}"
                                 type="time"
-                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $fieldGroup }}.{{ $key }}"
                                 class="setting-input {{ $skin['input'] }} w-36 sm:mt-1"
                             >
                         @else
                             <input
                                 id="{{ $id }}"
                                 type="text"
-                                wire:model.live.change="values.{{ $group }}.{{ $key }}"
+                                wire:model.live.change="values.{{ $fieldGroup }}.{{ $key }}"
                                 placeholder="{{ __('griglia::t.settings_empty_default') }}"
                                 autocomplete="off"
                                 class="setting-input {{ $skin['input'] }} w-full sm:mt-1 sm:w-48"
@@ -138,18 +137,18 @@
                     @if ($key === 'task_mode')
                         {{-- Reso sempre, mostrato via Alpine quando è "multitasking": la sola @if lato
                              server non veniva inserita dal morph di Livewire al cambio della select. --}}
-                        <li class="pb-3" wire:key="warn-{{ $group }}-{{ $key }}"
-                            x-data x-show="$wire.get('values.{{ $group }}.{{ $key }}') === 'multitasking'" x-cloak>
+                        <li class="pb-3" wire:key="warn-{{ $fieldGroup }}-{{ $key }}"
+                            x-data x-show="$wire.get('values.{{ $fieldGroup }}.{{ $key }}') === 'multitasking'" x-cloak>
                             <p class="db-setting-warn">{{ __('griglia::t.settings_options.task_mode_warn') }}</p>
                         </li>
                     @endif
                     @if ($key === 'autonomy')
                         {{-- Preview of the context block written for the chosen question level (task 499): every level
                              is rendered, Alpine shows the selected one, so it follows the select before the save lands. --}}
-                        <li class="pb-3" wire:key="preview-{{ $group }}-{{ $key }}" x-data>
+                        <li class="pb-3" wire:key="preview-{{ $fieldGroup }}-{{ $key }}" x-data>
                             <p class="{{ $skin['label'] }} inline-flex items-center gap-1 text-xs"><x-griglia::icon name="book" /> {{ __('griglia::t.question_level.preview_title') }}</p>
                             @foreach ($questionPreviews as $level => $body)
-                                <p class="{{ $skin['help'] }} db-ctx-preview mt-1 rounded border border-current/15 px-2 py-2 text-xs whitespace-pre-wrap break-words" x-show="$wire.get('values.{{ $group }}.{{ $key }}') === '{{ $level }}'" x-cloak>{{ $body }}</p>
+                                <p class="{{ $skin['help'] }} db-ctx-preview mt-1 rounded border border-current/15 px-2 py-2 text-xs whitespace-pre-wrap break-words" x-show="$wire.get('values.{{ $fieldGroup }}.{{ $key }}') === '{{ $level }}'" x-cloak>{{ $body }}</p>
                             @endforeach
                             <p class="{{ $skin['help'] }} mt-1 text-xs">{{ __('griglia::t.question_level.preview_help') }} <a href="{{ route('griglia.context') }}" class="inline-flex items-center gap-1 hover:underline"><x-griglia::icon name="book" /> {{ __('griglia::t.ctx.menu') }}</a></p>
                         </li>
@@ -159,10 +158,10 @@
         </section>
     @endforeach
 
-    {{-- Web Push on this device (the channel toggles live in the App group above) --}}
+    {{-- Web Push controls and diagnostics for this device --}}
     @unless (\Alle80\Griglia\Mode::isLocal())
     <section
-        id="panel-notif"
+        id="panel-notif-device"
         class="{{ $skin['card'] }} mb-6"
         aria-labelledby="sec-notif"
         x-bind:class="tab === 'notif' ? '' : 'hidden'"

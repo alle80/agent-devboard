@@ -166,6 +166,26 @@ class SettingsPage extends Component
     {
         $style = RememberStyle::current();
         $skin = Themes::settingsSkin($style);
+        $agentFields = AgentSettings::fields();
+        $appFields = AppSettings::fields();
+        $notificationKeys = [
+            'agent' => ['notify_on_done', 'notify_on_question', 'daily_summary', 'daily_summary_time'],
+            'app' => ['notify_in_app', 'notify_webpush', 'notify_mail'],
+        ];
+        $sectionFields = static function (string $group, array $fields): array {
+            $out = [];
+            foreach ($fields as $key => $field) {
+                $out[$group.'.'.$key] = [...$field, $group, $key];
+            }
+            return $out;
+        };
+        $notificationFields = [];
+        foreach ($notificationKeys as $group => $keys) {
+            $source = $group === 'agent' ? $agentFields : $appFields;
+            $notificationFields += $sectionFields($group, array_intersect_key($source, array_flip($keys)));
+        }
+        $agentFields = array_diff_key($agentFields, array_flip($notificationKeys['agent']));
+        $appFields = array_diff_key($appFields, array_flip($notificationKeys['app']));
 
         return view('griglia::livewire.settings-page', [
             'skin' => $skin,
@@ -173,9 +193,10 @@ class SettingsPage extends Component
             'pushSubscriptions' => method_exists(auth()->user() ?? new \stdClass, 'pushSubscriptions') ? auth()->user()->pushSubscriptions()->count() : 0,
             'questionPreviews' => \Alle80\Griglia\Support\QuestionLevel::previews(), // level => context block (task 499)
             'sections' => [
-                'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), __('griglia::t.settings_agent_intro'), AgentSettings::fields()],
-                'optimization' => [__('griglia::t.settings_optimization_title'), __('griglia::t.settings_optimization_intro'), OptimizationSettings::fields()],
-                'app' => [__('griglia::t.settings_app_title'), __('griglia::t.settings_app_intro'), AppSettings::fields()],
+                'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), __('griglia::t.settings_agent_intro'), $sectionFields('agent', $agentFields)],
+                'optimization' => [__('griglia::t.settings_optimization_title'), __('griglia::t.settings_optimization_intro'), $sectionFields('optimization', OptimizationSettings::fields())],
+                'app' => [__('griglia::t.settings_app_title'), __('griglia::t.settings_app_intro'), $sectionFields('app', $appFields)],
+                'notif' => [__('griglia::t.notif.title'), __('griglia::t.settings_notifications_intro'), $notificationFields],
             ],
         ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Impostazioni'])->title(__('griglia::t.settings_title'));
     }
