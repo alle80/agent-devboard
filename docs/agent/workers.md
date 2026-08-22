@@ -90,6 +90,7 @@ Each instance optionally reads `~/.config/griglia-worker/<agent-key>.env`:
 GRIGLIA_WORKER_DRIVER=codex
 GRIGLIA_WORKER_INTERVAL=10
 GRIGLIA_WORKER_RETRY_DELAY=30
+GRIGLIA_WORKER_MAX_PARALLEL=2
 GRIGLIA_WORKER_TRANSPORT=docker
 GRIGLIA_WORKER_CONTAINER=laravel-dev-app
 GRIGLIA_WORKER_REPO=/srv/my-project
@@ -118,6 +119,7 @@ so a single choice, exported once for the machine, covers the worker and the hel
 | `--repo` | `GRIGLIA_WORKER_REPO` | current directory |
 | `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | the agent key |
 | `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
+| `--max-parallel` | `GRIGLIA_WORKER_MAX_PARALLEL` | `2` |
 | `--model` | `GRIGLIA_WORKER_MODEL` | the agent CLI's own default |
 | `--effort` | `GRIGLIA_WORKER_EFFORT` | the agent CLI's own default |
 
@@ -159,10 +161,11 @@ the workflow needs.
 
 ## Behaviour and testing
 
-The worker polls the current board state, so it also finds work that was already open before a restart. It
-prefers an already-working task, otherwise the first open task in board order. One `flock` per repository/agent pair prevents
-duplicate sessions. While an agent runs, the worker keeps polling; a board Stop terminates that child process.
-After the agent exits, the service returns to polling and systemd restarts the worker after failures.
+The worker polls the current board state, so it also finds work that was already open before a restart. In
+`ordered` mode it runs exactly one session. In `multitasking` mode it runs up to `--max-parallel` sessions
+(default 2), one per eligible task; reduce the limit when tasks can touch the same files. One `flock` per
+repository/agent pair prevents duplicate worker processes, while the worker tracks every child by task id.
+A board Stop terminates only that task process. After a child exits, its slot becomes available.
 
 Check configuration without launching an agent:
 

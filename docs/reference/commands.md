@@ -37,13 +37,14 @@ Lists the open requests of the agent list (see config griglia.agent_list)
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argument / option | What it does | Default |
 |---|---|---|
 | `--all` | Also show completed items and items not open to work | flag |
 | `--json` | Machine-readable output | flag |
+| `--worker-json` | Machine-readable tasks plus worker scheduling settings | flag |
 | `--take` | Id of the todo to mark as working (take in charge) | — |
 | `--done` | Id of the todo to mark as completed | — |
 | `--comment` | Agent comment saved on the todo of --take/--done (claude_comment) | — |

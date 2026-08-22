@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.83.1] - 2026-08-22
+
+### Fixed
+- **Persistent workers now execute multitasking instead of only describing it.** In `multitasking` mode a worker
+  runs up to `GRIGLIA_WORKER_MAX_PARALLEL` independent agent sessions (default 2), while `ordered` remains
+  strictly serial. Each task is tracked and stopped independently; the board exposes scheduling mode through
+  the machine-readable worker contract (task 501).
+
 ## [0.83.0] - 2026-08-22
 
 ### Added

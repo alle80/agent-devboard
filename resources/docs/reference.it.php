@@ -54,6 +54,7 @@ return [
         'Lists the open requests of the agent list (see config griglia.agent_list)' => "Elenca le richieste aperte della lista dell'agente (vedi la config griglia.agent_list)",
         'Also show completed items and items not open to work' => 'Mostra anche gli elementi completati e quelli non ancora open to work',
         'Machine-readable output' => 'Output leggibile da un programma',
+        'Machine-readable tasks plus worker scheduling settings' => 'Task e impostazioni di pianificazione del worker in formato leggibile da un programma',
         'Id of the todo to mark as working (take in charge)' => 'Id del todo da mettere in lavorazione (presa in carico)',
         'Id of the todo to mark as completed' => 'Id del todo da segnare come completato',
         'Agent comment saved on the todo of --take/--done (claude_comment)' => "Commento dell'agente salvato sul todo di --take/--done (claude_comment)",

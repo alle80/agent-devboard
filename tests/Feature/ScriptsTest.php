@@ -44,6 +44,9 @@ class ScriptsTest extends TestCase
         $this->assertStringContainsString('[args.php, *artisan]', $worker);
         $this->assertStringContainsString('hashlib.sha256(str(repo).encode()).hexdigest()[:12]', $worker);
         $this->assertStringContainsString('lock_path(args.repo, args.agent)', $worker);
+        $this->assertStringContainsString('GRIGLIA_WORKER_MAX_PARALLEL', $worker);
+        $this->assertStringContainsString('state.get("task_mode") == "multitasking"', $worker);
+        $this->assertStringContainsString('running: dict[int, subprocess.Popen]', $worker);
         // The model and the reasoning effort of the dispatched session are configurable (task 475)
         foreach (['GRIGLIA_WORKER_MODEL', 'GRIGLIA_WORKER_EFFORT'] as $variable) {
             $this->assertStringContainsString('os.getenv("'.$variable.'")', $worker, "the worker must read $variable");

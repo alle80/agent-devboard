@@ -37,13 +37,14 @@ Elenca le richieste aperte della lista dell'agente (vedi la config griglia.agent
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argomento / opzione | Cosa fa | Default |
 |---|---|---|
 | `--all` | Mostra anche gli elementi completati e quelli non ancora open to work | flag |
 | `--json` | Output leggibile da un programma | flag |
+| `--worker-json` | Task e impostazioni di pianificazione del worker in formato leggibile da un programma | flag |
 | `--take` | Id del todo da mettere in lavorazione (presa in carico) | — |
 | `--done` | Id del todo da segnare come completato | — |
 | `--comment` | Commento dell'agente salvato sul todo di --take/--done (claude_comment) | — |

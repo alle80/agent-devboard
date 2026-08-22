@@ -94,6 +94,7 @@ Ogni istanza legge, se c'è, `~/.config/griglia-worker/<chiave-agente>.env`:
 GRIGLIA_WORKER_DRIVER=codex
 GRIGLIA_WORKER_INTERVAL=10
 GRIGLIA_WORKER_RETRY_DELAY=30
+GRIGLIA_WORKER_MAX_PARALLEL=2
 GRIGLIA_WORKER_TRANSPORT=docker
 GRIGLIA_WORKER_CONTAINER=laravel-dev-app
 GRIGLIA_WORKER_REPO=/srv/my-project
@@ -123,6 +124,7 @@ flag, comodo per un lancio una tantum:
 | `--repo` | `GRIGLIA_WORKER_REPO` | cartella corrente |
 | `--driver codex\|claude\|custom` | `GRIGLIA_WORKER_DRIVER` | la chiave dell'agente |
 | `--interval`, `--retry-delay` | `GRIGLIA_WORKER_INTERVAL`, `GRIGLIA_WORKER_RETRY_DELAY` | `10`, `30` |
+| `--max-parallel` | `GRIGLIA_WORKER_MAX_PARALLEL` | `2` |
 | `--model` | `GRIGLIA_WORKER_MODEL` | il default della CLI dell'agente |
 | `--effort` | `GRIGLIA_WORKER_EFFORT` | il default della CLI dell'agente |
 
@@ -164,11 +166,12 @@ concedi solo i permessi sul progetto che servono al flusso di lavoro.
 
 ## Comportamento e prove
 
-Il worker interroga lo stato attuale della board, quindi trova anche il lavoro che era già aperto prima di un
-riavvio. Preferisce un task già in lavorazione, altrimenti il primo task aperto nell'ordine della board. Un
-`flock` per coppia repository/agente impedisce sessioni doppie senza interferire con altre applicazioni. Mentre l'agente lavora il worker continua a interrogare la
-board; uno Stop dalla board termina quel processo figlio. Quando l'agente esce, il servizio torna a
-interrogare, e systemd riavvia il worker dopo un errore.
+Il worker interroga lo stato corrente della board, quindi trova anche il lavoro già aperto prima di un riavvio.
+In modalità `ordered` esegue esattamente una sessione. In modalità `multitasking` esegue fino a
+`--max-parallel` sessioni (2 per default), una per task idoneo; riduci il limite quando i task possono modificare
+gli stessi file. Un `flock` per coppia repository/agente impedisce worker duplicati, mentre il worker tiene
+traccia di ogni processo figlio per task. Uno Stop termina solo il processo di quel task; quando un figlio esce,
+il suo slot torna disponibile.
 
 Per controllare la configurazione senza lanciare un agente:
 

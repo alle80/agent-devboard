@@ -21,6 +21,7 @@ class GrigliaCheck extends Command
     protected $signature = 'griglia:check
         {--all : Also show completed items and items not open to work}
         {--json : Machine-readable output}
+        {--worker-json : Machine-readable tasks plus worker scheduling settings}
         {--take= : Id of the todo to mark as working (take in charge)}
         {--done= : Id of the todo to mark as completed}
         {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
@@ -196,11 +197,11 @@ class GrigliaCheck extends Command
         $todos = $workable($list);
         $planTodos = $planLists->mapWithKeys(fn ($l) => [$l->id => $workable($l)])->filter(fn ($c) => $c->isNotEmpty());
 
-        if ($this->option('json')) {
+        if ($this->option('json') || $this->option('worker-json')) {
             $all = $todos;
             foreach ($planTodos as $c) $all = $all->concat($c);
             // Every task carries its full resume chain (oldest steps included): same history the human output prints
-            $this->line($all->map(function (Todo $t) {
+            $items = $all->map(function (Todo $t) {
                 $row = $t->toArray();
                 $row['resume_chain'] = $t->resumeChain()->map(fn (Todo $p) => [
                     'id' => $p->id,
@@ -211,7 +212,11 @@ class GrigliaCheck extends Command
                 ])->values()->all();
 
                 return $row;
-            })->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            })->values();
+            $payload = $this->option('worker-json')
+                ? ['task_mode' => app(AgentSettings::class)->task_mode, 'items' => $items]
+                : $items;
+            $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
             $this->line('⚡ optimization: '.$opt->summary());

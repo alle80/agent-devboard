@@ -98,6 +98,18 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertJson($out);
     }
 
+    public function test_worker_json_includes_scheduling_mode_and_items(): void
+    {
+        $settings = app(\Alle80\Griglia\Settings\AgentSettings::class);
+        $settings->task_mode = 'multitasking';
+        $settings->save();
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true]);
+
+        $payload = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame('multitasking', $payload['task_mode']);
+        $this->assertSame($this->todo->id, $payload['items'][0]['id']);
+    }
+
     public function test_taking_a_completed_task_is_refused(): void
     {
         // A closed task stays closed: to carry on there is «resume», which makes a new linked task (task 348).
