@@ -16,7 +16,8 @@ tests/          orchestra/testbench + phpunit
 
 ```bash
 composer install
-composer lint                      # Laravel Pint, check only\ncomposer test                      # testbench, sqlite in memory
+composer lint                      # Laravel Pint + Larastan level 5
+composer test                      # testbench, sqlite in memory
 vendor/bin/testbench serve         # a bare Laravel app with the package mounted
 npm install && npm run build       # precompiled assets → public/build
 php artisan griglia:docs-build     # the documentation site
@@ -29,6 +30,10 @@ invalid state transitions. `tests/Feature/ReviewUiTest.php` covers assigning the
 The suite covers migrations, per-user scoping, the Livewire components, `griglia:check` / `griglia:watch`,
 the theme registry and zip packs, translation parity between `en` and `it`, and the broadcast event.
 GitHub Actions runs it on PHP 8.3 and 8.4.
+
+`composer lint` runs formatting checks first and then `vendor/bin/phpstan analyse` on `src/`. Larastan is configured
+at level 5 without a baseline. The small, counted exception list in `phpstan-ignores.neon` documents framework
+inference gaps individually; unmatched exceptions fail the analysis instead of silently becoming permanent debt.
 
 ## Releasing
 

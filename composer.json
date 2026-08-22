@@ -56,6 +56,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/ai": "^0.11.0",
         "laravel/pint": "^1.24",
         "orchestra/testbench": "^10.0|^11.0",
         "phpunit/phpunit": "^11.5|^12.0"
@@ -66,7 +68,10 @@
         }
     },
     "scripts": {
-        "lint": "vendor/bin/pint --test",
+        "lint": [
+            "vendor/bin/pint --test",
+            "vendor/bin/phpstan analyse"
+        ],
         "test": "vendor/bin/phpunit"
     },
     "config": {

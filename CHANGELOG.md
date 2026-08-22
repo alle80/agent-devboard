@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.88.4] - 2026-08-22
+
+### Added
+- Added Larastan level 5 analysis for `src/`, without a baseline, to the standard `composer lint` quality gate;
+  framework inference exceptions are individually documented and counted (task 519).
+
 ## [0.88.3] - 2026-08-22
 
 
@@ -1865,7 +1872,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.87.1...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.88.4...HEAD
+[0.88.4]: https://github.com/alle80/griglia/compare/v0.88.3...v0.88.4
 [0.85.0]: https://github.com/alle80/griglia/compare/v0.84.0...v0.85.0
 [0.82.0]: https://github.com/alle80/griglia/compare/v0.81.4...v0.82.0
 [0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3
