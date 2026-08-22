@@ -3,6 +3,9 @@
 The docs are plain Markdown in `docs/` with a `mkdocs.yml` (theme **Material for MkDocs**) at the package root.
 The site is **bilingual**: English is the base language, Italian pages sit next to them as `page.it.md` —
 see [Translations](translations.md).
+\nThe small version label below the footer is filled at build time by `docs_hooks.py`: it reads the first
+released version in `CHANGELOG.md`, so the published site follows each release without a second version field
+to update.
 
 ## Prerequisites
 

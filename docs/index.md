@@ -6,7 +6,7 @@ hero_text: >-
   Queue your requests as tasks; your coding agent takes them, asks questions, reports progress and
   closes them — and you follow the whole thing live, from the sofa or from your phone.
 hero_quickstart: Quickstart
-hero_install: Install
+hero_documentation: Documentation
 hero_meta: Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …
 hide:
   - navigation

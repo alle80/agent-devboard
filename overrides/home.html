@@ -5,7 +5,7 @@
   Used by docs/index.md through its `template:` front matter.
 
   Every string comes from the front matter of the page that uses the template (hero_title, hero_text,
-  hero_quickstart, hero_install, hero_meta), so the Italian home (index.it.md) translates the hero
+  hero_quickstart, hero_documentation, hero_meta), so the Italian home (index.it.md) translates the hero
   by itself, with no Jinja conditional on the locale.
 #}
 
@@ -23,7 +23,7 @@
       {% set ext = '/' if config.use_directory_urls else '.html' %}
       <div class="gr-hero__actions">
         <a href="{{ ('getting-started/quickstart' ~ ext) | url }}" class="md-button md-button--primary">{{ page.meta.hero_quickstart or 'Quickstart' }}</a>
-        <a href="{{ ('getting-started/installation' ~ ext) | url }}" class="md-button">{{ page.meta.hero_install or 'Install' }}</a>
+        <a href="{{ ('features/index' ~ ext) | url }}" class="md-button">{{ page.meta.hero_documentation or 'Documentation' }}</a>
         <a href="https://github.com/alle80/griglia" class="md-button gr-hero__ghost">GitHub</a>
       </div>
       <p class="gr-hero__meta">{{ page.meta.hero_meta or 'Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …' }}</p>

@@ -4,3 +4,10 @@
   Theme overrides for the Griglia site.
   The home page hero is built on top of this file (see docs/index.md).
 #}
+
+{% block footer %}
+  {{ super() }}
+  <div class="gr-docs-version" aria-label="Griglia documentation version">
+    Griglia v{{ config.extra.griglia_version }}
+  </div>
+{% endblock %}

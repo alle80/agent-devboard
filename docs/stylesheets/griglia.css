@@ -195,3 +195,13 @@
   .gr-hero__title { font-size: 2.4rem; }
   .gr-hero__text { font-size: .85rem; }
 }
+
+.gr-docs-version {
+  padding: .35rem .8rem;
+  border-top: 1px solid rgb(127 174 148 / .22);
+  background: var(--md-footer-bg-color--dark);
+  color: var(--md-footer-fg-color--lighter);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  text-align: center;
+}

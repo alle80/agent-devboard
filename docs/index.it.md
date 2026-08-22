@@ -6,7 +6,7 @@ hero_text: >-
   Metti in coda le tue richieste come task; il tuo agente le prende, fa domande, racconta come sta andando e
   le chiude — e tu segui tutto dal vivo, dal divano o dal telefono.
 hero_quickstart: Primi cinque minuti
-hero_install: Installa
+hero_documentation: Documentazione
 hero_meta: Laravel 12/13 · Livewire 4 · MIT · funziona con Claude Code, Codex CLI, Gemini CLI, …
 hide:
   - navigation

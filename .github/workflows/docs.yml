@@ -12,6 +12,7 @@ on:
       - 'docs/**'
       - 'overrides/**'
       - 'mkdocs.yml'
+      - 'docs_hooks.py'
       - 'CHANGELOG.md'
       - 'requirements-docs.txt'
       - '.github/workflows/docs.yml'

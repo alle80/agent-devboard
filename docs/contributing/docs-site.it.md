@@ -3,6 +3,8 @@
 La documentazione è Markdown semplice dentro `docs/`, con un `mkdocs.yml` (tema **Material for MkDocs**) alla
 radice del package. Il sito è **bilingue**: l'inglese è la lingua base, le pagine italiane stanno accanto come
 `pagina.it.md` — vedi [Traduzioni](translations.md).
+\nLa piccola versione sotto il footer viene compilata da `docs_hooks.py`: legge la prima versione rilasciata in
+`CHANGELOG.md`, così il sito pubblicato segue ogni release senza un secondo numero di versione da aggiornare.
 
 ## Cosa serve
 
