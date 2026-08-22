@@ -50,7 +50,9 @@ si apre con la scelta:
   package e in `lang/vendor/griglia` pubblicato: pubblica le tue traduzioni e compaiono qui.
 
 La scelta vale per ogni pagina della board e per le richieste Livewire dietro modali e salvataggi, date
-comprese («3 ore fa»). Non tocca la console: `griglia:check` continua a parlare all'agente in inglese.
+comprese («3 ore fa») e testi dei temi generici (il bottone «aggiungi», i segnaposto «scrivi qui…», il
+contatore — vedi [Temi](../features/themes.md#testi-e-lingue)). Non tocca la console: `griglia:check`
+continua a parlare all'agente in inglese.
 
 Aggiungere una lingua è una cartella accanto a `en` e `it` — vedi
 [Traduzioni](../contributing/translations.md).

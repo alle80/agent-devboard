@@ -18,6 +18,16 @@ return [
         'invalid_request' => 'La richiesta non è valida.',
     ],
 
+    // Testi dei temi generici: lo «slate» integrato e i pacchetti che non li definiscono (vedi Themes::text())
+    'theme' => [
+        'counter' => 'fatti',
+        'done_all' => 'tutto fatto',
+        'add' => 'aggiungi',
+        'stamp' => 'fatto',
+        'confirm' => 'elimino «:title»?',
+        'placeholder' => 'scrivi qui…',
+    ],
+
     'insert_here' => 'Inserisci qui',
     'drag_to_reorder' => 'Trascina per riordinare',
     'rename' => 'Rinomina',

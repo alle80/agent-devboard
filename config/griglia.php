@@ -58,7 +58,7 @@ return [
     // Generic theme used by the home route and as fallback
     'default_theme' => 'slate',
 
-    // Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin())
+    // Extra generic themes (slug => definition, same keys as Alle80\Griglia\Themes::builtin(); a built-in slug is overridden key by key)
     'themes' => [],
 
     // User model owning the lists

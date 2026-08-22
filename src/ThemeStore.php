@@ -2,7 +2,9 @@
 
 namespace Alle80\Griglia;
 
+use Alle80\Griglia\Support\Locale;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use RuntimeException;
 use ZipArchive;
@@ -112,10 +114,17 @@ class ThemeStore
         $def = array_intersect_key($def, array_flip(self::KEYS));
         $def['slug'] = $slug;
         $def += [
-            'label' => Str::headline($slug), 'icon' => '🎨', 'fonts' => '', 'claim' => '', 'counter' => 'done',
-            'done_all' => '', 'add' => '+', 'stamp' => 'DONE', 'footer' => '', 'confirm' => 'Delete «:title»?',
-            'placeholder' => '…', 'deco' => [],
+            'label' => Str::headline($slug), 'icon' => '🎨', 'fonts' => '', 'claim' => '', 'footer' => '', 'deco' => [],
+            // texts the pack leaves out: the translated ones of the built-in theme (board language)
+            'counter' => 'griglia::t.theme.counter', 'done_all' => 'griglia::t.theme.done_all', 'add' => 'griglia::t.theme.add',
+            'stamp' => 'griglia::t.theme.stamp', 'confirm' => 'griglia::t.theme.confirm', 'placeholder' => 'griglia::t.theme.placeholder',
         ];
+        foreach (Themes::TEXT_KEYS as $key) {
+            // a translation key, a literal, or a per-locale map {"en": "…", "it": "…"} (see Themes::text()); anything else is dropped
+            $def[$key] = is_array($def[$key])
+                ? array_filter($def[$key], fn ($text, $locale) => is_string($text) && is_string($locale), ARRAY_FILTER_USE_BOTH)
+                : (is_scalar($def[$key]) ? (string) $def[$key] : '');
+        }
         $def['deco'] = array_values(array_filter((array) $def['deco'], 'is_string'));
         if (! empty($def['icon_img'])) {
             // only files inside the pack (no external URLs: tracking / mixed content)
@@ -269,6 +278,11 @@ class ThemeStore
                 $zip->addFile($f->getPathname(), $f->getRelativePathname());
             }
         } else {
+            // Texts given as translation keys (the built-in theme) are written as per-locale maps: the
+            // exported theme.json is readable and stays multilingual
+            foreach (Themes::TEXT_KEYS as $key) {
+                $def[$key] = static::exportText($def[$key] ?? '');
+            }
             if (! empty($def['icon_img']) && str_starts_with($def['icon_img'], '/') && is_file(public_path($def['icon_img']))) {
                 $zip->addFile(public_path($def['icon_img']), 'images/'.basename($def['icon_img']));
                 $def['icon_img'] = 'images/'.basename($def['icon_img']);
@@ -280,6 +294,20 @@ class ThemeStore
         $zip->close();
 
         return $outFile;
+    }
+
+    /** A translation key becomes {locale: text} for every language of the board; literals and maps stay as they are. */
+    protected static function exportText(mixed $value): mixed
+    {
+        if (! is_string($value) || $value === '' || ! Lang::has($value)) {
+            return $value;
+        }
+        $texts = [];
+        foreach (Locale::available() as $locale) {
+            $texts[$locale] = Themes::text($value, $locale);
+        }
+
+        return $texts;
     }
 
     /** All top-level CSS rules whose selector mentions .theme-<slug> (no nesting/@media support needed here). */

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.15] - 2026-08-22
+
+### Fixed
+- The texts of the generic themes — the «add a task» button, the «write here…» placeholder of the insert form
+  and of the sub-tasks, the counter, the «done» stamp, the delete question — now follow the language of the
+  board: the built-in Slate (and the defaults of packs that leave them out) use the package translations
+  instead of English literals, so an Italian board no longer shows «add a task» / «write here…» (task 516).
+
+### Added
+- Theme definitions (`config('griglia.themes')`, `Themes::registerTheme()`, `theme.json` of a pack) may give
+  each text as a translation key, a literal or a per-locale map (`{"en": "add", "it": "aggiungi"}`);
+  `Themes::get()` resolves them (`Themes::text()`), a config or runtime entry for a built-in theme overrides
+  it key by key, and `griglia:theme-export` writes the keys of a built-in theme as per-locale maps (task 516).
+
 ## [0.87.14] - 2026-08-22
 
 ### Fixed

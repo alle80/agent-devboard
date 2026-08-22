@@ -67,6 +67,52 @@ class ThemesTest extends TestCase
         $this->assertSame('x', Themes::settingsSkin('manga')['layout']);
     }
 
+    /** The words a theme prints follow the board language: keys are translated, literals stay, maps pick the locale (task 516). */
+    public function test_theme_texts_follow_the_board_language(): void
+    {
+        $themes = new \ReflectionProperty(Themes::class, 'themes');
+        $registered = $themes->getValue();
+        try {
+            app()->setLocale('en');
+            $this->assertSame('add a task', Themes::get('slate')['add']);
+            $this->assertSame('write here…', Themes::get('slate')['placeholder']);
+            $this->assertSame('griglia::t.theme.add', Themes::all()['slate']['add'], 'all() keeps the definition as written');
+            app()->setLocale('it');
+            $this->assertSame('aggiungi', Themes::get('slate')['add']);
+            $this->assertSame('scrivi qui…', Themes::get('slate')['placeholder']);
+            $this->assertSame('elimino «:title»?', Themes::get('slate')['confirm']);
+            $this->assertSame('fatti', Themes::get('slate')['counter']);
+
+            // literals are used as they are; per-locale maps: current locale → app.fallback_locale → first entry
+            Themes::registerTheme('mixed', ['label' => 'Mixed', 'claim' => 'Keep calm. Grill on.', 'add' => ['en' => 'Go', 'it' => 'Vai'], 'stamp' => ['fr' => 'Fini'], 'counter' => ['en' => 'swum'], 'confirm' => 7, 'placeholder' => null]);
+            $t = Themes::get('mixed');
+            $this->assertSame(['Keep calm. Grill on.', 'Vai', 'Fini', 'swum', '7', ''], [$t['claim'], $t['add'], $t['stamp'], $t['counter'], $t['confirm'], $t['placeholder']]);
+            app()->setLocale('en');
+            $this->assertSame('Go', Themes::get('mixed')['add']);
+
+            // a runtime (or config) entry for a built-in slug overrides it key by key
+            Themes::registerTheme('slate', ['icon_img' => '/my/slate.svg']);
+            config(['griglia.themes' => ['slate' => ['claim' => 'griglia::t.theme.done_all']]]);
+            $slate = Themes::get('slate');
+            $this->assertSame(['/my/slate.svg', 'add a task', 'all done', 'Slate'], [$slate['icon_img'], $slate['add'], $slate['claim'], $slate['label']]);
+            $this->get('/')->assertOk()->assertSee('add a task');
+
+            // packs: missing texts fall back to the translated ones; maps and literals are kept, junk is dropped
+            ThemeStore::install($this->makePack('ocean', ['add' => ['en' => 'Dive', 'it' => 'Tuffati', 'xx' => ['no']], 'stamp' => 'SPLASH', 'confirm' => ['bad'], 'counter' => 12]));
+            app()->setLocale('it');
+            $ocean = Themes::get('ocean');
+            $this->assertSame(['Tuffati', 'SPLASH', '', '12', 'scrivi qui…', 'tutto fatto', 'deep blue'], [$ocean['add'], $ocean['stamp'], $ocean['confirm'], $ocean['counter'], $ocean['placeholder'], $ocean['done_all'], $ocean['claim']]);
+            $this->assertSame(['en' => 'Dive', 'it' => 'Tuffati'], Themes::all()['ocean']['add']);
+            app()->setLocale('en');
+            $this->assertSame('Dive', Themes::get('ocean')['add']);
+            $this->assertTrue(ThemeStore::uninstall('ocean'));
+        } finally {
+            $themes->setValue(null, $registered);
+            config(['griglia.themes' => []]);
+            app()->setLocale('en');
+        }
+    }
+
     public function test_install_uninstall_and_asset_route(): void
     {
         $def = ThemeStore::install($this->makePack());
@@ -131,6 +177,10 @@ class ThemesTest extends TestCase
         $def = json_decode($zip->getFromName('theme.json'), true);
         $zip->close();
         $this->assertSame('slate', $def['slug']);
+        // translation keys are exported as per-locale maps: readable and still multilingual once imported
+        $this->assertSame(['en' => 'add a task', 'it' => 'aggiungi'], $def['add']);
+        $this->assertSame(['en' => 'write here…', 'it' => 'scrivi qui…'], $def['placeholder']);
+        $this->assertSame('', $def['claim']);
 
         // slate is built-in → import must be refused; a renamed copy installs fine
         $this->artisan('griglia:theme-import', ['zip' => $out])->assertFailed();
@@ -141,6 +191,10 @@ class ThemesTest extends TestCase
         $zip->close();
         $this->artisan('griglia:theme-import', ['zip' => $out])->assertSuccessful();
         $this->assertTrue(Themes::has('slate-copy'));
+        $this->assertSame('add a task', Themes::get('slate-copy')['add']);
+        app()->setLocale('it');
+        $this->assertSame('aggiungi', Themes::get('slate-copy')['add']);
+        app()->setLocale('en');
     }
 
     public function test_css_is_sanitised_and_packs_have_limits(): void

@@ -25,7 +25,14 @@ class Themes
     /** Settings-page skins for dedicated styles (slug => skin). */
     protected static array $skins = [];
 
-    /** Built-in generic theme shipped with the package. */
+    /**
+     * Text fields of a theme definition: the words the board prints (claim and footer of the page, counter
+     * «3/5 done», done_all, the add button, the stamp of completed tasks, the delete confirm, the placeholder
+     * of the insert form and of the sub-tasks). Localized by get() — see text().
+     */
+    public const TEXT_KEYS = ['claim', 'counter', 'done_all', 'add', 'stamp', 'footer', 'confirm', 'placeholder'];
+
+    /** Built-in generic theme shipped with the package: its texts are translation keys, so they follow the board language. */
     public static function builtin(): array
     {
         return [
@@ -35,13 +42,13 @@ class Themes
                 'icon_img' => '/vendor/griglia/images/slate/slate.svg',
                 'fonts' => 'jetbrains-mono:400,700',
                 'claim' => '',
-                'counter' => 'done',
-                'done_all' => 'all done',
-                'add' => 'add a task',
-                'stamp' => 'done',
+                'counter' => 'griglia::t.theme.counter',
+                'done_all' => 'griglia::t.theme.done_all',
+                'add' => 'griglia::t.theme.add',
+                'stamp' => 'griglia::t.theme.stamp',
                 'footer' => '',
-                'confirm' => 'delete «:title»?',
-                'placeholder' => 'write here…',
+                'confirm' => 'griglia::t.theme.confirm',
+                'placeholder' => 'griglia::t.theme.placeholder',
                 'deco' => [],
             ],
         ];
@@ -62,11 +69,24 @@ class Themes
         static::$skins[$slug] = $skin;
     }
 
-    /** All generic themes: built-in + config('griglia.themes') + runtime registrations. */
+    /**
+     * All generic themes: built-in + config('griglia.themes') + runtime registrations + installed packs,
+     * as defined (texts not localized: see get()). A config or runtime entry whose slug is a built-in theme
+     * overrides it key by key (e.g. only `icon_img`), so the rest — the translated texts included — stays;
+     * other slugs replace each other entirely.
+     */
     public static function all(): array
     {
+        $builtin = static::builtin();
+        $all = $builtin;
+        foreach ([(array) config('griglia.themes', []), static::$themes] as $layer) {
+            foreach ($layer as $slug => $definition) {
+                $all[$slug] = isset($builtin[$slug]) ? array_merge($all[$slug], (array) $definition) : (array) $definition;
+            }
+        }
+
         // Installed packs (storage) override themes registered in code, never the built-in ones
-        return array_merge(static::builtin(), (array) config('griglia.themes', []), static::$themes, array_diff_key(ThemeStore::installed(), static::builtin()));
+        return array_merge($all, array_diff_key(ThemeStore::installed(), $builtin));
     }
 
     public static function has(string $slug): bool
@@ -74,9 +94,42 @@ class Themes
         return isset(static::all()[$slug]);
     }
 
+    /** Definition of a theme as the views use it: texts resolved for the current locale. */
     public static function get(string $slug): array
     {
-        return static::all()[$slug];
+        return static::localize(static::all()[$slug]);
+    }
+
+    /** The definition with every text field (TEXT_KEYS) resolved for the current locale. */
+    public static function localize(array $definition): array
+    {
+        foreach (self::TEXT_KEYS as $key) {
+            if (array_key_exists($key, $definition)) {
+                $definition[$key] = static::text($definition[$key]);
+            }
+        }
+
+        return $definition;
+    }
+
+    /**
+     * Text of a theme field in a locale (the current one by default). A definition may give it as:
+     *  - a translation key — `griglia::t.theme.add`, the built-in way: the board language applies;
+     *  - a literal — used as it is (a JSON translation of the host app, if any, applies);
+     *  - a per-locale map — `['en' => 'add', 'it' => 'aggiungi']`: the locale asked for, then
+     *    `app.fallback_locale`, then the first entry.
+     */
+    public static function text(mixed $value, ?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+        if (is_array($value)) {
+            $value = $value[$locale] ?? $value[(string) config('app.fallback_locale', 'en')] ?? (reset($value) ?: '');
+
+            return is_string($value) ? $value : '';
+        }
+        $value = is_scalar($value) ? (string) $value : '';
+
+        return $value === '' ? '' : (string) __($value, [], $locale);
     }
 
     public static function default(): string

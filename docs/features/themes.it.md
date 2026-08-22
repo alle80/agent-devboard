@@ -26,6 +26,28 @@ php artisan griglia:theme-export slate --css-from=resources/css/app.css
 
 Nel repository, dentro `resources/themes/`, c'è un pacchetto di esempio (`pollon`).
 
+## Testi e lingue
+
+Oltre ai colori, un tema definisce le poche parole che la board stampa: `claim` e `footer` (testa e piede
+della pagina), `counter` («3/5 *fatti*»), `done_all`, `add` (il bottone che apre il form di inserimento),
+`stamp` (sui task completati), `confirm` (la domanda di eliminazione; `:title` viene sostituito) e
+`placeholder` (form di inserimento e sotto-task). Ognuna può essere:
+
+- una **chiave di traduzione** — lo Slate integrato usa `griglia::t.theme.add`,
+  `griglia::t.theme.placeholder`, … così i suoi testi seguono la
+  [lingua della board](../configuration/index.md#la-lingua-della-board) (un `lang/vendor/griglia/<locale>/t.php`
+  pubblicato può riformularli);
+- un **testo letterale** — usato così com'è, nella lingua in cui è scritto (il `pollon` di esempio parla solo
+  italiano);
+- una **mappa per lingua** — `{"en": "add", "it": "aggiungi"}`: la board sceglie la lingua corrente, poi
+  `app.fallback_locale`, poi la prima voce.
+
+I testi che un pacchetto non definisce ricadono su quelli tradotti di Slate. `griglia:theme-export` scrive le
+chiavi di un tema integrato come mappe per lingua, così il `theme.json` esportato si legge e resta bilingue
+una volta importato. Una voce di `config('griglia.themes')` o di `Themes::registerTheme()` con lo slug di un
+tema integrato lo sovrascrive **chiave per chiave**: `['slate' => ['icon_img' => '/images/slate.svg']]` cambia
+l'icona e tiene i testi tradotti.
+
 ## Vedi anche
 
 - [Sicurezza](../operations/security.md) — perché i pacchetti sono trattati come contenuto non fidato.

@@ -50,7 +50,9 @@ The board speaks the languages it is translated into — English (base) and Ital
   the published `lang/vendor/griglia`: publish your own translations and they appear here.
 
 The choice applies to every board page and to the Livewire requests behind modals and saves, dates included
-(«3 hours ago»). It does not touch the console: `griglia:check` keeps talking to the agent in English.
+(«3 hours ago») and the texts of the generic themes (the «add a task» button, the «write here…» placeholders,
+the counter — see [Themes](../features/themes.md#texts-and-languages)). It does not touch the console:
+`griglia:check` keeps talking to the agent in English.
 
 Adding a language is a folder next to `en` and `it` — see
 [Translations](../contributing/translations.md).

@@ -304,6 +304,10 @@ built-in **Slate** theme. Add more with `config('griglia.themes')` or
 
 Generic themes are selected in **/settings → App → Theme** and the board always remains at `/`; theme slugs are not public board routes. The desktop dashboard is available only at `/dashboard` (or the configured `dashboard_route`).
 
+The words a theme prints (the add button, the placeholders, the counter, the delete question…) can be
+translation keys, literals or per-locale maps: the built-in Slate follows the language of the board, and a
+config/runtime entry for a built-in slug overrides it key by key (e.g. only `icon_img`).
+
 Fully custom styles (own components/views) plug in via `Themes::registerStyle()` /
 `Themes::registerSkin()`.
 

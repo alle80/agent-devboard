@@ -22,7 +22,7 @@ La decide chi installa il package; le opzioni che si cambiano a runtime stanno n
 | `home_route` | — | `true` | Registra una rotta home (route_prefix + '/') che mostra il tema selezionato nelle impostazioni |
 | `dashboard_route` | `GRIGLIA_DASHBOARD_ROUTE` | `'/dashboard'` | Dashboard da scrivania: una vista della board più larga e più leggibile, su una rotta sua. Metti null/false per disattivare la rotta e la linguetta laterale. |
 | `default_theme` | — | `'slate'` | Tema generico usato dalla rotta home e come ripiego |
-| `themes` | — | _array_ | Temi generici aggiuntivi (slug => definizione, stesse chiavi di Alle80\Griglia\Themes::builtin()) |
+| `themes` | — | _array_ | Temi generici aggiuntivi (slug => definizione, stesse chiavi di Alle80\Griglia\Themes::builtin(); uno slug integrato viene sovrascritto chiave per chiave) |
 | `user_model` | `GRIGLIA_USER_MODEL` | `'App\\Models\\User'` | Modello utente proprietario delle liste |
 | `attachments_disk` | `GRIGLIA_ATTACHMENTS_DISK` | `'local'` | Disco su cui salvare le immagini allegate. Il disco privato `local` è il default sicuro. |
 | `attachments_via_controller` | `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER` | `true` | Serve gli allegati attraverso il controller autorizzato, che rispetta il proprietario. Tienilo acceso con i dischi privati; spegnilo solo quando `attachments_disk` punta di proposito a un disco pubblico. |

@@ -18,6 +18,16 @@ return [
         'invalid_request' => 'The request is not valid.',
     ],
 
+    // Texts of the generic themes: the built-in «slate» and the packs that leave them out (see Themes::text())
+    'theme' => [
+        'counter' => 'done',
+        'done_all' => 'all done',
+        'add' => 'add a task',
+        'stamp' => 'done',
+        'confirm' => 'delete «:title»?',
+        'placeholder' => 'write here…',
+    ],
+
     // List
     'insert_here' => 'Insert here',
     'drag_to_reorder' => 'Drag to reorder',

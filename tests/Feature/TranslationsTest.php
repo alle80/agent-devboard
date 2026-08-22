@@ -2,7 +2,9 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Livewire\ThemedTodoList;
 use Alle80\Griglia\Tests\TestCase;
+use Livewire\Livewire;
 
 class TranslationsTest extends TestCase
 {
@@ -33,9 +35,12 @@ class TranslationsTest extends TestCase
     public function test_translations_are_used_by_the_ui(): void
     {
         $this->actingAsUser();
-        $this->get('/')->assertOk()->assertSee('Search…');
+        $this->get('/')->assertOk()->assertSee('Search…')->assertSee('add a task');
+        Livewire::test(ThemedTodoList::class)->call('startInsert', 1)->assertSee('write here…');
 
+        // the texts of the theme (add button, placeholders, counter) follow the board language too (task 516)
         app()->setLocale('it');
-        $this->get('/')->assertOk()->assertSee('Cerca…');
+        $this->get('/')->assertOk()->assertSee('Cerca…')->assertSee('aggiungi')->assertDontSee('add a task');
+        Livewire::test(ThemedTodoList::class)->call('startInsert', 1)->assertSee('scrivi qui…')->assertDontSee('write here…');
     }
 }
