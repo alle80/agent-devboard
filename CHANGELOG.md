@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.85.2] - 2026-08-22
+
+### Changed
+- `/settings` now groups notification events, daily-summary scheduling, delivery channels and device controls
+  in the Notifications tab instead of splitting them between Agent and App (task 503).
+
+### Fixed
+- **Task state labels stay visible beside their icons on every screen size.** The modal no longer hides the
+  textual state on phones, so waiting, open-to-work, working, question and done do not rely on colour and icon
+  recognition alone (task 508).
+
 ## [0.85.1] - 2026-08-22
 
 ### Fixed

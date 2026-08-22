@@ -82,8 +82,8 @@ sub-tasks (Markdown, sortable), questions/answers, resume-from context.
 A task is read-only while it is **working**, so the request cannot change under the agent’s feet. Tap the
 working badge to stop it and return it to waiting before editing; it can then be marked open to work again.
 
-The header uses the whole bar: on the left the **state badge** with ‹ `3/7` › — from a tablet up the badge
-carries its name — and on the right the commands: the agent that owns the task, **move to another list**,
+The header uses the whole bar: on the left the **state badge**, whose text label stays beside its icon on
+every screen, with ‹ `3/7` › — and on the right the commands: the agent that owns the task, **move to another list**,
 archive, delete, close, plus **resume with changes** (a new linked task) on a completed one.
 
 ### Saving happens by itself
@@ -151,8 +151,8 @@ Two settings in `/settings` govern it:
 
 Everything is designed for phones: rows on two levels, full-screen modal, full-width notification panel, Web Push.
 
-The modal header stacks on a narrow screen: the state badge (icon only — its name needs a wider panel)
-with ‹ `3/7` › stays on the first line next to the close button — always reachable, whatever the list
+The modal header stacks on a narrow screen: the state badge keeps its text label beside the icon and,
+with ‹ `3/7` ›, stays on the first line next to the close button — always understandable and reachable, whatever the list
 holds — the agent selector takes the line below, aligned left, and the remaining commands (move, archive,
 delete) sit on the last line, with touch targets big enough for a thumb. The selector has a line of its
 own on every screen: among the icons its label («Default (Claude Code)») ended up clipped. Nothing is

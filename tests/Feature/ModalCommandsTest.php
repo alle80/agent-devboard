@@ -204,7 +204,8 @@ class ModalCommandsTest extends TestCase
     public function test_the_modal_header_uses_the_whole_bar(): void
     {
         // Task 421: everything used to be pushed against the right edge (ml-auto), half the bar empty and
-        // the agent label cut mid-word. The two groups now sit on the two edges and the state says its name.
+        // the agent label cut mid-word. The two groups now sit on the two edges and the state says its name
+        // at every viewport width: icon-only state controls proved too cryptic on phones (task 508).
         $a = Todo::create(['title' => 'A', 'order' => 1, 'checklist_id' => $this->list->id]);
 
         $html = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
@@ -215,8 +216,8 @@ class ModalCommandsTest extends TestCase
 
         $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
         $this->assertStringContainsString('.modal-cmds { flex: 1 1 auto; justify-content: space-between; }', $css);
-        $this->assertStringContainsString('.db-state-name { display: none;', $css, 'the label steps aside on a narrow panel');
-        $this->assertStringContainsString('.db-state-name { display: inline; }', $css, 'and comes back from md, where there is room');
+        $this->assertStringContainsString('.db-state-name { display: inline;', $css, 'the textual state remains visible beside the icon');
+        $this->assertStringNotContainsString('.db-state-name { display: none;', $css, 'the textual state must not disappear on phones');
         $this->assertStringContainsString('.db-agent-select { max-width: 16rem; }', $css, 'the agent label has room from md');
     }
 
