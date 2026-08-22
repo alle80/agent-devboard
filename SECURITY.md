@@ -13,8 +13,7 @@ and noted in the `CHANGELOG.md` under **Security**.
   update requests) and, optionally, `canAccessGriglia()` / `griglia.access_gate`. Lists, tasks, attachments and
   notifications are always scoped to the owner.
 - **Administration**: global settings, the agent context and theme packs are admin-only (`Alle80\Griglia\Admin`:
-  `canManageGriglia()`, `griglia.admin_gate`, `GRIGLIA_ADMINS`, or the first user). The pre-rename hooks
-  `canAccessDevboard()` / `canManageDevboard()` are still honoured when the current ones are absent.
+  `canManageGriglia()`, `griglia.admin_gate`, `GRIGLIA_ADMINS`, or the first user).
   Switching to local mode from the UI is refused outside `APP_ENV=local`.
 - **Local mode** has no authentication by design: use it only on a machine that is not exposed (banner on every page).
 - **Theme packs** (zip) are treated as untrusted: no SVG, sanitised CSS (no `@import`/external urls), size and entry

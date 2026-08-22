@@ -13,7 +13,7 @@ L'ultima revisione del codice sorgente, con le sue priorità, sta nella
   attraverso l'ambito dell'utente corrente: non c'è una rotta che restituisca la board di qualcun altro.
 - **L'amministrazione è un gate separato.** Impostazioni, contesto dell'agente e pacchetti di temi sono solo
   per amministratori — `canManageGriglia()`, una ability del Gate o `GRIGLIA_ADMINS`; di default solo il primo
-  utente registrato (il vecchio `canManageDevboard()` è ancora onorato). Vedi [Accessi e modalità](../configuration/access.md).
+  utente registrato. Vedi [Accessi e modalità](../configuration/access.md).
 - **Gli upload sono validati**: tipo e dimensione controllati, immagini ricodificate, salvate di default sul
   disco privato `local` e servite solo attraverso il controller che rispetta il proprietario. Tieni
   `GRIGLIA_ATTACHMENTS_VIA_CONTROLLER=true`.

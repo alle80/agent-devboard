@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.88.1] - 2026-08-22
+
+### Removed
+- Removed support for the pre-Griglia user-model access hooks. Applications must now use
+  `canAccessGriglia()` and `canManageGriglia()`; the former Devboard hook names are no longer called.
+
 ## [0.88.0] - 2026-08-22
 
 ### Added

@@ -20,14 +20,12 @@ return [
     // one global set of lists (a board on your own machine). Overridable from /settings (AppSettings mode).
     'mode' => env('GRIGLIA_MODE', 'server'),
 
-    // Server mode: who may open the board. If the user model has `canAccessGriglia(): bool` it decides (the
-    // pre-rename `canAccessDevboard()` is still honoured); otherwise this Gate ability (e.g. 'access-griglia')
-    // if set; otherwise every authenticated user.
+    // Server mode: who may open the board. If the user model has `canAccessGriglia(): bool` it decides;
+    // otherwise this Gate ability (e.g. 'access-griglia') if set; otherwise every authenticated user.
     'access_gate' => env('GRIGLIA_ACCESS_GATE'),
 
     // Server mode: Gate ability deciding who may ADMINISTER the board (settings, agent context, theme packs).
-    // It is consulted after `canManageGriglia(): bool` on the user model (the pre-rename `canManageDevboard()`
-    // is still honoured) and before `admins`.
+    // It is consulted after `canManageGriglia(): bool` on the user model and before `admins`.
     'admin_gate' => env('GRIGLIA_ADMIN_GATE'),
 
     // Server mode: the administrators themselves, as ids or e-mails (GRIGLIA_ADMINS="1,alice@example.com").

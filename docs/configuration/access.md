@@ -18,9 +18,6 @@ The package replaces the plain `auth` middleware with its own gate. Restrict acc
 - `canAccessGriglia(): bool` on your user model, or
 - `GRIGLIA_ACCESS_GATE=<ability>` (a Gate ability of your app).
 
-The pre-rename hook `canAccessDevboard()` is still honoured when `canAccessGriglia()` is absent, but new
-installations should use the current name.
-
 ## Who administers it
 
 Settings, the agent context and theme packs are **administrator-only**:
@@ -29,8 +26,7 @@ Settings, the agent context and theme packs are **administrator-only**:
 - `GRIGLIA_ADMIN_GATE=<ability>`, or
 - `GRIGLIA_ADMINS="1,alice@example.com"` (ids or e-mails).
 
-By default only the **first registered user** is an administrator. As for access, the old
-`canManageDevboard()` is still honoured as a fallback.
+By default only the **first registered user** is an administrator.
 
 ## Theme packs are code
 

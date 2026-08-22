@@ -18,9 +18,6 @@ Il package sostituisce il semplice middleware `auth` con un proprio gate. Puoi r
 - `canAccessGriglia(): bool` sul tuo modello utente, oppure
 - `GRIGLIA_ACCESS_GATE=<ability>` (una ability del Gate della tua applicazione).
 
-Il vecchio hook `canAccessDevboard()`, da prima della rinomina, è ancora onorato quando manca
-`canAccessGriglia()`, ma le nuove installazioni devono usare il nome attuale.
-
 ## Chi la amministra
 
 Impostazioni, contesto dell'agente e pacchetti di temi sono **solo per amministratori**:
@@ -29,8 +26,7 @@ Impostazioni, contesto dell'agente e pacchetti di temi sono **solo per amministr
 - `GRIGLIA_ADMIN_GATE=<ability>`, oppure
 - `GRIGLIA_ADMINS="1,alice@example.com"` (id o indirizzi e-mail).
 
-Di default è amministratore solo il **primo utente registrato**. Come per l'accesso, il vecchio
-`canManageDevboard()` è ancora onorato come ripiego.
+Di default è amministratore solo il **primo utente registrato**.
 
 ## I pacchetti di temi sono codice
 

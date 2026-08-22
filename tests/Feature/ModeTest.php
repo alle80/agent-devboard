@@ -43,18 +43,6 @@ class ModeTest extends TestCase
         });
         $this->get('/stats')->assertForbidden();
 
-        // the pre-rename canAccessDevboard() is still honoured when the current name is absent
-        $this->actingAs(new class extends User {
-            public function canAccessDevboard(): bool { return false; }
-        });
-        $this->get('/stats')->assertForbidden();
-
-        // …but canAccessGriglia() wins when both are defined
-        $this->actingAs(new class extends User {
-            public function canAccessGriglia(): bool { return true; }
-            public function canAccessDevboard(): bool { return false; }
-        });
-        $this->get('/stats')->assertOk();
     }
 
     public function test_access_middleware_is_persistent_on_livewire_updates(): void

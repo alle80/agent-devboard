@@ -32,8 +32,6 @@ class GrigliaAccess
 
         if (method_exists($user, 'canAccessGriglia')) {
             abort_unless((bool) $user->canAccessGriglia(), 403, __('griglia::t.errors.forbidden'));
-        } elseif (method_exists($user, 'canAccessDevboard')) {   // pre-rename hook, still honoured
-            abort_unless((bool) $user->canAccessDevboard(), 403, __('griglia::t.errors.forbidden'));
         } elseif ($gate = config('griglia.access_gate')) {
             abort_unless(Gate::forUser($user)->allows($gate), 403, __('griglia::t.errors.forbidden'));
         }

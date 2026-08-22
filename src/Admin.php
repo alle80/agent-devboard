@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Gate;
 
 /**
  * Who may administer the board (global settings, agent context, theme packs): in local mode everybody;
- * in server mode, in this order, `canManageGriglia(): bool` on the user model if defined (the pre-rename
- * `canManageDevboard()` is still honoured), else the Gate ability `griglia.admin_gate` if set, else
+ * in server mode, in this order, `canManageGriglia(): bool` on the user model if defined, else the Gate
+ * ability `griglia.admin_gate` if set, else
  * membership in `griglia.admins` (ids or e-mails, GRIGLIA_ADMINS) if set, else the first registered user
  * (lowest id) only.
  */
@@ -23,9 +23,6 @@ class Admin
         }
         if (method_exists($user, 'canManageGriglia')) {
             return (bool) $user->canManageGriglia();
-        }
-        if (method_exists($user, 'canManageDevboard')) {   // pre-rename hook, still honoured
-            return (bool) $user->canManageDevboard();
         }
         if ($gate = config('griglia.admin_gate')) {
             return Gate::forUser($user)->allows($gate);

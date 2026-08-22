@@ -192,8 +192,6 @@ switched off.
 - **Administrators**: settings, agent context and theme packs are admin-only — `canManageGriglia(): bool`,
   or `GRIGLIA_ADMIN_GATE=<ability>`, or `GRIGLIA_ADMINS="1,alice@example.com"`; by default only the first
   registered user.
-- The pre-rename hooks `canAccessDevboard()` / `canManageDevboard()` are still honoured when the current
-  ones are absent.
 - **Theme packs** are code-like content: admin-only install, SVG refused, CSS sanitised (no
   `@import`/external urls), size caps (5 MB/file, 20 MB, 200 files), assets served sandboxed.
 
