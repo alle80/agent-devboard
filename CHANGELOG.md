@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.88.5] - 2026-08-22
+
+### Added
+- Generated plans now assign pertinent installed skills to each task, filtered by the plan's default agent
+  (task 610).
+
 ## [0.88.4] - 2026-08-22
 
 ### Added

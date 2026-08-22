@@ -12,7 +12,8 @@ because describing a goal takes a paragraph, not a line:
 What you type is kept as a draft, so leaving the page and coming back finds it where you left it, and
 cancelling asks before throwing it away. Pressing *Build the plan* hands the goal to the AI SDK agent
 `PlanBuilder`, which splits it into ordered tasks with notes and sub-tasks, **chained** (`depends_on_id`),
-and takes you back to the board. Without an AI provider the list gets a single «Build the plan» task for the
+and takes you back to the board. For each task it may also select pertinent, genuinely useful skills from the
+ones installed for the plan's default agent; unavailable skills are never assigned. Without an AI provider the list gets a single «Build the plan» task for the
 agent; if the AI fails, no half-created list is left behind.
 
 ## Changing a plan

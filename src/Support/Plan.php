@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Support;
 
+use Alle80\Griglia\Agent;
 use Alle80\Griglia\Ai\Agents\PlanBuilder;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
@@ -33,16 +34,17 @@ class Plan
     }
 
     /** Ask the model for the tasks of the plan. Returns [] on failure (logged). */
-    public static function tasks(string $prompt): array
+    public static function tasks(string $prompt, ?string $agent = null): array
     {
+        $skills = Skills::forAgent($agent);
         try {
             if (self::$resolver) {
-                return self::normalize((self::$resolver)($prompt));
+                return self::normalize((self::$resolver)($prompt), array_keys($skills));
             }
-            $response = (new PlanBuilder)->prompt($prompt);
+            $response = (new PlanBuilder($skills))->prompt($prompt);
             $data = method_exists($response, 'toArray') ? $response->toArray() : (array) $response;
 
-            return self::normalize($data['tasks'] ?? $data);
+            return self::normalize($data['tasks'] ?? $data, array_keys($skills));
         } catch (\Throwable $e) {
             Log::warning('griglia: plan generation failed: '.$e->getMessage());
 
@@ -57,7 +59,8 @@ class Plan
     public static function build(Checklist $list, string $prompt): int
     {
         $list->update(['plan_prompt' => $prompt]);
-        $tasks = self::available() ? self::tasks($prompt) : [];
+        $agent = $list->agent && isset(Agent::all()[$list->agent]) ? $list->agent : Agent::defaultKey();
+        $tasks = self::available() ? self::tasks($prompt, $agent) : [];
         $order = (int) $list->todos()->whereNull('archived_at')->max('order');
         if (! $tasks) {
             $list->todos()->create([
@@ -75,6 +78,7 @@ class Plan
                 'notes' => $t['notes'] !== '' ? $t['notes'] : null,
                 'order' => ++$order,
                 'depends_on_id' => $prev?->id,
+                'skills' => $t['skills'] ?: null,
             ]);
             foreach (array_values($t['subtasks']) as $i => $name) {
                 $todo->ingredients()->create(['name' => $name, 'order' => $i + 1]);
@@ -85,7 +89,8 @@ class Plan
         return count($tasks);
     }
 
-    private static function normalize(mixed $tasks): array
+    /** @param list<string> $availableSkills */
+    private static function normalize(mixed $tasks, array $availableSkills = []): array
     {
         $out = [];
         foreach ((array) $tasks as $t) {
@@ -99,6 +104,10 @@ class Plan
                 'title' => mb_strimwidth(trim((string) $t['title']), 0, 200, '…'),
                 'notes' => trim((string) ($t['notes'] ?? '')),
                 'subtasks' => array_values(array_filter(array_map(fn ($s) => trim((string) $s), (array) ($t['subtasks'] ?? [])), fn ($s) => $s !== '')),
+                'skills' => array_values(array_unique(array_filter(
+                    array_map(fn ($s) => trim((string) $s), (array) ($t['skills'] ?? [])),
+                    fn ($s) => in_array($s, $availableSkills, true),
+                ))),
             ];
         }
 

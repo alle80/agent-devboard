@@ -7,8 +7,8 @@ php artisan griglia:skills-import --file=skills.json   # oppure JSON su stdin: [
 ```
 
 Il modale del task lo mostra come accordion (con ricerca dal vivo); le skill che spunti per un task vengono
-stampate da `griglia:check` (`skills to activate for this task: …`) così l'agente le invoca. Non devi scrivere
-il JSON a mano: il package porta con sé `sync-skills.py`, che legge le cartelle delle skill di Claude Code,
+stampate da `griglia:check` (`skills to activate for this task: …`) così l'agente le invoca. Nei piani generati, `PlanBuilder` assegna le skill pertinenti task per task,
+considerando solo il catalogo disponibile per l'agente predefinito del piano. Non devi scrivere il JSON a mano: il package porta con sé `sync-skills.py`, che legge le cartelle delle skill di Claude Code,
 Codex e Gemini sulla macchina dove gira l'agente e le importa.
 
 ```bash

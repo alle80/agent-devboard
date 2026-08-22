@@ -10,6 +10,7 @@ use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Support\Plan;
+use Alle80\Griglia\Support\Skills;
 use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Livewire;
@@ -26,7 +27,34 @@ class PlanTest extends TestCase
     protected function tearDown(): void
     {
         Plan::$resolver = null;
+        if (str_contains(Skills::path(), 'griglia-plan-skills-test-')) {
+            @unlink(Skills::path());
+        }
         parent::tearDown();
+    }
+
+    public function test_build_assigns_only_relevant_skills_available_to_the_plan_agent(): void
+    {
+        config([
+            'griglia.agents' => 'claude:Claude Code,codex:Codex CLI',
+            'griglia.skills_file' => sys_get_temp_dir().'/griglia-plan-skills-test-'.getmypid().'.json',
+        ]);
+        Skills::import([
+            ['name' => 'documentation', 'description' => 'Write docs', 'agents' => ['codex']],
+            ['name' => 'imagegen', 'description' => 'Generate images', 'agents' => ['codex']],
+            ['name' => 'claude-only', 'agents' => ['claude']],
+        ]);
+        Plan::$resolver = fn () => [
+            ['title' => 'Write the guide', 'skills' => ['documentation', 'missing', 'claude-only']],
+            ['title' => 'Run tests', 'skills' => []],
+        ];
+        $list = Checklist::create(['name' => 'Docs', 'user_id' => auth()->id(), 'agent' => 'codex']);
+
+        Plan::build($list, 'Document the package');
+
+        [$docs, $tests] = $list->todos()->orderBy('order')->get();
+        $this->assertSame(['documentation'], $docs->skills);
+        $this->assertNull($tests->skills);
     }
 
     public function test_build_creates_chained_tasks_and_the_chain_opens_the_next_one(): void

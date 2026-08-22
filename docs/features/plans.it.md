@@ -12,7 +12,9 @@ apre `/plans/new`, perché descrivere un obiettivo richiede un paragrafo, non un
 Quello che scrivi viene tenuto come bozza, così se esci dalla pagina e torni lo ritrovi dov'era, e annullare
 chiede conferma prima di buttarlo via. Premendo *Costruisci il piano* l'obiettivo passa all'agente
 `PlanBuilder` dell'AI SDK, che lo spezza in task ordinati con note e sotto-task, **concatenati**
-(`depends_on_id`), e ti riporta alla board. Senza un provider AI la lista riceve un unico task «Costruisci il
+(`depends_on_id`), e ti riporta alla board. Per ogni task può anche scegliere skill pertinenti e davvero utili
+fra quelle installate per l'agente predefinito del piano; le skill non disponibili non vengono mai assegnate.
+Senza un provider AI la lista riceve un unico task «Costruisci il
 piano» per l'agente; se l'AI fallisce, non resta in giro nessuna lista fatta a metà.
 
 ## Cambiare un piano

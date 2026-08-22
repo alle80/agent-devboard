@@ -7,8 +7,8 @@ php artisan griglia:skills-import --file=skills.json   # or JSON on stdin: [{nam
 ```
 
 The task modal shows it as an accordion (with live search); the skills you tick for a task are printed by
-`griglia:check` (`skills to activate for this task: …`) so the agent invokes them. You do not have to write the
-JSON: the package ships `sync-skills.py`, which reads the Claude Code, Codex and Gemini skill folders of the
+`griglia:check` (`skills to activate for this task: …`) so the agent invokes them. For generated plans, `PlanBuilder` assigns pertinent skills task by task, considering
+only the catalogue available to the plan's default agent. You do not have to write the JSON: the package ships `sync-skills.py`, which reads the Claude Code, Codex and Gemini skill folders of the
 machine the agent runs on and imports them.
 
 ```bash

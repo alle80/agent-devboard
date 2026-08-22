@@ -20,11 +20,21 @@ class PlanBuilder implements Agent, HasStructuredOutput
 {
     use Promptable;
 
+    /** @param array<string, array{name: string, description: string, source: string, agents: array}> $skills */
+    public function __construct(private readonly array $skills = []) {}
+
     public function instructions(): Stringable|string
     {
         $lang = match (app()->getLocale()) {
             'it' => 'Italian', 'en' => 'English', default => app()->getLocale()
         };
+
+        $skills = $this->skills === []
+            ? 'No skills are installed for this agent. Always return an empty skills array.'
+            : "Skills installed for this agent (name: description):\n".implode("\n", array_map(
+                fn (array $skill) => '- '.$skill['name'].': '.($skill['description'] ?: 'No description'),
+                $this->skills,
+            ));
 
         return <<<TXT
         You are a senior tech lead planning the work of a coding agent on a software project.
@@ -33,6 +43,11 @@ class PlanBuilder implements Agent, HasStructuredOutput
         - title: short imperative sentence (max 80 characters);
         - notes: what to do and why, acceptance criteria, hints (2-6 sentences, markdown allowed);
         - subtasks: 0-6 short checklist items.
+        - skills: names of installed skills that are pertinent and genuinely useful for this specific task; otherwise [].
+        Never invent skill names and do not add a skill merely because it is available.
+
+        {$skills}
+
         Write in {$lang}. Do not add tasks for things that are not asked. Return only the structured data.
         TXT;
     }
@@ -45,6 +60,7 @@ class PlanBuilder implements Agent, HasStructuredOutput
                     'title' => $schema->string()->required(),
                     'notes' => $schema->string()->required(),
                     'subtasks' => $schema->array()->items($schema->string())->required(),
+                    'skills' => $schema->array()->items($schema->string())->required(),
                 ])
             )->required(),
         ];
