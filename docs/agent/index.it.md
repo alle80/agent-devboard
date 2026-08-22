@@ -48,7 +48,9 @@ l'agente ti dice di lanciare `/clear` — non può farlo al posto tuo.
 
 Si dichiarano con `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. Una lista (progetto) ha un agente di
 default (selettore nella barra), un task può cambiarlo dalla propria riga o dal modale. Il nome resta sempre
-visibile: durante la lavorazione diventa un badge di sola lettura sia nella lista sia nel dettaglio. Ogni agente esegue
+visibile: durante la lavorazione diventa un badge di sola lettura sia nella lista sia nel dettaglio. La barra degli
+strumenti può anche **filtrare** la lista per agente (il chip con l'icona del robot, accanto ai filtri di stato):
+segue la stessa assegnazione effettiva e si combina con ricerca e filtri di stato. Ogni agente esegue
 `griglia:check --agent=<la sua chiave>` (oppure imposta `GRIGLIA_AGENT_KEY`) e vede solo i propri task;
 `--take/--done` continuano a funzionare per id. Le [skill](skills.md) proposte su un task sono filtrate allo
 stesso modo: solo quelle che il suo agente ha installate.

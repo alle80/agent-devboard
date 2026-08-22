@@ -53,8 +53,10 @@ return [
     'back_to_active' => 'Torna alla lista',
     'show_archived' => 'Mostra gli elementi archiviati',
     'archive_help' => 'Stai guardando l\'archivio: gli elementi qui non compaiono nella lista e non contano nel totale. Puoi ripristinarli o eliminarli.',
-    'filter_help' => 'Filtro attivo: il riordino con trascinamento è disabilitato finché non torni a «Tutti» senza ricerca.',
+    'filter_help' => 'Filtro attivo: il riordino con trascinamento è disabilitato finché non togli la ricerca e ogni filtro (torna a «Tutti»).',
     'filters' => ['all' => 'Tutti', 'todo' => 'Da fare', 'done' => 'Fatti', 'otw' => 'Open to work', 'working' => 'Working', 'question' => 'Domande'],
+    'agent_filter' => 'Filtra per agente',
+    'all_agents' => 'Tutti gli agenti',
 
     'note' => 'Task',
     'state' => ['waiting' => 'In attesa', 'open' => 'Da fare', 'working' => 'In lavorazione', 'question' => 'In attesa di risposta', 'done' => 'Fatto'],

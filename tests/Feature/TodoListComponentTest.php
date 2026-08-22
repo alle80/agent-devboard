@@ -133,6 +133,43 @@ class TodoListComponentTest extends TestCase
         $component->assertSee('Other project');
     }
 
+    public function test_filter_by_effective_agent(): void
+    {
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI', 'griglia.agent_key' => 'claude']);
+        Checklist::findOrFail(Checklist::currentId())->update(['agent' => 'codex']);
+        $inherited = $this->add('Inherited Codex', 1);
+        $explicitClaude = $this->add('Explicit Claude', 2);
+        $explicitClaude->update(['agent' => 'claude']);
+
+        $other = Checklist::create(['name' => 'Default list', 'user_id' => auth()->id()]);
+        Todo::create(['title' => 'Global Claude', 'order' => 1, 'checklist_id' => $other->id]);
+
+        $component = Livewire::test(TodoList::class)->assertSee('All agents')->call('setAgentFilter', 'codex');
+        $this->assertSame(['Inherited Codex'], $component->viewData('todos')->pluck('title')->all());
+        $component->assertSet('agentFilter', 'codex');
+        $this->assertTrue($component->viewData('filtering'), 'the agent filter alone counts as filtering');
+
+        // …so drag & drop is refused while it is on, like with the state filters and the search
+        $component->call('reorder', [$explicitClaude->id, $inherited->id]);
+        $this->assertSame(1, $inherited->fresh()->order);
+
+        $component->set('search', 'Claude')->call('toggleSearchScope')->call('setAgentFilter', 'claude');
+        $this->assertEqualsCanonicalizing(
+            ['Explicit Claude', 'Global Claude'],
+            $component->viewData('todos')->pluck('title')->all(),
+        );
+
+        $component->call('setAgentFilter', 'unknown')->assertSet('agentFilter', '');
+        $this->assertTrue($component->viewData('filtering'), 'the active search still counts as filtering');
+    }
+
+    public function test_agent_filter_is_hidden_with_a_single_agent(): void
+    {
+        $this->add('Only one agent here');
+        Livewire::test(TodoList::class)->assertDontSee('All agents')
+            ->call('setAgentFilter', 'nobody')->assertSet('agentFilter', '');
+    }
+
     public function test_open_to_work_stop_and_resume(): void
     {
         $todo = $this->add('Task');

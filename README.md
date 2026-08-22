@@ -15,7 +15,7 @@ coding agent (Claude Code, …) takes them, asks questions, and closes them — 
 - Agent workflow: _open to work → working → done_, with questions, stop and resume
 - Multiple lists per user · sub-tasks · notes
 - Image attachments (upload / camera / paste) with optional AI descriptions for search
-- Archive · state filters · free-text search, optionally across every active list owned by the user
+- Archive · state/agent filters · free-text search, optionally across every active list owned by the user
 - Live updates between devices (any Laravel broadcaster, e.g. Reverb)
 - A theme system (built-in **Slate** theme + installable zip packs) and a settings page
 - English base language with an Italian translation — UI **and** documentation site

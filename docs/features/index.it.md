@@ -11,7 +11,7 @@ Tutto quello che fa la board, in una pagina. Segui un link quando vuoi il dettag
 | **Avanzamento e fase** | Una percentuale e un breve «cosa sto facendo adesso» su ogni task in lavorazione, aggiornati dall'agente strada facendo. [Il lato agente](../agent/index.md) |
 | **Domande** | L'agente può mettere in pausa un task con delle domande; tu rispondi nel modale e lo rimandi al lavoro. [Il lato agente](../agent/index.md) |
 | **Riprendi** | Un task finito riparte come task nuovo, che si porta dietro il vecchio contesto. [Usare la board](../board/usage.md) |
-| **Liste, archivio, ricerca** | Più liste per utente, filtri di stato, ricerca a testo libero (comprese le descrizioni AI delle immagini), archiviazione automatica dei task vecchi. [Usare la board](../board/usage.md) |
+| **Liste, archivio, ricerca** | Più liste per utente, filtri di stato (e di agente, con più agenti configurati), ricerca a testo libero (comprese le descrizioni AI delle immagini), archiviazione automatica dei task vecchi. [Usare la board](../board/usage.md) |
 
 ## Guidare un agente
 

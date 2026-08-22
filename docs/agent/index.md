@@ -50,7 +50,9 @@ Declare them with `GRIGLIA_AGENTS="claude:Claude Code,codex:Codex CLI"`. A list 
 under the commands, or straight from its row in the list, where
 the same selector sits on its own line under the title and doubles as the agent badge: the name of the agent
 that will take the task is always visible, also when the task simply inherits the list default (the empty
-option). While a task is working, the same name stays visible as a read-only badge in both the list and modal. Each agent runs `griglia:check --agent=<its key>`
+option). While a task is working, the same name stays visible as a read-only badge in both the list and modal.
+The toolbar can also **filter** the list by agent (the chip with the robot icon, next to the state filters): it
+follows the same effective assignment and combines with the search and the state filters. Each agent runs `griglia:check --agent=<its key>`
 (or sets `GRIGLIA_AGENT_KEY`) and sees only its tasks; `--take/--done` still work by id. The [skills](skills.md)
 offered on a task are filtered the same way: only the ones its agent has installed.
 

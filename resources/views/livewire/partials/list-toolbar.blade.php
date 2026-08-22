@@ -1,5 +1,5 @@
 {{--
-    Barra sopra la lista: ricerca a testo libero, filtri di stato, archivio.
+    Barra sopra la lista: ricerca a testo libero, filtri di stato (e di agente, in multi-agente), archivio.
     Variabili attese: $archivedCount, $filtering, $showArchived (dal componente), più le classi:
       $wrapClass   contenitore della barra
       $inputClass  campo di ricerca
@@ -74,7 +74,7 @@
       ><x-griglia::icon name="list" /> {{ __('griglia::t.search_all_lists') }}</button>
     </div>
 
-    {{-- Filtri di stato + archivio --}}
+    {{-- Filtri di stato, agente e archivio --}}
     <div class="flex flex-wrap items-center gap-1.5">
         @php($icons = ['todo' => 'waiting', 'done' => 'done', 'otw' => 'open', 'working' => 'working', 'question' => 'question'])
         @foreach (\Alle80\Griglia\Livewire\TodoList::filters() as $key => $label)
@@ -85,6 +85,22 @@
                 aria-pressed="{{ $filter === $key ? 'true' : 'false' }}"
             >@isset($icons[$key])<span class="db-badge db-badge-{{ $icons[$key] }}"><x-griglia::icon :name="$icons[$key]" size="1.1em" :stroke="2" /></span>@endisset{{ $label }}</button>
         @endforeach
+
+        {{-- Multi-agent: filter by the effective agent (task override, list default, global default — task 500).
+             A <select> dressed like the status chips: the label carries the chip look, the select is transparent
+             and inherits its colours (see .db-agent-filter in griglia.css). --}}
+        @if (\Alle80\Griglia\Agent::many())
+            <label class="{{ $agentFilter !== '' ? $chipOnClass : $chipClass }} db-agent-filter inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none"
+                   title="{{ __('griglia::t.agent_filter') }}">
+                <x-griglia::icon name="bot" size="1.1em" :stroke="2" />
+                <select wire:change="setAgentFilter($event.target.value)" aria-label="{{ __('griglia::t.agent_filter') }}">
+                    <option value="">{{ __('griglia::t.all_agents') }}</option>
+                    @foreach (\Alle80\Griglia\Agent::all() as $key => $label)
+                        <option value="{{ $key }}" @selected($agentFilter === $key)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </label>
+        @endif
 
         <span class="flex-1"></span>
 

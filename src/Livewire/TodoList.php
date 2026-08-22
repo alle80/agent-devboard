@@ -28,6 +28,9 @@ class TodoList extends Component
     /** Filtro di stato: all | todo | done | otw | working | question */
     public string $filter = 'all';
 
+    /** Effective agent key, or '' for every configured agent. */
+    public string $agentFilter = '';
+
     /** Lunghezza massima del titolo di un todo: default 50, modificabile da /settings. */
     public const TITLE_MAX = 50;
 
@@ -50,6 +53,11 @@ class TodoList extends Component
     public function setFilter(string $filter): void
     {
         $this->filter = in_array($filter, self::FILTERS, true) ? $filter : 'all';
+    }
+
+    public function setAgentFilter(string $agent): void
+    {
+        $this->agentFilter = array_key_exists($agent, \Alle80\Griglia\Agent::all()) ? $agent : '';
     }
 
     public function clearSearch(): void
@@ -79,6 +87,24 @@ class TodoList extends Component
             });
         }
 
+        if ($this->agentFilter !== '') {
+            $agent = $this->agentFilter;
+            $known = array_keys(\Alle80\Griglia\Agent::all());
+            $fallback = \Alle80\Griglia\Agent::defaultKey();
+            $q->where(function (Builder $w) use ($agent, $known, $fallback) {
+                $w->where('agent', $agent)
+                    ->orWhere(function (Builder $inherited) use ($agent, $known, $fallback) {
+                        $inherited->where(fn (Builder $task) => $task->whereNull('agent')->orWhereNotIn('agent', $known))
+                            ->whereHas('checklist', function (Builder $list) use ($agent, $known, $fallback) {
+                                $list->where('agent', $agent);
+                                if ($agent === $fallback) {
+                                    $list->orWhereNull('agent')->orWhereNotIn('agent', $known);
+                                }
+                            });
+                    });
+            });
+        }
+
         return match ($this->filter) {
             'todo' => $q->where('completed', false),
             'done' => $q->where('completed', true),
@@ -91,7 +117,7 @@ class TodoList extends Component
 
     protected function isFiltering(): bool
     {
-        return trim($this->search) !== '' || $this->filter !== 'all';
+        return trim($this->search) !== '' || $this->filter !== 'all' || $this->agentFilter !== '';
     }
 
     /** Todo in rinomina e relativa bozza. */

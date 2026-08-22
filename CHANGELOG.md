@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.86.0] - 2026-08-22
+
+### Added
+- **Filter by agent in the task list.** With several agents configured (`GRIGLIA_AGENTS`), the toolbar shows a chip
+  with the robot icon next to the state filters: pick an agent to see only its tasks. The filter follows the
+  effective assignment (task override, then list default, then the global default), combines with the search — also
+  across all active lists — and the state filters, and disables drag & drop like the other filters (task 500).
+
+### Changed
+- The «filter active» hint now says that every filter (not only the state chips and the search) must be cleared
+  before reordering again.
+
 ## [0.85.3] - 2026-08-22
 ### Changed
 - `/settings` now groups notification events, daily-summary scheduling, delivery channels and device controls

@@ -11,7 +11,7 @@ Everything the board does, in one page. Follow a link when you want the detail.
 | **Progress and phase** | A percentage and a short «what I am doing now» on every working task, updated by the agent as it goes. [The agent side](../agent/index.md) |
 | **Questions** | The agent can pause a task with questions; you answer in the modal and send it back to work. [The agent side](../agent/index.md) |
 | **Resume** | Reopen a finished task as a new one that carries the old context with it. [Using the board](../board/usage.md) |
-| **Lists, archive, search** | Several lists per user, state filters, free-text search within one list or across all active lists (including AI descriptions of the images), automatic archiving of old tasks. [Using the board](../board/usage.md) |
+| **Lists, archive, search** | Several lists per user, state filters (and agent filters when several agents are configured), free-text search within one list or across all active lists (including AI descriptions of the images), automatic archiving of old tasks. [Using the board](../board/usage.md) |
 
 ## Driving an agent
 

@@ -55,8 +55,10 @@ return [
     'back_to_active' => 'Back to the list',
     'show_archived' => 'Show archived items',
     'archive_help' => 'You are looking at the archive: these items are not in the list and do not count in the total. You can restore or delete them.',
-    'filter_help' => 'Filter active: drag & drop reordering is disabled until you go back to «All» with no search.',
+    'filter_help' => 'Filter active: drag & drop reordering is disabled until you clear the search and every filter (back to «All»).',
     'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => 'Open to work', 'working' => 'Working', 'question' => 'Questions'],
+    'agent_filter' => 'Filter by agent',
+    'all_agents' => 'All agents',
 
     // Modal
     'note' => 'Task',
