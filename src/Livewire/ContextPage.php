@@ -132,6 +132,9 @@ class ContextPage extends Component
     public function startEdit(int $id): void
     {
         $b = ContextBlock::findOrFail($id);
+        if ($b->isManaged()) {
+            return; // written by the board from a setting: it changes from /settings (task 499)
+        }
         $this->editingId = $b->id;
         $this->bodyDraft = $b->body;
         $this->titleDraft = (string) $b->title;

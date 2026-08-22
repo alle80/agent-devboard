@@ -17,7 +17,7 @@ class AgentSettings extends Settings
     /** Push su GitHub dopo il commit automatico (se spento: commit sì, push solo su richiesta). */
     public bool $push_after_commit;
 
-    /** 'ask' = fa domande ❓ quando in dubbio; 'decide' = decide da solo e spiega nel commento 🤖. */
+    /** Question level (task 499): autonomous | essential | ask | many | paranoid — rules in Support\QuestionLevel. */
     public string $autonomy;
 
     /** Notifica push sul telefono quando chiude un task. */

@@ -19,9 +19,10 @@ php artisan griglia:check --done=ID --comment="…" --outcome=blocked # c'è qua
 Quando possibile, l’agente propone scelte chiuse brevi con `--choices` (ripetuto nello stesso ordine di `--q`). Nel modale diventano risposte selezionabili con un tocco, ma restano sempre disponibili il campo di testo libero e il microfono speech-to-text. Senza opzioni si omette il `--choices` corrispondente.
 
 `check` stampa in testa le **impostazioni** dei gruppi `agent` e `optimization` (politica dei commit,
-autonomia, notifiche, modalità di lavoro, modalità stringata, …) che l'agente deve rispettare, poi i task
-aperti della lista dell'agente e, dopo di quelli, i task aperti dei **piani** avviati (sotto un titolo
-`Plan «nome»`).
+grado di domande, notifiche, modalità di lavoro, modalità stringata, …) che l'agente deve rispettare, poi le
+regole del **grado di domande** scelto (`❓ question level: …` — quante domande fare prima di iniziare; lo stesso
+blocco che la board scrive nel [contesto dell'agente](context.md)), poi i task aperti della lista dell'agente e,
+dopo di quelli, i task aperti dei **piani** avviati (sotto un titolo `Plan «nome»`).
 
 Regole che vale la pena conoscere: prendere il task **per primo** (prima di leggere e analizzare), un task
 alla volta nell'ordine della lista (`task_mode=ordered`) oppure più task indipendenti insieme

@@ -22,7 +22,7 @@ i numeri, i testi e gli orari appena cambiano (un toast lo conferma).
 ## Le impostazioni che legge l'agente
 
 I gruppi `agent` e `optimization` non sono decorazione: `griglia:check` li stampa in testa al proprio output e
-l'agente deve rispettarli — politica dei commit, autonomia, notifiche, un task alla volta o più di uno,
+l'agente deve rispettarli — politica dei commit, grado di domande, notifiche, un task alla volta o più di uno,
 modalità stringata, tono e lunghezza delle risposte. Cambiali dalla pagina e il `griglia:check` successivo
 obbedisce. Il tono **Chiaro e strutturato** è pensato anche per programmatori esperti: non elimina i dettagli
 tecnici, ma riduce il gergo non necessario, spiega i termini inevitabili e usa formattazione leggibile.
@@ -30,6 +30,13 @@ tecnici, ma riduce il gergo non necessario, spiega i termini inevitabili e usa f
 `Commento dell'agente` regola solo il resoconto salvato sotto il task; `Tono delle risposte` e `Lunghezza
 delle risposte` regolano invece la comunicazione rivolta all'utente. La modalità stringata resta una scelta
 separata di risparmio token e, quando è attiva, prevale riducendo quasi del tutto la conversazione in chat.
+
+**Grado di domande** (`autonomy`) è una scala a cinque gradini — agente autonomo, qualche dubbio essenziale,
+fai domande, fai molte domande, paranoico — che dice quante domande (`--ask`) fa l'agente prima di iniziare
+davvero un task. Ogni gradino ha le sue regole: la pagina mostra l'**anteprima del blocco di contesto** del
+gradino scelto e, al salvataggio, lo scrive nel contesto dell'agente ([`/context`](../agent/context.md) → i
+file di istruzioni generati) in un blocco *generato dalle Impostazioni*; `griglia:check` stampa le stesse
+regole sotto la riga delle impostazioni (`❓ question level`), così l'agente le legge su entrambi i canali.
 
 ## La lingua della board
 

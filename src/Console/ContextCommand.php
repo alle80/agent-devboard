@@ -33,6 +33,7 @@ class ContextCommand extends Command
                     return self::FAILURE;
                 }
                 [$g, $b] = Context::import($md, (bool) $this->option('replace'));
+                \Alle80\Griglia\Support\QuestionLevel::sync(); // the question-level block survives a (re)import (task 499)
                 $this->info("$g groups, $b blocks imported");
 
                 return self::SUCCESS;

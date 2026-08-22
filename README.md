@@ -114,7 +114,7 @@ php artisan griglia:check --done=ID --comment="…" --outcome=alert|blocked   # 
 ```
 
 `griglia:check` also prints, at the top, the **behaviour settings** from `/settings` that the agent must
-follow (commit policy, autonomy, notifications, verification, git flow, task order, …) and the
+follow (commit policy, question level, notifications, verification, git flow, task order, …) and the
 **Optimization** switches that cut the tokens a session spends (compact output, terse mode, context
 trimming). A closed item can be **resumed** into a new linked one, carrying its context.
 

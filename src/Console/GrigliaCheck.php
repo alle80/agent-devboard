@@ -222,6 +222,7 @@ class GrigliaCheck extends Command
             $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
+            $this->line(\Alle80\Griglia\Support\QuestionLevel::checkLine()); // how many questions before starting (task 499)
             $this->line('⚡ optimization: '.$opt->summary());
             if (\Alle80\Griglia\Agent::many()) {
                 $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(\Alle80\Griglia\Agent::all()), \Alle80\Griglia\Agent::all())), $me, \Alle80\Griglia\Agent::label($me)));

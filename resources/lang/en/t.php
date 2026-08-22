@@ -350,6 +350,8 @@ return [
         'sync_on' => 'Instruction files will be generated from the board again.',
         'sync_off' => 'Generation stopped: the original instruction files will be restored by the host sync.',
         'how' => 'The enabled blocks are what `php artisan griglia:context export` prints; on the host a script writes them to the instructions file.',
+        'managed' => 'generated from Settings',
+        'managed_hint' => 'This block is written by the board from a setting: change it in /settings; here you can only switch it off, move it or delete it (it comes back at the next save).',
     ],
     'notif' => [
         'title' => 'Notifications',
@@ -391,10 +393,25 @@ return [
         'test_body' => 'If you read this, the board can reach you.',
         'test_sent' => 'Test notification sent',
     ],
+    // Question level (task 499): the rules of each level = the managed context block + the ❓ line of griglia:check
+    'question_level' => [
+        'block_title' => 'Question level',
+        'group_title' => 'Questions to the user',
+        'preview_title' => 'Preview of the context block',
+        'preview_help' => 'Saving rewrites this block in the agent context (/context → the generated instruction files, e.g. CLAUDE.md / AGENTS.md); `griglia:check` prints it under the settings as well.',
+        'saved' => 'Question level saved: the context block has been updated.',
+        'rules' => [
+            'autonomous' => 'Do not ask questions before starting (`--ask` only if going on would be destructive or impossible): pick the most reasonable interpretation, start right away and list the assumptions you made in the 🤖 comment.',
+            'essential' => 'Start right away; use `--ask` only for the doubts that would waste the work or are hard to undo — at most one or two questions, sent together — and decide everything else yourself, writing the assumptions in the 🤖 comment.',
+            'ask' => 'When the request is ambiguous (scope, behaviour, UI) ask before writing code — all the questions in one `--ask`; when it is clear, start right away and note the minor assumptions in the 🤖 comment.',
+            'many' => 'Before writing code clear every uncertainty with one `--ask`: scope, edge cases, UI, naming, tests, what must not change; never fill a gap with an assumption; work on the answers and ask again as soon as a new doubt appears.',
+            'paranoid' => 'Never start on assumptions: first `--ask` everything that is not explicit (scope, edge cases, UI, data, tests, what must not change); once answered, send a second `--ask` with your understanding and the plan and wait for the OK; write code only then, and stop to ask again at every unexpected finding.',
+        ],
+    ],
     'settings_fields' => [
         'commit_after_task' => ['Commit after each completed task', 'When a task is closed the agent commits without asking. If off, the work stays uncommitted until you ask.'],
         'push_after_commit' => ['Automatic push to GitHub', 'After the automatic commit it also pushes. If off, you ask for the push.'],
-        'autonomy' => ['Autonomy', 'How it behaves when a request is ambiguous.'],
+        'autonomy' => ['Question level', 'How many questions the agent asks before it really starts working on a task, from a fully autonomous agent to a paranoid one. The rules of the chosen level are previewed below and written into the agent context when you save.'],
         'notify_on_done' => ['Notifications when a task is closed', 'One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when a task is closed, and the agent is told to notify you on its own channel too. Off = neither of them says anything.'],
         'notify_on_question' => ['Notifications for questions', 'One switch for both layers: the board notifies the list owner (bell, Web Push, mail) when the agent asks a question, and the agent is told to notify you on its own channel too. Off = neither of them says anything.'],
         'verify_before_close' => ['Verify before closing', 'Automatic mobile+desktop screenshots and Livewire tests before closing a task (slower, safer).'],
@@ -433,7 +450,7 @@ return [
         'tab_side' => ['Dashboard tab side', 'Which side of the window the slide-out dashboard tab opens from (desktop).'],
     ],
     'settings_options' => [
-        'autonomy' => ['ask' => 'Ask when in doubt', 'decide' => 'Decide alone and explain in the comment'],
+        'autonomy' => ['autonomous' => 'Autonomous agent — never asks, decides and explains in the comment', 'essential' => 'A few essential doubts — asks only what would waste the work', 'ask' => 'Ask questions — clears the ambiguities before starting', 'many' => 'Ask many questions — scope, edge cases, UI, tests', 'paranoid' => 'Paranoid — questions, then plan approval before any code'],
         'comment_detail' => ['short' => 'Short', 'detailed' => 'Detailed (technical + how to try)'],
         'response_tone' => ['clear' => 'Clear and structured — precise, low-jargon, readable formatting', 'technical' => 'Technical — specialist terminology and high density', 'conversational' => 'Conversational — informal and guided'],
         'response_length' => ['concise' => 'Concise — outcome and essentials only', 'balanced' => 'Balanced — outcome, rationale and next steps', 'detailed' => 'Detailed — context, alternatives and examples'],

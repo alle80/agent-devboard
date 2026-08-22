@@ -25,11 +25,13 @@ class SettingsPageTest extends TestCase
         $page->call('toggle', 'agent', 'commit_after_task');
         $this->assertFalse(app(AgentSettings::class)->refresh()->commit_after_task);
 
-        $page->set('values.agent.autonomy', 'decide');
-        $this->assertSame('decide', app(AgentSettings::class)->refresh()->autonomy);
+        $page->set('values.agent.autonomy', 'autonomous');
+        $this->assertSame('autonomous', app(AgentSettings::class)->refresh()->autonomy);
 
         $page->set('values.agent.autonomy', 'bogus');
-        $this->assertSame('decide', app(AgentSettings::class)->refresh()->autonomy);
+        $this->assertSame('autonomous', app(AgentSettings::class)->refresh()->autonomy);
+        $page->set('values.agent.autonomy', 'decide'); // the pre-499 value is no longer an option
+        $this->assertSame('autonomous', app(AgentSettings::class)->refresh()->autonomy);
 
         $page->set('values.agent.response_tone', 'conversational');
         $this->assertSame('conversational', app(AgentSettings::class)->refresh()->response_tone);

@@ -90,6 +90,13 @@
                                             <button type="submit" class="{{ $skin['back'] }} text-sm">{{ __('griglia::t.save') }}</button>
                                         </div>
                                     </form>
+                                @elseif ($b->isManaged())
+                                    {{-- Written by the board from a setting (task 499): shown here, changed in /settings --}}
+                                    <div class="block w-full text-left" title="{{ __('griglia::t.ctx.managed_hint') }}">
+                                        <span class="{{ $skin['label'] }} text-sm">{{ $b->title ?: '—' }}</span>
+                                        <a href="{{ route('griglia.settings') }}" class="{{ $skin['help'] }} ml-2 inline-flex items-center gap-1 text-xs hover:underline"><x-griglia::icon name="settings" /> {{ __('griglia::t.ctx.managed') }}</a>
+                                        <span class="{{ $skin['help'] }} db-ctx-preview mt-0.5 block text-xs whitespace-pre-wrap break-words">{{ \Illuminate\Support\Str::limit($b->body, 260) }}</span>
+                                    </div>
                                 @else
                                     <button type="button" wire:click="startEdit({{ $b->id }})" class="block w-full cursor-text text-left" title="{{ __('griglia::t.ctx.edit') }}">
                                         <span class="{{ $skin['label'] }} text-sm">{{ $b->title ?: '—' }}</span>

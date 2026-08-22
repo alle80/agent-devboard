@@ -22,6 +22,15 @@ L'interruttore **Genera i file di istruzioni dalla board** (in cima a `/context`
 lascia stare i file **originali** (spento) — utile quando smetti di usare la board: tornano a valere gli
 originali. Gli script sull'host lo leggono con `php artisan griglia:context enabled` (stampa `1`/`0`).
 
+## Blocchi generati dalla board
+
+Alcuni blocchi li scrive la board stessa a partire da un'impostazione e portano una chiave (`context_blocks.key`):
+oggi il **grado di domande** (`question_level`, Impostazioni → Come lavora l'agente → Grado di domande). Su
+`/context` mostrano *generato dalle Impostazioni* e non si modificano — cambia l'impostazione e il blocco viene
+riscritto dov'è, conservando interruttore e posizione; spegnilo o eliminalo se non lo vuoi (ricompare al prossimo
+salvataggio). Anche `griglia:context import` lo conserva: un file generato reimportato viene adottato (niente
+doppioni), e a un file che non lo contiene il blocco viene aggiunto in coda in un gruppo suo.
+
 ## Vedi anche
 
 - [Il lato agente](index.md) · [Configurazione e impostazioni](../configuration/index.md)

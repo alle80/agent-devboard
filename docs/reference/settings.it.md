@@ -10,7 +10,7 @@ Le opzioni della pagina `/settings`: salvate nel database, si cambiano a runtime
 |---|---|---|
 | **Commit dopo ogni task completato** (`commit_after_task`) | bool | Alla chiusura di un task l'agente fa commit senza chiedere. Se spento, il lavoro resta non committato finché non lo chiedi. |
 | **Push automatico su GitHub** (`push_after_commit`) | bool | Dopo il commit automatico fa anche il push. Se spento, il push lo chiedi tu. |
-| **Autonomia** (`autonomy`) | select: `ask`, `decide` | Come si comporta quando una richiesta è ambigua. |
+| **Grado di domande** (`autonomy`) | select: `autonomous`, `essential`, `ask`, `many`, `paranoid` | Quante domande fa l'agente prima di iniziare davvero a lavorare su un task, dall'agente del tutto autonomo a quello paranoico. Le regole del grado scelto sono in anteprima qui sotto e, al salvataggio, finiscono nel contesto dell'agente. |
 | **Notifiche a chiusura task** (`notify_on_done`) | bool | Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando un task viene chiuso, e l'agente riceve l'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due. |
 | **Notifiche per le domande** (`notify_on_question`) | bool | Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando l'agente fa una domanda, e l'agente riceve l'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due. |
 | **Verifica prima di chiudere** (`verify_before_close`) | bool | Screenshot mobile+desktop e test Livewire automatici prima di chiudere un task (più lento, più sicuro). |

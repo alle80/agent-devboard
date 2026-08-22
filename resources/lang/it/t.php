@@ -344,6 +344,8 @@ return [
         'sync_on' => 'I file di istruzioni torneranno a essere generati dalla board.',
         'sync_off' => 'Generazione fermata: la sincronizzazione sul server ripristinerà i file originali.',
         'how' => 'I blocchi attivi sono ciò che stampa `php artisan griglia:context export`; sul server uno script li scrive nel file delle istruzioni (CLAUDE.md).',
+        'managed' => 'generato dalle Impostazioni',
+        'managed_hint' => 'Questo blocco lo scrive la board a partire da un\'impostazione: si cambia da /settings; qui puoi solo spegnerlo, spostarlo o eliminarlo (ricompare al prossimo salvataggio).',
     ],
     'notif' => [
         'title' => 'Notifiche',
@@ -385,10 +387,25 @@ return [
         'test_body' => 'Se leggi questo, la board riesce a raggiungerti.',
         'test_sent' => 'Notifica di prova inviata',
     ],
+    // Grado di domande (task 499): le regole di ogni grado = il blocco di contesto gestito + la riga ❓ di griglia:check
+    'question_level' => [
+        'block_title' => 'Grado di domande',
+        'group_title' => 'Domande all\'utente',
+        'preview_title' => 'Anteprima del blocco di contesto',
+        'preview_help' => 'Al salvataggio questo blocco viene riscritto nel contesto dell\'agente (/context → i file di istruzioni generati, es. CLAUDE.md / AGENTS.md); anche `griglia:check` lo stampa sotto le impostazioni.',
+        'saved' => 'Grado di domande salvato: il blocco di contesto è stato aggiornato.',
+        'rules' => [
+            'autonomous' => 'Non fare domande prima di iniziare (`--ask` solo se procedere sarebbe distruttivo o impossibile): scegli l\'interpretazione più ragionevole, parti subito ed elenca nel commento 🤖 le assunzioni fatte.',
+            'essential' => 'Parti subito; usa `--ask` solo per i dubbi che farebbero sprecare il lavoro o sono difficili da annullare — al massimo una o due domande, inviate insieme — e decidi tu tutto il resto, scrivendo le assunzioni nel commento 🤖.',
+            'ask' => 'Quando la richiesta è ambigua (ambito, comportamento, UI) chiedi prima di scrivere codice — tutte le domande in un solo `--ask`; quando è chiara parti subito e annota nel commento 🤖 le assunzioni minori.',
+            'many' => 'Prima di scrivere codice chiarisci ogni incertezza con un solo `--ask`: ambito, casi limite, UI, nomi, test, cosa non deve cambiare; non colmare mai una lacuna con un\'assunzione; lavora sulle risposte e richiedi appena emerge un nuovo dubbio.',
+            'paranoid' => 'Non partire mai sulla base di assunzioni: prima `--ask` su tutto ciò che non è esplicito (ambito, casi limite, UI, dati, test, cosa non deve cambiare); ricevute le risposte manda un secondo `--ask` con la tua comprensione e il piano e aspetta l\'OK; solo allora scrivi codice, e fermati a richiedere a ogni scoperta inattesa.',
+        ],
+    ],
     'settings_fields' => [
         'commit_after_task' => ['Commit dopo ogni task completato', 'Alla chiusura di un task l\'agente fa commit senza chiedere. Se spento, il lavoro resta non committato finché non lo chiedi.'],
         'push_after_commit' => ['Push automatico su GitHub', 'Dopo il commit automatico fa anche il push. Se spento, il push lo chiedi tu.'],
-        'autonomy' => ['Autonomia', 'Come si comporta quando una richiesta è ambigua.'],
+        'autonomy' => ['Grado di domande', 'Quante domande fa l\'agente prima di iniziare davvero a lavorare su un task, dall\'agente del tutto autonomo a quello paranoico. Le regole del grado scelto sono in anteprima qui sotto e, al salvataggio, finiscono nel contesto dell\'agente.'],
         'notify_on_done' => ['Notifiche a chiusura task', 'Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando un task viene chiuso, e l\'agente riceve l\'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due.'],
         'notify_on_question' => ['Notifiche per le domande', 'Un solo interruttore per due strati: la board avvisa il proprietario della lista (campanella, Web Push, mail) quando l\'agente fa una domanda, e l\'agente riceve l\'istruzione di avvisarti anche dal suo canale. Spento = non ti avvisa nessuno dei due.'],
         'verify_before_close' => ['Verifica prima di chiudere', 'Screenshot mobile+desktop e test Livewire automatici prima di chiudere un task (più lento, più sicuro).'],
@@ -427,7 +444,7 @@ return [
         'tab_side' => ['Lato del pannello dashboard', 'Da quale lato della finestra si apre il pannello a scomparsa della dashboard (desktop).'],
     ],
     'settings_options' => [
-        'autonomy' => ['ask' => 'Chiedi quando in dubbio', 'decide' => 'Decidi da solo e spiega nel commento'],
+        'autonomy' => ['autonomous' => 'Agente autonomo — non chiede mai, decide e spiega nel commento', 'essential' => 'Qualche dubbio essenziale — chiede solo ciò che farebbe sprecare il lavoro', 'ask' => 'Fai domande — chiarisce le ambiguità prima di iniziare', 'many' => 'Fai molte domande — ambito, casi limite, UI, test', 'paranoid' => 'Paranoico — domande, poi approvazione del piano prima del codice'],
         'comment_detail' => ['short' => 'Breve', 'detailed' => 'Dettagliato (tecnica + come provare)'],
         'response_tone' => ['clear' => 'Chiaro e strutturato — preciso, poco gergo, formattazione leggibile', 'technical' => 'Tecnico — terminologia specialistica e alta densità', 'conversational' => 'Conversazionale — informale e guidato'],
         'response_length' => ['concise' => 'Concisa — solo esito e punti essenziali', 'balanced' => 'Equilibrata — esito, motivazione e prossimi passi', 'detailed' => 'Approfondita — contesto, alternative ed esempi'],

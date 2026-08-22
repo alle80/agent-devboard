@@ -15,6 +15,7 @@ class MigrationTest extends TestCase
             $this->assertTrue(Schema::hasTable($table), "table {$table}");
         }
         $this->assertTrue(Schema::hasColumn('questions', 'choices'));
+        $this->assertTrue(Schema::hasColumn('context_blocks', 'key'));
         $this->assertTrue(Schema::hasColumns('todos', ['open_to_work', 'working', 'stopped_at', 'question', 'claude_comment', 'result_summary', 'archived_at', 'parent_id']));
 
         $this->assertTrue(app(AgentSettings::class)->commit_after_task);

@@ -18,7 +18,7 @@ Tutto quello che fa la board, in una pagina. Segui un link quando vuoi il dettag
 | | |
 |---|---|
 | **Il contratto CLI** | `griglia:check` e `griglia:watch`: due comandi, nessuna API di un fornitore. [Il lato agente](../agent/index.md) |
-| **Le regole che l'agente segue** | La pagina delle impostazioni gli dice come lavorare — politica dei commit, autonomia, notifiche, un task alla volta o più di uno, modalità stringata. [Configurazione e impostazioni](../configuration/index.md) |
+| **Le regole che l'agente segue** | La pagina delle impostazioni gli dice come lavorare — politica dei commit, grado di domande, notifiche, un task alla volta o più di uno, modalità stringata. [Configurazione e impostazioni](../configuration/index.md) |
 | **Più agenti** | Li dichiari, dai a ogni lista o task il suo, e ogni agente vede solo il proprio lavoro. [Il lato agente](../agent/index.md) |
 | **Skill** | Carichi il catalogo delle skill del tuo agente e scegli, task per task, quali deve usare. [Skill](../agent/skills.md) |
 | **Contesto dell'agente** | Il tuo file di istruzioni come blocchi accendibili, modificati dalla board ed esportati in `AGENTS.md` / `CLAUDE.md`. [Contesto dell'agente](../agent/context.md) |

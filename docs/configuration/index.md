@@ -22,7 +22,7 @@ the selects, numbers, texts and times as soon as they change (a toast confirms i
 ## Settings the agent reads
 
 The `agent` and `optimization` groups are not decoration: `griglia:check` prints them at the top of its
-output and the agent is expected to follow them — commit policy, autonomy, notifications, one task at a
+output and the agent is expected to follow them — commit policy, question level, notifications, one task at a
 time or several, terse mode, response tone and response length. Change them from the page and the next
 `griglia:check` obeys. **Clear and structured** is suitable for experienced programmers too: it preserves
 technical detail while reducing unnecessary jargon, explaining unavoidable terms and using readable formatting.
@@ -30,6 +30,13 @@ technical detail while reducing unnecessary jargon, explaining unavoidable terms
 `Agent comment` controls only the report stored below a task; `Response tone` and `Response length` control
 user-facing communication. Terse mode remains a separate token-saving choice and, when enabled, takes priority
 by reducing chat almost entirely.
+
+**Question level** (`autonomy`) is a five-step scale — autonomous agent, a few essential doubts, ask questions,
+ask many questions, paranoid — that says how many questions the agent asks (`--ask`) before it really starts a
+task. Each step has its own rules: the page previews the **context block** of the selected step and, when you
+save, writes it into the agent context ([`/context`](../agent/context.md) → the generated instruction files) as
+a block *generated from Settings*; `griglia:check` prints the same rules under the settings line
+(`❓ question level`), so the agent reads them on both channels.
 
 ## The language of the board
 

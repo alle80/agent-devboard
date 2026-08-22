@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /** One switchable piece of the agent's context (a bullet / paragraph / sub-section in markdown). */
 class ContextBlock extends Model
 {
-    protected $fillable = ['group_id', 'title', 'body', 'order', 'enabled'];
+    protected $fillable = ['group_id', 'key', 'title', 'body', 'order', 'enabled'];
 
     protected function casts(): array
     {
@@ -18,6 +18,12 @@ class ContextBlock extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(ContextGroup::class, 'group_id');
+    }
+
+    /** Written by the board itself (e.g. the question level of /settings, key `question_level`): rewritten when its source changes, read-only on /context. */
+    public function isManaged(): bool
+    {
+        return $this->key !== null;
     }
 
     /** Rough token estimate (≈ 4 characters per token). */

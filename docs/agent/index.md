@@ -15,9 +15,11 @@ php artisan griglia:check --done=ID --comment="…" --outcome=alert   # done, bu
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # something is in the way (red row)
 ```
 
-`check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, autonomy,
-notifications, task mode, terse mode, …) that the agent is expected to follow, then the open tasks of the agent
-list and, after them, the open tasks of the started **plans** (under a `Plan «name»` heading).
+`check` prints the **settings** of the `agent` and `optimization` groups at the top (commit policy, question
+level, notifications, task mode, terse mode, …) that the agent is expected to follow, then the rules of the chosen
+**question level** (`❓ question level: …` — how many questions to ask before starting; the same block the board
+writes into the [agent context](context.md)), then the open tasks of the agent list and, after them, the open
+tasks of the started **plans** (under a `Plan «name»` heading).
 
 When possible, agents should offer short closed choices with `--choices` (repeat it in the same order as `--q`). The modal renders them as one-tap answers, while always retaining the free-text field and speech-to-text microphone. Omit or leave the corresponding `--choices` value empty for an open-only question.
 

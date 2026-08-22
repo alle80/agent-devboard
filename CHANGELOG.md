@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.85.0] - 2026-08-22
+
+### Added
+- **Question level: how many questions the agent asks before it really starts a task.** The `autonomy` setting
+  becomes a five-step scale — autonomous agent, a few essential doubts, ask questions, ask many questions,
+  paranoid — each with its own rules. `/settings` previews the context block of the chosen level and, on save,
+  writes it into the agent context (`/context` → the generated instruction files) as a block *generated from
+  Settings* (`context_blocks.key`, read-only on the page, kept across `griglia:context import`);
+  `griglia:check` prints the same rules under the settings line (`❓ question level`) (task 499).
+
+### Changed
+- `agent.autonomy` values: `decide` is migrated to `autonomous`, `ask` keeps its name; `essential`, `many` and
+  `paranoid` are new.
+
 ## [0.84.0] - 2026-08-22
 
 ### Added
@@ -1636,7 +1650,8 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.82.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.85.0...HEAD
+[0.85.0]: https://github.com/alle80/griglia/compare/v0.84.0...v0.85.0
 [0.82.0]: https://github.com/alle80/griglia/compare/v0.81.4...v0.82.0
 [0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3
 [0.80.2]: https://github.com/alle80/griglia/compare/v0.80.1...v0.80.2

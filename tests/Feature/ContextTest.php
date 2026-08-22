@@ -60,7 +60,7 @@ MD;
         file_put_contents($file, self::MD);
         $this->artisan('griglia:context', ['action' => 'import', '--file' => $file])->expectsOutputToContain('3 groups, 6 blocks imported')->assertSuccessful();
         $this->artisan('griglia:context', ['action' => 'import', '--file' => $file])->assertFailed();
-        $this->assertSame(3, ContextGroup::count());
+        $this->assertSame(4, ContextGroup::count()); // 3 imported + the managed question-level group (task 499)
 
         // Everything enabled → export reproduces the content
         $out = Context::export();
@@ -77,7 +77,7 @@ MD;
         $this->assertStringContainsString('## Skills', Context::export(all: true));
         [$on, $total] = Context::tokens();
         $this->assertLessThan($total, $on);
-        $this->artisan('griglia:context', ['action' => 'status'])->expectsOutputToContain('3 groups, 6 blocks')->assertSuccessful();
+        $this->artisan('griglia:context', ['action' => 'status'])->expectsOutputToContain('4 groups, 7 blocks')->assertSuccessful();
         $this->artisan('griglia:context', ['action' => 'export'])->expectsOutputToContain('Artisan')->assertSuccessful();
     }
 

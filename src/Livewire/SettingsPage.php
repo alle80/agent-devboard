@@ -105,6 +105,13 @@ class SettingsPage extends Component
         \Alle80\Griglia\Mode::reset();
         \Alle80\Griglia\Support\Locale::apply(); // cambiando lingua la pagina si ridisegna già tradotta
         $this->values[$group][$key] = $settings->{$key};
+        if ($group === 'agent' && $key === 'autonomy') {
+            // The question level also lives in the agent context as a managed block (task 499)
+            \Alle80\Griglia\Support\QuestionLevel::sync();
+            $this->dispatch('toast', message: __('griglia::t.question_level.saved'));
+
+            return;
+        }
         $this->dispatch('toast', message: __('griglia::t.msg.setting_saved', ['label' => $field[0]]));
     }
 
@@ -164,6 +171,7 @@ class SettingsPage extends Component
             'skin' => $skin,
             'installedThemes' => ThemeStore::installed(),
             'pushSubscriptions' => method_exists(auth()->user() ?? new \stdClass, 'pushSubscriptions') ? auth()->user()->pushSubscriptions()->count() : 0,
+            'questionPreviews' => \Alle80\Griglia\Support\QuestionLevel::previews(), // level => context block (task 499)
             'sections' => [
                 'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), __('griglia::t.settings_agent_intro'), AgentSettings::fields()],
                 'optimization' => [__('griglia::t.settings_optimization_title'), __('griglia::t.settings_optimization_intro'), OptimizationSettings::fields()],

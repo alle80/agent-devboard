@@ -18,7 +18,7 @@ Everything the board does, in one page. Follow a link when you want the detail.
 | | |
 |---|---|
 | **The CLI contract** | `griglia:check` and `griglia:watch`: two commands, no vendor API. [The agent side](../agent/index.md) |
-| **Rules the agent follows** | The settings page tells it how to work — commit policy, autonomy, notifications, one task at a time or several, terse mode. [Configuration & settings](../configuration/index.md) |
+| **Rules the agent follows** | The settings page tells it how to work — commit policy, question level, notifications, one task at a time or several, terse mode. [Configuration & settings](../configuration/index.md) |
 | **Several agents** | Declare them, give each list or task its own, and each agent sees only its work. [The agent side](../agent/index.md) |
 | **Skills** | Load your agent's skill catalogue and pick, per task, which ones it should use. [Skills](../agent/skills.md) |
 | **Agent context** | Your instructions file as toggleable blocks, edited from the board and exported back to `AGENTS.md` / `CLAUDE.md`. [Agent context](../agent/context.md) |

@@ -143,6 +143,17 @@
                             <p class="db-setting-warn">{{ __('griglia::t.settings_options.task_mode_warn') }}</p>
                         </li>
                     @endif
+                    @if ($key === 'autonomy')
+                        {{-- Preview of the context block written for the chosen question level (task 499): every level
+                             is rendered, Alpine shows the selected one, so it follows the select before the save lands. --}}
+                        <li class="pb-3" wire:key="preview-{{ $group }}-{{ $key }}" x-data>
+                            <p class="{{ $skin['label'] }} inline-flex items-center gap-1 text-xs"><x-griglia::icon name="book" /> {{ __('griglia::t.question_level.preview_title') }}</p>
+                            @foreach ($questionPreviews as $level => $body)
+                                <p class="{{ $skin['help'] }} db-ctx-preview mt-1 rounded border border-current/15 px-2 py-2 text-xs whitespace-pre-wrap break-words" x-show="$wire.get('values.{{ $group }}.{{ $key }}') === '{{ $level }}'" x-cloak>{{ $body }}</p>
+                            @endforeach
+                            <p class="{{ $skin['help'] }} mt-1 text-xs">{{ __('griglia::t.question_level.preview_help') }} <a href="{{ route('griglia.context') }}" class="inline-flex items-center gap-1 hover:underline"><x-griglia::icon name="book" /> {{ __('griglia::t.ctx.menu') }}</a></p>
+                        </li>
+                    @endif
                 @endforeach
             </ul>
         </section>
