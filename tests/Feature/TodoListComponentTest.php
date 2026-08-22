@@ -144,10 +144,15 @@ class TodoListComponentTest extends TestCase
         $other = Checklist::create(['name' => 'Default list', 'user_id' => auth()->id()]);
         Todo::create(['title' => 'Global Claude', 'order' => 1, 'checklist_id' => $other->id]);
 
-        $component = Livewire::test(TodoList::class)->assertSee('All agents')->call('setAgentFilter', 'codex');
+        $component = Livewire::test(TodoList::class)->assertSee('All agents');
+        preg_match('/<label class="([^"]*db-agent-filter[^"]*)"/', $component->html(), $inactiveFilter);
+
+        $component->call('setAgentFilter', 'codex');
         $this->assertSame(['Inherited Codex'], $component->viewData('todos')->pluck('title')->all());
         $component->assertSet('agentFilter', 'codex');
         $this->assertTrue($component->viewData('filtering'), 'the agent filter alone counts as filtering');
+        preg_match('/<label class="([^"]*db-agent-filter[^"]*)"/', $component->html(), $activeFilter);
+        $this->assertSame($inactiveFilter[1], $activeFilter[1], 'choosing an agent must not restyle the select');
 
         // …so drag & drop is refused while it is on, like with the state filters and the search
         $component->call('reorder', [$explicitClaude->id, $inherited->id]);

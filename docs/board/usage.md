@@ -126,7 +126,8 @@ collapse it or hide the last lines; saving stays silent so it does not interrupt
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state and agent filters, archive.
 When several agents are configured, the chip with the robot icon (**All agents**) narrows the list to one agent's
 tasks; the filter follows the effective assignment (task override, then list default, then the global default),
-combines with the search and the state filters, and — like them — disables drag & drop while it is on.
+combines with the search and the state filters, and — like them — disables drag & drop while it is on. Its visual
+style stays unchanged after choosing an agent; the selected name is the indication of the active value.
 Turn on **All lists** beside the search field to find matching tasks in every active list you own; each result
 shows its list name. Archived lists and other users’ lists stay outside the search.
 On a plan list the **Plan** bar shows progress and the start/pause buttons (see [Plans](../features/plans.md)).

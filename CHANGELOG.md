@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.2] - 2026-08-22
+
+### Fixed
+- The agent filter select keeps the same chip style after choosing an agent instead of changing its appearance
+  based on whether the value is empty (task 555).
+
 ## [0.87.1] - 2026-08-22
 ### Changed
 - The task id chip now sits at the right end of the title line of the row (still one tap to copy), no longer on

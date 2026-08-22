@@ -90,7 +90,7 @@
              A <select> dressed like the status chips: the label carries the chip look, the select is transparent
              and inherits its colours (see .db-agent-filter in griglia.css). --}}
         @if (\Alle80\Griglia\Agent::many())
-            <label class="{{ $agentFilter !== '' ? $chipOnClass : $chipClass }} db-agent-filter inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none"
+            <label class="{{ $chipClass }} db-agent-filter inline-flex cursor-pointer items-center gap-1 px-2.5 py-1 text-xs leading-none"
                    title="{{ __('griglia::t.agent_filter') }}">
                 <x-griglia::icon name="bot" size="1.1em" :stroke="2" />
                 <select wire:change="setAgentFilter($event.target.value)" aria-label="{{ __('griglia::t.agent_filter') }}">

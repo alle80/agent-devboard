@@ -134,7 +134,8 @@ Ricerca a testo libero (titolo, note, commento, sotto-task, domande, descrizioni
 stato e di agente, archivio. Con più agenti configurati il chip con l'icona del robot (**Tutti gli agenti**)
 restringe la lista ai task di un solo agente; il filtro segue l'assegnazione effettiva (agente del task, altrimenti
 default della lista, altrimenti agente predefinito), si combina con ricerca e filtri di stato e — come loro —
-disabilita il trascinamento finché è attivo. Attiva **Tutte le liste** accanto alla ricerca per trovare i task in tutte le tue liste attive;
+disabilita il trascinamento finché è attivo. Lo stile non cambia dopo la scelta: è il nome selezionato a indicare
+il valore attivo. Attiva **Tutte le liste** accanto alla ricerca per trovare i task in tutte le tue liste attive;
 ogni risultato mostra la lista di origine. Le liste archiviate e quelle di altri utenti restano escluse. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
 [Piani](../features/plans.md)).
 
