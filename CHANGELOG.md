@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.88.6] - 2026-08-22
+### Changed
+- Reworked the documentation homepage around a factual developer-oriented explanation of Griglia's capabilities,
+  advantages over an uncoordinated CLI-agent session, non-goals and MIT open-source model (task 611).
+
 ## [0.88.5] - 2026-08-22
 
 ### Added

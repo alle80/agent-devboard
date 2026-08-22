@@ -1,10 +1,10 @@
 ---
-title: Una board di sviluppo per agenti
+title: Una task board open source per agenti di coding
 template: home.html
-hero_title: Una board di sviluppo per agenti
+hero_title: Una task board open source per agenti di coding
 hero_text: >-
-  Metti in coda le tue richieste come task; il tuo agente le prende, fa domande, racconta come sta andando e
-  le chiude — e tu segui tutto dal vivo, dal divano o dal telefono.
+  Griglia offre a sviluppatori e agenti di coding CLI un flusso condiviso e osservabile per richieste, domande,
+  avanzamento e risultati. Vive nella tua applicazione Laravel e resta sotto il tuo controllo.
 hero_quickstart: Primi cinque minuti
 hero_documentation: Documentazione
 hero_meta: Laravel 12/13 · Livewire 4 · MIT · funziona con Claude Code, Codex CLI, Gemini CLI, …
@@ -13,15 +13,14 @@ hide:
   - toc
 ---
 
-# Cos'è Griglia
+# Cosa fa Griglia
 
-**Griglia** è una board Laravel + Livewire che installi dentro la tua applicazione. Una lista è il canale con
-il tuo agente: ci scrivi le richieste come task, le segni **open to work**, e l'agente — Claude Code, Codex
-CLI, Gemini CLI, una qualunque CLI — le prende, chiede quando qualcosa non è chiaro, tiene in movimento la
-barra di avanzamento e le chiude con una risposta che puoi leggere.
+**Griglia** è una task board Laravel + Livewire per sviluppatori che usano agenti di coding. Scrivi una richiesta,
+aggiungi note, sotto-task o screenshot e decidi quando è pronta. Un agente CLI può quindi prenderla,
+fare domande, comunicare la fase corrente e chiuderla con un risultato registrato.
 
-Non è un involucro attorno a una chat e non parla con l'API di nessun fornitore: il contratto sono due comandi
-artisan e un file di istruzioni. Tutto quello che sa parlare con una shell può guidarla.
+La board rende questo scambio visibile e persistente. Può coordinare più liste e agenti,
+trasformare un obiettivo in un piano ordinato, notificarti quando serve una risposta e conservare dati su tempi di lavoro, token e costi.
 
 <div class="grid cards" markdown>
 
@@ -80,6 +79,26 @@ artisan e un file di istruzioni. Tutto quello che sa parlare con una shell può 
     [Installazione](getting-started/installation.md)
 
 </div>
+
+## Perché usarla invece della sola sessione CLI?
+
+Una sessione nel terminale è efficace mentre uno sviluppatore la segue, ma lo stato del lavoro tende a
+essere locale e temporaneo. Griglia aggiunge un piano di controllo persistente attorno all.agente CLI senza sostituirlo:
+
+- le richieste hanno una coda e un'autorizzazione a partire;
+- domande, avanzamento e risultati restano collegati al task;
+- il lavoro può proseguire in nuove sessioni o worker persistenti;
+- un altro dispositivo o membro del team può capire lo stato senza leggere il transcript del terminale.
+
+L'agente continua a modificare codice, eseguire test e usare Git con i suoi normali strumenti CLI. Griglia coordina il lavoro intorno a quella sessione.
+
+## Cosa non è Griglia
+
+Griglia non è un modello di coding autonomo, un IDE, un'interfaccia chat o un servizio agentico in hosting. Non invia prompt all'API di un provider e non elimina la necessità di revisionare le modifiche. Tu porti l.agente e decidi come eseguirlo; Griglia fornisce il flusso di task condiviso.
+
+## Open source per scelta
+
+Griglia è distribuita con licenza MIT. Board, protocollo per gli agenti, migrazioni e documentazione sono nel sorgente del package: un team può ispezionare il flusso, adattarlo alla propria applicazione Laravel e tenere i dati operativi sull'infrastruttura che controlla.
 
 ## Come funziona in un minuto
 

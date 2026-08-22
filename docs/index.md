@@ -1,10 +1,10 @@
 ---
-title: A dev board for coding agents
+title: An open-source task board for coding agents
 template: home.html
-hero_title: A dev board for coding agents
+hero_title: An open-source task board for coding agents
 hero_text: >-
-  Queue your requests as tasks; your coding agent takes them, asks questions, reports progress and
-  closes them — and you follow the whole thing live, from the sofa or from your phone.
+  Griglia gives developers and CLI coding agents a shared, observable workflow for requests, questions,
+  progress and results. It runs in your Laravel application and stays under your control.
 hero_quickstart: Quickstart
 hero_documentation: Documentation
 hero_meta: Laravel 12/13 · Livewire 4 · MIT · works with Claude Code, Codex CLI, Gemini CLI, …
@@ -13,15 +13,14 @@ hide:
   - toc
 ---
 
-# What Griglia is
+# What Griglia does
 
-**Griglia** is a Laravel + Livewire board you install in your own app. One list is the channel with your
-coding agent: you write requests as tasks, mark them **open to work**, and the agent — Claude Code, Codex
-CLI, Gemini CLI, any CLI agent — takes them, asks when something is unclear, keeps the progress bar moving
-and closes them with an answer you can read.
+**Griglia** is a Laravel + Livewire task board for developers who use coding agents. You write a request,
+add notes, sub-tasks or screenshots, and decide when it is ready. A CLI agent can then claim it, ask
+questions, report its current phase and close it with a recorded result.
 
-It is not a chat wrapper and it does not talk to any vendor API: the contract is two artisan commands and
-one instructions file. Anything that speaks a shell can drive it.
+The board keeps that exchange visible and persistent. It can coordinate several lists and agents, turn a
+goal into an ordered plan, notify you when input is needed, and retain working time, token and cost data.
 
 <div class="grid cards" markdown>
 
@@ -80,6 +79,26 @@ one instructions file. Anything that speaks a shell can drive it.
     [Installation](getting-started/installation.md)
 
 </div>
+
+## Why use it instead of a CLI session alone?
+
+A terminal session is effective while one developer is watching it, but its task state is usually local and
+temporary. Griglia adds a durable control plane around the CLI agent without replacing it:
+
+- requests have an explicit queue and permission to start;
+- questions, progress and results remain attached to the task;
+- work can continue through fresh sessions or persistent workers;
+- another device or team member can understand the current state without reading a terminal transcript.
+
+The agent still edits code, runs tests and uses Git through its normal CLI tools. Griglia coordinates the work around that session.
+
+## What Griglia is not
+
+Griglia is not an autonomous coding model, an IDE, a chat interface or a hosted agent service. It does not send prompts to a model provider and it does not remove the need to review changes. You bring the coding agent and decide how it runs; Griglia supplies the shared task workflow.
+
+## Open source by design
+
+Griglia is released under the MIT licence. The board, agent protocol, migrations and documentation are available in the package source, so teams can inspect the workflow, adapt it to their Laravel application and keep operational data on infrastructure they control.
 
 ## How it works in one minute
 
