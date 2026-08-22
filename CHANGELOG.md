@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.88.2] - 2026-08-22
+
+### Tests
+- Covered the optional-reviewer lifecycle end to end, including legacy completion, approval, rework, resubmission,
+  reviewer assignment and invalid state transitions (task 571).
+
 ## [0.88.1] - 2026-08-22
 
 ### Removed

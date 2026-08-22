@@ -22,6 +22,11 @@ npm install && npm run build       # asset precompilati → public/build
 php artisan griglia:docs-build     # il sito della documentazione
 ```
 
+La suite di regressione del ciclo di revisione si trova in `tests/Feature/ReviewWorkflowTest.php`. Copre sia il
+percorso storico senza revisore sia i flussi completi di invio, approvazione, richiesta modifiche e nuovo invio,
+incluse le transizioni di stato non valide. `tests/Feature/ReviewUiTest.php` copre l'assegnazione del revisore
+opzionale nel modale del task.
+
 La suite copre migrazioni, delimitazione per utente, i componenti Livewire, `griglia:check` /
 `griglia:watch`, il registro dei temi e i pacchetti zip, l'allineamento delle traduzioni fra `en` e `it` e
 l'evento di broadcast. GitHub Actions la esegue su PHP 8.3 e 8.4.

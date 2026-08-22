@@ -69,6 +69,17 @@ class ReviewWorkflowTest extends TestCase
         }
     }
 
+    public function test_optional_reviewer_can_be_added_changed_and_removed_before_work_starts(): void
+    {
+        $todo = $this->task(['working' => false, 'open_to_work' => true]);
+
+        $todo->update(['reviewer_agent' => 'claude']);
+        $this->assertSame('claude', $todo->fresh()->reviewer_agent);
+
+        $todo->update(['reviewer_agent' => null]);
+        $this->assertNull($todo->fresh()->reviewer_agent);
+    }
+
     public function test_reviewed_original_cannot_be_completed_directly(): void
     {
         $todo = $this->task(['reviewer_agent' => 'claude']);
@@ -170,6 +181,49 @@ class ReviewWorkflowTest extends TestCase
 
         $this->expectException(DomainException::class);
         app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->requestChanges($attempt->fresh(), 'claude');
+    }
+
+    public function test_review_decision_requires_a_taken_attempt_and_change_request_requires_a_comment(): void
+    {
+        $original = $this->task(['reviewer_agent' => 'claude']);
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--done' => $original->id])->assertSuccessful();
+        $attempt = $original->reviewAttempts()->sole();
+
+        try {
+            app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->approve($attempt, 'claude');
+            $this->fail('An untaken review attempt should not be approvable.');
+        } catch (DomainException $e) {
+            $this->assertStringContainsString('working review attempt', $e->getMessage());
+        }
+
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--take' => $attempt->id])->assertSuccessful();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--request-changes' => $attempt->id])
+            ->expectsOutputToContain('requires --comment')->assertFailed();
+
+        $this->assertNull($attempt->fresh()->review_outcome);
+        $this->assertSame(ReviewStatus::InReview, $original->fresh()->review_status);
+    }
+
+    public function test_executor_cannot_submit_a_task_that_is_not_working_or_submit_twice(): void
+    {
+        $notWorking = $this->task([
+            'working' => false, 'open_to_work' => true, 'reviewer_agent' => 'claude',
+        ]);
+
+        try {
+            app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->submit($notWorking, 'codex');
+            $this->fail('A task that is not working should not be submittable.');
+        } catch (DomainException $e) {
+            $this->assertStringContainsString('working task', $e->getMessage());
+        }
+        $this->assertCount(0, $notWorking->reviewAttempts()->get());
+
+        $working = $this->task(['reviewer_agent' => 'claude', 'order' => 2]);
+        $workflow = app(\Alle80\Griglia\Domain\ReviewWorkflow::class);
+        $workflow->submit($working, 'codex');
+
+        $this->expectException(DomainException::class);
+        $workflow->submit($working->fresh(), 'codex');
     }
 
     private function task(array $attributes = []): Todo

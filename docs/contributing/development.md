@@ -22,6 +22,10 @@ npm install && npm run build       # precompiled assets → public/build
 php artisan griglia:docs-build     # the documentation site
 ```
 
+The review lifecycle regression suite is in `tests/Feature/ReviewWorkflowTest.php`. It exercises both the legacy
+completion path without a reviewer and the complete submit, approve, request-changes and resubmit paths, including
+invalid state transitions. `tests/Feature/ReviewUiTest.php` covers assigning the optional reviewer in the task modal.
+
 The suite covers migrations, per-user scoping, the Livewire components, `griglia:check` / `griglia:watch`,
 the theme registry and zip packs, translation parity between `en` and `it`, and the broadcast event.
 GitHub Actions runs it on PHP 8.3 and 8.4.
