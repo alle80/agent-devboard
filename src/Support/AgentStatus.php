@@ -166,6 +166,26 @@ class AgentStatus
         return ['updated_at' => $updated, 'stale' => ! $updated || $updated->diffInMinutes($now) > self::STALE_MINUTES, 'agents' => $agents];
     }
 
+    /** Compact usage state consumed by persistent workers. Stale snapshots never block dispatch. */
+    public static function workerAgents(?CarbonImmutable $now = null): array
+    {
+        $now ??= CarbonImmutable::now();
+        $status = self::agents($now);
+
+        return array_map(function (array $agent) use ($status, $now) {
+            $resets = collect($agent['windows'] ?? [])
+                ->filter(fn (array $window) => ($window['used'] ?? 0) >= 100 && ($window['resets'] ?? null)?->isAfter($now))
+                ->pluck('resets')
+                ->sortDesc()
+                ->first();
+
+            return [
+                'key' => $agent['key'],
+                'limited_until' => ! $status['stale'] && $resets ? $resets->toIso8601String() : null,
+            ];
+        }, $status['agents']);
+    }
+
     /** "2h 10m" style countdown. */
     public static function countdown(?int $seconds): string
     {

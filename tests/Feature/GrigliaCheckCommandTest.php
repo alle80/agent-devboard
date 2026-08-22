@@ -63,7 +63,7 @@ class GrigliaCheckCommandTest extends TestCase
     public function test_working_task_can_be_paused_and_retaken(): void
     {
         $this->artisan('griglia:check', ['--take' => $this->todo->id, '--progress' => 40, '--phase' => 'waiting for quota'])->assertSuccessful();
-        $this->artisan('griglia:check', ['--pause' => $this->todo->id])->expectsOutputToContain('⏸ paused')->assertSuccessful();
+        $this->artisan('griglia:check', ['--pause' => $this->todo->id, '--phase' => 'Codex usage limit until 15:30'])->expectsOutputToContain('⏸ paused')->assertSuccessful();
 
         $this->todo->refresh();
         $this->assertTrue($this->todo->paused);
@@ -71,6 +71,7 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertFalse($this->todo->open_to_work);
         $this->assertNull($this->todo->working_since, 'a pause closes the timed work interval');
         $this->assertSame(40, $this->todo->progress, 'progress is preserved');
+        $this->assertSame('Codex usage limit until 15:30', $this->todo->phase, 'the worker explains why and until when it paused');
         $this->artisan('griglia:check')->doesntExpectOutputToContain('Add dark mode')->assertSuccessful();
         $this->artisan('griglia:check', ['--all' => true])->expectsOutputToContain('⏸ #1 Add dark mode')->assertSuccessful();
 

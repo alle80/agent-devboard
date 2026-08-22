@@ -13,6 +13,8 @@ session per eligible task: exactly one in the board's ``ordered`` mode, up to ``
 
 from __future__ import annotations
 
+from datetime import datetime
+
 import argparse
 import fcntl
 import hashlib
@@ -101,6 +103,33 @@ def claim(args: argparse.Namespace, task: dict) -> bool:
         print(f"task {task['id']}: not dispatched — {reason}", file=sys.stderr, flush=True)
         return False
     return True
+
+
+def provider_limit(state: dict, agent: str) -> str | None:
+    """Return the fresh quota reset exposed by the board for this worker, if any."""
+    match = next((item for item in state.get("agents", []) if item.get("key") == agent), {})
+    value = match.get("limited_until")
+    return str(value) if value else None
+
+
+def pause(args: argparse.Namespace, task_id: int, phase: str) -> bool:
+    """Close the task work interval while quota prevents its CLI from running."""
+    command = [part for part in board_command(args) if part != "--worker-json"]
+    command += [f"--pause={task_id}", f"--phase={phase}"]
+    result = subprocess.run(command, cwd=args.repo, text=True, capture_output=True, check=False)
+    if result.returncode:
+        reason = result.stderr.strip() or result.stdout.strip() or "board refused the pause"
+        print(f"task {task_id}: could not pause — {reason}", file=sys.stderr, flush=True)
+        return False
+    return True
+
+
+def limit_phase(agent: str, limited_until: str) -> str:
+    try:
+        reset = datetime.fromisoformat(limited_until.replace("Z", "+00:00")).astimezone()
+        return f"{agent} usage limit until {reset:%H:%M}"
+    except ValueError:
+        return f"{agent} usage limit until {limited_until}"
 
 
 def prompt(agent: str, task: dict) -> str:
@@ -299,6 +328,7 @@ def main() -> int:
     drain = DrainRequest()
     drain.install()
     known = seen = fingerprint()
+    announced_limit: str | None = None
     while True:
         try:
             # 1. Reap finished sessions first, whatever the board says (a board error must not leave zombies)
@@ -330,9 +360,21 @@ def main() -> int:
                     del running[task_id]
 
             limit = max(1, args.max_parallel) if state.get("task_mode") == "multitasking" else 1
-            # A pause belongs to the agent, not to the human workflow: once a session slot is available the
-            # worker claims it again, and --take atomically clears `paused` while preserving progress/phase.
-            eligible = [] if drain.requested else [item for item in items if item.get("id") not in running and not item.get("completed") and not item.get("question") and (item.get("working") or item.get("open_to_work") or item.get("paused"))]
+            limited_until = provider_limit(state, args.agent)
+            if limited_until:
+                if announced_limit != limited_until:
+                    print(f"provider {args.agent} at usage limit; next attempt after {limited_until}", flush=True)
+                    announced_limit = limited_until
+                phase = limit_phase(args.agent, limited_until)
+                for task in items:
+                    if task.get("working") and task.get("id") not in running:
+                        pause(args, int(task["id"]), phase)
+                eligible = []
+            else:
+                announced_limit = None
+                # A pause belongs to the agent, not to the human workflow: once a session slot is available the
+                # worker claims it again, and --take atomically clears `paused` while preserving progress/phase.
+                eligible = [] if drain.requested else [item for item in items if item.get("id") not in running and not item.get("completed") and not item.get("question") and (item.get("working") or item.get("open_to_work") or item.get("paused"))]
             for task in eligible[:max(0, limit - len(running))]:
                 session = start_agent(args, task)
                 if session is not None:

@@ -55,6 +55,21 @@ class AgentStatusTest extends TestCase
         $this->assertSame('—', AgentStatus::countdown(null));
     }
 
+    public function test_worker_state_exposes_only_fresh_active_limits(): void
+    {
+        $now = CarbonImmutable::parse('2026-08-22 15:00:00+00:00');
+        AgentStatus::import(['updated_at' => $now->toIso8601String(), 'agents' => [[
+            'key' => 'codex', 'name' => 'Codex CLI', 'windows' => [
+                ['key' => 'five_hour', 'utilization' => 100, 'resets_at' => '2026-08-22T15:10:00+00:00'],
+                ['key' => 'weekly', 'utilization' => 90, 'resets_at' => '2026-08-29T15:30:00+00:00'],
+            ],
+        ]]]);
+
+        $this->assertSame('2026-08-22T15:10:00+00:00', AgentStatus::workerAgents($now)[0]['limited_until']);
+        $this->assertNull(AgentStatus::workerAgents($now->addMinutes(20))[0]['limited_until'], 'stale snapshots must not block dispatch');
+        $this->assertNull(AgentStatus::workerAgents($now->addMinutes(11))[0]['limited_until'], 'an elapsed reset must release the worker');
+    }
+
     public function test_import_command_page_and_states(): void
     {
         $this->get('/agents')->assertOk()->assertSee('No agent data yet');

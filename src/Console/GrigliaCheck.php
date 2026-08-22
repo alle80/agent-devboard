@@ -114,7 +114,9 @@ class GrigliaCheck extends Command
 
                 return self::FAILURE;
             }
-            $t->update(['paused' => true, 'working' => false, 'open_to_work' => false, 'question' => false] + $this->tokenAttrs($t));
+            $phase = trim((string) $this->option('phase'));
+            $t->update(['paused' => true, 'working' => false, 'open_to_work' => false, 'question' => false]
+                + ($phase !== '' ? ['phase' => $phase] : []) + $this->tokenAttrs($t));
             $this->info(sprintf('⏸ paused: «%s» (id:%d) — its persistent worker will resume it automatically', $t->title, $t->id));
         }
 
@@ -291,7 +293,7 @@ class GrigliaCheck extends Command
                 return $row;
             })->values();
             $payload = $this->option('worker-json')
-                ? ['task_mode' => app(AgentSettings::class)->task_mode, 'items' => $items]
+                ? ['task_mode' => app(AgentSettings::class)->task_mode, 'agents' => \Alle80\Griglia\Support\AgentStatus::workerAgents(), 'items' => $items]
                 : $items;
             $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {

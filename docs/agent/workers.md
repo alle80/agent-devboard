@@ -167,6 +167,13 @@ repository/agent pair prevents duplicate worker processes, while the worker trac
 Before launching a CLI for an open task, the worker takes it through `griglia:check --take`: this repeats the
 board's current ownership check. If the user changed the task agent or its list default after the poll
 snapshot, the board refuses the stale claim and the wrong agent is never started.
+When the fresh snapshot produced by `agent-status.py` reports a usage window at 100%, the board exposes its
+reset time to the worker. The worker logs the limit once, dispatches no new CLI sessions and pauses each affected
+task after its process exits, with a phase such as `codex usage limit until 15:30`. Pausing closes the timed work
+interval without losing progress. Once the reset time passes (or a newer snapshot clears the limit), the normal
+paused-task path takes the task again automatically. Stale usage snapshots never block dispatch, so schedule
+`agent-status.py` at least every five minutes as described in [Host scripts](scripts.md).
+
 A board Stop terminates only that task process. After a child exits, its slot becomes available and the journal
 prints `task <id>: agent session ended with status <code>`. The worker reads only the JSON document of
 `--worker-json`: a warning the board prints after it does not stop the loop.
