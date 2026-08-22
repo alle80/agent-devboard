@@ -147,9 +147,8 @@ Il driver `claude` li passa come `--model` e `--effort` (`low`, `medium`, `high`
 `{model}` e `{effort}` (stringa vuota se non impostati), quindi è il template argv a decidere dove finiscono.
 Il worker non valida i valori: un modello o un livello sconosciuto fallisce dentro la CLI dell'agente.
 
-Le variabili si leggono all'avvio del worker, quindi una modifica ha effetto al prossimo
-`systemctl --user restart griglia-agent-worker@<chiave-agente>.service` — che interrompe anche la sessione in
-corso in quel momento.
+Le variabili si leggono all'avvio del worker. Per applicare una modifica senza interrompere le sessioni in
+corso, svuota il worker invece di riavviarlo — vedi [Aggiornare un worker in esecuzione](#aggiornare-un-worker-in-esecuzione).
 
 Per Gemini CLI, Aider o un altro agente, usa il driver `custom`. L'array JSON viene eseguito direttamente (mai
 attraverso una shell); `{prompt}`, `{repo}`, `{agent}`, `{model}` e `{effort}` vengono sostituiti dentro i singoli argomenti:
@@ -171,7 +170,33 @@ In modalità `ordered` esegue esattamente una sessione. In modalità `multitaski
 `--max-parallel` sessioni (2 per default), una per task idoneo; riduci il limite quando i task possono modificare
 gli stessi file. Un `flock` per coppia repository/agente impedisce worker duplicati, mentre il worker tiene
 traccia di ogni processo figlio per task. Uno Stop termina solo il processo di quel task; quando un figlio esce,
-il suo slot torna disponibile.
+il suo slot torna disponibile e nel journal compare `task <id>: agent session ended with status <codice>`. Il
+worker legge solo il documento JSON di `--worker-json`: un avviso che la board stampa dopo non ferma il ciclo.
+
+### Aggiornare un worker in esecuzione
+
+Un semplice `systemctl --user restart` uccide le sessioni dell'agente avviate dal worker. Per questo il worker
+si tiene aggiornato da solo, senza riavvio:
+
+- **Nuovo script su disco** — un rilascio del package, `vendor:publish --tag=griglia-scripts`, un `git pull`:
+  entro un intervallo il worker si ri-esegue sul posto. Stesso PID, stesso lock, e ogni sessione in corso passa
+  al nuovo codice (`--adopt`), quindi nessuno viene interrotto; nel journal compare
+  `reloading worker from <percorso> (<n> running session(s) carried over)` e poi `carried over after reload: …`.
+  Un file che non compila viene ignorato finché non cambia di nuovo.
+- **Nuovo ambiente** — `~/.config/griglia-worker/<chiave-agente>.env`, per esempio `GRIGLIA_WORKER_MAX_PARALLEL`:
+  lo legge il service manager all'avvio, quindi il worker deve ripartire, ma alle sue condizioni. Mandagli
+  `SIGHUP`:
+
+    ```bash
+    systemctl --user kill --signal=SIGHUP --kill-whom=main griglia-agent-worker@codex.service
+    ```
+
+    Il worker non avvia nuove sessioni, lascia finire quelle in corso e poi esce; `Restart=always` nella unit lo
+    fa ripartire con ambiente e script correnti. Nel journal compaiono `SIGHUP received: draining …` e
+    `drained: exiting so the service manager restarts the worker`. Il lavoro aperto nel frattempo aspetta il
+    riavvio — pochi secondi dopo la fine dell'ultima sessione.
+
+Usa `systemctl --user restart` solo quando interrompere le sessioni in corso è accettabile.
 
 Per controllare la configurazione senza lanciare un agente:
 

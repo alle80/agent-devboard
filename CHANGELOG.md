@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.85.1] - 2026-08-22
+
+### Fixed
+- **`griglia:check --worker-json` printed the stalled-plan warning after the JSON document**, so the persistent
+  worker failed to parse the board on every poll («Extra data») as soon as a plan had work left but nothing
+  open: no session was dispatched and finished sessions were never reaped. The warning stays in the human
+  output, as it already did for `--json` (task 507).
+- The persistent worker reaps finished sessions before asking the board, reads the JSON document even when
+  something follows it, and logs when a session ends (task 507).
+
+### Added
+- **The persistent worker updates itself without interrupting the running sessions** (task 507): when its
+  script changes on disk it re-executes itself in place (same PID and lock, sessions handed over with
+  `--adopt`), and `SIGHUP` drains it — no new session starts, it exits when the running ones end and the
+  service manager restarts it with the current environment
+  (`systemctl --user kill --signal=SIGHUP --kill-whom=main griglia-agent-worker@<key>.service`). Until now a
+  code or environment change needed a `systemctl restart` that killed the sessions in progress.
+
 ## [0.85.0] - 2026-08-22
 
 ### Added

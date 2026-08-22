@@ -142,9 +142,8 @@ The `claude` driver passes them as `--model` and `--effort` (`low`, `medium`, `h
 `{model}` and `{effort}` placeholders (empty strings when unset), so an argv template decides where they go.
 Values are not validated by the worker: an unknown model or effort level fails inside the agent CLI.
 
-The variables are read when the worker starts, so a change takes effect at the next
-`systemctl --user restart griglia-agent-worker@<agent-key>.service` — which also terminates a session that is
-running at that moment.
+The variables are read when the worker starts. To apply a change without interrupting the sessions that are
+running, drain the worker instead of restarting it — see [Updating a running worker](#updating-a-running-worker).
 
 For Gemini CLI, Aider or another agent, use the custom driver. The JSON array is executed directly (never
 through a shell); `{prompt}`, `{repo}`, `{agent}`, `{model}` and `{effort}` are replaced in individual arguments:
@@ -165,7 +164,34 @@ The worker polls the current board state, so it also finds work that was already
 `ordered` mode it runs exactly one session. In `multitasking` mode it runs up to `--max-parallel` sessions
 (default 2), one per eligible task; reduce the limit when tasks can touch the same files. One `flock` per
 repository/agent pair prevents duplicate worker processes, while the worker tracks every child by task id.
-A board Stop terminates only that task process. After a child exits, its slot becomes available.
+A board Stop terminates only that task process. After a child exits, its slot becomes available and the journal
+prints `task <id>: agent session ended with status <code>`. The worker reads only the JSON document of
+`--worker-json`: a warning the board prints after it does not stop the loop.
+
+### Updating a running worker
+
+A plain `systemctl --user restart` kills the agent sessions the worker started. The worker therefore keeps
+itself current without one:
+
+- **New script on disk** — a package release, `vendor:publish --tag=griglia-scripts`, a `git pull`: within one
+  interval the worker re-executes itself in place. Same PID, same lock, and every running session is handed over
+  to the new code (`--adopt`), so nobody is interrupted; the journal prints
+  `reloading worker from <path> (<n> running session(s) carried over)` and then `carried over after reload: …`.
+  A file that does not compile is ignored until it changes again.
+- **New environment** — `~/.config/griglia-worker/<agent-key>.env`, for example `GRIGLIA_WORKER_MAX_PARALLEL`:
+  the service manager reads it at start, so the worker has to be restarted, but on its own terms. Send it
+  `SIGHUP`:
+
+    ```bash
+    systemctl --user kill --signal=SIGHUP --kill-whom=main griglia-agent-worker@codex.service
+    ```
+
+    The worker starts no new session, lets the running ones finish, then exits; `Restart=always` in the unit
+    starts it again with the current environment and script. The journal shows `SIGHUP received: draining …`
+    and `drained: exiting so the service manager restarts the worker`. New work opened meanwhile waits for the
+    restart — a few seconds after the last session ends.
+
+Use `systemctl --user restart` only when interrupting the running sessions is acceptable.
 
 Check configuration without launching an agent:
 

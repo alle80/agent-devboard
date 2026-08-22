@@ -175,7 +175,10 @@ class GrigliaCheck extends Command
 
         $opt = app(OptimizationSettings::class);
         $acted = $this->option('take') || $this->option('done') || $this->option('ask');
-        if ($acted && $opt->compact_check && ! $this->option('all') && ! $this->option('json')) {
+        // --json and --worker-json are parsed by scripts (the persistent worker reads the latter): nothing but
+        // the JSON document may reach stdout, whatever else the command would like to say (task 507)
+        $machine = $this->option('json') || $this->option('worker-json');
+        if ($acted && $opt->compact_check && ! $this->option('all') && ! $machine) {
             return self::SUCCESS; // compact: the result line is enough, no settings/listing (token saving)
         }
 
@@ -200,7 +203,7 @@ class GrigliaCheck extends Command
         $todos = $workable($list);
         $planTodos = $planLists->mapWithKeys(fn ($l) => [$l->id => $workable($l)])->filter(fn ($c) => $c->isNotEmpty());
 
-        if ($this->option('json') || $this->option('worker-json')) {
+        if ($machine) {
             $all = $todos;
             foreach ($planTodos as $c) $all = $all->concat($c);
             // Every task carries its full resume chain (oldest steps included): same history the human output prints
@@ -309,9 +312,9 @@ class GrigliaCheck extends Command
         }
 
         // Dead ends: a plan with work left but nothing the agent may take. The user would wait for an agent
-        // that is waiting for the board — say it out loud, with the way out (task 347). Never in --json:
-        // that output is parsed by scripts.
-        foreach ($this->option('json') ? collect() : $planLists as $pl) {
+        // that is waiting for the board — say it out loud, with the way out (task 347). Never in --json or
+        // --worker-json: a line after the document broke the worker's parser (task 507).
+        foreach ($machine ? collect() : $planLists as $pl) {
             $pending = $pl->todos()->whereNull('archived_at')->where('completed', false)->count();
             $openable = $pl->todos()->whereNull('archived_at')->where('completed', false)
                 ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true))->count();

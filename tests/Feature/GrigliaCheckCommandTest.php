@@ -112,6 +112,27 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertSame($this->todo->id, $payload['items'][0]['id']);
     }
 
+    public function test_worker_json_stays_machine_readable_with_a_stuck_plan(): void
+    {
+        // The persistent worker parses --worker-json --all: the dead-end plan warning printed after the document
+        // blinded it for hours («Extra data» on every poll, task 507). Stuck plan = started, work left, nothing open.
+        $plan = Checklist::create(['name' => 'Stuck plan', 'user_id' => auth()->id(), 'plan_prompt' => 'Something']);
+        $plan->todos()->create(['title' => 'Done already', 'order' => 1, 'completed' => true, 'completed_at' => now()]);
+        $plan->todos()->create(['title' => 'Waiting for ever', 'order' => 2]);
+
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
+        $out = trim(\Illuminate\Support\Facades\Artisan::output());
+
+        $this->assertJson($out);
+        $payload = json_decode($out, true, flags: JSON_THROW_ON_ERROR);
+        $this->assertArrayHasKey('task_mode', $payload);
+        $this->assertStringNotContainsString('none is open to work', $out);
+
+        // ...while the human output still warns about it
+        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--all' => true]);
+        $this->assertStringContainsString('none is open to work', \Illuminate\Support\Facades\Artisan::output());
+    }
+
     public function test_taking_a_completed_task_is_refused(): void
     {
         // A closed task stays closed: to carry on there is «resume», which makes a new linked task (task 348).

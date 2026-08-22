@@ -46,7 +46,14 @@ class ScriptsTest extends TestCase
         $this->assertStringContainsString('lock_path(args.repo, args.agent)', $worker);
         $this->assertStringContainsString('GRIGLIA_WORKER_MAX_PARALLEL', $worker);
         $this->assertStringContainsString('state.get("task_mode") == "multitasking"', $worker);
-        $this->assertStringContainsString('running: dict[int, subprocess.Popen]', $worker);
+        $this->assertStringContainsString('running: dict[int, Session]', $worker);
+        // Task 507: the board JSON is read even when a warning follows it; the script reloads itself in place
+        // (same PID, sessions handed over) when it changes on disk; SIGHUP drains it instead of killing sessions
+        $this->assertStringContainsString('json.JSONDecoder().raw_decode(text, start)', $worker);
+        $this->assertStringContainsString('os.execv(sys.executable, [sys.executable, str(source), *argv])', $worker);
+        $this->assertStringContainsString('"--adopt="', $worker);
+        $this->assertStringContainsString('f"--lock-fd={lock.fileno()}"', $worker);
+        $this->assertStringContainsString('signal.signal(signal.SIGHUP, self.handle)', $worker);
         // The model and the reasoning effort of the dispatched session are configurable (task 475)
         foreach (['GRIGLIA_WORKER_MODEL', 'GRIGLIA_WORKER_EFFORT'] as $variable) {
             $this->assertStringContainsString('os.getenv("'.$variable.'")', $worker, "the worker must read $variable");
@@ -67,5 +74,21 @@ class ScriptsTest extends TestCase
         $this->assertCount(1, $paths);
         $this->assertSame(realpath($dir), realpath((string) array_key_first($paths)));
         $this->assertSame(base_path('scripts'), reset($paths));
+    }
+
+    public function test_python_scripts_have_valid_syntax(): void
+    {
+        // A script that does not parse never reaches the host: the worker would stay down until someone looks at
+        // the journal (task 507). Skipped where the test runner has no python3.
+        $python = trim((string) shell_exec('command -v python3 2>/dev/null'));
+        if ($python === '') {
+            $this->markTestSkipped('python3 is not available on this runner');
+        }
+        $dir = dirname(__DIR__, 2).'/scripts';
+        foreach (['sync-skills.py', 'sync-context.py', 'claude-tokens.py', 'agent-status.py', 'griglia-agent-worker.py'] as $script) {
+            $output = [];
+            exec(escapeshellarg($python).' -c '.escapeshellarg('import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])').' '.escapeshellarg($dir.'/'.$script).' 2>&1', $output, $code);
+            $this->assertSame(0, $code, "$script does not parse: ".implode("\n", $output));
+        }
     }
 }
