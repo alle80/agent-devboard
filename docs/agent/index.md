@@ -9,7 +9,10 @@ php artisan griglia:watch --agent=codex         # only events assigned to one ag
 php artisan griglia:check                       # what is open to work or already taken, settings, plans
 php artisan griglia:check --take=ID             # take in charge: the task turns to working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testing"
+php artisan griglia:check --pause=ID            # pause work, preserving progress and statistics
 php artisan griglia:check --ask=ID --q="Which one?" --choices="First|Second" # choices align with questions
+php artisan griglia:check --approve=REVIEW_ID --comment="Approved"
+php artisan griglia:check --request-changes=REVIEW_ID --comment="What must change"
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
 php artisan griglia:check --done=ID --comment="…" --outcome=alert   # done, but it needs a look (yellow row)
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # something is in the way (red row)
@@ -19,7 +22,11 @@ When an original task has an optional reviewer configured, the executor's `--don
 completion. Griglia atomically leaves the original incomplete and creates a linked, open review attempt assigned to
 that reviewer. Without a reviewer, `--done` keeps its existing meaning. Review attempts have immutable round numbers,
 cannot review themselves or participate in plan/resume chains, and never release the original's plan dependants.
-Reviewer decisions are explicit operations rather than an ordinary `--done`, so an outcome cannot be omitted. The task modal lets users choose an optional reviewer before work starts, then shows review ownership and the in-progress, in-review, approved or changes-requested state; links connect each original task to its review attempt.
+Reviewer decisions are explicit operations rather than an ordinary `--done`, so an outcome cannot be omitted. The
+assigned reviewer must first take the review attempt, then use `--approve` or `--request-changes`; the latter requires
+a comment explaining the requested work. Approval completes the attempt and original atomically and releases plan
+dependants. A change request retains the review comment, reopens the original for its executor and allows a later review
+round. Repeated identical decisions are safe; opposite decisions are rejected. The task modal shows the resulting state.
 
 Agent wrappers may pass multiline comments with escaped `\n` sequences: `griglia:check` normalizes them to
 real Markdown line breaks when saving the answer. The compact result summary always remains on one line.
@@ -47,6 +54,9 @@ resume can itself be resumed. With `--json` the same history is in the `resume_c
 ordered from the closest step to the oldest one.
 
 Statistics: every *working* interval is timed automatically; tokens are whatever the agent reports.
+When an agent must stop temporarily (for example because its usage limit was reached), `--pause=ID` closes the
+current timed interval and shows the pause badge without losing progress or phase. The paused task is not offered
+to persistent workers; tapping its badge reopens it, and the next `--take` resumes work.
 
 **A heavy session costs on every step**, because the context is re-read at every turn. The setting «suggest
 clearing the session» (⚡ optimization, in thousands of tokens) is the threshold past which the agent tells

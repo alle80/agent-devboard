@@ -15,7 +15,7 @@
         {{-- State badge = the same toggle as the dot in the row: tap → waiting ⚪ ⇄ open to work 🟢
              (working 🔧 → tap = stop; question ❓ → tap = take the task back without answering, the questions
              stay recorded; done ✔ → reopen from the list) --}}
-        @php($next = match ($state) { 'waiting' => 'open', 'open' => 'waiting', 'working' => 'waiting', 'question' => 'waiting', default => null })
+        @php($next = match ($state) { 'waiting' => 'open', 'open' => 'waiting', 'working' => 'waiting', 'paused' => 'open', 'question' => 'waiting', default => null })
         <button type="button"
                 class="db-badge db-badge-{{ $state }} db-state-trigger {{ $next ? 'cursor-pointer transition hover:scale-110 active:translate-y-px' : 'cursor-default' }}"
                 @if ($next) wire:click="setState('{{ $next }}')" @endif

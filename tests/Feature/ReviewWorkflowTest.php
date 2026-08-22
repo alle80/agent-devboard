@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Domain\ReviewOutcome;
 use Alle80\Griglia\Domain\ReviewStatus;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
@@ -106,6 +107,69 @@ class ReviewWorkflowTest extends TestCase
                 $this->assertNotSame('', $e->getMessage());
             }
         }
+    }
+
+    public function test_reviewer_can_approve_and_complete_the_aggregate(): void
+    {
+        $original = $this->task(['reviewer_agent' => 'claude']);
+        $dependent = Todo::create([
+            'title' => 'Next', 'order' => 2, 'checklist_id' => $this->list->id,
+            'agent' => 'codex', 'depends_on_id' => $original->id,
+        ]);
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--done' => $original->id])->assertSuccessful();
+        $attempt = $original->reviewAttempts()->sole();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--take' => $attempt->id])->assertSuccessful();
+
+        $this->artisan('griglia:check', [
+            '--agent' => 'claude', '--approve' => $attempt->id, '--comment' => 'Looks good',
+        ])->expectsOutputToContain('review approved')->assertSuccessful();
+
+        $this->assertSame(ReviewOutcome::Approved, $attempt->fresh()->review_outcome);
+        $this->assertTrue($attempt->fresh()->completed);
+        $this->assertSame('Looks good', $attempt->fresh()->claude_comment);
+        $this->assertSame(ReviewStatus::Approved, $original->fresh()->review_status);
+        $this->assertTrue($original->fresh()->completed);
+        $this->assertTrue($dependent->fresh()->open_to_work);
+    }
+
+    public function test_reviewer_can_request_changes_and_executor_can_resubmit(): void
+    {
+        $original = $this->task(['reviewer_agent' => 'claude']);
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--done' => $original->id])->assertSuccessful();
+        $attempt = $original->reviewAttempts()->sole();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--take' => $attempt->id])->assertSuccessful();
+
+        $this->artisan('griglia:check', [
+            '--agent' => 'claude', '--request-changes' => $attempt->id,
+            '--comment' => 'Add the missing regression test',
+        ])->expectsOutputToContain('changes requested')->assertSuccessful();
+
+        $this->assertSame(ReviewOutcome::ChangesRequested, $attempt->fresh()->review_outcome);
+        $this->assertSame('Add the missing regression test', $attempt->fresh()->claude_comment);
+        $this->assertSame(ReviewStatus::ChangesRequested, $original->fresh()->review_status);
+        $this->assertTrue($original->fresh()->open_to_work);
+        $this->assertFalse($original->fresh()->completed);
+
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--take' => $original->id])->assertSuccessful();
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--done' => $original->id])->assertSuccessful();
+        $this->assertSame(2, $original->reviewAttempts()->count());
+        $this->assertSame(2, $original->reviewAttempts()->reorder()->latest('review_round')->first()->review_round);
+    }
+
+    public function test_review_decisions_require_the_assigned_reviewer_and_are_immutable(): void
+    {
+        $original = $this->task(['reviewer_agent' => 'claude']);
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--done' => $original->id])->assertSuccessful();
+        $attempt = $original->reviewAttempts()->sole();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--take' => $attempt->id])->assertSuccessful();
+
+        $this->artisan('griglia:check', ['--agent' => 'codex', '--approve' => $attempt->id])
+            ->expectsOutputToContain('refusing to approve')->assertFailed();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--approve' => $attempt->id])->assertSuccessful();
+        $this->artisan('griglia:check', ['--agent' => 'claude', '--approve' => $attempt->id])->assertSuccessful();
+
+        $this->expectException(DomainException::class);
+        app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->requestChanges($attempt->fresh(), 'claude');
     }
 
     private function task(array $attributes = []): Todo

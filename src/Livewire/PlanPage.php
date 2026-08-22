@@ -166,6 +166,7 @@ class PlanPage extends Component
         return $list->todos()
             ->where('completed', false)
             ->where('working', false)
+            ->where('paused', false)
             ->where('question', false)
             ->whereNull('working_since')
             ->get();

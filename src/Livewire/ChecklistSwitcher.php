@@ -144,7 +144,7 @@ class ChecklistSwitcher extends Component
             return;
         }
         $next = $list->todos()->whereNull('archived_at')->orderBy('order')->get()
-            ->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->question);
+            ->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->paused && ! $t->question);
         if ($next) {
             $next->update(['open_to_work' => true, 'stopped_at' => null]);
         }
@@ -158,7 +158,7 @@ class ChecklistSwitcher extends Component
             'todos' => fn ($q) => $q->whereNull('archived_at'),
             'todos as done_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', true),
             'todos as chained_count' => fn ($q) => $q->whereNull('archived_at')->whereNotNull('depends_on_id'),
-            'todos as running_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', false)->where(fn ($w) => $w->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true)),
+            'todos as running_count' => fn ($q) => $q->whereNull('archived_at')->where('completed', false)->where(fn ($w) => $w->where('open_to_work', true)->orWhere('working', true)->orWhere('paused', true)->orWhere('question', true)),
         ])->orderBy('id')->get();
 
         return view('griglia::livewire.checklist-switcher', [

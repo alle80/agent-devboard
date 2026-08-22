@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Task-row agent selectors now show the complete selected-agent label instead of clipping it with a fixed-width
+  ellipsis (task 579).
+
+
+## [0.87.11] - 2026-08-22
+
+### Added
+- Reviewers can explicitly approve a working review attempt or request changes through `griglia:check`. Approval
+  atomically completes both the attempt and its original and releases plan dependants; requesting changes records the
+  feedback and reopens the original for its executor. Decisions are authorized, idempotent and immutable (task 570).
+- Agents can pause an active task with `griglia:check --pause=ID`: the board shows a dedicated two-bar pause
+  state and filter, preserves progress, stops work-time accounting, and lets the user reopen it (task 576).
 
 ## [0.87.10] - 2026-08-22
 

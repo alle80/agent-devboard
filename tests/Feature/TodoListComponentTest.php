@@ -62,6 +62,25 @@ class TodoListComponentTest extends TestCase
         Livewire::test(TodoList::class)
             ->assertSee('title="Completed task"', false)            ->assertSee('class="todo-action db-badge db-badge-done', false);
     }
+    public function test_paused_task_has_its_icon_filter_and_can_be_reopened(): void
+    {
+        $paused = $this->add('Paused task');
+        $paused->update(['paused' => true, 'progress' => 35]);
+        $this->add('Waiting task', 2);
+
+        $component = Livewire::test(TodoList::class)
+            ->assertSee('title="Paused by the agent: click to reopen"', false)
+            ->assertSee('db-badge-paused', false)
+            ->call('setFilter', 'paused');
+        $this->assertSame(['Paused task'], $component->viewData('todos')->pluck('title')->all());
+
+        $component->call('toggleOpenToWork', $paused->id);
+        $paused->refresh();
+        $this->assertFalse($paused->paused);
+        $this->assertTrue($paused->open_to_work);
+        $this->assertSame(35, $paused->progress);
+    }
+
     public function test_working_task_cannot_be_renamed_completed_archived_or_deleted(): void
     {
         $todo = $this->add('Agent owns this');

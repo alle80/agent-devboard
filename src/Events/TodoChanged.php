@@ -36,6 +36,7 @@ class TodoChanged implements ShouldBroadcastNow
         return match (true) {
             (bool) $todo->completed => 'done',
             (bool) $todo->question => 'question',
+            (bool) $todo->paused => 'paused',
             (bool) $todo->working => 'working',
             (bool) $todo->open_to_work => 'otw',
             default => 'waiting',

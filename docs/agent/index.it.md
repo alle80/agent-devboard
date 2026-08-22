@@ -10,6 +10,9 @@ php artisan griglia:watch --agent=codex         # solo gli eventi assegnati a un
 php artisan griglia:check                       # cosa è open to work o già preso, impostazioni, piani
 php artisan griglia:check --take=ID             # presa in carico: il task passa a working (0%)
 php artisan griglia:check --take=ID --progress=60 --phase="testando"
+php artisan griglia:check --pause=ID            # pausa il lavoro conservando avanzamento e statistiche
+php artisan griglia:check --approve=ID_REVIEW --comment="Approvato"
+php artisan griglia:check --request-changes=ID_REVIEW --comment="Cosa modificare"
 php artisan griglia:check --ask=ID --q="Quale?" --choices="Prima|Seconda"     # mette il task in pausa con delle domande
 php artisan griglia:check --done=ID --comment="…" [--tokens-in=N --tokens-out=N]
 php artisan griglia:check --done=ID --comment="…" --outcome=alert   # fatto, ma va guardato (riga gialla)
@@ -22,6 +25,11 @@ e assegnato al revisore. Senza revisore, `--done` conserva il significato preced
 round immutabile, non possono revisionare sé stessi né entrare nelle catene di piano/ripresa e non sbloccano mai i
 dipendenti dell'originale. Le decisioni del revisore sono azioni esplicite, non un normale `--done`, così l'esito non
 può essere omesso.
+
+Il revisore assegnato prende prima in carico il tentativo, poi usa `--approve` oppure `--request-changes`; quest'ultimo
+richiede un commento con il lavoro da rifare. L'approvazione completa atomicamente tentativo e originale e sblocca i
+dipendenti del piano. La richiesta di modifiche conserva il commento della review, riapre l'originale al suo esecutore
+e consente un round successivo. Ripetere la stessa decisione è sicuro, mentre un esito opposto viene rifiutato.
 
 I wrapper degli agenti possono passare commenti multilinea con sequenze `\n`: al salvataggio `griglia:check`
 le converte in veri a capo Markdown. Il riepilogo compatto del risultato resta sempre su una sola riga.
@@ -49,6 +57,9 @@ anche una ripresa può essere ripresa. Con `--json` la stessa storia sta nel cam
 ordinata dal passo più vicino al più vecchio.
 
 Statistiche: ogni intervallo *working* viene cronometrato da solo; i token sono quelli che riporta l'agente.
+Quando l'agente deve fermarsi temporaneamente (per esempio per il limite di utilizzo), `--pause=ID` chiude
+l'intervallo cronometrato e mostra il badge di pausa senza perdere percentuale o fase. Il worker persistente non
+riceve il task in pausa; toccando il badge lo si riapre e il successivo `--take` riprende il lavoro.
 
 **Una sessione pesante costa a ogni passo**, perché il contesto viene riletto a ogni turno. L'impostazione
 «suggerisci di ripulire la sessione» (⚡ ottimizzazione, in migliaia di token) è la soglia oltre la quale

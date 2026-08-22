@@ -7,6 +7,7 @@
         'open'     => '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/>',
         // working: «Matrix» digital rain — three columns of dashes flowing down (CSS .db-rain), green glow
         'working'  => '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path class="db-rain" d="M8.5 6.5v11"/><path class="db-rain db-rain-2" d="M12 6.5v11"/><path class="db-rain db-rain-3" d="M15.5 6.5v11"/>',
+        'paused'   => '<circle cx="12" cy="12" r="9"/><path d="M9.5 8v8M14.5 8v8"/>',
         'question' => '<circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.7 2.7 0 1 1 3.8 2.5c-.9.4-1.1 1-1.1 1.8"/><circle cx="12" cy="16.6" r=".7" fill="currentColor" stroke="none"/>',
         'done'     => '<circle cx="12" cy="12" r="9"/><path d="M8 12.4l2.6 2.6 5.4-5.8"/>',
         // commands

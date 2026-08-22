@@ -76,7 +76,7 @@
 
     {{-- Filtri di stato, agente e archivio --}}
     <div class="flex flex-wrap items-center gap-1.5">
-        @php($icons = ['todo' => 'waiting', 'done' => 'done', 'otw' => 'open', 'working' => 'working', 'question' => 'question'])
+        @php($icons = ['todo' => 'waiting', 'done' => 'done', 'otw' => 'open', 'working' => 'working', 'paused' => 'paused', 'question' => 'question'])
         @foreach (\Alle80\Griglia\Livewire\TodoList::filters() as $key => $label)
             <button
                 type="button"

@@ -15,11 +15,12 @@ Every row has a state dot:
 | ![waiting](../images/state-waiting.svg){ width="18" } | waiting | you — the agent must not touch it |
 | ![open to work](../images/state-open.svg){ width="18" } | open to work | you — ready for the agent |
 | ![working](../images/state-working.svg){ width="18" } | working | the agent (`--take`) — icon animated, progress % and phase next to the title |
+| ![paused](../images/state-paused.svg){ width="18" } | paused | the agent (`--pause`) — progress is preserved; tap to reopen |
 | ![question](../images/state-question.svg){ width="18" } | question | the agent asked something; answer in the modal and restart |
 | ![stopped](../images/state-stop.svg){ width="18" } | stopped | you tapped the working badge — the agent stops at once |
 | ![done](../images/state-done.svg){ width="18" } | done | the agent (`--done`) or you (checkbox) |
 
-Tap the dot to move between *waiting* and *open to work* (or to stop the agent). A completed row always
+Tap the dot to move between *waiting* and *open to work*, stop the agent, or reopen a paused task. A completed row always
 shows the *done* icon, even if it was open to work before completion.
 
 When the agent has left a result, a very short automatic summary appears under the title. Agents can give a
@@ -95,6 +96,9 @@ The header uses the whole bar: on the left the **state badge**, whose text label
 every screen, with ‹ `3/7` › and the task id (`id:510`, tap to copy the number) — and on the right the
 commands: the agent that owns the task, **move to another list**, archive, delete, close, plus **resume with
 changes** (a new linked task) on a completed one.
+
+When several agents are configured, the selected agent is shown on its own line below the task title. The chip expands
+to show the complete agent name, up to the available width of the row.
 
 ### Saving happens by itself
 

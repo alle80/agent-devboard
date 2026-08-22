@@ -25,7 +25,7 @@ class TodoList extends Component
     /** Show todos from every active list owned by the current user. */
     public bool $searchAllLists = false;
 
-    /** Filtro di stato: all | todo | done | otw | working | question */
+    /** Filtro di stato: all | todo | done | otw | working | paused | question */
     public string $filter = 'all';
 
     /** Effective agent key, or '' for every configured agent. */
@@ -40,7 +40,7 @@ class TodoList extends Component
     }
 
     /** Filter keys (labels come from the translations: griglia::t.filters). */
-    public const FILTERS = ['all', 'todo', 'done', 'otw', 'working', 'question'];
+    public const FILTERS = ['all', 'todo', 'done', 'otw', 'working', 'paused', 'question'];
 
     /** key => translated label */
     public static function filters(): array
@@ -110,6 +110,7 @@ class TodoList extends Component
             'done' => $q->where('completed', true),
             'otw' => $q->where('open_to_work', true)->where('completed', false),
             'working' => $q->where('working', true)->where('completed', false),
+            'paused' => $q->where('paused', true)->where('completed', false),
             'question' => $q->where('question', true),
             default => $q,
         };
@@ -189,9 +190,9 @@ class TodoList extends Component
         if (! $chained && ! ($list?->plan_prompt)) {
             return null;
         }
-        $todos = $this->active()->orderBy('order')->get(['id', 'completed', 'open_to_work', 'working', 'question']);
-        $next = $todos->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->question);
-        $running = $todos->contains(fn ($t) => ! $t->completed && ($t->open_to_work || $t->working || $t->question));
+        $todos = $this->active()->orderBy('order')->get(['id', 'completed', 'open_to_work', 'working', 'paused', 'question']);
+        $next = $todos->first(fn ($t) => ! $t->completed && ! $t->open_to_work && ! $t->working && ! $t->paused && ! $t->question);
+        $running = $todos->contains(fn ($t) => ! $t->completed && ($t->open_to_work || $t->working || $t->paused || $t->question));
 
         return ['next' => $next?->id, 'done' => $todos->where('completed', true)->count(), 'total' => $todos->count(), 'running' => $running, 'paused' => (bool) $list?->plan_paused];
     }
@@ -292,6 +293,14 @@ class TodoList extends Component
         // Con domande aperte il pallino porta al modale per rispondere
         if ($todo->question) {
             $this->dispatch('open-ingredients', todoId: $todo->id);
+
+            return;
+        }
+
+        // Paused by the agent: the user explicitly reopens it for the persistent worker.
+        if ($todo->paused) {
+            $todo->update(['paused' => false, 'open_to_work' => true, 'stopped_at' => null]);
+            $this->dispatch('toast', message: __('griglia::t.msg.otw_on', ['title' => $todo->title]), type: 'success');
 
             return;
         }

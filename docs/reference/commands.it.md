@@ -37,7 +37,7 @@ Elenca le richieste aperte della lista dell'agente (vedi la config griglia.agent
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--pause [PAUSE]] [--done [DONE]] [--approve [APPROVE]] [--request-changes [REQUEST-CHANGES]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argomento / opzione | Cosa fa | Default |
@@ -46,8 +46,11 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--json` | Output leggibile da un programma | flag |
 | `--worker-json` | Task e impostazioni di pianificazione del worker in formato leggibile da un programma | flag |
 | `--take` | Id del todo da mettere in lavorazione (presa in carico) | — |
+| `--pause` | Id del todo in lavorazione da mettere in pausa finché non viene riaperto sulla board | — |
 | `--done` | Id del todo da segnare come completato | — |
-| `--comment` | Commento dell'agente salvato sul todo di --take/--done (claude_comment) | — |
+| `--approve` | Id del tentativo di revisione in lavorazione da approvare | — |
+| `--request-changes` | Id del tentativo di revisione in lavorazione da restituire al suo esecutore | — |
+| `--comment` | Commento dell'agente salvato con --take/--done/--approve/--request-changes (claude_comment) | — |
 | `--summary` | Riassunto brevissimo del risultato, mostrato sotto il titolo del task (con --done) | — |
 | `--progress` | Percentuale di avanzamento 0-100 mostrata sul todo in lavorazione (con --take; per aggiornarla rilancia --take=ID --progress=N). --take da solo parte da 0% | — |
 | `--phase` | Testo breve su cosa sta facendo adesso l'agente (con --take; per esempio "scrivendo codice", "testando"); mostrato accanto alla % | — |
@@ -55,8 +58,8 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--ask` | Id del todo su cui fare domande (il task si mette in pausa nello stato «domanda») | — |
 | `--q` | Testo di ogni domanda, ripetibile | _array_ |
 | `--choices` | Scelte chiuse separate da \| per il --q corrispondente, ripetibile; il testo libero resta disponibile | _array_ |
-| `--tokens-in` | Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
-| `--tokens-out` | Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask) | — |
+| `--tokens-in` | Token in ingresso spesi dall'ultimo --take (con qualsiasi azione sul task) | — |
+| `--tokens-out` | Token in uscita spesi dall'ultimo --take (con qualsiasi azione sul task) | — |
 | `--agent` | Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo) | — |
 | `--force` | Agisci su un task che appartiene a un altro agente, oppure riprendi un task fermato dall'utente (--take/--done/--ask altrimenti lo rifiutano) | flag |
 

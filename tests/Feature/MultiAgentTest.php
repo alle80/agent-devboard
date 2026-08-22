@@ -72,6 +72,10 @@ class MultiAgentTest extends TestCase
             ->assertSeeHtml('setTodoAgent('.$todo->id.', $event.target.value)')
             ->assertSeeHtml('db-agent-row');
 
+        $css = file_get_contents(__DIR__.'/../../resources/css/griglia.css');
+        $this->assertStringContainsString('.db-agent-row .db-agent-chip { width: max-content; max-width: 100%; }', $css);
+        $this->assertStringNotContainsString('.db-agent-row .db-agent-chip { max-width: 12rem; }', $css, 'the selected agent label must not be clipped');
+
         Livewire::test(TodoList::class)->call('setTodoAgent', $todo->id, 'codex')->assertDispatched('toast');
         $this->assertSame('codex', $todo->fresh()->agent);
 

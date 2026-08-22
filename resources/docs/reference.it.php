@@ -57,7 +57,11 @@ return [
         'Machine-readable tasks plus worker scheduling settings' => 'Task e impostazioni di pianificazione del worker in formato leggibile da un programma',
         'Id of the todo to mark as working (take in charge)' => 'Id del todo da mettere in lavorazione (presa in carico)',
         'Id of the todo to mark as completed' => 'Id del todo da segnare come completato',
+        'Id of the working todo to pause until it is reopened on the board' => 'Id del todo in lavorazione da mettere in pausa finché non viene riaperto sulla board',
+        'Id of a working review attempt to approve' => 'Id del tentativo di revisione in lavorazione da approvare',
+        'Id of a working review attempt that must return to its executor' => 'Id del tentativo di revisione in lavorazione da restituire al suo esecutore',
         'Agent comment saved on the todo of --take/--done (claude_comment)' => "Commento dell'agente salvato sul todo di --take/--done (claude_comment)",
+        'Agent comment saved on --take/--done/--approve/--request-changes (claude_comment)' => "Commento dell'agente salvato con --take/--done/--approve/--request-changes (claude_comment)",
         'Very short result summary shown below the task title (with --done)' => 'Riassunto brevissimo del risultato, mostrato sotto il titolo del task (con --done)',
         'Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%' => 'Percentuale di avanzamento 0-100 mostrata sul todo in lavorazione (con --take; per aggiornarla rilancia --take=ID --progress=N). --take da solo parte da 0%',
         'Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the %' => 'Testo breve su cosa sta facendo adesso l\'agente (con --take; per esempio "scrivendo codice", "testando"); mostrato accanto alla %',
@@ -68,6 +72,8 @@ return [
         'Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in ingresso spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)' => "Token in uscita spesi sul todo dall'ultimo --take (sommati alle sue statistiche; con --take/--done/--ask)",
         'Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)' => "Solo i task di questa chiave d'agente (più agenti; default: GRIGLIA_AGENT_KEY, oppure tutti i task quando l'agente è uno solo)",
+        'Input tokens spent since the last --take (with any task action)' => "Token in ingresso spesi dall'ultimo --take (con qualsiasi azione sul task)",
+        'Output tokens spent since the last --take (with any task action)' => "Token in uscita spesi dall'ultimo --take (con qualsiasi azione sul task)",
         'Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise)' => "Agisci su un task che appartiene a un altro agente, oppure riprendi un task fermato dall'utente (--take/--done/--ask altrimenti lo rifiutano)",
 
         // ----- griglia:context

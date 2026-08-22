@@ -34,6 +34,7 @@ return [
     'stop_confirm' => 'Stop the agent\'s work on «:title»?',
     'dot_question' => 'The agent has questions: open to answer',
     'dot_working' => 'In progress: click to stop',
+    'dot_paused' => 'Paused by the agent: click to reopen',
     'dot_otw_on' => 'Open to work: click to disable',
     'dot_otw_off' => 'Mark as open to work',
     'dot_done' => 'Completed task',
@@ -63,13 +64,13 @@ return [
     'show_archived' => 'Show archived items',
     'archive_help' => 'You are looking at the archive: these items are not in the list and do not count in the total. You can restore or delete them.',
     'filter_help' => 'Filter active: drag & drop reordering is disabled until you clear the search and every filter (back to «All»).',
-    'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => 'Open to work', 'working' => 'Working', 'question' => 'Questions'],
+    'filters' => ['all' => 'All', 'todo' => 'To do', 'done' => 'Done', 'otw' => 'Open to work', 'working' => 'Working', 'paused' => 'Paused', 'question' => 'Questions'],
     'agent_filter' => 'Filter by agent',
     'all_agents' => 'All agents',
 
     // Modal
     'note' => 'Task',
-    'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'question' => 'Awaiting answer', 'done' => 'Done'],
+    'state' => ['waiting' => 'Waiting', 'open' => 'Open to work', 'working' => 'Working', 'paused' => 'Paused', 'question' => 'Awaiting answer', 'done' => 'Done'],
     'md' => ['bold' => 'Bold', 'italic' => 'Italic', 'code' => 'Code', 'codeblock' => 'Code block', 'list' => 'List', 'quote' => 'Quote', 'link' => 'Link', 'linktext' => 'text', 'table' => 'Table', 'separator' => 'Separator'],
     'image_too_large' => 'Image too large (max :mp megapixel).',
     'image_description' => 'Image description',

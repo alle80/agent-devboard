@@ -364,7 +364,7 @@ class IngredientModal extends Component
         }
     }
 
-    /** State of the current todo, for the coloured badge: waiting|open|working|question|done. */
+    /** State of the current todo, for the coloured badge: waiting|open|working|paused|question|done. */
     public function stateKey(): string
     {
         $todo = $this->todo();
@@ -373,6 +373,7 @@ class IngredientModal extends Component
             ! $todo => 'waiting',
             (bool) $todo->completed => 'done',
             (bool) $todo->question => 'question',
+            (bool) $todo->paused => 'paused',
             (bool) $todo->working => 'working',
             (bool) $todo->open_to_work => 'open',
             default => 'waiting',
@@ -386,7 +387,10 @@ class IngredientModal extends Component
             return;
         }
 
-        if ($todo->working) {
+        if ($todo->paused) {
+            $todo->update(['paused' => false, 'open_to_work' => true, 'stopped_at' => null]);
+            $this->dispatch('toast', message: __('griglia::t.msg.otw_on', ['title' => $todo->title]), type: 'success');
+        } elseif ($todo->working) {
             $todo->update(['working' => false, 'open_to_work' => false, 'stopped_at' => now()]);
             $this->dispatch('toast', message: __('griglia::t.msg.stopped', ['title' => $todo->title]), type: 'info');
         } else {
@@ -421,10 +425,10 @@ class IngredientModal extends Component
         }
         $wasWorking = $todo->working;
         $attrs = match ($state) {
-            'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'question' => false, 'outcome' => null],
-            'open' => ['completed' => false, 'open_to_work' => true, 'working' => false, 'question' => false, 'stopped_at' => null, 'outcome' => null],
+            'waiting' => ['completed' => false, 'open_to_work' => false, 'working' => false, 'paused' => false, 'question' => false, 'outcome' => null],
+            'open' => ['completed' => false, 'open_to_work' => true, 'working' => false, 'paused' => false, 'question' => false, 'stopped_at' => null, 'outcome' => null],
             // closed by the user: there is no agent result to flag, so no outcome
-            'done' => ['completed' => true, 'open_to_work' => false, 'working' => false, 'question' => false, 'result_seen' => true, 'progress' => null, 'outcome' => null],
+            'done' => ['completed' => true, 'open_to_work' => false, 'working' => false, 'paused' => false, 'question' => false, 'result_seen' => true, 'progress' => null, 'outcome' => null],
         };
         if ($wasWorking && $state !== 'open') {
             $attrs['stopped_at'] = now();

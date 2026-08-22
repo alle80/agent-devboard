@@ -60,6 +60,34 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertTrue($this->todo->ingredients()->first()->checked, 'sub-tasks ticked on done');
     }
 
+    public function test_working_task_can_be_paused_and_retaken(): void
+    {
+        $this->artisan('griglia:check', ['--take' => $this->todo->id, '--progress' => 40, '--phase' => 'waiting for quota'])->assertSuccessful();
+        $this->artisan('griglia:check', ['--pause' => $this->todo->id])->expectsOutputToContain('⏸ paused')->assertSuccessful();
+
+        $this->todo->refresh();
+        $this->assertTrue($this->todo->paused);
+        $this->assertFalse($this->todo->working);
+        $this->assertFalse($this->todo->open_to_work);
+        $this->assertNull($this->todo->working_since, 'a pause closes the timed work interval');
+        $this->assertSame(40, $this->todo->progress, 'progress is preserved');
+        $this->artisan('griglia:check')->doesntExpectOutputToContain('Add dark mode')->assertSuccessful();
+        $this->artisan('griglia:check', ['--all' => true])->expectsOutputToContain('⏸ #1 Add dark mode')->assertSuccessful();
+
+        $this->todo->update(['open_to_work' => true]);
+        $this->artisan('griglia:check', ['--take' => $this->todo->id])->assertSuccessful();
+        $this->assertFalse($this->todo->fresh()->paused);
+        $this->assertTrue($this->todo->fresh()->working);
+    }
+
+    public function test_only_a_working_task_can_be_paused(): void
+    {
+        $this->artisan('griglia:check', ['--pause' => $this->todo->id])
+            ->expectsOutputToContain('only a working task can be paused')
+            ->assertFailed();
+        $this->assertFalse($this->todo->fresh()->paused);
+    }
+
     public function test_done_normalizes_escaped_newlines_from_agent_wrappers(): void
     {
         $this->artisan('griglia:check', [

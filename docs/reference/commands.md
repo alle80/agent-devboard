@@ -37,7 +37,7 @@ Lists the open requests of the agent list (see config griglia.agent_list)
 Alias: `sviluppo:check`
 
 ```bash
-php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--done [DONE]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
+php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--pause [PAUSE]] [--done [DONE]] [--approve [APPROVE]] [--request-changes [REQUEST-CHANGES]] [--comment [COMMENT]] [--summary [SUMMARY]] [--progress [PROGRESS]] [--phase [PHASE]] [--outcome [OUTCOME]] [--ask [ASK]] [--q [Q]] [--choices [CHOICES]] [--tokens-in [TOKENS-IN]] [--tokens-out [TOKENS-OUT]] [--agent [AGENT]] [--force]
 ```
 
 | Argument / option | What it does | Default |
@@ -46,8 +46,11 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--json` | Machine-readable output | flag |
 | `--worker-json` | Machine-readable tasks plus worker scheduling settings | flag |
 | `--take` | Id of the todo to mark as working (take in charge) | — |
+| `--pause` | Id of the working todo to pause until it is reopened on the board | — |
 | `--done` | Id of the todo to mark as completed | — |
-| `--comment` | Agent comment saved on the todo of --take/--done (claude_comment) | — |
+| `--approve` | Id of a working review attempt to approve | — |
+| `--request-changes` | Id of a working review attempt that must return to its executor | — |
+| `--comment` | Agent comment saved on --take/--done/--approve/--request-changes (claude_comment) | — |
 | `--summary` | Very short result summary shown below the task title (with --done) | — |
 | `--progress` | Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0% | — |
 | `--phase` | Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the % | — |
@@ -55,8 +58,8 @@ php artisan griglia:check [--all] [--json] [--worker-json] [--take [TAKE]] [--do
 | `--ask` | Id of the todo to ask questions about (the task pauses in the question state) | — |
 | `--q` | Text of each question, repeatable | _array_ |
 | `--choices` | Pipe-separated closed choices for the corresponding --q, repeatable; free text remains available | _array_ |
-| `--tokens-in` | Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
-| `--tokens-out` | Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask) | — |
+| `--tokens-in` | Input tokens spent since the last --take (with any task action) | — |
+| `--tokens-out` | Output tokens spent since the last --take (with any task action) | — |
 | `--agent` | Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent) | — |
 | `--force` | Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise) | flag |
 

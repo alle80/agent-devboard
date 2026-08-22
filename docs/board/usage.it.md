@@ -16,6 +16,7 @@ Ogni riga ha il pallino dello stato:
 | ![in attesa](../images/state-waiting.svg){ width="18" } | in attesa | tu — l'agente non deve toccarlo |
 | ![open to work](../images/state-open.svg){ width="18" } | open to work | tu — pronto per l'agente |
 | ![working](../images/state-working.svg){ width="18" } | working | l'agente (`--take`) — icona animata, percentuale e fase accanto al titolo |
+| ![in pausa](../images/state-paused.svg){ width="18" } | in pausa | l'agente (`--pause`) — conserva l'avanzamento; tocca per riaprire |
 | ![domanda](../images/state-question.svg){ width="18" } | domanda | l'agente ha chiesto qualcosa; rispondi nel modale e fallo ripartire |
 | ![fermato](../images/state-stop.svg){ width="18" } | fermato | hai toccato il badge «working» — l'agente si ferma subito |
 | ![fatto](../images/state-done.svg){ width="18" } | fatto | l'agente (`--done`) o tu (spunta) |
@@ -24,7 +25,7 @@ Quando c'è un risultato dell'agente, sotto il titolo compare un riassunto autom
 possono darne uno più preciso con `griglia:check --done --summary="…"`; altrimenti Griglia lo ricava dal
 commento di chiusura. Serve a distinguere una sequenza di task ripresi che hanno tutti lo stesso titolo.
 
-Tocca il pallino per passare fra *in attesa* e *open to work* (o per fermare l'agente).
+Tocca il pallino per passare fra *in attesa* e *open to work*, fermare l'agente o riaprire un task in pausa.
 
 In fondo alla riga del titolo ogni riga mostra l'**id** del task (`id:510`): lo stesso `id:N` che l'agente stampa
 in `griglia:check`, e il numero che usi con `--take` / `--done` o quando parli di un task. Toccalo per copiare il
@@ -96,6 +97,9 @@ visibile accanto all'icona (si tocca per cambiarlo), ‹ `3/7` › e l'id del ta
 copiare il numero), **sposta in un'altra lista**, archivia, elimina; su un task completato: **riprendi con
 modifiche** (un nuovo
 task collegato).
+
+Quando sono configurati più agenti, l’agente selezionato compare su una riga propria sotto il titolo del task. La
+targhetta si allarga fino a mostrare il nome completo, entro la larghezza disponibile della riga.
 
 Un task è in sola lettura mentre è **in lavorazione**, così la richiesta non cambia sotto i piedi
 dell’agente. Tocca il badge working per fermarlo e riportarlo in attesa prima di modificarlo; poi potrai

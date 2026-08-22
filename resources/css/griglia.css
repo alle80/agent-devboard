@@ -448,6 +448,7 @@ select.setting-input { appearance: auto; }
 .db-badge-waiting  { color: #94a3b8; }
 .db-badge-open     { color: var(--tl-accent, #22c55e); }
 .db-badge-working  { color: #00ff41; filter: drop-shadow(0 0 3px rgb(0 255 65 / .8)); }
+.db-badge-paused   { color: #f59e0b; }
 .db-badge-question { color: #a78bfa; }
 .db-badge-done     { color: #22c55e; }
 
@@ -480,7 +481,7 @@ select.setting-input { appearance: auto; }
 .db-agent-chip:hover { opacity: 1; }
 /* Sotto il titolo la targhetta ha la riga tutta per sé: può respirare senza spingere via i comandi (task 427). */
 .db-agent-row { line-height: 1; }
-.db-agent-row .db-agent-chip { max-width: 12rem; }
+.db-agent-row .db-agent-chip { width: max-content; max-width: 100%; }
 .db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
 
 /* Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check, ultima targhetta della riga del titolo

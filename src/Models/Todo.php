@@ -17,7 +17,7 @@ class Todo extends Model
 {
     use SoftDeletes;
 
-    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'paused', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -25,6 +25,7 @@ class Todo extends Model
             'completed' => 'boolean',
             'open_to_work' => 'boolean',
             'working' => 'boolean',
+            'paused' => 'boolean',
             'question' => 'boolean',
             'result_seen' => 'boolean',
             'progress' => 'integer',
@@ -277,6 +278,9 @@ class Todo extends Model
                 if ((bool) $todo->completed !== ($todo->review_outcome !== null)) {
                     throw new DomainException('A review attempt is completed if and only if it has an outcome.');
                 }
+                if ($todo->exists && $todo->getOriginal('review_outcome') !== null && $todo->isDirty('review_outcome')) {
+                    throw new DomainException('A review decision is immutable.');
+                }
                 if ($todo->exists && $todo->review_outcome === null && $todo->isDirty(['agent', 'checklist_id', 'archived_at'])) {
                     throw new DomainException('An active review attempt cannot be reassigned, moved, or archived.');
                 }
@@ -296,8 +300,8 @@ class Todo extends Model
                 if ($todo->review_status === ReviewStatus::Approved && ! $todo->completed) {
                     throw new DomainException('An approved task must be completed.');
                 }
-                if ($todo->review_status === ReviewStatus::InReview && ($todo->working || $todo->open_to_work || $todo->question || $todo->completed)) {
-                    throw new DomainException('A task in review cannot also be open, working, questioned, or completed.');
+                if ($todo->review_status === ReviewStatus::InReview && ($todo->working || $todo->paused || $todo->open_to_work || $todo->question || $todo->completed)) {
+                    throw new DomainException('A task in review cannot also be open, working, paused, questioned, or completed.');
                 }
                 if ($todo->exists && $todo->reviewAttempts()->whereNull('review_outcome')->exists()
                     && $todo->isDirty(['agent', 'reviewer_agent', 'checklist_id', 'archived_at'])) {
@@ -335,14 +339,14 @@ class Todo extends Model
         // Plan chain: when a task gets completed, the tasks waiting for it become open to work 🟢
         static::saved(function (Todo $todo) {
             if ($todo->completed && $todo->wasChanged('completed') && ! ($todo->checklist?->plan_paused)) {
-                $todo->dependents()->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->whereNull('archived_at')
+                $todo->dependents()->where('completed', false)->where('open_to_work', false)->where('working', false)->where('paused', false)->where('question', false)->whereNull('archived_at')
                     ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => true, 'stopped_at' => null]));
             }
 
             // …and when a completed task is reopened, the tasks it had opened go back to waiting, unless
             // somebody already worked on them: otherwise the agent would run ahead of the task you reopened.
             if (! $todo->completed && $todo->wasChanged('completed')) {
-                $todo->dependents()->where('completed', false)->where('open_to_work', true)->where('working', false)->where('question', false)
+                $todo->dependents()->where('completed', false)->where('open_to_work', true)->where('working', false)->where('paused', false)->where('question', false)
                     ->where('work_seconds', 0)->whereNull('archived_at')
                     ->get()->each(fn (Todo $next) => $next->update(['open_to_work' => false]));
             }
@@ -359,7 +363,7 @@ class Todo extends Model
         static::deleting(fn (Todo $todo) => $todo->handOverChain());
 
         // Aggiornamento live delle pagine aperte (Reverb)
-        static::saved(fn (Todo $todo) => Live::todoChanged($todo, stateChanged: $todo->wasChanged(['completed', 'open_to_work', 'working', 'question'])));
+        static::saved(fn (Todo $todo) => Live::todoChanged($todo, stateChanged: $todo->wasChanged(['completed', 'open_to_work', 'working', 'paused', 'question'])));
         static::deleted(fn (Todo $todo) => Live::todoChanged($todo, deleted: true));
     }
 }

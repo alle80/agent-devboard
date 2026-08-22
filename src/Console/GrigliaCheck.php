@@ -25,8 +25,11 @@ class GrigliaCheck extends Command
         {--json : Machine-readable output}
         {--worker-json : Machine-readable tasks plus worker scheduling settings}
         {--take= : Id of the todo to mark as working (take in charge)}
+        {--pause= : Id of the working todo to pause until it is reopened on the board}
         {--done= : Id of the todo to mark as completed}
-        {--comment= : Agent comment saved on the todo of --take/--done (claude_comment)}
+        {--approve= : Id of a working review attempt to approve}
+        {--request-changes= : Id of a working review attempt that must return to its executor}
+        {--comment= : Agent comment saved on --take/--done/--approve/--request-changes (claude_comment)}
         {--summary= : Very short result summary shown below the task title (with --done)}
         {--progress= : Progress percentage 0-100 shown on the working todo (with --take; re-run --take=ID --progress=N to update). --take alone starts at 0%}
         {--phase= : Short text of what the agent is doing now (with --take; e.g. "writing code", "testing"); shown next to the %}
@@ -34,8 +37,8 @@ class GrigliaCheck extends Command
         {--ask= : Id of the todo to ask questions about (the task pauses in the question state)}
         {--q=* : Text of each question, repeatable}
         {--choices=* : Pipe-separated closed choices for the corresponding --q, repeatable; free text remains available}
-        {--tokens-in= : Input tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
-        {--tokens-out= : Output tokens spent on the todo since the last --take (added to its stats; with --take/--done/--ask)}
+        {--tokens-in= : Input tokens spent since the last --take (with any task action)}
+        {--tokens-out= : Output tokens spent since the last --take (with any task action)}
         {--agent= : Only the tasks of this agent key (multi-agent; default: GRIGLIA_AGENT_KEY, or every task when one agent)}
         {--force : Act on a task that belongs to another agent, or take again a task the user stopped (--take/--done/--ask refuse it otherwise)}';
 
@@ -88,6 +91,33 @@ class GrigliaCheck extends Command
             return self::FAILURE;
         }
 
+        $actions = array_filter([
+            'take' => $this->option('take'), 'pause' => $this->option('pause'),
+            'done' => $this->option('done'), 'ask' => $this->option('ask'),
+            'approve' => $this->option('approve'),
+            'request-changes' => $this->option('request-changes'),
+        ], fn ($id) => $id !== null && $id !== false);
+        if (count($actions) > 1) {
+            $this->error('Use only one task action at a time.');
+
+            return self::FAILURE;
+        }
+
+        // Agent pause: preserve progress, close the timed working interval, and wait for the user to reopen it.
+        if ($id = $this->option('pause')) {
+            $t = $find((int) $id);
+            if ($trespass($t, 'pause')) {
+                return self::FAILURE;
+            }
+            if (! $t->working || $t->completed) {
+                $this->error(sprintf('«%s» (id:%d) is not being worked on: only a working task can be paused.', $t->title, $t->id));
+
+                return self::FAILURE;
+            }
+            $t->update(['paused' => true, 'working' => false, 'open_to_work' => false, 'question' => false] + $this->tokenAttrs($t));
+            $this->info(sprintf('⏸ paused: «%s» (id:%d) — reopen it on the board to resume', $t->title, $t->id));
+        }
+
         // Questions: pause the work until the user answers and restarts the item
         if ($id = $this->option('ask')) {
             $t = $find((int) $id);
@@ -106,15 +136,44 @@ class GrigliaCheck extends Command
                 $choices = array_values(array_unique(array_filter(array_map('trim', explode('|', $choiceGroups[$index] ?? '')))));
                 $t->questions()->create(['question' => $q, 'choices' => $choices ?: null, 'order' => $next++]);
             }
-            $t->update(['question' => true, 'working' => false, 'open_to_work' => false, 'phase' => null] + $this->tokenAttrs($t));
+            $t->update(['question' => true, 'working' => false, 'paused' => false, 'open_to_work' => false, 'phase' => null] + $this->tokenAttrs($t));
             Notify::questionAsked($t, $qs); // the app notifies the user (bell / web push / mail)
             $this->info(sprintf('❓ %d questions asked on «%s» (id:%d, waiting for answers)', count($qs), $t->title, $t->id));
+        }
+
+        foreach (['approve', 'request-changes'] as $decision) {
+            if (! ($id = $this->option($decision))) continue;
+            $t = $find((int) $id);
+            if ($trespass($t, $decision === 'approve' ? 'approve' : 'request changes on')) return self::FAILURE;
+            $alreadyDecided = $t->review_outcome !== null;
+            $comment = Markdown::normalizeAgentResponse($this->option('comment'));
+            if ($decision === 'request-changes' && ! $comment) {
+                $this->error('--request-changes requires --comment="what must be changed".');
+
+                return self::FAILURE;
+            }
+            $report = $this->tokenAttrs($t) + [
+                'outcome' => $outcome ?? ($decision === 'approve' ? 'ok' : 'alert'),
+            ];
+            if ($comment) {
+                $report['claude_comment'] = $comment;
+                $report['result_summary'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($comment))), 0, 120) ?: null;
+            }
+            $workflow = app(ReviewWorkflow::class);
+            $original = $decision === 'approve'
+                ? $workflow->approve($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t), $report)
+                : $workflow->requestChanges($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t), $report);
+            if ($decision === 'approve' && ! $alreadyDecided) Notify::todoCompleted($original);
+            $this->info(sprintf('%s: «%s» (id:%d) — original «%s» (id:%d) %s',
+                $decision === 'approve' ? '✅ review approved' : '↩ changes requested',
+                $t->title, $t->id, $original->title, $original->id,
+                $decision === 'approve' ? 'completed' : 'reopened'));
         }
 
         // Quick actions: take in charge / complete with comment
         // A completed task stays completed: to carry on, the user creates a new one with «resume» (task 348).
         // Done is done: a closed task carries no open question and is no longer «open to work» (same as closing it from the modal).
-        foreach (['take' => ['working' => true, 'stopped_at' => null, 'question' => false], 'done' => ['working' => false, 'completed' => true, 'question' => false, 'open_to_work' => false, 'result_seen' => false]] as $opt => $attrs) {
+        foreach (['take' => ['working' => true, 'paused' => false, 'stopped_at' => null, 'question' => false], 'done' => ['working' => false, 'paused' => false, 'completed' => true, 'question' => false, 'open_to_work' => false, 'result_seen' => false]] as $opt => $attrs) {
             if ($id = $this->option($opt)) {
                 $t = $find((int) $id);
 
@@ -186,7 +245,7 @@ class GrigliaCheck extends Command
         }
 
         $opt = app(OptimizationSettings::class);
-        $acted = $this->option('take') || $this->option('done') || $this->option('ask');
+        $acted = $this->option('take') || $this->option('pause') || $this->option('done') || $this->option('ask') || $this->option('approve') || $this->option('request-changes');
         // --json and --worker-json are parsed by scripts (the persistent worker reads the latter): nothing but
         // the JSON document may reach stdout, whatever else the command would like to say (task 507)
         $machine = $this->option('json') || $this->option('worker-json');
@@ -255,16 +314,18 @@ class GrigliaCheck extends Command
             }
             $this->info(sprintf('List "%s": %d items %s', $name, $todos->count(), $this->option('all') ? 'in total' : 'open to work 🟢 (in list order = priority)'));
             if (! $this->option('all')) {
-                $waiting = $list->todos()->whereNull('archived_at')->where('completed', false)->where('open_to_work', false)->where('working', false)->where('question', false)->count();
+                $waiting = $list->todos()->whereNull('archived_at')->where('completed', false)->where('open_to_work', false)->where('working', false)->where('paused', false)->where('question', false)->count();
                 if ($waiting) $this->line("   (+{$waiting} open but not yet open to work: do not touch them)");
                 $asking = $list->todos()->whereNull('archived_at')->where('completed', false)->where('question', true)->count();
                 if ($asking) $this->line("   (+{$asking} waiting for the user's answers ❓)");
+                $paused = $list->todos()->whereNull('archived_at')->where('completed', false)->where('paused', true)->count();
+                if ($paused) $this->line("   (+{$paused} paused by the agent ⏸ — reopen on the board to resume)");
             }
 
             $render = function ($todos) use ($last, $opt) {
             foreach ($todos as $t) {
                 $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪')), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Griglia\Agent::many() ? ' {agent: '.\Alle80\Griglia\Agent::effective($t).'}' : '', $t->id));
+                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->paused ? '⏸' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪'))), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Griglia\Agent::many() ? ' {agent: '.\Alle80\Griglia\Agent::effective($t).'}' : '', $t->id));
                 // Resume chain: a resumed task can itself be resumed — print the WHOLE history, newest first (task 416)
                 $chain = $t->resumeChain();
                 if ($chain->isNotEmpty()) {
@@ -329,7 +390,7 @@ class GrigliaCheck extends Command
         foreach ($machine ? collect() : $planLists as $pl) {
             $pending = $pl->todos()->whereNull('archived_at')->where('completed', false)->count();
             $openable = $pl->todos()->whereNull('archived_at')->where('completed', false)
-                ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('question', true))->count();
+                ->where(fn ($q) => $q->where('open_to_work', true)->orWhere('working', true)->orWhere('paused', true)->orWhere('question', true))->count();
             // A plan nobody has started yet is not a dead end: it is simply waiting for ▶. Warn only about
             // plans that were started (or paused) and now have nothing the agent may take.
             $started = $pl->plan_paused || $pl->todos()->whereNull('archived_at')->where('completed', true)->exists();
