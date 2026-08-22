@@ -55,7 +55,7 @@ return [
     // Toolbar
     'search_placeholder' => 'Search… (title, notes, sub-tasks, images)',
     'search_all_lists' => 'All lists',
-    'search_all_lists_help' => 'Search across all your active lists',
+    'search_all_lists_help' => 'Show tasks from all your active lists',
     'search_label' => 'Search the list',
     'clear_search' => 'Clear search',
     'archived' => 'Archived',

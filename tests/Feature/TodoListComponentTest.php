@@ -78,6 +78,19 @@ class TodoListComponentTest extends TestCase
             ->assertDontSeeHtml("setTodoAgent(".$todo->id);
     }
 
+    public function test_working_badge_uses_the_agent_inherited_from_the_list(): void
+    {
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI', 'griglia.agent_key' => 'claude']);
+        Checklist::findOrFail(Checklist::currentId())->update(['agent' => 'codex']);
+        $todo = $this->add('Inherited agent');
+        $todo->update(['working' => true, 'agent' => null]);
+
+        $html = Livewire::test(TodoList::class)->html();
+
+        $this->assertMatchesRegularExpression('/db-agent-select[^>]*>Codex CLI<\/span>/', $html);
+        $this->assertDoesNotMatchRegularExpression('/db-agent-select[^>]*>Claude Code<\/span>/', $html);
+    }
+
     public function test_title_length_is_enforced(): void
     {
         Livewire::test(TodoList::class)->call('startInsert', 1)->set('newTitle', str_repeat('x', 51))->call('saveInsert')
@@ -119,9 +132,10 @@ class TodoListComponentTest extends TestCase
         $this->assertSame(['Call mom'], $t->viewData('todos')->pluck('title')->all());
     }
 
-    public function test_search_can_include_all_owned_active_lists(): void
+    public function test_all_lists_scope_applies_without_search_and_with_state_filters(): void
     {
-        $this->add('Current needle');
+        $current = $this->add('Current needle');
+        $current->update(['completed' => true]);
         $other = Checklist::create(['name' => 'Other project', 'user_id' => auth()->id()]);
         Todo::create(['title' => 'Other needle', 'order' => 1, 'checklist_id' => $other->id]);
         $archived = Checklist::create(['name' => 'Old project', 'user_id' => auth()->id(), 'archived_at' => now()]);
@@ -130,7 +144,7 @@ class TodoListComponentTest extends TestCase
         $foreign = Checklist::create(['name' => 'Foreign', 'user_id' => $foreignUser->id]);
         Todo::create(['title' => 'Foreign needle', 'order' => 1, 'checklist_id' => $foreign->id]);
 
-        $component = Livewire::test(TodoList::class)->set('search', 'needle');
+        $component = Livewire::test(TodoList::class);
         $this->assertSame(['Current needle'], $component->viewData('todos')->pluck('title')->all());
 
         $component->call('toggleSearchScope');
@@ -139,6 +153,16 @@ class TodoListComponentTest extends TestCase
             $component->viewData('todos')->pluck('title')->all(),
         );
         $component->assertSee('Other project');
+        $this->assertTrue($component->viewData('filtering'), 'the all-lists scope disables drag and drop');
+
+        $component->call('setFilter', 'done');
+        $this->assertSame(['Current needle'], $component->viewData('todos')->pluck('title')->all());
+
+        $component->call('setFilter', 'todo');
+        $this->assertSame(['Other needle'], $component->viewData('todos')->pluck('title')->all());
+
+        $component->set('search', 'current');
+        $this->assertSame([], $component->viewData('todos')->pluck('title')->all());
     }
 
     public function test_filter_by_effective_agent(): void

@@ -12,6 +12,9 @@ modale), altrimenti quello di
 default della lista (selettore nella barra), altrimenti l'agente predefinito. `griglia:check --agent=<chiave>`
 elenca solo i task di quell'agente, e le azioni si rifiutano di toccare quelli degli altri:
 
+La riga del task continua a mostrare questo agente effettivo mentre il lavoro è in corso, anche quando il task
+eredita il default della lista invece di avere un'assegnazione propria.
+
 ```console
 $ php artisan griglia:check --agent=claude --take=412
 «Release the package» (id:412) belongs to agent «Codex CLI», you are «Claude Code»: refusing to take it

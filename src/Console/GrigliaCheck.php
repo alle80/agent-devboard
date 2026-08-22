@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Console;
 
+use Alle80\Griglia\Domain\ReviewWorkflow;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Settings\AgentSettings;
@@ -159,14 +160,23 @@ class GrigliaCheck extends Command
                     $attrs['phase'] = null;
                     $attrs['outcome'] = $outcome ?? 'ok';
                 }
-                $t->update($attrs + $this->tokenAttrs($t));
+                $submitted = false;
+                if ($opt === 'done' && $t->reviewer_agent) {
+                    // Reports and counters belong to the original; the service owns the atomic state boundary.
+                    $report = array_intersect_key($attrs + $this->tokenAttrs($t), array_flip(['claude_comment', 'result_summary', 'outcome', 'tokens_in', 'tokens_out']));
+                    $t->update($report);
+                    app(ReviewWorkflow::class)->submit($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t));
+                    $submitted = true;
+                } else {
+                    $t->update($attrs + $this->tokenAttrs($t));
+                }
                 if ($opt === 'done' && app(AgentSettings::class)->check_subtasks_on_done) {
                     $t->ingredients()->update(['checked' => true]);
                 }
-                if ($opt === 'done') {
+                if ($opt === 'done' && ! $submitted) {
                     Notify::todoCompleted($t); // the app notifies the user (bell / web push / mail)
                 }
-                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : '✔ completed', $t->title, $t->id, $opt === 'take'
+                $this->info(sprintf('%s: «%s» (id:%d)%s', $opt === 'take' ? '🔧 taken in charge' : ($submitted ? '🔎 submitted for review' : '✔ completed'), $t->title, $t->id, $opt === 'take'
                     ? sprintf(' — %d%%%s', $attrs['progress'], ! empty($attrs['phase']) ? ' · '.$attrs['phase'] : '')
                     : self::outcomeMark($attrs['outcome'] ?? 'ok')));
                 if ($opt === 'done' && $t->hasStats()) {

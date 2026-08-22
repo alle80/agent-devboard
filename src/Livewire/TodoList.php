@@ -22,7 +22,7 @@ class TodoList extends Component
     /** Ricerca a testo libero (titolo, nota, commento, sotto-task, immagini). */
     public string $search = '';
 
-    /** Search in every active list owned by the current user. */
+    /** Show todos from every active list owned by the current user. */
     public bool $searchAllLists = false;
 
     /** Filtro di stato: all | todo | done | otw | working | question */
@@ -117,7 +117,7 @@ class TodoList extends Component
 
     protected function isFiltering(): bool
     {
-        return trim($this->search) !== '' || $this->filter !== 'all' || $this->agentFilter !== '';
+        return $this->searchAllLists || trim($this->search) !== '' || $this->filter !== 'all' || $this->agentFilter !== '';
     }
 
     /** Todo in rinomina e relativa bozza. */
@@ -131,7 +131,7 @@ class TodoList extends Component
     /** Query dei todo della lista corrente. */
     protected function scoped(): Builder
     {
-        if ($this->searchAllLists && trim($this->search) !== '') {
+        if ($this->searchAllLists) {
             return Todo::whereIn('checklist_id', Checklist::mine()->select('id'));
         }
 
@@ -143,7 +143,7 @@ class TodoList extends Component
     {
         return $this->applyFilters($this->scoped())
             ->when($this->showArchived, fn ($q) => $q->whereNotNull('archived_at')->orderByDesc('archived_at'), fn ($q) => $q->whereNull('archived_at')->orderBy('order'))
-            ->with(['checklist:id,name', 'ingredients', 'dependsOn:id,title,completed,order'])->withCount('attachments')->get();
+            ->with(['checklist:id,name,agent', 'ingredients', 'dependsOn:id,title,completed,order'])->withCount('attachments')->get();
     }
 
     /** Query dei todo attivi (non archiviati) della lista corrente: la numerazione `order` vive solo qui. */

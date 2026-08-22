@@ -53,7 +53,7 @@ return [
 
     'search_placeholder' => 'Cerca… (titolo, note, sotto-task, immagini)',
     'search_all_lists' => 'Tutte le liste',
-    'search_all_lists_help' => 'Cerca in tutte le tue liste attive',
+    'search_all_lists_help' => 'Mostra i task di tutte le tue liste attive',
     'search_label' => 'Cerca nella lista',
     'clear_search' => 'Pulisci ricerca',
     'archived' => 'Archiviati',

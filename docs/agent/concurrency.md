@@ -12,6 +12,9 @@ else the list default (toolbar
 selector), else the default agent. `griglia:check --agent=<key>` lists only that agent's tasks, and the
 actions refuse to touch anybody else's:
 
+The task row keeps showing this effective agent while work is in progress, including when the task inherits
+the list default rather than carrying its own override.
+
 ```console
 $ php artisan griglia:check --agent=claude --take=412
 «Release the package» (id:412) belongs to agent «Codex CLI», you are «Claude Code»: refusing to take it

@@ -133,8 +133,9 @@ When several agents are configured, the chip with the robot icon (**All agents**
 tasks; the filter follows the effective assignment (task override, then list default, then the global default),
 combines with the search and the state filters, and — like them — disables drag & drop while it is on. Its visual
 style stays unchanged after choosing an agent; the selected name is the indication of the active value.
-Turn on **All lists** beside the search field to find matching tasks in every active list you own; each result
-shows its list name. Archived lists and other users’ lists stay outside the search.
+Turn on **All lists** beside the search field to show tasks from every active list you own. The scope applies to the
+unfiltered board as well as text, state and agent filters, and each result shows its list name. Archived lists and
+other users’ lists stay outside the board.
 On a plan list the **Plan** bar shows progress and the start/pause buttons (see [Plans](../features/plans.md)).
 
 ## Desktop: the dashboard

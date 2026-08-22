@@ -80,7 +80,6 @@ di un piano.
 
 Nient'altro è una porta a senso unico: un task che esce dalla board (archiviato o cancellato) passa la sua
 catena al task che lo precede, così un piano non resta mai in attesa di qualcosa che non arriverà, e un task
-
 con domande aperte può essere ritirato senza rispondere — tocca il suo badge nel modale: le domande restano
 registrate e il task torna in attesa.
 
@@ -141,8 +140,9 @@ stato e di agente, archivio. Con più agenti configurati il chip con l'icona del
 restringe la lista ai task di un solo agente; il filtro segue l'assegnazione effettiva (agente del task, altrimenti
 default della lista, altrimenti agente predefinito), si combina con ricerca e filtri di stato e — come loro —
 disabilita il trascinamento finché è attivo. Lo stile non cambia dopo la scelta: è il nome selezionato a indicare
-il valore attivo. Attiva **Tutte le liste** accanto alla ricerca per trovare i task in tutte le tue liste attive;
-ogni risultato mostra la lista di origine. Le liste archiviate e quelle di altri utenti restano escluse. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
+il valore attivo. Attiva **Tutte le liste** accanto alla ricerca per mostrare i task di tutte le tue liste attive.
+L'ambito vale per la lista senza filtri e anche per ricerca, stato e agente; ogni risultato mostra la lista di origine.
+Le liste archiviate e quelle di altri utenti restano escluse. Su una lista-piano la barra **Piano** mostra l'avanzamento e i bottoni avvia/pausa (vedi
 [Piani](../features/plans.md)).
 
 ## Desktop: la dashboard

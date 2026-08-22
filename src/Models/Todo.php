@@ -2,7 +2,11 @@
 
 namespace Alle80\Griglia\Models;
 
+use Alle80\Griglia\Agent;
+use Alle80\Griglia\Domain\ReviewOutcome;
+use Alle80\Griglia\Domain\ReviewStatus;
 use Alle80\Griglia\Support\Live;
+use DomainException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +17,7 @@ class Todo extends Model
 {
     use SoftDeletes;
 
-    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -33,6 +37,9 @@ class Todo extends Model
             'completed_at' => 'datetime',
             'stopped_at' => 'datetime',
             'order' => 'integer',
+            'review_round' => 'integer',
+            'review_status' => ReviewStatus::class,
+            'review_outcome' => ReviewOutcome::class,
         ];
     }
 
@@ -136,6 +143,21 @@ class Todo extends Model
         return $this->hasMany(Todo::class, 'depends_on_id')->orderBy('order');
     }
 
+    public function reviewOf(): BelongsTo
+    {
+        return $this->belongsTo(Todo::class, 'review_of_id');
+    }
+
+    public function reviewAttempts(): HasMany
+    {
+        return $this->hasMany(Todo::class, 'review_of_id')->orderBy('review_round')->orderBy('id');
+    }
+
+    public function isReviewAttempt(): bool
+    {
+        return $this->review_of_id !== null;
+    }
+
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class)->orderBy('order')->orderBy('id');
@@ -227,6 +249,9 @@ class Todo extends Model
     {
         // Plan lists: a new task joins the chain (depends on the previous task by order) unless told otherwise
         static::creating(function (Todo $todo) {
+            if ($todo->isReviewAttempt()) {
+                return;
+            }
             if ($todo->depends_on_id || ! $todo->checklist_id || $todo->archived_at) {
                 return;
             }
@@ -240,6 +265,44 @@ class Todo extends Model
             if ($prev && $prev->id !== $todo->id) {
                 $todo->depends_on_id = $prev->id;
                 // the previous task is already done → this one opens right away only if the plan is running
+            }
+        });
+
+        // Review aggregate invariants check one record here; cross-row transitions live in ReviewWorkflow.
+        static::saving(function (Todo $todo) {
+            if ($todo->isReviewAttempt()) {
+                if (! $todo->review_round || ! $todo->agent || $todo->reviewer_agent || $todo->parent_id || $todo->depends_on_id || $todo->review_status) {
+                    throw new DomainException('Invalid review-attempt fields.');
+                }
+                if ((bool) $todo->completed !== ($todo->review_outcome !== null)) {
+                    throw new DomainException('A review attempt is completed if and only if it has an outcome.');
+                }
+                if ($todo->exists && $todo->review_outcome === null && $todo->isDirty(['agent', 'checklist_id', 'archived_at'])) {
+                    throw new DomainException('An active review attempt cannot be reassigned, moved, or archived.');
+                }
+            } else {
+                if ($todo->review_round || $todo->review_outcome) {
+                    throw new DomainException('Review rounds and outcomes belong only to review attempts.');
+                }
+                if ($todo->reviewer_agent && ! array_key_exists($todo->reviewer_agent, Agent::all())) {
+                    throw new DomainException('The reviewer must be a configured agent.');
+                }
+                if ($todo->reviewer_agent && $todo->reviewer_agent === Agent::effective($todo)) {
+                    throw new DomainException('An executor cannot review their own task.');
+                }
+                if ($todo->reviewer_agent && $todo->completed && $todo->review_status !== ReviewStatus::Approved) {
+                    throw new DomainException('A reviewed task can be completed only after approval.');
+                }
+                if ($todo->review_status === ReviewStatus::Approved && ! $todo->completed) {
+                    throw new DomainException('An approved task must be completed.');
+                }
+                if ($todo->review_status === ReviewStatus::InReview && ($todo->working || $todo->open_to_work || $todo->question || $todo->completed)) {
+                    throw new DomainException('A task in review cannot also be open, working, questioned, or completed.');
+                }
+                if ($todo->exists && $todo->reviewAttempts()->whereNull('review_outcome')->exists()
+                    && $todo->isDirty(['agent', 'reviewer_agent', 'checklist_id', 'archived_at'])) {
+                    throw new DomainException('A task with an active review cannot be reassigned, moved, or archived.');
+                }
             }
         });
 

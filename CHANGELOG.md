@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.9] - 2026-08-22
+
+### Fixed
+- **All lists** now scopes the unfiltered board and state/agent filters too, instead of affecting text searches only;
+  archived and other users' lists remain excluded (task 574).
+
+### Added
+- Optional reviewers now have persisted task linkage, review rounds and typed aggregate states. Completing executor
+  work through `griglia:check --done` atomically submits it as a separate reviewer-owned task, while tasks without a
+  reviewer keep the existing completion path; model and database invariants reject invalid review records (task 568).
+
+### Fixed
+- Working task badges now show the effective agent inherited from their list instead of falling back to the global
+  default when the task has no explicit agent override (task 575).
+
 ## [0.87.8] - 2026-08-22
 
 ### Fixed

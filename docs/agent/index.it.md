@@ -16,6 +16,13 @@ php artisan griglia:check --done=ID --comment="…" --outcome=alert   # fatto, m
 php artisan griglia:check --done=ID --comment="…" --outcome=blocked # c'è qualcosa che blocca (riga rossa)
 ```
 
+Quando un task originale ha un revisore opzionale configurato, il `--done` dell'esecutore è un **invio**, non la
+chiusura finale. Griglia lascia atomicamente incompleto l'originale e crea un tentativo di revisione collegato, aperto
+e assegnato al revisore. Senza revisore, `--done` conserva il significato precedente. I tentativi hanno un numero di
+round immutabile, non possono revisionare sé stessi né entrare nelle catene di piano/ripresa e non sbloccano mai i
+dipendenti dell'originale. Le decisioni del revisore sono azioni esplicite, non un normale `--done`, così l'esito non
+può essere omesso.
+
 I wrapper degli agenti possono passare commenti multilinea con sequenze `\n`: al salvataggio `griglia:check`
 le converte in veri a capo Markdown. Il riepilogo compatto del risultato resta sempre su una sola riga.
 
