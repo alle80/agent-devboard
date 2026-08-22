@@ -26,10 +26,10 @@ When the agent has left a result, a very short automatic summary appears under t
 more precise one with `griglia:check --done --summary="…"`; otherwise Griglia derives it from the closing
 comment. It tells apart a sequence of resumed tasks that all share the same title.
 
-Next to the dot every row shows the task **id** (`id:510`): the same `id:N` the agent prints in
-`griglia:check`, and the number you use with `--take` / `--done` or when you talk about a task. Tap it to copy
-the number (the chip says *copied* for a moment). The big number at the left of the row is the position in
-the list, which changes when you reorder or archive; the id never changes.
+At the right end of the title line every row shows the task **id** (`id:510`): the same `id:N` the agent prints
+in `griglia:check`, and the number you use with `--take` / `--done` or when you talk about a task. Tap it to
+copy the number (the chip says *copied* for a moment, and the modal does not open). The big number at the left
+of the row is the position in the list, which changes when you reorder or archive; the id never changes.
 
 ### The colour of the row
 

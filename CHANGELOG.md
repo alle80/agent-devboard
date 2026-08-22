@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.87.1] - 2026-08-22
+### Changed
+- The task id chip now sits at the right end of the title line of the row (still one tap to copy), no longer on
+  the command level: on phones it pushed the row's commands onto a second line (task 510).
+
 ## [0.87.0] - 2026-08-22
 ### Added
 - The task id is visible on the board: an `id:N` chip on the first level of every row, next to the state dot,
@@ -1702,7 +1707,7 @@ monorepo into a standalone, installable Composer package.
 - Requires PHP 8.3+, Laravel 12 or 13, Livewire 4, Tailwind CSS 4 in the host app.
 - The full pre-extraction history lives in the origin monorepo linked above.
 
-[Unreleased]: https://github.com/alle80/griglia/compare/v0.87.0...HEAD
+[Unreleased]: https://github.com/alle80/griglia/compare/v0.87.1...HEAD
 [0.85.0]: https://github.com/alle80/griglia/compare/v0.84.0...v0.85.0
 [0.82.0]: https://github.com/alle80/griglia/compare/v0.81.4...v0.82.0
 [0.80.3]: https://github.com/alle80/griglia/compare/v0.80.2...v0.80.3

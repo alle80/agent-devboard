@@ -144,6 +144,11 @@
                                     <span class="db-phase min-w-0 truncate text-xs italic opacity-75" title="{{ $todo->phase }}">{{ $todo->phase }}</span>
                                 @endif
                             @endif
+                            {{-- Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check, ultima targhetta
+                                 del titolo, spinta a destra (ml-auto): sul telefono va a capo da sola invece di rubare spazio ai
+                                 comandi del primo livello (in v0.87.0 li mandava su due righe). È uno span dentro il bottone del
+                                 titolo: copy.js intercetta il tocco in fase di cattura e copia il numero senza aprire il modale. --}}
+                            <span class="db-id ml-auto shrink-0" data-copy="{{ $todo->id }}" title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}">id:{{ $todo->id }}</span>
                     </button>
                     @if ($todo->claude_comment && $todo->result_summary)
                         <p class="mt-0.5 truncate text-xs opacity-60" title="{{ $todo->result_summary }}">{{ $todo->result_summary }}</p>
@@ -163,14 +168,6 @@
                     @endif
                     @endif
                 </div>
-
-                {{-- Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check. Sta sul primo livello
-                     della riga, accanto al pallino: è il «.todo-title + *» del CSS, quindi margin-left:auto lo spinge a
-                     destra. Un tocco copia il numero (copy.js, data-copy): è un bottone a sé, non sta dentro il titolo. --}}
-                <button type="button" class="db-id shrink-0" data-copy="{{ $todo->id }}"
-                    title="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}"
-                    aria-label="{{ __('griglia::t.task_id_copy', ['id' => $todo->id]) }}"
-                >id:{{ $todo->id }}</button>
 
                     @if ($editingId !== $todo->id)
                     @php($st = $todo->completed ? 'done' : ($todo->question ? 'question' : ($todo->working ? 'working' : ($todo->open_to_work ? 'open' : 'waiting'))))

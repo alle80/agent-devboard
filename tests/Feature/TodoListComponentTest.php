@@ -242,11 +242,11 @@ class TodoListComponentTest extends TestCase
 
     public function test_the_row_shows_the_task_id_to_copy(): void
     {
-        // The same «id:N» the agent prints in griglia:check, next to the state dot; one tap copies the number (task 510).
+        // The same «id:N» the agent prints in griglia:check, last badge of the title line; one tap copies the number (task 510).
         $todo = $this->add('Find me by id');
 
         Livewire::test(TodoList::class)
             ->assertSeeHtml('data-copy="'.$todo->id.'"')
-            ->assertSeeHtml('>id:'.$todo->id.'</button>');
+            ->assertSeeHtml('>id:'.$todo->id.'</span>');
     }
 }

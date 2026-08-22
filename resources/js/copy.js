@@ -70,20 +70,6 @@ document.addEventListener('click', async (e) => {
     return;
   }
 
-  // Anything with data-copy (the task id chip, task 510): one tap copies the value; the label says «copied»
-  // (or «not copied») for a moment, then goes back to what it was.
-  const chip = e.target.closest('[data-copy]');
-  if (chip) {
-    e.preventDefault();
-    e.stopPropagation();
-    const ok = await copyText(chip.dataset.copy || '');
-    const original = chip.dataset.copyLabel ?? (chip.dataset.copyLabel = chip.textContent);
-    chip.textContent = ok ? (t().copied || 'copied') : (t().copy_failed || 'error');
-    chip.classList.add(ok ? 'is-copied' : 'is-failed');
-    setTimeout(() => { chip.textContent = original; chip.classList.remove('is-copied', 'is-failed'); }, 1200);
-    return;
-  }
-
   // Inline code: one click copies it, unless the user is selecting text.
   const inline = e.target.closest('.db-prose code');
   if (inline && ! inline.closest('pre') && (window.getSelection()?.isCollapsed ?? true)) {
@@ -92,6 +78,21 @@ document.addEventListener('click', async (e) => {
     setTimeout(() => inline.classList.remove('is-copied', 'is-failed'), 1200);
   }
 });
+
+// Anything with data-copy (the task id chip in the row and in the modal, task 510): one tap copies the value and
+// the label says «copied» (or «not copied») for a moment, then goes back to what it was. Capture phase, so a chip
+// that sits inside another control (the title button of a row, which opens the modal) copies without triggering it.
+document.addEventListener('click', async (e) => {
+  const chip = e.target.closest('[data-copy]');
+  if (! chip) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const ok = await copyText(chip.dataset.copy || '');
+  const original = chip.dataset.copyLabel ?? (chip.dataset.copyLabel = chip.textContent);
+  chip.textContent = ok ? (t().copied || 'copied') : (t().copy_failed || 'error');
+  chip.classList.add(ok ? 'is-copied' : 'is-failed');
+  setTimeout(() => { chip.textContent = original; chip.classList.remove('is-copied', 'is-failed'); }, 1200);
+}, true);
 
 const run = () => decorate();
 document.addEventListener('DOMContentLoaded', run);

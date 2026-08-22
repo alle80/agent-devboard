@@ -26,10 +26,10 @@ commento di chiusura. Serve a distinguere una sequenza di task ripresi che hanno
 
 Tocca il pallino per passare fra *in attesa* e *open to work* (o per fermare l'agente).
 
-Accanto al pallino ogni riga mostra l'**id** del task (`id:510`): lo stesso `id:N` che l'agente stampa in
-`griglia:check`, e il numero che usi con `--take` / `--done` o quando parli di un task. Toccalo per copiare il
-numero (la targhetta dice *copiato* per un attimo). Il numero grande a sinistra della riga è la posizione in
-lista, che cambia riordinando o archiviando; l'id non cambia mai.
+In fondo alla riga del titolo ogni riga mostra l'**id** del task (`id:510`): lo stesso `id:N` che l'agente stampa
+in `griglia:check`, e il numero che usi con `--take` / `--done` o quando parli di un task. Toccalo per copiare il
+numero (la targhetta dice *copiato* per un attimo, e il modale non si apre). Il numero grande a sinistra della
+riga è la posizione in lista, che cambia riordinando o archiviando; l'id non cambia mai.
 
 ### Il colore della riga
 

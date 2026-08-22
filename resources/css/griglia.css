@@ -483,8 +483,8 @@ select.setting-input { appearance: auto; }
 .db-agent-row .db-agent-chip { max-width: 12rem; }
 .db-agent-select option { color: CanvasText; background: Canvas; text-transform: none; }
 
-/* Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check, sul primo livello della riga accanto
-   al pallino di stato e nella testata del modale accanto a ‹ 3/7 ›. Un tocco copia il numero (copy.js, data-copy) e per
+/* Id del task (task 510): lo stesso «id:N» che l'agente stampa in griglia:check, ultima targhetta della riga del titolo
+   (a destra) e nella testata del modale accanto a ‹ 3/7 ›. Un tocco copia il numero (copy.js, data-copy) e per
    un attimo la targhetta dice «copiato». Il bersaglio del dito è più largo di quel che si vede (::before). */
 .db-id {
     position: relative; display: inline-flex; align-items: center;
@@ -493,7 +493,7 @@ select.setting-input { appearance: auto; }
     color: inherit; background: none; border: 1px solid currentColor; border-radius: 999px; padding: .2rem .5rem;
     opacity: .55; cursor: pointer; transition: opacity .15s ease, color .15s ease;
 }
-.db-id::before { content: ''; position: absolute; inset: -.45rem -.3rem; }
+.db-id::before { content: ''; position: absolute; inset: -.35rem -.2rem; }
 .db-id:hover, .db-id:focus-visible { opacity: 1; }
 .db-id.is-copied { opacity: 1; color: var(--tl-accent, #22c55e); }
 .db-id.is-failed { opacity: 1; color: #ef4444; }
