@@ -2,8 +2,11 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Agent;
+use Alle80\Griglia\Mode;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Themes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -36,7 +39,7 @@ class TodoList extends Component
 
     public static function titleMax(): int
     {
-        return (int) (app(\Alle80\Griglia\Settings\AppSettings::class)->title_max_length ?: self::TITLE_MAX);
+        return (int) (app(AppSettings::class)->title_max_length ?: self::TITLE_MAX);
     }
 
     /** Filter keys (labels come from the translations: griglia::t.filters). */
@@ -57,7 +60,7 @@ class TodoList extends Component
 
     public function setAgentFilter(string $agent): void
     {
-        $this->agentFilter = array_key_exists($agent, \Alle80\Griglia\Agent::all()) ? $agent : '';
+        $this->agentFilter = array_key_exists($agent, Agent::all()) ? $agent : '';
     }
 
     public function clearSearch(): void
@@ -89,8 +92,8 @@ class TodoList extends Component
 
         if ($this->agentFilter !== '') {
             $agent = $this->agentFilter;
-            $known = array_keys(\Alle80\Griglia\Agent::all());
-            $fallback = \Alle80\Griglia\Agent::defaultKey();
+            $known = array_keys(Agent::all());
+            $fallback = Agent::defaultKey();
             $q->where(function (Builder $w) use ($agent, $known, $fallback) {
                 $w->where('agent', $agent)
                     ->orWhere(function (Builder $inherited) use ($agent, $known, $fallback) {
@@ -157,26 +160,28 @@ class TodoList extends Component
     public function setListAgent(string $agent): void
     {
         $agent = trim($agent);
-        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
+        if ($agent !== '' && ! array_key_exists($agent, Agent::all())) {
             return;
         }
         Checklist::mine()->whereKey(Checklist::currentId())->update(['agent' => $agent ?: null]);
-        $this->dispatch('toast', message: __('griglia::t.agent_set', ['agent' => \Alle80\Griglia\Agent::label($agent ?: \Alle80\Griglia\Agent::defaultKey())]));
+        $this->dispatch('toast', message: __('griglia::t.agent_set', ['agent' => Agent::label($agent ?: Agent::defaultKey())]));
     }
 
     /** Multi-agent: agent of a single task from the list row ('' = the list's default). */
     public function setTodoAgent(int $todoId, string $agent): void
     {
         $agent = trim($agent);
-        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
+        if ($agent !== '' && ! array_key_exists($agent, Agent::all())) {
             return;
         }
         $todo = $this->scoped()->findOrFail($todoId);
-        if ($todo->working) { return; }
+        if ($todo->working) {
+            return;
+        }
         $todo->update(['agent' => $agent ?: null]);
         $this->dispatch('toast', message: __('griglia::t.agent_set_task', [
             'title' => $todo->title,
-            'agent' => \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)),
+            'agent' => Agent::label(Agent::effective($todo)),
         ]));
     }
 
@@ -240,7 +245,9 @@ class TodoList extends Component
     public function archive(int $todoId): void
     {
         $todo = $this->active()->findOrFail($todoId);
-        if ($todo->working) { return; }
+        if ($todo->working) {
+            return;
+        }
         $todo->update(['archived_at' => now()]);
 
         // Richiude il buco nella numerazione degli attivi
@@ -264,7 +271,9 @@ class TodoList extends Component
     public function toggle(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
-        if ($todo->working) { return; }
+        if ($todo->working) {
+            return;
+        }
 
         // A closed task stays closed: reopening it would put back in front of the agent something it had
         // already answered. To carry on, «resume» makes a new task linked to this one (task 348).
@@ -360,7 +369,9 @@ class TodoList extends Component
     public function startEdit(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
-        if ($todo->working) { return; }
+        if ($todo->working) {
+            return;
+        }
         $this->editingId = $todo->id;
         $this->titleDraft = $todo->title;
         $this->titleOriginal = $todo->title;
@@ -511,7 +522,9 @@ class TodoList extends Component
     public function delete(int $todoId): void
     {
         $todo = $this->scoped()->findOrFail($todoId);
-        if ($todo->working) { return; }
+        if ($todo->working) {
+            return;
+        }
         // Resume chain: chi era «ripreso» da questo passa al nonno, così lo storico non si spezza (task 416)
         Todo::where('parent_id', $todo->id)->update(['parent_id' => $todo->parent_id]);
         $todo->delete();
@@ -542,7 +555,7 @@ class TodoList extends Component
     {
 
         return [
-            \Alle80\Griglia\Mode::echoListener() => 'onTodoChanged',
+            Mode::echoListener() => 'onTodoChanged',
             'live-resync' => 'resync',
             'ingredients-updated' => 'refreshList',
             'resume-todo' => 'resume',
@@ -559,7 +572,7 @@ class TodoList extends Component
 
         $this->dispatch('todo-changed-live'); // il modale, se aperto, si aggiorna
 
-        if (($event['source'] ?? '') === 'cli' && ! empty($event['state_changed']) && app(\Alle80\Griglia\Settings\AppSettings::class)->toast_console_changes) {
+        if (($event['source'] ?? '') === 'cli' && ! empty($event['state_changed']) && app(AppSettings::class)->toast_console_changes) {
             $title = (string) ($event['title'] ?? '');
             [$key, $type] = match ($event['state'] ?? '') {
                 'working' => ['agent_working', 'info'],

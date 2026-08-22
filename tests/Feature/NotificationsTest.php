@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Http\Controllers\PushSubscriptionController;
 use Alle80\Griglia\Livewire\NotificationBell;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
@@ -116,11 +117,11 @@ class NotificationsTest extends TestCase
         $this->post(route('griglia.push.store'), ['endpoint' => 'https://fcm.googleapis.com/fcm/send/abc', 'keys' => ['p256dh' => 'K', 'auth' => 'A'], 'contentEncoding' => 'aesgcm'])->assertOk()->assertJson(['ok' => true]);
         $this->assertSame(1, $this->user->pushSubscriptions()->count());
         $this->assertSame('K', $this->user->pushSubscriptions()->first()->public_key);
-        $this->assertTrue(\Alle80\Griglia\Http\Controllers\PushSubscriptionController::endpointAllowed('https://web.push.apple.com/QWxh'));
-        $this->assertFalse(\Alle80\Griglia\Http\Controllers\PushSubscriptionController::endpointAllowed('https://attacker.push.apple.com.evil.test/x'));
+        $this->assertTrue(PushSubscriptionController::endpointAllowed('https://web.push.apple.com/QWxh'));
+        $this->assertFalse(PushSubscriptionController::endpointAllowed('https://attacker.push.apple.com.evil.test/x'));
         config(['griglia.push_allowed_hosts' => []]);
-        $this->assertTrue(\Alle80\Griglia\Http\Controllers\PushSubscriptionController::endpointAllowed('https://any.host/x'), 'empty list = any https');
-        $this->assertFalse(\Alle80\Griglia\Http\Controllers\PushSubscriptionController::endpointAllowed('http://any.host/x'));
+        $this->assertTrue(PushSubscriptionController::endpointAllowed('https://any.host/x'), 'empty list = any https');
+        $this->assertFalse(PushSubscriptionController::endpointAllowed('http://any.host/x'));
 
         $this->delete(route('griglia.push.destroy'), ['endpoint' => 'https://fcm.googleapis.com/fcm/send/abc'])->assertOk();
         $this->assertSame(0, $this->user->pushSubscriptions()->count());
@@ -130,7 +131,9 @@ class NotificationsTest extends TestCase
         $this->post(route('griglia.notifications.test'))->assertOk();
         $this->assertSame(1, $this->user->unreadNotifications()->count(), 'test notification lands in the bell');
         // throttled: 5 per minute on the test endpoint
-        for ($i = 0; $i < 4; $i++) { $this->post(route('griglia.notifications.test'))->assertOk(); }
+        for ($i = 0; $i < 4; $i++) {
+            $this->post(route('griglia.notifications.test'))->assertOk();
+        }
         $this->post(route('griglia.notifications.test'))->assertStatus(429);
     }
 

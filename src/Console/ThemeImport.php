@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Console;
 
+use Alle80\Griglia\Themes;
 use Alle80\Griglia\ThemeStore;
 use Illuminate\Console\Command;
 
@@ -34,7 +35,7 @@ class ThemeImport extends Command
             return self::FAILURE;
         }
 
-        $this->info(sprintf('Installed theme «%s» (%s) → %s', $def['label'], $def['slug'], \Alle80\Griglia\Themes::url($def['slug'])));
+        $this->info(sprintf('Installed theme «%s» (%s) → %s', $def['label'], $def['slug'], Themes::url($def['slug'])));
 
         return self::SUCCESS;
     }

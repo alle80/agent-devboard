@@ -5,9 +5,9 @@ namespace Alle80\Griglia\Tests\Feature;
 use Alle80\Griglia\Livewire\SettingsPage;
 use Alle80\Griglia\Livewire\ThemedTodoList;
 use Alle80\Griglia\Settings\AppSettings;
+use Alle80\Griglia\Tests\TestCase;
 use Alle80\Griglia\Themes;
 use Alle80\Griglia\ThemeStore;
-use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Livewire\Livewire;
@@ -211,16 +211,22 @@ class ThemesTest extends TestCase
 
         // installed pack: the css on disk is the sanitised one, external icon_img dropped
         $file = $this->makePack('sky', ['icon_img' => 'https://evil.test/i.png']);
-        $zip = new ZipArchive; $zip->open($file); $zip->addFromString('theme.css', "@import 'x'; .t{color:#fff}"); $zip->close();
+        $zip = new ZipArchive;
+        $zip->open($file);
+        $zip->addFromString('theme.css', "@import 'x'; .t{color:#fff}");
+        $zip->close();
         $def = ThemeStore::install($file);
         $this->assertNull($def['icon_img'] ?? null);
         $this->assertStringNotContainsString('@import', file_get_contents(ThemeStore::path('sky', 'theme.css')));
 
         // too many entries
         $big = storage_path('framework/testing/big.zip');
-        $zip = new ZipArchive; $zip->open($big, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zip = new ZipArchive;
+        $zip->open($big, ZipArchive::CREATE | ZipArchive::OVERWRITE);
         $zip->addFromString('theme.json', json_encode(['slug' => 'big', 'label' => 'Big']));
-        for ($i = 0; $i < ThemeStore::MAX_ENTRIES + 1; $i++) { $zip->addFromString("images/f$i.txt", 'x'); }
+        for ($i = 0; $i < ThemeStore::MAX_ENTRIES + 1; $i++) {
+            $zip->addFromString("images/f$i.txt", 'x');
+        }
         $zip->close();
         $this->expectException(\RuntimeException::class);
         ThemeStore::install($big);

@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Models;
 
+use Alle80\Griglia\Mode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,7 +50,7 @@ class Checklist extends Model
     public static function mineWithArchived(): Builder
     {
         // Local mode: one global set of lists (no users); server mode: the logged-in user's lists
-        return \Alle80\Griglia\Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
+        return Mode::isLocal() ? static::query() : static::where('user_id', auth()->id());
     }
 
     /** Solo l'archivio dell'utente. */

@@ -3,9 +3,9 @@
 namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Livewire\IngredientModal;
-use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\Support\User;
 use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
@@ -91,7 +91,7 @@ class ModalCommandsTest extends TestCase
         $b = Todo::create(['title' => 'B', 'order' => 2, 'checklist_id' => $this->list->id]);
         $other = Checklist::create(['name' => 'other', 'user_id' => $this->list->user_id]);
         Todo::create(['title' => 'X', 'order' => 1, 'checklist_id' => $other->id]);
-        $foreign = Checklist::create(['name' => 'foreign', 'user_id' => \Alle80\Griglia\Tests\Support\User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')])->id]);
+        $foreign = Checklist::create(['name' => 'foreign', 'user_id' => User::create(['name' => 'B', 'email' => 'b@x.it', 'password' => bcrypt('s')])->id]);
 
         $modal = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->assertSee('other')->assertDontSee('foreign');
         $modal->call('moveTo', $foreign->id);
@@ -254,10 +254,10 @@ class ModalCommandsTest extends TestCase
         $this->assertStringContainsString('.modal-cmds-agent .db-agent-select { max-width: 100%; }', $css, 'the whole row is the select\'s');
         $this->assertStringNotContainsString('.modal-cmds-tools .db-agent-select', $css, 'no more squeezing among the icons');
 
-        $a->update(["agent" => "codex", "working" => true]);
-        $workingHtml = Livewire::test(IngredientModal::class)->call("openFor", $a->id)->html();
-        $this->assertStringContainsString("Codex CLI", $workingHtml);
-        $this->assertStringContainsString("modal-cmds-agent", $workingHtml);
-        $this->assertStringNotContainsString("setAgent(\$event.target.value)", $workingHtml);
+        $a->update(['agent' => 'codex', 'working' => true]);
+        $workingHtml = Livewire::test(IngredientModal::class)->call('openFor', $a->id)->html();
+        $this->assertStringContainsString('Codex CLI', $workingHtml);
+        $this->assertStringContainsString('modal-cmds-agent', $workingHtml);
+        $this->assertStringNotContainsString('setAgent($event.target.value)', $workingHtml);
     }
 }

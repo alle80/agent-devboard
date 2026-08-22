@@ -4,7 +4,9 @@ namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Tests\TestCase;
+use Illuminate\Support\Facades\Artisan;
 
 class GrigliaCheckCommandTest extends TestCase
 {
@@ -38,14 +40,14 @@ class GrigliaCheckCommandTest extends TestCase
         $this->artisan('griglia:check', ['--take' => $this->todo->id])->expectsOutputToContain('taken in charge')->assertSuccessful();
         $this->assertTrue($this->todo->fresh()->working);
 
-        $this->artisan("griglia:check", ["--ask" => $this->todo->id, "--q" => ["Which shade?", "Also for the login?"], "--choices" => ["Blue|Green", "Yes|No"]])->assertSuccessful();
+        $this->artisan('griglia:check', ['--ask' => $this->todo->id, '--q' => ['Which shade?', 'Also for the login?'], '--choices' => ['Blue|Green', 'Yes|No']])->assertSuccessful();
         $this->todo->refresh();
         $this->assertTrue($this->todo->question);
         $this->assertFalse($this->todo->working);
         $this->assertSame(2, $this->todo->questions()->count());
         // items with open questions are not listed as workable
-        $this->assertSame(["Blue", "Green"], $this->todo->questions()->first()->choices);
-        $this->assertSame(["Yes", "No"], $this->todo->questions()->skip(1)->first()->choices);
+        $this->assertSame(['Blue', 'Green'], $this->todo->questions()->first()->choices);
+        $this->assertSame(['Yes', 'No'], $this->todo->questions()->skip(1)->first()->choices);
         $this->artisan('griglia:check')->doesntExpectOutputToContain('Add dark mode')->assertSuccessful();
 
         $this->todo->update(['question' => false, 'open_to_work' => true]);
@@ -136,20 +138,20 @@ class GrigliaCheckCommandTest extends TestCase
         $plan = Checklist::create(['name' => 'Stuck plan', 'user_id' => auth()->id(), 'plan_prompt' => 'Something']);
         $plan->todos()->create(['title' => 'Waiting for ever', 'order' => 1]);
 
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--json' => true]);
+        Artisan::call('griglia:check', ['--json' => true]);
 
-        $out = trim(\Illuminate\Support\Facades\Artisan::output());
+        $out = trim(Artisan::output());
         $this->assertJson($out);
     }
 
     public function test_worker_json_includes_scheduling_mode_and_items(): void
     {
-        $settings = app(\Alle80\Griglia\Settings\AgentSettings::class);
+        $settings = app(AgentSettings::class);
         $settings->task_mode = 'multitasking';
         $settings->save();
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true]);
+        Artisan::call('griglia:check', ['--worker-json' => true]);
 
-        $payload = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
+        $payload = json_decode(trim(Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
         $this->assertSame('multitasking', $payload['task_mode']);
         $this->assertSame($this->todo->id, $payload['items'][0]['id']);
     }
@@ -158,9 +160,9 @@ class GrigliaCheckCommandTest extends TestCase
     {
         $this->todo->update(['open_to_work' => false, 'paused' => true, 'progress' => 40, 'phase' => 'waiting for quota']);
 
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
+        Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
 
-        $payload = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
+        $payload = json_decode(trim(Artisan::output()), true, flags: JSON_THROW_ON_ERROR);
         $item = collect($payload['items'])->firstWhere('id', $this->todo->id);
         $this->assertTrue($item['paused']);
         $this->assertSame(40, $item['progress']);
@@ -175,8 +177,8 @@ class GrigliaCheckCommandTest extends TestCase
         $plan->todos()->create(['title' => 'Done already', 'order' => 1, 'completed' => true, 'completed_at' => now()]);
         $plan->todos()->create(['title' => 'Waiting for ever', 'order' => 2]);
 
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
-        $out = trim(\Illuminate\Support\Facades\Artisan::output());
+        Artisan::call('griglia:check', ['--worker-json' => true, '--all' => true]);
+        $out = trim(Artisan::output());
 
         $this->assertJson($out);
         $payload = json_decode($out, true, flags: JSON_THROW_ON_ERROR);
@@ -184,8 +186,8 @@ class GrigliaCheckCommandTest extends TestCase
         $this->assertStringNotContainsString('none is open to work', $out);
 
         // ...while the human output still warns about it
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--all' => true]);
-        $this->assertStringContainsString('none is open to work', \Illuminate\Support\Facades\Artisan::output());
+        Artisan::call('griglia:check', ['--all' => true]);
+        $this->assertStringContainsString('none is open to work', Artisan::output());
     }
 
     public function test_taking_a_completed_task_is_refused(): void
@@ -223,8 +225,8 @@ class GrigliaCheckCommandTest extends TestCase
             ->assertSuccessful();
 
         // JSON output carries the same history for scripts
-        \Illuminate\Support\Facades\Artisan::call('griglia:check', ['--json' => true]);
-        $rows = json_decode(trim(\Illuminate\Support\Facades\Artisan::output()), true);
+        Artisan::call('griglia:check', ['--json' => true]);
+        $rows = json_decode(trim(Artisan::output()), true);
         $row = collect($rows)->firstWhere('id', $third->id);
         $this->assertSame([$second->id, $first->id], array_column($row['resume_chain'], 'id'));
         $this->assertSame('first answer', $row['resume_chain'][1]['claude_comment']);

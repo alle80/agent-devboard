@@ -2,7 +2,10 @@
 
 namespace Alle80\Griglia\Console;
 
+use Alle80\Griglia\Models\ContextGroup;
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Support\Context;
+use Alle80\Griglia\Support\QuestionLevel;
 use Illuminate\Console\Command;
 
 /**
@@ -27,19 +30,19 @@ class ContextCommand extends Command
 
                     return self::FAILURE;
                 }
-                if (! $this->option('replace') && \Alle80\Griglia\Models\ContextGroup::exists()) {
+                if (! $this->option('replace') && ContextGroup::exists()) {
                     $this->error('The context is not empty: use --replace to overwrite it (the switches are lost) or edit it in /context');
 
                     return self::FAILURE;
                 }
                 [$g, $b] = Context::import($md, (bool) $this->option('replace'));
-                \Alle80\Griglia\Support\QuestionLevel::sync(); // the question-level block survives a (re)import (task 499)
+                QuestionLevel::sync(); // the question-level block survives a (re)import (task 499)
                 $this->info("$g groups, $b blocks imported");
 
                 return self::SUCCESS;
             case 'enabled':
                 // for the host sync: 1 = write the generated files, 0 = restore the originals
-                $this->output->write(app(\Alle80\Griglia\Settings\AppSettings::class)->context_sync ? '1' : '0');
+                $this->output->write(app(AppSettings::class)->context_sync ? '1' : '0');
 
                 return self::SUCCESS;
             case 'export':
@@ -48,7 +51,7 @@ class ContextCommand extends Command
                 return self::SUCCESS;
             default:
                 [$on, $total] = Context::tokens();
-                $groups = \Alle80\Griglia\Models\ContextGroup::withCount('blocks')->orderBy('order')->get();
+                $groups = ContextGroup::withCount('blocks')->orderBy('order')->get();
                 $this->info(sprintf('%d groups, %d blocks — ≈%d tokens enabled of %d', $groups->count(), $groups->sum('blocks_count'), $on, $total));
                 foreach ($groups as $g) {
                     $this->line(sprintf('  %s %s (%d blocks, %d enabled)', $g->enabled ? '🟢' : '⚫', $g->title, $g->blocks_count, $g->blocks()->where('enabled', true)->count()));

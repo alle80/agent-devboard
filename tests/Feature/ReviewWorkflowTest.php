@@ -4,10 +4,12 @@ namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Domain\ReviewOutcome;
 use Alle80\Griglia\Domain\ReviewStatus;
+use Alle80\Griglia\Domain\ReviewWorkflow;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Tests\TestCase;
 use DomainException;
+use Illuminate\Database\QueryException;
 
 class ReviewWorkflowTest extends TestCase
 {
@@ -96,7 +98,7 @@ class ReviewWorkflowTest extends TestCase
             'agent' => 'claude', 'review_round' => 1, 'open_to_work' => true,
         ]);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
         $attempt->replicate()->save();
     }
 
@@ -180,7 +182,7 @@ class ReviewWorkflowTest extends TestCase
         $this->artisan('griglia:check', ['--agent' => 'claude', '--approve' => $attempt->id])->assertSuccessful();
 
         $this->expectException(DomainException::class);
-        app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->requestChanges($attempt->fresh(), 'claude');
+        app(ReviewWorkflow::class)->requestChanges($attempt->fresh(), 'claude');
     }
 
     public function test_review_decision_requires_a_taken_attempt_and_change_request_requires_a_comment(): void
@@ -190,7 +192,7 @@ class ReviewWorkflowTest extends TestCase
         $attempt = $original->reviewAttempts()->sole();
 
         try {
-            app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->approve($attempt, 'claude');
+            app(ReviewWorkflow::class)->approve($attempt, 'claude');
             $this->fail('An untaken review attempt should not be approvable.');
         } catch (DomainException $e) {
             $this->assertStringContainsString('working review attempt', $e->getMessage());
@@ -211,7 +213,7 @@ class ReviewWorkflowTest extends TestCase
         ]);
 
         try {
-            app(\Alle80\Griglia\Domain\ReviewWorkflow::class)->submit($notWorking, 'codex');
+            app(ReviewWorkflow::class)->submit($notWorking, 'codex');
             $this->fail('A task that is not working should not be submittable.');
         } catch (DomainException $e) {
             $this->assertStringContainsString('working task', $e->getMessage());
@@ -219,7 +221,7 @@ class ReviewWorkflowTest extends TestCase
         $this->assertCount(0, $notWorking->reviewAttempts()->get());
 
         $working = $this->task(['reviewer_agent' => 'claude', 'order' => 2]);
-        $workflow = app(\Alle80\Griglia\Domain\ReviewWorkflow::class);
+        $workflow = app(ReviewWorkflow::class);
         $workflow->submit($working, 'codex');
 
         $this->expectException(DomainException::class);

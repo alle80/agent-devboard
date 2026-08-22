@@ -2,6 +2,8 @@
 
 namespace Alle80\Griglia\Settings;
 
+use Alle80\Griglia\Mode;
+use Alle80\Griglia\Support\Locale;
 use Alle80\Griglia\Themes;
 use Spatie\LaravelSettings\Settings;
 
@@ -86,7 +88,7 @@ class AppSettings extends Settings
 
         $labels = (array) __('griglia::t.settings_fields');
         $def = [
-            'locale' => ['select', \Alle80\Griglia\Support\Locale::options()],
+            'locale' => ['select', Locale::options()],
             'default_style' => ['select', $styles],
             'title_max_length' => ['int', ['min' => 10, 'max' => 200]],
             'auto_archive_days' => ['int', ['min' => 0, 'max' => 365]],
@@ -97,7 +99,7 @@ class AppSettings extends Settings
             'mode' => ['select', array_filter([
                 '' => __('griglia::t.settings_options.mode_config'),
                 'server' => __('griglia::t.settings_options.mode_server'),
-                'local' => \Alle80\Griglia\Mode::localFromUiAllowed() ? __('griglia::t.settings_options.mode_local') : null,
+                'local' => Mode::localFromUiAllowed() ? __('griglia::t.settings_options.mode_local') : null,
             ])],
             'show_dashboard_tab' => ['bool', []],
             'speech_mode' => ['select', [

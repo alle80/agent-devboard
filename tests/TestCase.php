@@ -2,10 +2,12 @@
 
 namespace Alle80\Griglia\Tests;
 
-use Alle80\Griglia\Tests\Support\User;
 use Alle80\Griglia\GrigliaServiceProvider;
+use Alle80\Griglia\Mode;
+use Alle80\Griglia\Tests\Support\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\LivewireServiceProvider;
+use NotificationChannels\WebPush\WebPushServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelSettings\LaravelSettingsServiceProvider;
 
@@ -29,7 +31,7 @@ abstract class TestCase extends Orchestra
                 @unlink($compiled);
             }
         }
-        \Alle80\Griglia\Mode::reset(); // static cache must not leak between tests
+        Mode::reset(); // static cache must not leak between tests
         $this->withoutVite();
 
         // Users table of the host app + package migrations (tables + settings defaults)
@@ -40,7 +42,7 @@ abstract class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
-        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, \NotificationChannels\WebPush\WebPushServiceProvider::class, GrigliaServiceProvider::class];
+        return [LivewireServiceProvider::class, LaravelSettingsServiceProvider::class, WebPushServiceProvider::class, GrigliaServiceProvider::class];
     }
 
     protected function defineEnvironment($app): void

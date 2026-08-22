@@ -5,7 +5,9 @@ namespace Alle80\Griglia\Tests\Feature;
 use Alle80\Griglia\Livewire\IngredientModal;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\Support\User;
 use Alle80\Griglia\Tests\TestCase;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Livewire;
 
 class IngredientModalTest extends TestCase
@@ -66,14 +68,14 @@ class IngredientModalTest extends TestCase
         $this->todo->update(['question' => true]);
 
         $m = Livewire::test(IngredientModal::class)->call('openFor', $this->todo->id);
-        $m->assertSee("Blue")->assertSee("Green")->assertSeeHtml("db-mic");
+        $m->assertSee('Blue')->assertSee('Green')->assertSeeHtml('db-mic');
         $m->call('resumeWork'); // blocked: unanswered
         $this->assertTrue($this->todo->fresh()->question);
 
         $m->set("answers.{$q->id}", 'Blue')->call('saveAnswer', $q->id);
         $this->assertSame('Blue', $q->fresh()->answer);
-        $m->call("selectAnswer", $q->id, "Green");
-        $this->assertSame("Green", $q->fresh()->answer);
+        $m->call('selectAnswer', $q->id, 'Green');
+        $this->assertSame('Green', $q->fresh()->answer);
 
         $m->call('resumeWork');
         $this->todo->refresh();
@@ -83,11 +85,11 @@ class IngredientModalTest extends TestCase
 
     public function test_foreign_todo_cannot_be_opened(): void
     {
-        $other = \Alle80\Griglia\Tests\Support\User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
+        $other = User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
         $foreign = Checklist::create(['name' => 'X', 'user_id' => $other->id]);
         $todo = Todo::create(['title' => 'Not mine', 'order' => 1, 'checklist_id' => $foreign->id]);
 
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         Livewire::test(IngredientModal::class)->call('openFor', $todo->id);
     }
 

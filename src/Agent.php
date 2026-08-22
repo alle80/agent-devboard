@@ -29,11 +29,17 @@ class Agent
         if (is_string($raw) && trim($raw) !== '') {
             foreach (explode(',', $raw) as $pair) {
                 [$k, $l] = array_pad(array_map('trim', explode(':', $pair, 2)), 2, null);
-                if ($k !== '') $out[$k] = $l ?: $k;
+                if ($k !== '') {
+                    $out[$k] = $l ?: $k;
+                }
             }
         } elseif (is_array($raw)) {
             foreach ($raw as $k => $l) {
-                if (is_int($k)) { $out[(string) $l] = (string) $l; } else { $out[(string) $k] = (string) $l; }
+                if (is_int($k)) {
+                    $out[(string) $l] = (string) $l;
+                } else {
+                    $out[(string) $k] = (string) $l;
+                }
             }
         }
         if ($out === []) {

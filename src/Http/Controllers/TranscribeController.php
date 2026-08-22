@@ -6,6 +6,8 @@ use Alle80\Griglia\Support\Speech;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Files\Base64Audio;
+use Laravel\Ai\Transcription;
 
 /** Server-side speech to text: the browser uploads a short recording, the AI SDK transcribes it. */
 class TranscribeController
@@ -25,9 +27,9 @@ class TranscribeController
         $prompt = Speech::prompt();
 
         try {
-            $audio = \Laravel\Ai\Files\Base64Audio::fromUpload($file, $mime);
+            $audio = Base64Audio::fromUpload($file, $mime);
             // A long dictation is a big file: a fixed short timeout threw away five minutes of talking.
-            $pending = \Laravel\Ai\Transcription::of($audio)->language($lang)
+            $pending = Transcription::of($audio)->language($lang)
                 ->timeout($file->getSize() > 2_000_000 ? 180 : 90);
 
             if ($prompt !== '' && method_exists($pending, 'withProviderOptions')) {

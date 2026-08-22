@@ -28,7 +28,7 @@ class Markdown
     /** Normalize escaped line breaks produced by agent CLI wrappers, including legacy answers. */
     public static function normalizeAgentResponse(?string $text): string
     {
-        return str_replace(["\\r\\n", "\\n", "\\r"], ["\n", "\n", "\n"], (string) $text);
+        return str_replace(['\\r\\n', '\\n', '\\r'], ["\n", "\n", "\n"], (string) $text);
     }
 
     /** Render an agent answer, normalizing escaped line breaks saved by older wrappers. */

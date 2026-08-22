@@ -2,9 +2,10 @@
 
 namespace Alle80\Griglia\Events;
 
+use Alle80\Griglia\Mode;
 use Alle80\Griglia\Models\Todo;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -45,11 +46,11 @@ class TodoChanged implements ShouldBroadcastNow
 
     public function broadcastOn(): PrivateChannel|Channel
     {
-        if (\Alle80\Griglia\Mode::isLocal()) {
-            return new Channel(\Alle80\Griglia\Mode::broadcastChannel());
+        if (Mode::isLocal()) {
+            return new Channel(Mode::broadcastChannel());
         }
 
-        return new PrivateChannel(\Alle80\Griglia\Mode::broadcastChannel($this->userId));
+        return new PrivateChannel(Mode::broadcastChannel($this->userId));
     }
 
     public function broadcastAs(): string

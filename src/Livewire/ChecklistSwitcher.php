@@ -61,8 +61,6 @@ class ChecklistSwitcher extends Component
     }
 
     /** Plan mode: the new list is built from a prompt (chained tasks). */
-
-
     public function create(): void
     {
         $name = trim($this->newName);

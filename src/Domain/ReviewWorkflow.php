@@ -110,6 +110,7 @@ class ReviewWorkflow
                     'review_status' => ReviewStatus::ChangesRequested,
                 ]);
             }
+
             return $original;
         }, 3);
     }

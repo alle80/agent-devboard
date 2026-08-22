@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Http\Middleware;
 
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Themes;
 use Closure;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class RememberStyle
             $slug = trim(substr($slug, strlen($prefix)), '/');
         }
         if ($slug === '') {
-            $configured = app(\Alle80\Griglia\Settings\AppSettings::class)->default_style;
+            $configured = app(AppSettings::class)->default_style;
             session(['style' => Themes::has($configured) ? $configured : Themes::default()]);
         }
 
@@ -30,7 +31,7 @@ class RememberStyle
     /** Current style: session, then the default style from /settings, then the default theme. */
     public static function current(): string
     {
-        $style = session('style') ?: (app(\Alle80\Griglia\Settings\AppSettings::class)->default_style ?: Themes::default());
+        $style = session('style') ?: (app(AppSettings::class)->default_style ?: Themes::default());
 
         return Themes::known($style) ? $style : Themes::default();
     }

@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Mode;
 use Alle80\Griglia\Models\Checklist;
 use Livewire\Component;
 
@@ -21,7 +22,7 @@ class NotificationBell extends Component
     protected function getListeners(): array
     {
 
-        return [\Alle80\Griglia\Mode::echoListener() => '$refresh'];
+        return [Mode::echoListener() => '$refresh'];
     }
 
     protected function user(): ?object

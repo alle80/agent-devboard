@@ -2,13 +2,16 @@
 
 namespace Alle80\Griglia\Console;
 
+use Alle80\Griglia\Agent;
 use Alle80\Griglia\Domain\ReviewWorkflow;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\OptimizationSettings;
+use Alle80\Griglia\Support\AgentStatus;
 use Alle80\Griglia\Support\Markdown;
 use Alle80\Griglia\Support\Notify;
+use Alle80\Griglia\Support\QuestionLevel;
 use Illuminate\Console\Command;
 
 /**
@@ -66,18 +69,18 @@ class GrigliaCheck extends Command
         $find = fn (int $id) => Todo::whereIn('checklist_id', $scopeIds)->findOrFail($id);
 
         // Multi-agent: which agent am I? (option, else config key); with several agents only my tasks are listed
-        $me = (string) ($this->option('agent') ?: (\Alle80\Griglia\Agent::many() ? \Alle80\Griglia\Agent::defaultKey() : ''));
+        $me = (string) ($this->option('agent') ?: (Agent::many() ? Agent::defaultKey() : ''));
 
         // Several agents at once must not step on each other: every task belongs to ONE agent (task override,
         // else list default, else the default agent). Acting on somebody else's task is refused, so a wrong id
         // in a prompt cannot steal the work another agent is already doing; --force is the deliberate way in.
         $trespass = function (Todo $t, string $action) use ($me): bool {
-            $owner = \Alle80\Griglia\Agent::effective($t);
+            $owner = Agent::effective($t);
             if ($me === '' || $this->option('force') || $owner === $me) {
                 return false;
             }
             $this->error(sprintf('«%s» (id:%d) belongs to agent «%s», you are «%s»: refusing to %s it%s. Reassign it on the board (task or list agent), or re-run with --force.',
-                $t->title, $t->id, \Alle80\Griglia\Agent::label($owner), \Alle80\Griglia\Agent::label($me), $action,
+                $t->title, $t->id, Agent::label($owner), Agent::label($me), $action,
                 $t->working ? ' — it is being worked on right now' : ''));
 
             return true;
@@ -144,9 +147,13 @@ class GrigliaCheck extends Command
         }
 
         foreach (['approve', 'request-changes'] as $decision) {
-            if (! ($id = $this->option($decision))) continue;
+            if (! ($id = $this->option($decision))) {
+                continue;
+            }
             $t = $find((int) $id);
-            if ($trespass($t, $decision === 'approve' ? 'approve' : 'request changes on')) return self::FAILURE;
+            if ($trespass($t, $decision === 'approve' ? 'approve' : 'request changes on')) {
+                return self::FAILURE;
+            }
             $alreadyDecided = $t->review_outcome !== null;
             $comment = Markdown::normalizeAgentResponse($this->option('comment'));
             if ($decision === 'request-changes' && ! $comment) {
@@ -163,9 +170,11 @@ class GrigliaCheck extends Command
             }
             $workflow = app(ReviewWorkflow::class);
             $original = $decision === 'approve'
-                ? $workflow->approve($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t), $report)
-                : $workflow->requestChanges($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t), $report);
-            if ($decision === 'approve' && ! $alreadyDecided) Notify::todoCompleted($original);
+                ? $workflow->approve($t, $me !== '' ? $me : Agent::effective($t), $report)
+                : $workflow->requestChanges($t, $me !== '' ? $me : Agent::effective($t), $report);
+            if ($decision === 'approve' && ! $alreadyDecided) {
+                Notify::todoCompleted($original);
+            }
             $this->info(sprintf('%s: «%s» (id:%d) — original «%s» (id:%d) %s',
                 $decision === 'approve' ? '✅ review approved' : '↩ changes requested',
                 $t->title, $t->id, $original->title, $original->id,
@@ -226,7 +235,7 @@ class GrigliaCheck extends Command
                     // Reports and counters belong to the original; the service owns the atomic state boundary.
                     $report = array_intersect_key($attrs + $this->tokenAttrs($t), array_flip(['claude_comment', 'result_summary', 'outcome', 'tokens_in', 'tokens_out']));
                     $t->update($report);
-                    app(ReviewWorkflow::class)->submit($t, $me !== '' ? $me : \Alle80\Griglia\Agent::effective($t));
+                    app(ReviewWorkflow::class)->submit($t, $me !== '' ? $me : Agent::effective($t));
                     $submitted = true;
                 } else {
                     $t->update($attrs + $this->tokenAttrs($t));
@@ -268,7 +277,7 @@ class GrigliaCheck extends Command
             }
             $todos = $query->get();
             if ($me !== '') {
-                $todos = $todos->filter(fn ($t) => \Alle80\Griglia\Agent::effective($t, $l) === $me)->values();
+                $todos = $todos->filter(fn ($t) => Agent::effective($t, $l) === $me)->values();
             }
 
             return $todos;
@@ -278,7 +287,9 @@ class GrigliaCheck extends Command
 
         if ($machine) {
             $all = $todos;
-            foreach ($planTodos as $c) $all = $all->concat($c);
+            foreach ($planTodos as $c) {
+                $all = $all->concat($c);
+            }
             // Every task carries its full resume chain (oldest steps included): same history the human output prints
             $items = $all->map(function (Todo $t) {
                 $row = $t->toArray();
@@ -293,21 +304,21 @@ class GrigliaCheck extends Command
                 return $row;
             })->values();
             $payload = $this->option('worker-json')
-                ? ['task_mode' => app(AgentSettings::class)->task_mode, 'agents' => \Alle80\Griglia\Support\AgentStatus::workerAgents(), 'items' => $items]
+                ? ['task_mode' => app(AgentSettings::class)->task_mode, 'agents' => AgentStatus::workerAgents(), 'items' => $items]
                 : $items;
             $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } else {
             $this->line('⚙️ settings (/settings) — FOLLOW THEM: '.app(AgentSettings::class)->summary());
-            $this->line(\Alle80\Griglia\Support\QuestionLevel::checkLine()); // how many questions before starting (task 499)
+            $this->line(QuestionLevel::checkLine()); // how many questions before starting (task 499)
             $this->line('⚡ optimization: '.$opt->summary());
-            if (\Alle80\Griglia\Agent::many()) {
-                $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(\Alle80\Griglia\Agent::all()), \Alle80\Griglia\Agent::all())), $me, \Alle80\Griglia\Agent::label($me)));
+            if (Agent::many()) {
+                $this->line(sprintf('🤝 agents: %s — you are «%s» (%s): only your tasks are listed', implode(', ', array_map(fn ($k, $v) => "$k=$v", array_keys(Agent::all()), Agent::all())), $me, Agent::label($me)));
             }
-            if (\Alle80\Griglia\Agent::many()) {
+            if (Agent::many()) {
                 $busy = Todo::whereIn('checklist_id', $scopeIds)->whereNull('archived_at')->where('working', true)
-                    ->orderBy('id')->get()->filter(fn ($t) => \Alle80\Griglia\Agent::effective($t) !== $me);
+                    ->orderBy('id')->get()->filter(fn ($t) => Agent::effective($t) !== $me);
                 if ($busy->isNotEmpty()) {
-                    $this->line('🔒 busy elsewhere: '.$busy->map(fn ($t) => sprintf('%s on «%s» (id:%d)', \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($t)), $t->title, $t->id))->implode(' · ')
+                    $this->line('🔒 busy elsewhere: '.$busy->map(fn ($t) => sprintf('%s on «%s» (id:%d)', Agent::label(Agent::effective($t)), $t->title, $t->id))->implode(' · ')
                         .' — stay out of those files and branches, and run the shared steps (package release, asset build, migrations, caches) one agent at a time');
                 }
             }
@@ -317,64 +328,76 @@ class GrigliaCheck extends Command
             $this->info(sprintf('List "%s": %d items %s', $name, $todos->count(), $this->option('all') ? 'in total' : 'open to work 🟢 (in list order = priority)'));
             if (! $this->option('all')) {
                 $waiting = $list->todos()->whereNull('archived_at')->where('completed', false)->where('open_to_work', false)->where('working', false)->where('paused', false)->where('question', false)->count();
-                if ($waiting) $this->line("   (+{$waiting} open but not yet open to work: do not touch them)");
+                if ($waiting) {
+                    $this->line("   (+{$waiting} open but not yet open to work: do not touch them)");
+                }
                 $asking = $list->todos()->whereNull('archived_at')->where('completed', false)->where('question', true)->count();
-                if ($asking) $this->line("   (+{$asking} waiting for the user's answers ❓)");
+                if ($asking) {
+                    $this->line("   (+{$asking} waiting for the user's answers ❓)");
+                }
                 $paused = $list->todos()->whereNull('archived_at')->where('completed', false)->where('paused', true)->count();
-                if ($paused) $this->line("   (+{$paused} paused by the agent ⏸ — reopen on the board to resume)");
+                if ($paused) {
+                    $this->line("   (+{$paused} paused by the agent ⏸ — reopen on the board to resume)");
+                }
             }
 
             $render = function ($todos) use ($last, $opt) {
-            foreach ($todos as $t) {
-                $isNew = $t->updated_at->timestamp > $last;
-                $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->paused ? '⏸' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪'))), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', \Alle80\Griglia\Agent::many() ? ' {agent: '.\Alle80\Griglia\Agent::effective($t).'}' : '', $t->id));
-                // Resume chain: a resumed task can itself be resumed — print the WHOLE history, newest first (task 416)
-                $chain = $t->resumeChain();
-                if ($chain->isNotEmpty()) {
-                    if ($chain->count() > 1) {
-                        $this->line(sprintf('        ↩ resume chain: %d previous tasks, newest first — the whole history still applies', $chain->count()));
+                foreach ($todos as $t) {
+                    $isNew = $t->updated_at->timestamp > $last;
+                    $this->line(sprintf('%s [%s] %s #%d %s%s%s  (id:%d)', $isNew ? '🆕' : '  ', $t->completed ? 'x' : ' ', $t->question ? '❓' : ($t->paused ? '⏸' : ($t->working ? '🔧' : ($t->open_to_work ? '🟢' : '⚪'))), $t->order, $t->title, $t->working && $t->progress !== null ? sprintf(' [%d%%%s]', $t->progress, $t->phase ? ' · '.$t->phase : '') : '', Agent::many() ? ' {agent: '.Agent::effective($t).'}' : '', $t->id));
+                    // Resume chain: a resumed task can itself be resumed — print the WHOLE history, newest first (task 416)
+                    $chain = $t->resumeChain();
+                    if ($chain->isNotEmpty()) {
+                        if ($chain->count() > 1) {
+                            $this->line(sprintf('        ↩ resume chain: %d previous tasks, newest first — the whole history still applies', $chain->count()));
+                        }
+                        foreach ($chain as $step => $p) {
+                            $this->line($step === 0
+                                ? sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $p->title, $p->id)
+                                : sprintf('        ↩ %d steps back «%s» (id:%d)', $step + 1, $p->title, $p->id));
+                            if ($p->notes) {
+                                $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($p->notes)));
+                            }
+                            if ($p->claude_comment) {
+                                $this->line('           🤖 previous: '.str_replace("\n", "\n              ", $opt->trim($p->claude_comment)));
+                            }
+                            foreach ($p->ingredients as $i) {
+                                $this->line(sprintf('           - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
+                            }
+                        }
                     }
-                    foreach ($chain as $step => $p) {
-                        $this->line($step === 0
-                            ? sprintf('        ↩ resumes «%s» (id:%d): the previous context still applies', $p->title, $p->id)
-                            : sprintf('        ↩ %d steps back «%s» (id:%d)', $step + 1, $p->title, $p->id));
-                        if ($p->notes) $this->line('           previous note: '.str_replace("\n", "\n              ", $opt->trim($p->notes)));
-                        if ($p->claude_comment) $this->line('           🤖 previous: '.str_replace("\n", "\n              ", $opt->trim($p->claude_comment)));
-                        foreach ($p->ingredients as $i) $this->line(sprintf('           - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
+                    if ($t->working && $t->working_since) {
+                        $this->line(sprintf('        ⏱ working since %s (%s this interval%s)', $t->working_since->toIso8601String(), Todo::formatDuration(max(0, (int) $t->working_since->diffInSeconds(now()))), $t->work_seconds ? ', '.Todo::formatDuration($t->workSeconds()).' in total' : ''));
+                    } elseif ($t->hasStats()) {
+                        $this->line('        📊 '.$t->statsLine());
+                    }
+                    if ($t->stopped_at) {
+                        $this->line('        ⏹ stopped by the user on '.$t->stopped_at->format('d/m H:i').': do NOT work on it until it is 🟢 again');
+                    }
+                    if ($t->depends_on_id) {
+                        $dep = Todo::find($t->depends_on_id);
+                        $this->line(sprintf('        ⛓ plan chain: after «%s» (id:%d, %s) — the next task opens automatically when this one is done', $dep?->title ?? '?', $t->depends_on_id, $dep?->completed ? 'done' : 'NOT done yet'));
+                    }
+                    if ($t->skills) {
+                        $this->line('        🧩 skills to activate for this task (Skill tool): '.implode(', ', (array) $t->skills));
+                    }
+                    if ($t->notes) {
+                        $this->line('        note: '.str_replace("\n", "\n              ", $t->notes));
+                    }
+                    if ($t->completed && in_array($t->outcome, ['alert', 'blocked'], true)) {
+                        $this->line('        '.trim(self::outcomeMark($t->outcome)));
+                    }
+                    if ($t->claude_comment) {
+                        $this->line('        🤖 agent: '.str_replace("\n", "\n                 ", $opt->trim($t->claude_comment)));
+                    }
+                    foreach ($t->ingredients as $i) {
+                        $this->line(sprintf('        - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
+                    }
+                    foreach ($t->questions as $q) {
+                        $this->line('        ❓ '.$q->question);
+                        $this->line('           → '.($q->answer ?? '(no answer)'));
                     }
                 }
-                if ($t->working && $t->working_since) {
-                    $this->line(sprintf('        ⏱ working since %s (%s this interval%s)', $t->working_since->toIso8601String(), Todo::formatDuration(max(0, (int) $t->working_since->diffInSeconds(now()))), $t->work_seconds ? ', '.Todo::formatDuration($t->workSeconds()).' in total' : ''));
-                } elseif ($t->hasStats()) {
-                    $this->line('        📊 '.$t->statsLine());
-                }
-                if ($t->stopped_at) {
-                    $this->line('        ⏹ stopped by the user on '.$t->stopped_at->format('d/m H:i').': do NOT work on it until it is 🟢 again');
-                }
-                if ($t->depends_on_id) {
-                    $dep = Todo::find($t->depends_on_id);
-                    $this->line(sprintf('        ⛓ plan chain: after «%s» (id:%d, %s) — the next task opens automatically when this one is done', $dep?->title ?? '?', $t->depends_on_id, $dep?->completed ? 'done' : 'NOT done yet'));
-                }
-                if ($t->skills) {
-                    $this->line('        🧩 skills to activate for this task (Skill tool): '.implode(', ', (array) $t->skills));
-                }
-                if ($t->notes) {
-                    $this->line('        note: '.str_replace("\n", "\n              ", $t->notes));
-                }
-                if ($t->completed && in_array($t->outcome, ['alert', 'blocked'], true)) {
-                    $this->line('        '.trim(self::outcomeMark($t->outcome)));
-                }
-                if ($t->claude_comment) {
-                    $this->line('        🤖 agent: '.str_replace("\n", "\n                 ", $opt->trim($t->claude_comment)));
-                }
-                foreach ($t->ingredients as $i) {
-                    $this->line(sprintf('        - [%s] %s', $i->checked ? 'x' : ' ', $i->name));
-                }
-                foreach ($t->questions as $q) {
-                    $this->line('        ❓ '.$q->question);
-                    $this->line('           → '.($q->answer ?? '(no answer)'));
-                }
-            }
             };
             $render($todos);
 

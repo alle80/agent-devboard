@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Agent;
 use Alle80\Griglia\Models\Attachment;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Ingredient;
@@ -9,8 +10,11 @@ use Alle80\Griglia\Models\Question;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Support\ImageDescription;
 use Alle80\Griglia\Support\ImageStore;
+use Alle80\Griglia\Support\Live;
+use Alle80\Griglia\Support\Skills;
 use Alle80\Griglia\Themes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -145,7 +149,7 @@ class IngredientModal extends Component
         $todo = $this->todo();
         if ($todo && $todo->completed && ! $todo->result_seen) {
             $todo->update(['result_seen' => true]);
-            \Alle80\Griglia\Support\Live::todoChanged($todo);
+            Live::todoChanged($todo);
         }
     }
 
@@ -211,7 +215,7 @@ class IngredientModal extends Component
                 'images.*.mimes' => __('griglia::t.msg.image_formats'),
                 'images.*.max' => __('griglia::t.msg.image_too_big'),
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->imageError = collect($e->errors())->flatten()->first();
             $this->images = [];
             $this->dispatch('toast', message: $this->imageError, type: 'error');
@@ -402,7 +406,7 @@ class IngredientModal extends Component
             $this->dispatch('toast', message: __($todo->open_to_work ? 'griglia::t.msg.otw_on' : 'griglia::t.msg.otw_off', ['title' => $todo->title]), type: $todo->open_to_work ? 'success' : 'info');
         }
 
-        \Alle80\Griglia\Support\Live::todoChanged($todo);
+        Live::todoChanged($todo);
         $this->dispatch('ingredients-updated');
     }
 
@@ -435,7 +439,7 @@ class IngredientModal extends Component
         }
         $todo->update($attrs);
         $this->dispatch('toast', message: __('griglia::t.msg.state_set', ['state' => __('griglia::t.state.'.$state), 'title' => $todo->title]), type: $state === 'done' ? 'success' : 'info');
-        \Alle80\Griglia\Support\Live::todoChanged($todo);
+        Live::todoChanged($todo);
         $this->dispatch('ingredients-updated');
     }
 
@@ -447,21 +451,27 @@ class IngredientModal extends Component
             return;
         }
         $agent = trim($agent);
-        if ($agent !== '' && ! array_key_exists($agent, \Alle80\Griglia\Agent::all())) {
+        if ($agent !== '' && ! array_key_exists($agent, Agent::all())) {
             return;
         }
         $todo->update(['agent' => $agent ?: null]);
         $this->dispatch('ingredients-updated');
     }
+
     public function setReviewer(string $agent): void
     {
         $todo = $this->todo();
-        if (! $todo || $todo->working || $todo->completed || $todo->review_status || $todo->isReviewAttempt()) { return; }
+        if (! $todo || $todo->working || $todo->completed || $todo->review_status || $todo->isReviewAttempt()) {
+            return;
+        }
         $agent = trim($agent);
-        if ($agent !== "" && (! array_key_exists($agent, \Alle80\Griglia\Agent::all()) || $agent === \Alle80\Griglia\Agent::effective($todo))) { return; }
-        $todo->update(["reviewer_agent" => $agent ?: null]);
-        $this->dispatch("ingredients-updated");
+        if ($agent !== '' && (! array_key_exists($agent, Agent::all()) || $agent === Agent::effective($todo))) {
+            return;
+        }
+        $todo->update(['reviewer_agent' => $agent ?: null]);
+        $this->dispatch('ingredients-updated');
     }
+
     /** Move the todo to another list of the user (appended at the end of the active items there). */
     public function moveTo(int $checklistId): void
     {
@@ -782,7 +792,7 @@ class IngredientModal extends Component
     /** Le skill che l'agente assegnato a questo task può davvero invocare (task 375). */
     protected function skillCatalogue(Todo $todo): array
     {
-        return \Alle80\Griglia\Support\Skills::forAgent(\Alle80\Griglia\Agent::effective($todo));
+        return Skills::forAgent(Agent::effective($todo));
     }
 
     /** Dati comuni a tutte le viste del modale (base e stili dedicati). */
@@ -793,8 +803,8 @@ class IngredientModal extends Component
         return [
             'todo' => $todo,
             'readonly' => (bool) ($todo?->completed || $todo?->working),
-            'skills' => $todo ? $this->skillCatalogue($todo) : \Alle80\Griglia\Support\Skills::all(),
-            'skillsAgent' => $todo ? \Alle80\Griglia\Agent::label(\Alle80\Griglia\Agent::effective($todo)) : \Alle80\Griglia\Agent::name(),
+            'skills' => $todo ? $this->skillCatalogue($todo) : Skills::all(),
+            'skillsAgent' => $todo ? Agent::label(Agent::effective($todo)) : Agent::name(),
             'otherLists' => $todo ? Checklist::mine()->whereKeyNot($todo->checklist_id)->orderBy('name')->get(['id', 'name']) : collect(),
         ];
     }

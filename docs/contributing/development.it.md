@@ -16,7 +16,7 @@ tests/          orchestra/testbench + phpunit
 
 ```bash
 composer install
-vendor/bin/phpunit                 # testbench, sqlite in memoria
+composer lint                      # Laravel Pint, solo controllo\ncomposer test                      # testbench, sqlite in memoria
 vendor/bin/testbench serve         # un'applicazione Laravel nuda con il package montato
 npm install && npm run build       # asset precompilati → public/build
 php artisan griglia:docs-build     # il sito della documentazione

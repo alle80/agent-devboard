@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Http\Middleware;
 
+use Alle80\Griglia\Mode;
 use Alle80\Griglia\Models\Checklist;
 use Closure;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class OpenFromLink
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->isMethod('GET') && (auth()->check() || \Alle80\Griglia\Mode::isLocal())) {
+        if ($request->isMethod('GET') && (auth()->check() || Mode::isLocal())) {
             if (($list = (int) $request->query('list')) && Checklist::mine()->whereKey($list)->exists()) {
                 session(['checklist_id' => $list]);
             }

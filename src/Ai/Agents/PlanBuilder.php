@@ -22,7 +22,9 @@ class PlanBuilder implements Agent, HasStructuredOutput
 
     public function instructions(): Stringable|string
     {
-        $lang = match (app()->getLocale()) { 'it' => 'Italian', 'en' => 'English', default => app()->getLocale() };
+        $lang = match (app()->getLocale()) {
+            'it' => 'Italian', 'en' => 'English', default => app()->getLocale()
+        };
 
         return <<<TXT
         You are a senior tech lead planning the work of a coding agent on a software project.

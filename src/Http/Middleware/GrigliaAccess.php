@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Guards the board routes according to the mode:
@@ -26,7 +27,7 @@ class GrigliaAccess
 
         $user = $request->user();
         if (! $user) {
-            $login = ! $request->expectsJson() && \Illuminate\Support\Facades\Route::has('login') ? route('login', absolute: false) : null;
+            $login = ! $request->expectsJson() && Route::has('login') ? route('login', absolute: false) : null;
             throw new AuthenticationException('Unauthenticated.', ['web'], $login);
         }
 

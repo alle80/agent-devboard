@@ -19,12 +19,12 @@ class ReviewUiTest extends TestCase
         $user = $this->actingAsUser();
         $this->list = Checklist::create(['name' => 'dev', 'user_id' => $user->id, 'agent' => 'codex']);
     }
+
     protected function tearDown(): void
     {
-        Todo::query()->whereNotNull("review_of_id")->forceDelete();
+        Todo::query()->whereNotNull('review_of_id')->forceDelete();
         parent::tearDown();
     }
-
 
     public function test_reviewer_can_be_selected_and_cleared_in_the_task_modal(): void
     {

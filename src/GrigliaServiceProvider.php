@@ -2,22 +2,26 @@
 
 namespace Alle80\Griglia;
 
-use Alle80\Griglia\Console\AutoArchive;
-use Alle80\Griglia\Console\DescribeImages;
-use Alle80\Griglia\Console\ThemeExport;
-use Alle80\Griglia\Console\ThemeImport;
 use Alle80\Griglia\Console\AgentStatusImport;
+use Alle80\Griglia\Console\AutoArchive;
 use Alle80\Griglia\Console\ContextCommand;
-use Alle80\Griglia\Console\GrigliaCheck;
+use Alle80\Griglia\Console\DescribeImages;
 use Alle80\Griglia\Console\DocsBuild;
 use Alle80\Griglia\Console\DocsGenerate;
 use Alle80\Griglia\Console\EmptyTrash;
+use Alle80\Griglia\Console\GrigliaCheck;
 use Alle80\Griglia\Console\SkillsImport;
+use Alle80\Griglia\Console\ThemeExport;
+use Alle80\Griglia\Console\ThemeImport;
 use Alle80\Griglia\Console\Watch;
+use Alle80\Griglia\Http\Middleware\GrigliaAccess;
+use Alle80\Griglia\Http\Middleware\GrigliaAdmin;
+use Alle80\Griglia\Http\Middleware\SetLocale;
 use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Settings\OptimizationSettings;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -40,14 +44,14 @@ class GrigliaServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'griglia');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'griglia');
-        \Illuminate\Support\Facades\Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'griglia');
+        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'griglia');
 
         // <livewire:griglia::todo-list />, griglia::ingredient-modal, griglia::themed-todo-list,
         // griglia::themed-ingredient-modal, griglia::checklist-switcher, griglia::settings-page
         Livewire::addNamespace('griglia', classNamespace: 'Alle80\\Griglia\\Livewire');
         // Security: GrigliaAccess replaces `auth` on the package routes, so it must also run on Livewire's
         // /livewire/update requests (only "persistent" middleware is re-applied there)
-        Livewire::addPersistentMiddleware([\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Alle80\Griglia\Http\Middleware\GrigliaAdmin::class, \Alle80\Griglia\Http\Middleware\SetLocale::class]);
+        Livewire::addPersistentMiddleware([GrigliaAccess::class, GrigliaAdmin::class, SetLocale::class]);
 
         if (config('griglia.register_routes', true)) {
             // After the host app's routes, so host routes keep precedence over package pages

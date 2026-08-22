@@ -5,6 +5,7 @@ namespace Alle80\Griglia\Tests\Feature;
 use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
+use Alle80\Griglia\Tests\Support\User;
 use Alle80\Griglia\Tests\TestCase;
 use Livewire\Livewire;
 
@@ -60,8 +61,9 @@ class TodoListComponentTest extends TestCase
         $todo = $this->add('Finished task');
         $todo->update(['completed' => true, 'open_to_work' => true]);
         Livewire::test(TodoList::class)
-            ->assertSee('title="Completed task"', false)            ->assertSee('class="todo-action db-badge db-badge-done', false);
+            ->assertSee('title="Completed task"', false)->assertSee('class="todo-action db-badge db-badge-done', false);
     }
+
     public function test_paused_task_has_its_icon_filter_and_can_be_reopened(): void
     {
         $paused = $this->add('Paused task');
@@ -91,10 +93,10 @@ class TodoListComponentTest extends TestCase
         $this->assertFalse($todo->completed);
         $this->assertNull($todo->archived_at);
         $this->assertNull($todo->deleted_at);
-        config(["griglia.agents" => "claude:Claude Code,codex:Codex CLI"]);
+        config(['griglia.agents' => 'claude:Claude Code,codex:Codex CLI']);
         Livewire::test(TodoList::class)
-            ->assertSee("Claude Code")
-            ->assertDontSeeHtml("setTodoAgent(".$todo->id);
+            ->assertSee('Claude Code')
+            ->assertDontSeeHtml('setTodoAgent('.$todo->id);
     }
 
     public function test_working_badge_uses_the_agent_inherited_from_the_list(): void
@@ -171,7 +173,7 @@ class TodoListComponentTest extends TestCase
         Todo::create(['title' => 'Other needle', 'order' => 1, 'checklist_id' => $other->id]);
         $archived = Checklist::create(['name' => 'Old project', 'user_id' => auth()->id(), 'archived_at' => now()]);
         Todo::create(['title' => 'Archived needle', 'order' => 1, 'checklist_id' => $archived->id]);
-        $foreignUser = \Alle80\Griglia\Tests\Support\User::create(['name' => 'O', 'email' => 'other-search@example.com', 'password' => 'x']);
+        $foreignUser = User::create(['name' => 'O', 'email' => 'other-search@example.com', 'password' => 'x']);
         $foreign = Checklist::create(['name' => 'Foreign', 'user_id' => $foreignUser->id]);
         Todo::create(['title' => 'Foreign needle', 'order' => 1, 'checklist_id' => $foreign->id]);
 
@@ -263,7 +265,7 @@ class TodoListComponentTest extends TestCase
     public function test_todos_of_other_users_are_invisible(): void
     {
         $this->add('Mine');
-        $other = \Alle80\Griglia\Tests\Support\User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
+        $other = User::create(['name' => 'O', 'email' => 'o@example.com', 'password' => 'x']);
         $foreign = Checklist::create(['name' => 'X', 'user_id' => $other->id]);
         Todo::create(['title' => 'Not mine', 'order' => 1, 'checklist_id' => $foreign->id]);
 

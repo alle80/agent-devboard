@@ -2,10 +2,12 @@
 
 namespace Alle80\Griglia\Support;
 
+use Alle80\Griglia\Ai\Agents\PlanBuilder;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Closure;
 use Illuminate\Support\Facades\Log;
+use Laravel\Ai\Ai;
 
 /**
  * Plan mode: a list built from a prompt — the goal is split (by the AI SDK agent PlanBuilder, or by a
@@ -22,7 +24,7 @@ class Plan
         if (self::$resolver) {
             return true;
         }
-        if (! class_exists(\Laravel\Ai\Ai::class)) {
+        if (! class_exists(Ai::class)) {
             return false;
         }
         $provider = (string) config('ai.default', '');
@@ -37,7 +39,7 @@ class Plan
             if (self::$resolver) {
                 return self::normalize((self::$resolver)($prompt));
             }
-            $response = (new \Alle80\Griglia\Ai\Agents\PlanBuilder)->prompt($prompt);
+            $response = (new PlanBuilder)->prompt($prompt);
             $data = method_exists($response, 'toArray') ? $response->toArray() : (array) $response;
 
             return self::normalize($data['tasks'] ?? $data);

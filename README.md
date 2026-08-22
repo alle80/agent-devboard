@@ -325,7 +325,7 @@ configured nothing happens (failures are logged, never raised).
 ## Development
 
 ```bash
-cd packages/griglia && composer update && vendor/bin/phpunit
+cd packages/griglia && composer update\ncomposer lint\ncomposer test
 ```
 
 The suite (orchestra/testbench, in-memory sqlite) covers migrations, per-user scoping, the Livewire

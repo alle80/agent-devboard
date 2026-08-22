@@ -6,7 +6,7 @@ Issue e pull request sono benvenute su
 ## Prima di aprire una pull request
 
 ```bash
-cd packages/griglia && composer update && vendor/bin/phpunit
+cd packages/griglia && composer update\ncomposer lint\ncomposer test
 ```
 
 La suite (orchestra/testbench, SQLite in memoria) copre migrazioni, delimitazione per utente, i componenti
@@ -24,7 +24,7 @@ traduzioni e l'evento di broadcast. GitHub Actions la esegue su PHP 8.3 e 8.4.
 
 ## Stile
 
-Segui il codice che hai attorno: convenzioni Laravel, nessuna dipendenza nuova senza un motivo, interfaccia
+Esegui `composer lint` per controllare lo stile Laravel Pint e `composer test` per avviare PHPUnit. Segui il\ncodice che hai attorno: convenzioni Laravel, nessuna dipendenza nuova senza un motivo, interfaccia
 costruita con il set di icone e le variabili di tema del package invece che con markup usa e getta.
 
 ## Sicurezza

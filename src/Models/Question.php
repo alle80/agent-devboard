@@ -19,6 +19,7 @@ class Question extends Model
     {
         return $this->belongsTo(Todo::class);
     }
+
     protected static function booted(): void
     {
         // Aggiornamento live della lista/modale aperti altrove (Reverb)

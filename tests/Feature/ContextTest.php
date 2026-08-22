@@ -48,7 +48,7 @@ MD;
         $this->assertSame(['my-project', 'How to work', 'Skills'], array_column($g, 'title'));
         $this->assertSame(['Intro paragraph.'], array_column($g[0]['blocks'], 'body'));
         $this->assertSame(['Artisan', 'Assets', 'Standalone paragraph with code.', 'bash'], array_column($g[1]['blocks'], 'title'));
-        $this->assertStringContainsString("second line of the same bullet", $g[1]['blocks'][1]['body']);
+        $this->assertStringContainsString('second line of the same bullet', $g[1]['blocks'][1]['body']);
         $this->assertStringContainsString('fenced - not a bullet', $g[1]['blocks'][3]['body'], 'fenced code stays one block');
         $this->assertSame('Issue tracker', $g[2]['blocks'][0]['title']);
         $this->assertStringContainsString("### Issue tracker\n\nIssues live on GitHub.", $g[2]['blocks'][0]['body'], '### heading joined with its paragraph');

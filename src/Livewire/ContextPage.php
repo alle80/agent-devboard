@@ -2,9 +2,12 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Admin;
+use Alle80\Griglia\Agent;
 use Alle80\Griglia\Http\Middleware\RememberStyle;
 use Alle80\Griglia\Models\ContextBlock;
 use Alle80\Griglia\Models\ContextGroup;
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Support\Context;
 use Alle80\Griglia\Themes;
 use Livewire\Component;
@@ -36,13 +39,13 @@ class ContextPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Griglia\Admin::check(), 403, __('griglia::t.errors.admin_only'));
+        abort_unless(Admin::check(), 403, __('griglia::t.errors.admin_only'));
     }
 
     /** Switch «generate the instruction files from the board» (host sync honours it). */
     public function toggleSync(): void
     {
-        $s = app(\Alle80\Griglia\Settings\AppSettings::class);
+        $s = app(AppSettings::class);
         $s->context_sync = ! $s->context_sync;
         $s->save();
         $this->dispatch('toast', message: __($s->context_sync ? 'griglia::t.ctx.sync_on' : 'griglia::t.ctx.sync_off'), type: $s->context_sync ? 'success' : 'info');
@@ -195,7 +198,7 @@ class ContextPage extends Component
             'groups' => ContextGroup::with('blocks')->orderBy('order')->orderBy('id')->get(),
             'tokensOn' => $on,
             'tokensTotal' => $total,
-            'syncOn' => (bool) app(\Alle80\Griglia\Settings\AppSettings::class)->context_sync,
-        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('griglia::t.ctx.title', ['agent' => \Alle80\Griglia\Agent::name()]));
+            'syncOn' => (bool) app(AppSettings::class)->context_sync,
+        ])->layout($skin['layout'], $skin['layoutData'] + ['title' => 'Context'])->title(__('griglia::t.ctx.title', ['agent' => Agent::name()]));
     }
 }

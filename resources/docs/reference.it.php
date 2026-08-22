@@ -79,7 +79,7 @@ return [
         // ----- griglia:context
         'Agent context (instructions file) as switchable groups/blocks: import, export, status' => "Contesto dell'agente (file di istruzioni) come gruppi/blocchi accendibili: import, export, status",
         'import|export|status|enabled' => 'import|export|status|enabled',
-        'markdown file for import (default: stdin)' => "file markdown da importare (default: stdin)",
+        'markdown file for import (default: stdin)' => 'file markdown da importare (default: stdin)',
         'import: wipe the current context first' => 'import: cancella prima il contesto attuale',
         'export: include disabled groups/blocks' => 'export: includi anche gruppi e blocchi spenti',
 
@@ -151,7 +151,7 @@ return [
         'Agents status snapshot (plan + usage windows), written by `griglia:agent-status-import`; shown in /agents' => "Snapshot dello stato degli agenti (piano + finestre d'uso), scritto da `griglia:agent-status-import`; mostrato in /agents",
         "Catalogue of the agent's skills (JSON written by `griglia:skills-import`; shown in the task modal)" => "Catalogo delle skill dell'agente (JSON scritto da `griglia:skills-import`; mostrato nel modale del task)",
         "Vocabulary hint sent with the audio of the speech to text (helps with names and jargon: «l'agente» instead of «la gente»). null = use the translated default, '' = no hint at all." => "Suggerimento di vocabolario mandato con l'audio della dettatura (aiuta con nomi e gergo: «l'agente» invece di «la gente»). null = usa il default tradotto, '' = nessun suggerimento.",
-        "Hard limit of a single dictation, in seconds (0 = no limit): when it is reached the recording is closed and transcribed, instead of growing until the upload or the provider refuses it." => "Durata massima di una singola dettatura, in secondi (0 = nessun limite): al limite la registrazione viene chiusa e trascritta, invece di crescere finché l'upload o il provider la rifiutano.",
+        'Hard limit of a single dictation, in seconds (0 = no limit): when it is reached the recording is closed and transcribed, instead of growing until the upload or the provider refuses it.' => "Durata massima di una singola dettatura, in secondi (0 = nessun limite): al limite la registrazione viene chiusa e trascritta, invece di crescere finché l'upload o il provider la rifiutano.",
         "Front-end assets: 'precompiled' (default) = the CSS/JS built by the package, published in public/vendor/griglia/build — nothing to build in the host app; 'vite' = the host app bundles resources/css/griglia.css + resources/js/griglia.js in its own Vite build (entries below)" => "Asset front-end: 'precompiled' (default) = il CSS/JS compilati dal package, pubblicati in public/vendor/griglia/build — niente da compilare nell'applicazione ospite; 'vite' = l'applicazione ospite include resources/css/griglia.css + resources/js/griglia.js nella propria build Vite (voci qui sotto)",
         'With `assets` = \'vite\': the entry points of the host app passed to @vite() on the package pages.' => "Con `assets` = 'vite': le voci d'ingresso dell'applicazione ospite passate a @vite() nelle pagine del package.",
         'With `assets` = \'precompiled\': public URL where the published build is served from.' => "Con `assets` = 'precompiled': URL pubblico da cui viene servita la build pubblicata.",

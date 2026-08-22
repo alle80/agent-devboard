@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Http\Controllers;
 
+use Alle80\Griglia\Notifications\TestNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -65,7 +66,7 @@ class PushSubscriptionController
     {
         $user = $request->user();
         if ($user && method_exists($user, 'notify')) {
-            $user->notify(new \Alle80\Griglia\Notifications\TestNotification);
+            $user->notify(new TestNotification);
         }
 
         return response()->json(['ok' => true]);

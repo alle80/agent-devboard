@@ -42,6 +42,7 @@ class PlansPage extends Component
     {
         $list = Checklist::mine()->whereKey($checklistId)->firstOrFail();
         abort_unless($list->plan_prompt || $list->todos()->whereNotNull('depends_on_id')->exists(), 404);
+
         return $list;
     }
 

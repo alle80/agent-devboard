@@ -55,8 +55,12 @@ class Stats
         $q = $list->todos()->withTrashed()->where('completed', true)->whereNotNull('completed_at')
             ->with(['ingredients', 'parent:id,title', 'checklist:id,name'])->withCount(['questions', 'ingredients as ingredients_done_count' => fn ($i) => $i->where('checked', true)])
             ->orderByDesc('completed_at')->orderByDesc('id');
-        if ($from) $q->where('completed_at', '>=', $from);
-        if ($to) $q->where('completed_at', '<=', $to);
+        if ($from) {
+            $q->where('completed_at', '>=', $from);
+        }
+        if ($to) {
+            $q->where('completed_at', '<=', $to);
+        }
 
         return $q->get()->map(fn (Todo $t) => self::row($t));
     }

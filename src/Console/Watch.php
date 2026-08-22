@@ -4,6 +4,7 @@ namespace Alle80\Griglia\Console;
 
 use Alle80\Griglia\Agent;
 use Alle80\Griglia\Models\Checklist;
+use Alle80\Griglia\Models\Todo;
 use Illuminate\Console\Command;
 
 /**
@@ -81,7 +82,7 @@ class Watch extends Command
             ->where(fn ($q) => $q->whereNotNull('plan_prompt')->orWhereHas('todos', fn ($t) => $t->whereNotNull('depends_on_id')))
             ->pluck('id')->push($list->id)->all();
         $out = [];
-        foreach (\Alle80\Griglia\Models\Todo::whereIn('checklist_id', $ids)->whereNull('archived_at')->where('completed', false)->with(['questions', 'checklist'])->get() as $t) {
+        foreach (Todo::whereIn('checklist_id', $ids)->whereNull('archived_at')->where('completed', false)->with(['questions', 'checklist'])->get() as $t) {
             if ($agent !== '' && Agent::effective($t) !== $agent) {
                 continue;
             }

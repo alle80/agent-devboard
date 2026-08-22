@@ -3,6 +3,7 @@
 namespace Alle80\Griglia\Livewire;
 
 use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Themes;
 use Livewire\Attributes\Layout;
 
@@ -34,7 +35,7 @@ class DashboardTodoList extends TodoList
             'archivedCount' => $this->archivedCount(),
             'filtering' => $this->isFiltering(),
             'plan' => $this->planStatus(),
-            'listAgent' => (string) (\Alle80\Griglia\Models\Checklist::find(\Alle80\Griglia\Models\Checklist::currentId())?->agent ?? ''),
+            'listAgent' => (string) (Checklist::find(Checklist::currentId())?->agent ?? ''),
             'wide' => true,
         ])->title($this->listName().' — Dashboard');
     }

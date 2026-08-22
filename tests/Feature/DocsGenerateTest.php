@@ -57,7 +57,7 @@ class DocsGenerateTest extends TestCase
             $this->assertArrayNotHasKey(
                 $description,
                 $seen,
-                "config keys `$key` and `".($seen[$description] ?? '')."` share the same description"
+                "config keys `$key` and `".($seen[$description] ?? '').'` share the same description'
             );
             $seen[$description] = $key;
         }

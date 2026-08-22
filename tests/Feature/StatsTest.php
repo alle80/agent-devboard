@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Livewire\StatsPage;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Settings\AppSettings;
@@ -9,6 +10,7 @@ use Alle80\Griglia\Support\Stats;
 use Alle80\Griglia\Tests\TestCase;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Carbon;
+use Livewire\Livewire;
 
 /** Statistics & history: completed_at, cost from the price list, history rows, aggregates, series. */
 class StatsTest extends TestCase
@@ -101,15 +103,15 @@ class StatsTest extends TestCase
         // page
         session(['checklist_id' => $this->list->id]);
         $this->get('/stats')->assertOk()->assertSee('Statistics')->assertSee('7,50 €')->assertSee('B (untracked)');
-        \Livewire\Livewire::test(\Alle80\Griglia\Livewire\StatsPage::class)->assertSee('History — 2 completed tasks')->call('setDays', 7)->assertSet('days', 7)->call('setDays', 99)->assertSet('days', 30);
+        Livewire::test(StatsPage::class)->assertSee('History — 2 completed tasks')->call('setDays', 7)->assertSet('days', 7)->call('setDays', 99)->assertSet('days', 30);
         // empty state
         $empty = Checklist::create(['name' => 'empty', 'user_id' => auth()->id()]);
-        \Livewire\Livewire::test(\Alle80\Griglia\Livewire\StatsPage::class)->call('setList', $empty->id)->assertSee('No completed task in this period');
+        Livewire::test(StatsPage::class)->call('setList', $empty->id)->assertSee('No completed task in this period');
         // all lists / all plans
         $plan = Checklist::create(['name' => 'myplan', 'user_id' => auth()->id(), 'plan_prompt' => 'x']);
         Todo::create(['title' => 'P1', 'order' => 1, 'checklist_id' => $plan->id, 'completed' => true, 'work_seconds' => 60]);
-        \Livewire\Livewire::test(\Alle80\Griglia\Livewire\StatsPage::class)->call('setList', 0)->assertSee('History — 3 completed tasks')->assertSee('· myplan')->assertSee('· proj');
-        \Livewire\Livewire::test(\Alle80\Griglia\Livewire\StatsPage::class)->call('setList', -1)->assertSee('History — 1 completed tasks')->assertSee('P1')->assertDontSee('B (untracked)');
+        Livewire::test(StatsPage::class)->call('setList', 0)->assertSee('History — 3 completed tasks')->assertSee('· myplan')->assertSee('· proj');
+        Livewire::test(StatsPage::class)->call('setList', -1)->assertSee('History — 1 completed tasks')->assertSee('P1')->assertDontSee('B (untracked)');
         $this->assertSame(2, $overview->firstWhere('list.id', $this->list->id)['agg']['count']);
     }
 }

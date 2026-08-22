@@ -5,6 +5,7 @@ namespace Alle80\Griglia\Tests\Feature;
 use Alle80\Griglia\Admin;
 use Alle80\Griglia\Livewire\ContextPage;
 use Alle80\Griglia\Livewire\SettingsPage;
+use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Tests\Support\User;
 use Alle80\Griglia\Tests\TestCase;
 use Illuminate\Support\Facades\Gate;
@@ -49,7 +50,13 @@ class AdminTest extends TestCase
         $this->assertTrue(Admin::allows($second));
         $this->assertFalse(Admin::allows(User::first()));
 
-        $custom = new class extends User { public function canManageGriglia(): bool { return true; } };
+        $custom = new class extends User
+        {
+            public function canManageGriglia(): bool
+            {
+                return true;
+            }
+        };
         $this->assertTrue(Admin::allows($custom), 'model method wins');
 
         $this->assertFalse(Admin::allows(null));
@@ -60,13 +67,13 @@ class AdminTest extends TestCase
         $this->actingAsUser();
         $page = Livewire::test(SettingsPage::class);
         $page->set('values.app.mode', 'local');
-        $this->assertSame('', app(\Alle80\Griglia\Settings\AppSettings::class)->refresh()->mode);
-        $this->assertArrayNotHasKey('local', \Alle80\Griglia\Settings\AppSettings::fields()['mode'][3]);
+        $this->assertSame('', app(AppSettings::class)->refresh()->mode);
+        $this->assertArrayNotHasKey('local', AppSettings::fields()['mode'][3]);
 
         config(['griglia.allow_local_from_ui' => true]);
-        $this->assertArrayHasKey('local', \Alle80\Griglia\Settings\AppSettings::fields()['mode'][3]);
+        $this->assertArrayHasKey('local', AppSettings::fields()['mode'][3]);
         Livewire::test(SettingsPage::class)->set('values.app.mode', 'local');
-        $this->assertSame('local', app(\Alle80\Griglia\Settings\AppSettings::class)->refresh()->mode);
+        $this->assertSame('local', app(AppSettings::class)->refresh()->mode);
     }
 
     public function test_context_page_is_admin_only(): void

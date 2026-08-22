@@ -98,9 +98,9 @@ class MultiAgentTest extends TestCase
 
         // «gone» is not configured any more: the task must fall back to the default agent instead of
         // belonging to nobody and waiting forever (task 347).
-        $this->assertSame(\Alle80\Griglia\Agent::defaultKey(), \Alle80\Griglia\Agent::effective($todo->fresh()));
+        $this->assertSame(Agent::defaultKey(), Agent::effective($todo->fresh()));
 
-        $this->artisan('griglia:check', ['--agent' => \Alle80\Griglia\Agent::defaultKey()])
+        $this->artisan('griglia:check', ['--agent' => Agent::defaultKey()])
             ->expectsOutputToContain('Left behind')
             ->assertSuccessful();
     }

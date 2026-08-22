@@ -327,8 +327,11 @@ class ThemeStore
             $depth = 1;
             $j = $open + 1;
             while ($j < $len && $depth > 0) {
-                if ($css[$j] === '{') $depth++;
-                elseif ($css[$j] === '}') $depth--;
+                if ($css[$j] === '{') {
+                    $depth++;
+                } elseif ($css[$j] === '}') {
+                    $depth--;
+                }
                 $j++;
             }
             $block = substr($css, $open, $j - $open);

@@ -2,6 +2,7 @@
 
 namespace Alle80\Griglia\Tests\Feature;
 
+use Alle80\Griglia\Http\Middleware\GrigliaAccess;
 use Alle80\Griglia\Livewire\ChecklistSwitcher;
 use Alle80\Griglia\Mode;
 use Alle80\Griglia\Models\Checklist;
@@ -38,8 +39,12 @@ class ModeTest extends TestCase
         $this->get('/stats')->assertOk();
 
         // canAccessGriglia() on the model wins over the gate
-        $this->actingAs(new class extends User {
-            public function canAccessGriglia(): bool { return false; }
+        $this->actingAs(new class extends User
+        {
+            public function canAccessGriglia(): bool
+            {
+                return false;
+            }
         });
         $this->get('/stats')->assertForbidden();
 
@@ -47,7 +52,7 @@ class ModeTest extends TestCase
 
     public function test_access_middleware_is_persistent_on_livewire_updates(): void
     {
-        $this->assertContains(\Alle80\Griglia\Http\Middleware\GrigliaAccess::class, \Livewire\Livewire::getPersistentMiddleware(), 'GrigliaAccess replaces auth, so Livewire must re-apply it on /livewire/update');
+        $this->assertContains(GrigliaAccess::class, Livewire::getPersistentMiddleware(), 'GrigliaAccess replaces auth, so Livewire must re-apply it on /livewire/update');
     }
 
     public function test_local_mode_has_no_auth_and_global_lists(): void

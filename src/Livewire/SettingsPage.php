@@ -2,12 +2,19 @@
 
 namespace Alle80\Griglia\Livewire;
 
+use Alle80\Griglia\Admin;
+use Alle80\Griglia\Agent;
+use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Mode;
 use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\AppSettings;
 use Alle80\Griglia\Settings\OptimizationSettings;
-use Alle80\Griglia\Http\Middleware\RememberStyle;
+use Alle80\Griglia\Support\Locale;
+use Alle80\Griglia\Support\QuestionLevel;
 use Alle80\Griglia\Themes;
 use Alle80\Griglia\ThemeStore;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -35,7 +42,7 @@ class SettingsPage extends Component
     /** Defence in depth: admin-only, also on Livewire update requests. */
     public function boot(): void
     {
-        abort_unless(\Alle80\Griglia\Admin::check(), 403, __('griglia::t.errors.admin_only'));
+        abort_unless(Admin::check(), 403, __('griglia::t.errors.admin_only'));
     }
 
     public function mount(): void
@@ -72,11 +79,13 @@ class SettingsPage extends Component
             case 'select':
                 if (! array_key_exists((string) $value, $field[3])) {
                     $this->values[$group][$key] = $settings->{$key};
+
                     return;
                 }
-                if ($group === 'app' && $key === 'mode' && $value === 'local' && ! \Alle80\Griglia\Mode::localFromUiAllowed()) {
+                if ($group === 'app' && $key === 'mode' && $value === 'local' && ! Mode::localFromUiAllowed()) {
                     $this->values[$group][$key] = $settings->{$key};
                     $this->dispatch('toast', message: __('griglia::t.msg.local_not_allowed'), type: 'error');
+
                     return;
                 }
                 $settings->{$key} = (string) $value;
@@ -90,6 +99,7 @@ class SettingsPage extends Component
                 if (! preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', (string) $value)) {
                     $this->values[$group][$key] = $settings->{$key};
                     $this->dispatch('toast', message: __('griglia::t.msg.invalid_time'), type: 'error');
+
                     return;
                 }
                 $settings->{$key} = (string) $value;
@@ -102,12 +112,12 @@ class SettingsPage extends Component
         }
 
         $settings->save();
-        \Alle80\Griglia\Mode::reset();
-        \Alle80\Griglia\Support\Locale::apply(); // cambiando lingua la pagina si ridisegna già tradotta
+        Mode::reset();
+        Locale::apply(); // cambiando lingua la pagina si ridisegna già tradotta
         $this->values[$group][$key] = $settings->{$key};
         if ($group === 'agent' && $key === 'autonomy') {
             // The question level also lives in the agent context as a managed block (task 499)
-            \Alle80\Griglia\Support\QuestionLevel::sync();
+            QuestionLevel::sync();
             $this->dispatch('toast', message: __('griglia::t.question_level.saved'));
 
             return;
@@ -128,12 +138,12 @@ class SettingsPage extends Component
             $this->validate(['themeZip' => ['file', 'max:20480']], ['themeZip.max' => __('griglia::t.themes.err_too_big')]);
             $def = ThemeStore::install($this->themeZip->getRealPath());
             $this->dispatch('toast', message: __('griglia::t.themes.installed_ok', ['label' => $def['label']]));
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->dispatch('toast', message: collect($e->errors())->flatten()->first(), type: 'error');
         } catch (\RuntimeException $e) {
             $this->dispatch('toast', message: $e->getMessage(), type: 'error'); // ThemeStore's own, translated messages
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('griglia: theme install failed: '.$e->getMessage());
+            Log::warning('griglia: theme install failed: '.$e->getMessage());
             $this->dispatch('toast', message: __('griglia::t.themes.err_generic'), type: 'error');
         }
 
@@ -177,6 +187,7 @@ class SettingsPage extends Component
             foreach ($fields as $key => $field) {
                 $out[$group.'.'.$key] = [...$field, $group, $key];
             }
+
             return $out;
         };
         $notificationFields = [];
@@ -191,9 +202,9 @@ class SettingsPage extends Component
             'skin' => $skin,
             'installedThemes' => ThemeStore::installed(),
             'pushSubscriptions' => method_exists(auth()->user() ?? new \stdClass, 'pushSubscriptions') ? auth()->user()->pushSubscriptions()->count() : 0,
-            'questionPreviews' => \Alle80\Griglia\Support\QuestionLevel::previews(), // level => context block (task 499)
+            'questionPreviews' => QuestionLevel::previews(), // level => context block (task 499)
             'sections' => [
-                'agent' => [__('griglia::t.settings_agent_title', ['agent' => \Alle80\Griglia\Agent::name()]), __('griglia::t.settings_agent_intro'), $sectionFields('agent', $agentFields)],
+                'agent' => [__('griglia::t.settings_agent_title', ['agent' => Agent::name()]), __('griglia::t.settings_agent_intro'), $sectionFields('agent', $agentFields)],
                 'optimization' => [__('griglia::t.settings_optimization_title'), __('griglia::t.settings_optimization_intro'), $sectionFields('optimization', OptimizationSettings::fields())],
                 'app' => [__('griglia::t.settings_app_title'), __('griglia::t.settings_app_intro'), $sectionFields('app', $appFields)],
                 'notif' => [__('griglia::t.notif.title'), __('griglia::t.settings_notifications_intro'), $notificationFields],

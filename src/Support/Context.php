@@ -35,14 +35,17 @@ class Context
             if (preg_match('/^```/', $line)) {
                 $inFence = ! $inFence;
                 $buffer[] = $line;
+
                 continue;
             }
             if ($inFence) {
                 $buffer[] = $line;
+
                 continue;
             }
             if (preg_match('/^#\s+(.+)$/', $line, $m) && $current === null) {
                 $current = ['title' => trim($m[1]), 'blocks' => []];
+
                 continue;
             }
             if (preg_match('/^##\s+(.+)$/', $line, $m)) {
@@ -51,6 +54,7 @@ class Context
                     $groups[] = $current;
                 }
                 $current = ['title' => trim($m[1]), 'blocks' => []];
+
                 continue;
             }
             if ($current === null) {
@@ -64,6 +68,7 @@ class Context
                 } else {
                     $flush();
                 }
+
                 continue;
             }
             // New block also on a top-level bullet, a ### sub-heading, or a «**Bold lead**» line following plain text
@@ -89,7 +94,7 @@ class Context
             return trim($m[1]);
         }
         if (preg_match('/^(?:[-*]\s+|\d+\.\s+)?\*\*([^*]{1,80})\*\*/', $first, $m)) {
-            return trim($m[1], " :");
+            return trim($m[1], ' :');
         }
         $plain = trim(preg_replace('/^(?:[-*]\s+|\d+\.\s+)/', '', $first));
         $plain = preg_replace('/[`*_]/', '', $plain);

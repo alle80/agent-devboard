@@ -3,6 +3,7 @@
 namespace Alle80\Griglia\Support;
 
 use Alle80\Griglia\Settings\AppSettings;
+use Carbon\Carbon;
 
 /**
  * Lingua dell'interfaccia della board. La sceglie l'impostazione `app.locale` di /settings
@@ -95,6 +96,6 @@ class Locale
             return;
         }
         app()->setLocale($locale);
-        \Carbon\Carbon::setLocale($locale);
+        Carbon::setLocale($locale);
     }
 }

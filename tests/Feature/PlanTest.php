@@ -3,10 +3,15 @@
 namespace Alle80\Griglia\Tests\Feature;
 
 use Alle80\Griglia\Livewire\ChecklistSwitcher;
+use Alle80\Griglia\Livewire\IngredientModal;
+use Alle80\Griglia\Livewire\PlanPage;
+use Alle80\Griglia\Livewire\PlansPage;
+use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Models\Checklist;
 use Alle80\Griglia\Models\Todo;
 use Alle80\Griglia\Support\Plan;
 use Alle80\Griglia\Tests\TestCase;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Livewire;
 
 /** Plan mode: a list built from a prompt into chained tasks; the chain opens the next task on completion. */
@@ -63,21 +68,21 @@ class PlanTest extends TestCase
         session(['checklist_id' => $list->id]);
         [$a, $b] = $list->todos()->orderBy('order')->get()->all();
 
-        $c = Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('Start the plan');
+        $c = Livewire::test(TodoList::class)->assertSee('Start the plan');
         $c->call('startPlan')->assertDispatched('toast');
         $this->assertTrue($a->fresh()->open_to_work);
         $this->assertFalse($b->fresh()->open_to_work);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('in progress')->assertDontSee('Start the plan');
+        Livewire::test(TodoList::class)->assertSee('in progress')->assertDontSee('Start the plan');
 
         // A done → B opens by the chain; nothing to start
         $a->update(['open_to_work' => false, 'completed' => true]);
         $this->assertTrue($b->fresh()->open_to_work);
         // user stops B → «Resume the plan»
         $b->fresh()->update(['open_to_work' => false]);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('Resume the plan')->call('startPlan');
+        Livewire::test(TodoList::class)->assertSee('Resume the plan')->call('startPlan');
         $this->assertTrue($b->fresh()->open_to_work);
         $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('plan completed');
+        Livewire::test(TodoList::class)->assertSee('plan completed');
     }
 
     public function test_check_includes_plan_lists_after_the_agent_list(): void
@@ -111,15 +116,15 @@ class PlanTest extends TestCase
         [$a, $b] = $list->todos()->orderBy('order')->get()->all();
         $a->update(['completed' => true]);
         $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('plan completed');
+        Livewire::test(TodoList::class)->assertSee('plan completed');
 
         // user adds a task at the end (via the modal «new task») → chained to B, plan resumable
-        Livewire::test(\Alle80\Griglia\Livewire\IngredientModal::class)->call('createNew');
+        Livewire::test(IngredientModal::class)->call('createNew');
         $c = $list->todos()->orderByDesc('order')->first();
         $c->update(['title' => 'C']);
         $this->assertSame($b->id, $c->fresh()->depends_on_id, 'new task joins the chain');
         $this->assertFalse($c->fresh()->open_to_work);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('Resume the plan')->call('startPlan');
+        Livewire::test(TodoList::class)->assertSee('Resume the plan')->call('startPlan');
         $this->assertTrue($c->fresh()->open_to_work);
 
         // a normal list does not chain
@@ -136,7 +141,7 @@ class PlanTest extends TestCase
         Plan::build($list, 'Go');
         session(['checklist_id' => $list->id]);
         [$a, $b, $c] = $list->todos()->orderBy('order')->get()->all();
-        $cmp = Livewire::test(\Alle80\Griglia\Livewire\TodoList::class);
+        $cmp = Livewire::test(TodoList::class);
         $cmp->call('startPlan');
         $this->assertTrue($a->fresh()->open_to_work);
         $cmp->assertSee('Pause the plan');
@@ -144,13 +149,13 @@ class PlanTest extends TestCase
         $cmp->call('pausePlan')->assertDispatched('toast');
         $this->assertTrue($list->fresh()->plan_paused);
         $this->assertFalse($a->fresh()->open_to_work, 'open task back to waiting');
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->assertSee('paused')->assertSee('Resume the plan');
+        Livewire::test(TodoList::class)->assertSee('paused')->assertSee('Resume the plan');
 
         // completing while paused does not open the next one
         $a->fresh()->update(['completed' => true]);
         $this->assertFalse($b->fresh()->open_to_work);
 
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->call('startPlan');
+        Livewire::test(TodoList::class)->call('startPlan');
         $this->assertFalse($list->fresh()->plan_paused);
         $this->assertTrue($b->fresh()->open_to_work, 'resume opens the next not-started task');
         $b->fresh()->update(['open_to_work' => false, 'completed' => true]);
@@ -166,13 +171,13 @@ class PlanTest extends TestCase
         [$a, $b, $c] = $list->todos()->orderBy('order')->get()->all();
 
         // user drags C to the top: C, A, B
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->call('reorder', [$c->id, $a->id, $b->id]);
+        Livewire::test(TodoList::class)->call('reorder', [$c->id, $a->id, $b->id]);
         $this->assertNull($c->fresh()->depends_on_id);
         $this->assertSame($c->id, $a->fresh()->depends_on_id);
         $this->assertSame($a->id, $b->fresh()->depends_on_id);
 
         // start → C opens first; completing C opens A
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->call('startPlan');
+        Livewire::test(TodoList::class)->call('startPlan');
         $this->assertTrue($c->fresh()->open_to_work);
         $c->fresh()->update(['open_to_work' => false, 'completed' => true]);
         $this->assertTrue($a->fresh()->open_to_work);
@@ -182,7 +187,7 @@ class PlanTest extends TestCase
         $x = Todo::create(['title' => 'x', 'order' => 1, 'checklist_id' => $plain->id]);
         $y = Todo::create(['title' => 'y', 'order' => 2, 'checklist_id' => $plain->id]);
         session(['checklist_id' => $plain->id]);
-        Livewire::test(\Alle80\Griglia\Livewire\TodoList::class)->call('reorder', [$y->id, $x->id]);
+        Livewire::test(TodoList::class)->call('reorder', [$y->id, $x->id]);
         $this->assertNull($x->fresh()->depends_on_id);
     }
 
@@ -221,7 +226,7 @@ class PlanTest extends TestCase
 
         $this->get(route('griglia.plans.create'))->assertOk()->assertSee('plan-goal', false);
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+        Livewire::test(PlanPage::class)
             ->set('prompt', 'Build a small website for the package documentation')
             ->call('create')
             ->assertHasNoErrors();
@@ -234,7 +239,7 @@ class PlanTest extends TestCase
 
     public function test_the_plan_page_refuses_an_empty_goal(): void
     {
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+        Livewire::test(PlanPage::class)
             ->set('prompt', 'too short')
             ->call('create')
             ->assertHasErrors('prompt');
@@ -244,16 +249,16 @@ class PlanTest extends TestCase
 
     public function test_the_draft_survives_leaving_the_page(): void
     {
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+        Livewire::test(PlanPage::class)
             ->set('prompt', 'A goal I started writing and did not finish');
 
         // Coming back: the text is still there.
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)
+        Livewire::test(PlanPage::class)
             ->assertSet('prompt', 'A goal I started writing and did not finish');
 
         // Cancelling throws it away.
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)->call('cancel');
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class)->assertSet('prompt', '');
+        Livewire::test(PlanPage::class)->call('cancel');
+        Livewire::test(PlanPage::class)->assertSet('prompt', '');
     }
 
     public function test_editing_a_plan_saves_the_goal_without_touching_the_tasks(): void
@@ -262,7 +267,7 @@ class PlanTest extends TestCase
         $list = Checklist::create(['name' => 'Roadmap', 'user_id' => auth()->id()]);
         Plan::build($list, 'The first goal of the plan');
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class, ['list' => $list])
+        Livewire::test(PlanPage::class, ['list' => $list])
             ->assertSet('prompt', 'The first goal of the plan')
             ->set('prompt', 'A better written goal for the plan')
             ->call('saveGoal')
@@ -285,7 +290,7 @@ class PlanTest extends TestCase
 
         Plan::$resolver = fn () => [['title' => 'New one'], ['title' => 'New two']];
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlanPage::class, ['list' => $list])
+        Livewire::test(PlanPage::class, ['list' => $list])
             ->call('rebuild')
             ->assertHasNoErrors();
 
@@ -358,8 +363,8 @@ class PlanTest extends TestCase
         $fresh = Checklist::create(['name' => 'Never started', 'user_id' => auth()->id()]);
         Plan::build($fresh, 'A plan waiting for the play button');
 
-        \Illuminate\Support\Facades\Artisan::call('griglia:check');
-        $this->assertStringNotContainsString('Never started', \Illuminate\Support\Facades\Artisan::output(),
+        Artisan::call('griglia:check');
+        $this->assertStringNotContainsString('Never started', Artisan::output(),
             'a plan nobody started is not a dead end, it is just waiting for ▶');
 
         // Started, then stuck: the first task done, the next one archived away.
@@ -369,9 +374,10 @@ class PlanTest extends TestCase
         $one->update(['completed' => true]);
         $two->update(['open_to_work' => false]);
 
-        \Illuminate\Support\Facades\Artisan::call('griglia:check');
-        $this->assertStringContainsString('Stuck halfway', \Illuminate\Support\Facades\Artisan::output());
+        Artisan::call('griglia:check');
+        $this->assertStringContainsString('Stuck halfway', Artisan::output());
     }
+
     public function test_plans_page_lists_only_plans_and_is_linked_from_the_lists_menu(): void
     {
         Checklist::create(['name' => 'Plain list', 'user_id' => auth()->id()]);
@@ -379,7 +385,7 @@ class PlanTest extends TestCase
         Plan::$resolver = fn () => [['title' => 'First'], ['title' => 'Second']];
         Plan::build($plan, 'Build the roadmap');
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)->assertSee('Roadmap')->assertDontSee('Plain list');
+        Livewire::test(PlansPage::class)->assertSee('Roadmap')->assertDontSee('Plain list');
         $this->get(route('griglia.home'))->assertOk()->assertSee(route('griglia.plans.index'), false);
     }
 
@@ -390,21 +396,20 @@ class PlanTest extends TestCase
         Plan::build($plan, 'Build the roadmap');
         $first = $plan->todos()->orderBy('order')->first();
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+        Livewire::test(PlansPage::class)
             ->call('start', $plan->id)
             ->assertDispatched('toast');
         $this->assertTrue($first->fresh()->open_to_work);
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+        Livewire::test(PlansPage::class)
             ->call('pause', $plan->id)
             ->assertDispatched('toast');
         $this->assertTrue($plan->fresh()->plan_paused);
         $this->assertFalse($first->fresh()->open_to_work);
 
-        Livewire::test(\Alle80\Griglia\Livewire\PlansPage::class)
+        Livewire::test(PlansPage::class)
             ->call('open', $plan->id)
             ->assertRedirect();
         $this->assertSame($plan->id, session('checklist_id'));
     }
-
 }

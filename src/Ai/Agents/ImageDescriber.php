@@ -25,7 +25,9 @@ class ImageDescriber implements Agent
 
     public function instructions(): Stringable|string
     {
-        $lang = match (app()->getLocale()) { 'it' => 'Italian', 'en' => 'English', default => app()->getLocale() };
+        $lang = match (app()->getLocale()) {
+            'it' => 'Italian', 'en' => 'English', default => app()->getLocale()
+        };
 
         return <<<TXT
         You describe images for a searchable archive.

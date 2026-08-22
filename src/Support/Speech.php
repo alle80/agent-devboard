@@ -3,6 +3,7 @@
 namespace Alle80\Griglia\Support;
 
 use Alle80\Griglia\Settings\AppSettings;
+use Laravel\Ai\Transcription;
 
 /**
  * Speech to text mode: 'browser' = Web Speech API in the browser (free, quality varies, phones restart
@@ -34,7 +35,7 @@ class Speech
     /** True when the AI SDK is installed and a transcription provider with a key is configured. */
     public static function serverAvailable(): bool
     {
-        if (! class_exists(\Laravel\Ai\Transcription::class)) {
+        if (! class_exists(Transcription::class)) {
             return false;
         }
         $provider = (string) config('ai.default_for_transcription', '');

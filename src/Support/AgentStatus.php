@@ -198,8 +198,12 @@ class AgentStatus
         $d = intdiv($seconds, 86400);
         $h = intdiv($seconds % 86400, 3600);
         $m = intdiv($seconds % 3600, 60);
-        if ($d > 0) return sprintf('%dg %dh', $d, $h);
-        if ($h > 0) return sprintf('%dh %02dm', $h, $m);
+        if ($d > 0) {
+            return sprintf('%dg %dh', $d, $h);
+        }
+        if ($h > 0) {
+            return sprintf('%dh %02dm', $h, $m);
+        }
 
         return sprintf('%dm', max(1, $m));
     }

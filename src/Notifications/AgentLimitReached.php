@@ -13,9 +13,20 @@ class AgentLimitReached extends GrigliaNotification
         parent::__construct($todo);
     }
 
-    public function kind(): string { return 'agent_limit_reached'; }
-    public function icon(): string { return '⚠'; }
-    public function title(): string { return __('griglia::t.notif.limit_title', ['agent' => $this->agentName]); }
+    public function kind(): string
+    {
+        return 'agent_limit_reached';
+    }
+
+    public function icon(): string
+    {
+        return '⚠';
+    }
+
+    public function title(): string
+    {
+        return __('griglia::t.notif.limit_title', ['agent' => $this->agentName]);
+    }
 
     public function body(): string
     {

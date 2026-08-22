@@ -6,6 +6,7 @@ use Alle80\Griglia\Agent;
 use Alle80\Griglia\Domain\ReviewOutcome;
 use Alle80\Griglia\Domain\ReviewStatus;
 use Alle80\Griglia\Support\Live;
+use Alle80\Griglia\Support\Stats;
 use DomainException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ class Todo extends Model
 {
     use SoftDeletes;
 
-    protected $fillable =['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'paused', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
+    protected $fillable = ['title', 'order', 'completed', 'completed_at', 'open_to_work', 'working', 'paused', 'stopped_at', 'question', 'notes', 'claude_comment', 'result_summary', 'result_seen', 'outcome', 'progress', 'phase', 'working_since', 'work_seconds', 'tokens_in', 'tokens_out', 'skills', 'agent', 'reviewer_agent', 'review_of_id', 'review_round', 'review_status', 'review_outcome', 'archived_at', 'checklist_id', 'parent_id', 'depends_on_id'];
 
     protected function casts(): array
     {
@@ -189,31 +190,46 @@ class Todo extends Model
         $h = intdiv($seconds, 3600);
         $m = intdiv($seconds % 3600, 60);
         $s = $seconds % 60;
-        if ($h > 0) return sprintf('%dh %02dm', $h, $m);
-        if ($m > 0) return sprintf('%dm %02ds', $m, $s);
+        if ($h > 0) {
+            return sprintf('%dh %02dm', $h, $m);
+        }
+        if ($m > 0) {
+            return sprintf('%dm %02ds', $m, $s);
+        }
+
         return sprintf('%ds', $s);
     }
 
     /** "1.2M", "45k", "812". */
     public static function formatTokens(int $n): string
     {
-        if ($n >= 1_000_000) return rtrim(rtrim(number_format($n / 1_000_000, 1, '.', ''), '0'), '.').'M';
-        if ($n >= 1_000) return rtrim(rtrim(number_format($n / 1_000, 1, '.', ''), '0'), '.').'k';
+        if ($n >= 1_000_000) {
+            return rtrim(rtrim(number_format($n / 1_000_000, 1, '.', ''), '0'), '.').'M';
+        }
+        if ($n >= 1_000) {
+            return rtrim(rtrim(number_format($n / 1_000, 1, '.', ''), '0'), '.').'k';
+        }
+
         return (string) $n;
     }
 
     /** Estimated cost from the price list in AppSettings (null when no prices or no tokens). */
     public function cost(): ?float
     {
-        return \Alle80\Griglia\Support\Stats::cost((int) $this->tokens_in, (int) $this->tokens_out);
+        return Stats::cost((int) $this->tokens_in, (int) $this->tokens_out);
     }
 
     /** One-line summary for CLI/UI: "⏱ 1h 12m · 🪙 1.2M in / 12k out". */
     public function statsLine(): string
     {
         $parts = [];
-        if ($this->workSeconds() > 0) $parts[] = '⏱ '.self::formatDuration($this->workSeconds());
-        if ($this->tokens_in > 0 || $this->tokens_out > 0) $parts[] = '🪙 '.self::formatTokens((int) $this->tokens_in).' in / '.self::formatTokens((int) $this->tokens_out).' out';
+        if ($this->workSeconds() > 0) {
+            $parts[] = '⏱ '.self::formatDuration($this->workSeconds());
+        }
+        if ($this->tokens_in > 0 || $this->tokens_out > 0) {
+            $parts[] = '🪙 '.self::formatTokens((int) $this->tokens_in).' in / '.self::formatTokens((int) $this->tokens_out).' out';
+        }
+
         return implode(' · ', $parts);
     }
 
@@ -319,7 +335,9 @@ class Todo extends Model
 
         // Statistics: every 🔧 interval is timed, whatever flips `working` (CLI take/done/ask, user stop from the web)
         static::saving(function (Todo $todo) {
-            if (! $todo->isDirty('working')) return;
+            if (! $todo->isDirty('working')) {
+                return;
+            }
             if ($todo->working) {
                 $todo->working_since ??= now();
             } elseif ($todo->working_since) {

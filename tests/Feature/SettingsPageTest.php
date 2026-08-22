@@ -6,8 +6,8 @@ use Alle80\Griglia\Livewire\SettingsPage;
 use Alle80\Griglia\Livewire\TodoList;
 use Alle80\Griglia\Settings\AgentSettings;
 use Alle80\Griglia\Settings\AppSettings;
-use Alle80\Griglia\Themes;
 use Alle80\Griglia\Tests\TestCase;
+use Alle80\Griglia\Themes;
 use Livewire\Livewire;
 
 class SettingsPageTest extends TestCase

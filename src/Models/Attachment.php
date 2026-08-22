@@ -5,6 +5,7 @@ namespace Alle80\Griglia\Models;
 use Alle80\Griglia\Support\Live;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 class Attachment extends Model
@@ -29,7 +30,7 @@ class Attachment extends Model
     /** URL of the image: the authorised controller route (default) or the disk's public URL. */
     public function url(): string
     {
-        if (config('griglia.attachments_via_controller', true) && \Illuminate\Support\Facades\Route::has('griglia.attachment')) {
+        if (config('griglia.attachments_via_controller', true) && Route::has('griglia.attachment')) {
             return route('griglia.attachment', $this->id);
         }
 
