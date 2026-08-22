@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.87.3] - 2026-08-22
+
+### Fixed
+- On desktop, compact text in the board and task modal is easier to read, list filters and Markdown editor
+  controls have larger targets, and the list-agent select no longer clips its text; mobile sizing is unchanged
+  (task 556).
+- The persistent worker claims an open task through `griglia:check --take` before launching the agent CLI,
+  closing the race where an agent/default change after polling could start the previously selected agent; a refused stale claim is logged and no CLI process is created
+  (task 495).
 
 ## [0.87.2] - 2026-08-22
 

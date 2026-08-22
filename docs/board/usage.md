@@ -123,6 +123,9 @@ collapse it or hide the last lines; saving stays silent so it does not interrupt
 
 ## Toolbar
 
+On desktop, compact labels, filter controls and the Markdown editor toolbar use a larger, more readable size;
+the denser mobile sizing is preserved to leave room for board and modal content.
+
 Free-text search (title, notes, comment, sub-tasks, questions, image descriptions), state and agent filters, archive.
 When several agents are configured, the chip with the robot icon (**All agents**) narrows the list to one agent's
 tasks; the filter follows the effective assignment (task override, then list default, then the global default),

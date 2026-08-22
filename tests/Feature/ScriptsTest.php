@@ -50,6 +50,8 @@ class ScriptsTest extends TestCase
         // Task 507: the board JSON is read even when a warning follows it; the script reloads itself in place
         // (same PID, sessions handed over) when it changes on disk; SIGHUP drains it instead of killing sessions
         $this->assertStringContainsString('json.JSONDecoder().raw_decode(text, start)', $worker);
+        $this->assertStringContainsString('if not claim(args, task):', $worker, 'an agent must claim through the current board guard before its CLI starts');
+        $this->assertStringContainsString('command.append(f"--take={task[\'id\']}")', $worker, 'the claim must be atomic with the board ownership check');
         $this->assertStringContainsString('os.execv(sys.executable, [sys.executable, str(source), *argv])', $worker);
         $this->assertStringContainsString('"--adopt="', $worker);
         $this->assertStringContainsString('f"--lock-fd={lock.fileno()}"', $worker);

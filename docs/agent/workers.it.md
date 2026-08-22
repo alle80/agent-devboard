@@ -169,7 +169,11 @@ Il worker interroga lo stato corrente della board, quindi trova anche il lavoro 
 In modalità `ordered` esegue esattamente una sessione. In modalità `multitasking` esegue fino a
 `--max-parallel` sessioni (2 per default), una per task idoneo; riduci il limite quando i task possono modificare
 gli stessi file. Un `flock` per coppia repository/agente impedisce worker duplicati, mentre il worker tiene
-traccia di ogni processo figlio per task. Uno Stop termina solo il processo di quel task; quando un figlio esce,
+traccia di ogni processo figlio per task. Prima di avviare la CLI per un task aperto, il worker lo prende con
+`griglia:check --take`: così ripete il controllo di assegnazione corrente della board. Se l'utente ha cambiato
+l'agente del task o il predefinito della lista dopo lo snapshot, la board rifiuta la presa obsoleta e
+l'agente sbagliato non parte.
+Uno Stop termina solo il processo di quel task; quando un figlio esce,
 il suo slot torna disponibile e nel journal compare `task <id>: agent session ended with status <codice>`. Il
 worker legge solo il documento JSON di `--worker-json`: un avviso che la board stampa dopo non ferma il ciclo.
 

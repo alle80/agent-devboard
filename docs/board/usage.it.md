@@ -130,6 +130,9 @@ la scrittura.
 
 ## Barra degli strumenti
 
+Su desktop le etichette compatte, i filtri e la barra dell’editor Markdown hanno dimensioni più leggibili; su mobile restano invece più densi per lasciare
+spazio ai contenuti della lista e del modale.
+
 Ricerca a testo libero (titolo, note, commento, sotto-task, domande, descrizioni delle immagini), filtri di
 stato e di agente, archivio. Con più agenti configurati il chip con l'icona del robot (**Tutti gli agenti**)
 restringe la lista ai task di un solo agente; il filtro segue l'assegnazione effettiva (agente del task, altrimenti

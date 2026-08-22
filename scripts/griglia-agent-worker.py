@@ -89,6 +89,20 @@ def board(args: argparse.Namespace, all_items: bool = False) -> dict:
     return parse_board(result.stdout)
 
 
+def claim(args: argparse.Namespace, task: dict) -> bool:
+    """Re-check ownership and take an open task before starting its CLI session."""
+    if task.get("working"):
+        return True
+    command = [part for part in board_command(args) if part != "--worker-json"]
+    command.append(f"--take={task['id']}")
+    result = subprocess.run(command, cwd=args.repo, text=True, capture_output=True, check=False)
+    if result.returncode:
+        reason = result.stderr.strip() or result.stdout.strip() or "board refused the task"
+        print(f"task {task['id']}: not dispatched — {reason}", file=sys.stderr, flush=True)
+        return False
+    return True
+
+
 def prompt(agent: str, task: dict) -> str:
     return (
         f"Work on Griglia as agent {agent}. Read AGENTS.md first and obey it. "
@@ -211,10 +225,13 @@ def adopt(spec: str) -> dict[int, Session]:
 
 def start_agent(args: argparse.Namespace, task: dict) -> Session | None:
     command = driver_command(args, prompt(args.agent, task))
-    print(f"dispatching task {task['id']} to {args.driver or args.agent}", flush=True)
     if args.dry_run:
+        print(f"would claim and dispatch task {task['id']} to {args.driver or args.agent}", flush=True)
         print(json.dumps(command, ensure_ascii=False))
         return None
+    if not claim(args, task):
+        return None
+    print(f"dispatching task {task['id']} to {args.driver or args.agent}", flush=True)
     process = subprocess.Popen(command, cwd=args.repo)
     return Session(int(task["id"]), process.pid, process)
 

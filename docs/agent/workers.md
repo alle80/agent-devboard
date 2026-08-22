@@ -164,6 +164,9 @@ The worker polls the current board state, so it also finds work that was already
 `ordered` mode it runs exactly one session. In `multitasking` mode it runs up to `--max-parallel` sessions
 (default 2), one per eligible task; reduce the limit when tasks can touch the same files. One `flock` per
 repository/agent pair prevents duplicate worker processes, while the worker tracks every child by task id.
+Before launching a CLI for an open task, the worker takes it through `griglia:check --take`: this repeats the
+board's current ownership check. If the user changed the task agent or its list default after the poll
+snapshot, the board refuses the stale claim and the wrong agent is never started.
 A board Stop terminates only that task process. After a child exits, its slot becomes available and the journal
 prints `task <id>: agent session ended with status <code>`. The worker reads only the JSON document of
 `--worker-json`: a warning the board prints after it does not stop the loop.

@@ -504,6 +504,17 @@ select.setting-input { appearance: auto; }
 .db-agent-filter select { background: transparent; border: 0; padding: 0; color: inherit; font: inherit; max-width: 11rem; text-overflow: ellipsis; cursor: pointer; }
 .db-agent-filter option { color: CanvasText; background: Canvas; }
 
+/* Desktop board density (task 556): keep compact mobile sizing, while desktop secondary copy and controls use a readable size. */
+@media (min-width: 768px) {
+    .list-toolbar .text-xs,
+    .todo-row .text-xs,
+    .modal-panel .text-xs { font-size: .875rem; }
+    .list-toolbar button,
+    .list-toolbar .db-agent-filter { padding: .45rem .8rem; }
+    .db-list-agent select { min-height: 2.5rem; font-size: .875rem; line-height: 1.25rem; }
+    .db-agent-filter select { line-height: 1.25rem; }
+}
+
 /* Il nome dello stato resta accanto all'icona anche sul telefono: il colore da solo non deve costringere
    a ricordare la legenda, soprattutto per waiting/open to work e per gli stati dell'agente (task 508). */
 .db-state-name { display: inline; font-size: 0.75rem; opacity: 0.7; white-space: nowrap; }
@@ -528,6 +539,11 @@ select.setting-input { appearance: auto; }
 }
 .db-md-btn:hover { opacity: 1; background: var(--tl-accent, #16a34a); color: var(--tl-accent-fg, #fff); }
 .db-md-sep { width: 1px; height: 18px; margin: 0 3px; background: currentColor; opacity: .2; }
+@media (min-width: 768px) {
+    .modal-panel .db-md-bar { gap: 3px; padding: 6px 8px; }
+    .modal-panel .db-md-btn { min-width: 32px; height: 32px; padding: 0 8px; font-size: 15px; }
+    .modal-panel .db-md-sep { height: 22px; }
+}
 .db-md .db-md-input {
     border-top-left-radius: 0; border-top-right-radius: 0; width: 100%; resize: none;
     field-sizing: content;
